@@ -11,18 +11,34 @@ bool EventPick::passHLT(SkimTree *tree){
   //if(is2022){}
   bool pass_HLT = false;
   if(isZeeJet){
-    pass_HLT = tree->HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ;
-    if(isDebug){
-    cout<<"tree->HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ = "<< tree->HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ;
+		if(is2016Pre || is2016Post){
+      pass_HLT = tree->HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ;
+      if(isDebug){
+        cout<<"tree->HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ = "<< tree->HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ;
+      }
     }
-  }
+		if(is2017 || is2018){
+      pass_HLT = tree->HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL;
+      if(isDebug){
+        cout<<"tree->HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL = "<< tree->HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL;
+      }
+    }
+  }//isZeeJet
 
   if(isZmmJet){
-    pass_HLT = tree->HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8;
-    if(isDebug){
-    cout<<"tree->HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8 = "<< tree->HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8<<endl;
+		if(is2016Pre || is2016Post){
+      pass_HLT = tree->HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ;
+      if(isDebug){
+        cout<<"tree->HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ = "<< tree->HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ<<endl;
+      }
     }
-  }
+		if(is2017 || is2018){
+      pass_HLT = tree->HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8;
+      if(isDebug){
+        cout<<"tree->HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8 = "<< tree->HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8<<endl;
+      }
+    }
+  }//isZmmJet
 
   if(isGamJet){
     pass_HLT = tree->HLT_Photon200 ||
@@ -134,40 +150,40 @@ bool EventPick::passHLT(SkimTree *tree){
 
 
 bool EventPick::passFilter(SkimTree *tree){
-  //We can also pick year-specific filters
-  //if(isData){}
-  //if(is2022){}
-  bool pass = 
-  (tree->Flag_goodVertices &&
-  tree->Flag_globalSuperTightHalo2016Filter &&
-  tree->Flag_EcalDeadCellTriggerPrimitiveFilter &&
-  tree->Flag_BadPFMuonFilter &&
-  tree->Flag_BadPFMuonDzFilter &&
-  tree->Flag_hfNoisyHitsFilter &&
-  tree->Flag_eeBadScFilter &&
-  tree->Flag_ecalBadCalibFilter);
+  bool pass = (tree->Flag_goodVertices &&
+		    tree->Flag_globalSuperTightHalo2016Filter &&
+		    tree->Flag_HBHENoiseFilter &&
+		    tree->Flag_HBHENoiseIsoFilter && 
+		    tree->Flag_EcalDeadCellTriggerPrimitiveFilter &&
+		    tree->Flag_BadPFMuonFilter &&
+		    tree->Flag_eeBadScFilter );
+  if (is2017 || is2018) pass = pass && tree->Flag_ecalBadCalibFilter ;
 
   if(isDebug){
     cout<<"tree->Flag_goodVertices             = "<<tree->Flag_goodVertices <<endl;
     cout<<"tree->Flag_globalSuperTightHalo2016Filter   = "<<tree->Flag_globalSuperTightHalo2016Filter <<endl;
     cout<<"tree->Flag_EcalDeadCellTriggerPrimitiveFilter = "<<tree->Flag_EcalDeadCellTriggerPrimitiveFilter <<endl;
     cout<<"tree->Flag_BadPFMuonFilter          = "<<tree->Flag_BadPFMuonFilter <<endl;
-    cout<<"tree->Flag_BadPFMuonDzFilter          = "<<tree->Flag_BadPFMuonDzFilter <<endl;
-    cout<<"tree->Flag_hfNoisyHitsFilter          = "<<tree->Flag_hfNoisyHitsFilter <<endl;
+    cout<<"tree->Flag_HBHENoiseFilter          = "<<tree->Flag_HBHENoiseFilter <<endl;
+    cout<<"tree->Flag_HBHENoiseIsoFilter       = "<<tree->Flag_HBHENoiseIsoFilter <<endl;
     cout<<"tree->Flag_eeBadScFilter            = "<<tree->Flag_eeBadScFilter <<endl;
-    cout<<"tree->Flag_ecalBadCalibFilter)        = "<<tree->Flag_ecalBadCalibFilter<<endl;
+    cout<<"tree->Flag_ecalBadCalibFilter)      = "<<tree->Flag_ecalBadCalibFilter<<endl;
   }
 
   return pass;
 }
 
 void EventPick::printBins(TH1D *hist){
-  cout<<setw(30)<<hist->GetXaxis()->GetBinLabel(1)<<" : "<<hist->GetBinContent(1)<<endl;
-  for(int i = 2; i<hist->GetNbinsX()+1; i++){
-    int previous_bin = hist->GetBinContent(i-1);
-    int current_bin  = hist->GetBinContent(i);
-    double change = ((previous_bin - current_bin) / static_cast<double>(previous_bin)) * 100;
-    cout<<setw(30)<<hist->GetXaxis()->GetBinLabel(i)<<" : "<<hist->GetBinContent(i)<< " => "<<change<<" %" <<endl;
+  cout<<setw(20)<<"CUT"<< setw(10)<<"ENTRIES" << setw(10)<<"CHANGE"<<endl;
+  int nentries = hist->GetBinContent(1);
+  for (int i=2; i<hist->GetNbinsX()+1; i++){
+    int previous = 0;
+    if(i==1) previous = nentries; 
+    else previous = hist->GetBinContent(i-1);
+    int current   = hist->GetBinContent(i);
+    double change = ((previous - current) / static_cast<double>(previous)) * 100;
+    cout<<setw(20)<<hist->GetXaxis()->GetBinLabel(i)<<
+    setw(10)<<current << setw(5)<<" => "<<change<<" %" <<endl;
   }
 }
 

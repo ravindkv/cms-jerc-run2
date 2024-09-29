@@ -361,29 +361,13 @@ int HistGamJet::Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectS
 			double phoSmearSF_Up     = 1.0;
 			double phoSmearSF_Down   = 1.0;
 			int iGam = objP->pickedPhotons.at(0);
-			if (isData){
-				phoScaleSF  = objS->loadedPhoSsRef->evaluate({"total_correction", 
-				            tree->Photon_seedGain[iGam], 
-				            static_cast<Float_t>(tree->run), 
-				            tree->Photon_eta[iGam], 
-				            tree->Photon_r9[iGam],
-				            tree->Photon_pt[iGam]});
-			}
+      if(isData) phoScaleSF = objS->getPhoScaleCorrection("total_correction", tree, iGam);
 			if (isMC){
-				phoScaleSF  = objS->loadedPhoSsRef->evaluate({"total_uncertainty",
-				            tree->Photon_seedGain[iGam], 
-				            static_cast<Float_t>(tree->run), 
-				            tree->Photon_eta[iGam], 
-				            tree->Photon_r9[iGam],
-				            tree->Photon_pt[iGam]});
+        phoScaleSF = objS->getPhoScaleCorrection("total_uncertainty", tree, iGam);
 				phoScaleSF_Up     = (1+phoScaleSF);
 				phoScaleSF_Down   = (1-phoScaleSF);
-				double rho  = objS->loadedPhoSsRef->evaluate({"rho", 
-				            tree->Photon_eta[iGam], 
-				            tree->Photon_r9[iGam]});
-				double err_rho  = objS->loadedPhoSsRef->evaluate({"err_rho", 
-				            tree->Photon_eta[iGam], 
-				            tree->Photon_r9[iGam]});
+        double rho  = objS->getPhoSmearCorrection("rho", tree, iGam);
+				double err_rho  = objS->getPhoSmearCorrection("err_rho", tree, iGam);
 				phoSmearSF       = gRandom->Gaus(1., rho);
 				phoSmearSF_Up    = gRandom->Gaus(1., rho+err_rho);
 				phoSmearSF_Down  = gRandom->Gaus(1., rho-err_rho);
@@ -431,21 +415,6 @@ int HistGamJet::Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectS
       double rawJetPt = tree->Jet_pt[i] * (1.0 - tree->Jet_rawFactor[i]);
       double rawJetMass = tree->Jet_mass[i] * (1.0 - tree->Jet_rawFactor[i]);
       double corrs = 1.0;
-      if(isDebug)cout<<"---: Jet correction :---"<<endl;
-      for(auto l2l3Ref:objS->loadedJetL2L3Refs){
-        try{ 
-          //cout<<"rawJetPt = "<<rawJetPt<<", corr = "<<tree->Jet_eta[i]<<endl;
-          //auto corr = l2l3Ref->evaluate({tree->Jet_eta[i],rawJetPt}); 
-          double corr = 1.0;
-          corrs  = corr*corrs;
-          rawJetPt = corrs*rawJetPt;
-          rawJetMass = corrs*rawJetMass;
-          if(isDebug) cout<<"rawJetPt = "<<rawJetPt<<", corr = "<<corr<<", corrs = "<<corrs<<endl;
-        } catch (const std::exception& e) {
-          cout<<"\nEXCEPTION: in l2l3Ref: "<<e.what()<<endl;
-          std::abort();
-        }
-      }
       //double res = (v.size()>1 ? v[v.size()-1]/v[v.size()-2] : 1.);
       //Jet_RES[i] = 1./res;
       res  = 1.0;
@@ -498,20 +467,6 @@ int HistGamJet::Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectS
     hCutflow->Fill(count_passedCut);
     hCutflowWeight->Fill(count_passedCut, weight);
 
-    //------------------------------------------------
-    //Event to be vetoed if leading jet falls in veto region
-    //------------------------------------------------
-    try{ 
-      auto jvNumber= objS->loadedJetVetoRef->evaluate({objS->jetVetoKey, p4Jet1.Eta(), p4Jet1.Phi()});
-    if(jvNumber>0) continue; // passJetVetoMap
-    } catch (const std::exception& e) {
-      cout<<"\nEXCEPTION: in objS->loadedJetVetoRef: "<<e.what()<<endl;
-      std::abort();
-    }
-    count_passedCut++;
-    hCutflow->Fill(count_passedCut);
-    hCutflowWeight->Fill(count_passedCut, weight);
-     
     //------------------------------------------------
     // GenJet loop
     //------------------------------------------------

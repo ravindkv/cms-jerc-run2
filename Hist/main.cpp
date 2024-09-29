@@ -123,67 +123,20 @@ int main(int argc, char* argv[]){
   cout<<" Set and load ObjectScale.cpp"<<endl;
   cout<<"--------------------------------------"<<endl;
   ObjectScale *objS = new ObjectScale(oName);
-  //Jet veto 
-  objS->setJetVetoKey(oName); 
-  objS->setJetVetoName(oName); 
-  objS->setJetVetoJsonPath(oName); 
+  objS->setInputs();
   objS->loadJetVetoRef(); 
-
-  //Jet L1FastJet 
-  objS->setJetL1FastJetName(oName); 
-  objS->setJetL1FastJetJsonPath(oName); 
-  objS->loadJetL1FastJetRef(); 
-  cout<<endl;
-
-  //Jet L2Relative 
-  objS->setJetL2RelativeName(oName); 
-  objS->setJetL2RelativeJsonPath(oName); 
-  objS->loadJetL2RelativeRef(); 
-  cout<<endl;
-
-  //Jet L2L3Residual 
-  objS->setJetL2L3ResidualName(oName); 
-  objS->setJetL2L3ResidualJsonPath(oName); 
+  objS->loadJetL1FastJetRef();    
+  objS->loadJetL2RelativeRef();   
   objS->loadJetL2L3ResidualRef(); 
-  cout<<endl;
-
-  //Jet L2L3 
-  objS->setJetL2L3Names(oName); 
-  objS->setJetL2L3JsonPath(oName); 
-  objS->loadJetL2L3Refs(); 
-  cout<<endl;
-
-  // JER Resolution 
-  objS->setJERResoName(oName); 
-  objS->setJERResoJsonPath(oName); 
   objS->loadJERResoRef(); 
-  cout<<endl;
-
-  // JER SF 
-  objS->setJERSFName(oName); 
-  objS->setJERSFJsonPath(oName); 
-  objS->loadJERSFRef(); 
-  cout<<endl;
-
+  objS->loadJERSFRef();   
   if(globF->isGamJet){//Scale and Smearing
-    //Photon SS 
-    objS->setPhoSsName(oName); 
-    objS->setPhoSsJsonPath(oName); 
     objS->loadPhoSsRef(); 
-    cout<<endl;
-    
-    //Electron SS 
-    objS->setEleSsName(oName); 
-    objS->setEleSsJsonPath(oName); 
     objS->loadEleSsRef(); 
-    cout<<endl;
   }
-
   //Lumi
   if (globF->isData){
-    objS->setLumiJsonPath(oName); 
     objS->loadLumiJson(); 
-    cout<<endl;
   }
 
   string outDir = "output";

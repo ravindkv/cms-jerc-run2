@@ -261,7 +261,7 @@ int HistZeeJet::Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectS
     if(isData){
       passGoodLumi = objS->checkGoodLumi(tree->run, tree->luminosityBlock);
     }
-    if(!passGoodLumi) continue; 
+    //if(!passGoodLumi) continue; 
     if(isDebug) cout<<"passLumi"<<endl;
     count_passedCut++;
     hCutflow->Fill(count_passedCut);
@@ -346,21 +346,6 @@ int HistZeeJet::Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectS
       double rawJetPt = tree->Jet_pt[i] * (1.0 - tree->Jet_rawFactor[i]);
       double rawJetMass = tree->Jet_mass[i] * (1.0 - tree->Jet_rawFactor[i]);
       double corrs = 1.0;
-      if(isDebug)cout<<"---: Jet correction :---"<<endl;
-      for(auto l2l3Ref:objS->loadedJetL2L3Refs){
-        try{ 
-          //cout<<"rawJetPt = "<<rawJetPt<<", corr = "<<tree->Jet_eta[i]<<endl;
-          //auto corr = l2l3Ref->evaluate({tree->Jet_eta[i],rawJetPt}); 
-          double corr = 1.0;
-          corrs  = corr*corrs;
-          rawJetPt = corrs*rawJetPt;
-          rawJetMass = corrs*rawJetMass;
-          if(isDebug) cout<<"rawJetPt = "<<rawJetPt<<", corr = "<<corr<<", corrs = "<<corrs<<endl;
-        } catch (const std::exception& e) {
-          cout<<"\nEXCEPTION: in l2l3Ref: "<<e.what()<<endl;
-          std::abort();
-        }
-      }
       //double res = (v.size()>1 ? v[v.size()-1]/v[v.size()-2] : 1.);
       //Jet_RES[i] = 1./res;
       res  = 1.0;
@@ -414,20 +399,6 @@ int HistZeeJet::Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectS
     hCutflow->Fill(count_passedCut);
     hCutflowWeight->Fill(count_passedCut, weight);
 
-    //------------------------------------------------
-    //Event to be vetoed if leading jet falls in veto region
-    //------------------------------------------------
-    try{ 
-      auto jvNumber= objS->loadedJetVetoRef->evaluate({objS->jetVetoKey, p4Jet1.Eta(), p4Jet1.Phi()});
-    if(jvNumber>0) continue; // passJetVetoMap
-    } catch (const std::exception& e) {
-      cout<<"\nEXCEPTION: in objS->loadedJetVetoRef: "<<e.what()<<endl;
-      std::abort();
-    }
-    count_passedCut++;
-    hCutflow->Fill(count_passedCut);
-    hCutflowWeight->Fill(count_passedCut, weight);
-     
     //------------------------------------------------
     // GenJet loop
     //------------------------------------------------
@@ -684,20 +655,7 @@ int HistZeeJet::Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectS
       pJetNeemefInRunRefPt230->Fill(tree->run, tree->Jet_neEmEF[iJet], weight);
     }
   }//event for loop
-  cout << "\n ===========> Processed " << nentries << " events <=============\n";
-  cout<<setw(20)<<"CUT"<< setw(10)<<"ENTRIES" << setw(10)<< "WEIGHT"<< setw(10)<<"CHANGE"<<endl;
-  for (int i=1; i<hCutflow->GetNbinsX(); i++){
-    int previous = 0;
-    if(i==1) previous = nentries; 
-    else previous = hCutflow->GetBinContent(i-1);
-    int current   = hCutflow->GetBinContent(i);
-    int currentWithWeight   = hCutflowWeight->GetBinContent(i);
-    double change = ((previous - current) / static_cast<double>(previous)) * 100;
-    double weight_ = currentWithWeight/static_cast<double>(current);
-    cout<<setw(20)<<hCutflow->GetXaxis()->GetBinLabel(i)<<
-    setw(10)<<current << setw(10)<< weight_<< setw(5)<<" - "<<change<<" %" <<endl;
-  }
-
+  
   // Add extra plot for jet response vs Ref pT
   if (isMC) {
     fout->cd("passRefBarrel");
@@ -711,6 +669,8 @@ int HistZeeJet::Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectS
     curdir->cd();
   }
   fout->Write();
+  eventP->printBins(hCutflow);
+  eventP->scanTFile(fout);
   cout<<"Output file: "<<fout->GetName()<<endl;
   fout->Close();
   return 0;

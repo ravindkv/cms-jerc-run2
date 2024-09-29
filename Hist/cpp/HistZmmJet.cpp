@@ -346,21 +346,6 @@ int HistZmmJet::Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectS
       double rawJetPt = tree->Jet_pt[i] * (1.0 - tree->Jet_rawFactor[i]);
       double rawJetMass = tree->Jet_mass[i] * (1.0 - tree->Jet_rawFactor[i]);
       double corrs = 1.0;
-      if(isDebug)cout<<"---: Jet correction :---"<<endl;
-      for(auto l2l3Ref:objS->loadedJetL2L3Refs){
-        try{ 
-          //cout<<"rawJetPt = "<<rawJetPt<<", corr = "<<tree->Jet_eta[i]<<endl;
-          //auto corr = l2l3Ref->evaluate({tree->Jet_eta[i],rawJetPt}); 
-          double corr = 1.0;
-          corrs  = corr*corrs;
-          rawJetPt = corrs*rawJetPt;
-          rawJetMass = corrs*rawJetMass;
-          if(isDebug) cout<<"rawJetPt = "<<rawJetPt<<", corr = "<<corr<<", corrs = "<<corrs<<endl;
-        } catch (const std::exception& e) {
-          cout<<"\nEXCEPTION: in l2l3Ref: "<<e.what()<<endl;
-          std::abort();
-        }
-      }
       //double res = (v.size()>1 ? v[v.size()-1]/v[v.size()-2] : 1.);
       //Jet_RES[i] = 1./res;
       res  = 1.0;
@@ -414,20 +399,6 @@ int HistZmmJet::Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectS
     hCutflow->Fill(count_passedCut);
     hCutflowWeight->Fill(count_passedCut, weight);
 
-    //------------------------------------------------
-    //Event to be vetoed if leading jet falls in veto region
-    //------------------------------------------------
-    try{ 
-      auto jvNumber= objS->loadedJetVetoRef->evaluate({objS->jetVetoKey, p4Jet1.Eta(), p4Jet1.Phi()});
-    if(jvNumber>0) continue; // passJetVetoMap
-    } catch (const std::exception& e) {
-      cout<<"\nEXCEPTION: in objS->loadedJetVetoRef: "<<e.what()<<endl;
-      std::abort();
-    }
-    count_passedCut++;
-    hCutflow->Fill(count_passedCut);
-    hCutflowWeight->Fill(count_passedCut, weight);
-     
     //------------------------------------------------
     // GenJet loop
     //------------------------------------------------

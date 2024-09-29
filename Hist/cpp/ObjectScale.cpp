@@ -1,53 +1,223 @@
 #include"ObjectScale.h"
 #include<iostream>
-   
-//-------------------------------------
-// Jet veto maps
-//-------------------------------------
-void ObjectScale::setJetVetoKey(TString oName){
-     jetVetoKey = "jetvetomap";
-     cout<<setw(25)<<"setJetVetoKey() = "<<jetVetoKey<<endl;
-} 
-   
-void ObjectScale::setJetVetoName(TString oName){
-     if(is22C || is22D){
-         jetVetoName = "Winter22Run3_RunCD_V1";
-     }
-     if(is22E){
-         jetVetoName = "Winter22Run3_RunE_V1";
-     }
-     if(is23A || is23B || is23C || is23Pre){
-         jetVetoName = "Summer23Prompt23_RunC_V1";
-     }
-     if(is23D || is23E || is23F || is23G || is23Post){
-         jetVetoName = "Summer23BPixPrompt23_RunD_V1";
-     }
-     if(is24){//FIXME
-         jetVetoName = "Summer23BPixPrompt23_RunD_V1";
-     }
-     cout<<setw(25)<<"setJetVetoName() = "<<jetVetoName<<endl;
-} 
-   
-void ObjectScale::setJetVetoJsonPath(TString oName){
-     if(is22 || is22D){
-         jetVetoJsonPath = "POG/JME/2022_Prompt/jetvetomaps.json.gz";
-     }
-     if(is23A || is23B || is23C || is23Pre){
-         jetVetoJsonPath = "POG/JME/2023_Summer23/jetvetomaps.json.gz";
-     }
-     if(is23D || is23E || is23F || is23G || is23Post){
-         jetVetoJsonPath = "POG/JME/2023_Summer23BPix/jetvetomaps.json.gz";
-     }
-     if(is24){//FIXME
-         jetVetoJsonPath = "POG/JME/2023_Summer23BPix/jetvetomaps.json.gz";
-     }
-     cout<<setw(25)<<"setJetVetoJsonPath() = "<<jetVetoJsonPath<<endl;
-} 
+
+void ObjectScale::setInputs(){
+  if (is2016Pre){
+    // Jet veto
+    jetVetoJsonPath = "POG/JME/2016preVFP_UL/jetvetomaps.json.gz";
+    jetVetoName     = "Summer19UL16_V1";
+    jetVetoKey      = "jetvetomap_hot";
+    // Jet L1, L2, L3
+    jercJsonPath          = "POG/JME/2016preVFP_UL/jet_jerc.json.gz";
+    jetL1FastJetName      = "Summer19UL16APV_V7_MC_L1FastJet_AK4PFchs";
+    jetL2RelativeName     = "Summer19UL16APV_V7_MC_L2Relative_AK4PFchs";
+    jetL3AbsoluteName     = "Summer19UL16APV_V7_MC_L3Absolute_AK4PFchs";
+    jetL2L3ResidualName   = "Summer19UL16APV_V7_MC_L2L3Residual_AK4PFchs";
+    if (isData){
+      if(is2016PreBCD){
+        jetL1FastJetName    = "Summer19UL16APV_RunBCD_V7_DATA_L1FastJet_AK4PFchs";
+        jetL2RelativeName   = "Summer19UL16APV_RunBCD_V7_DATA_L2Relative_AK4PFchs";
+        jetL3AbsoluteName   = "Summer19UL16APV_RunBCD_V7_DATA_L3Absolute_AK4PFchs";
+        jetL2L3ResidualName = "Summer19UL16APV_RunBCD_V7_DATA_L2L3Residual_AK4PFchs";
+      }
+      else if(is2016PreEF){
+        jetL1FastJetName    = "Summer19UL16APV_RunEF_V7_DATA_L1FastJet_AK4PFchs";
+        jetL2RelativeName   = "Summer19UL16APV_RunEF_V7_DATA_L2Relative_AK4PFchs";
+        jetL3AbsoluteName   = "Summer19UL16APV_RunEF_V7_DATA_L3Absolute_AK4PFchs";
+        jetL2L3ResidualName = "Summer19UL16APV_RunEF_V7_DATA_L2L3Residual_AK4PFchs";
+      }
+      else{
+        cout<<setw(25)<<"Error: inputs are not set for data in ObjectScale::setInputs()"<<endl;
+        std::abort();
+      }
+    }//isData
+    //JER 
+    JERResoName     = "Summer20UL16APV_JRV3_MC_PtResolution_AK4PFchs";
+    JERSFName       = "Summer20UL16APV_JRV3_MC_ScaleFactor_AK4PFchs";
+    //Photon SS 
+    phoSsJsonPath = "POG/EGM/S+SJSON/2022Re-recoBCD/photonSS.json";
+    phoSsName     = "2022Re-recoBCD_SmearingJSON";
+    //Electron SS 
+    eleSsJsonPath = "POG/EGM/electronSS.json";
+    eleSsName     = "2022Re-recoBCD_ScaleJSON";
+    //Lumi golden JSON
+    lumiJsonPath = "POG/LUM/Cert_271036-284044_13TeV_ReReco_07Aug2017_Collisions16_JSON.txt";
+  }
+
+  else if (is2016Post){
+    // Jet veto
+    jetVetoJsonPath = "POG/JME/2016postVFP_UL/jetvetomaps.json.gz";
+    jetVetoName     = "Summer19UL16_V1";
+    jetVetoKey      = "jetvetomap_hot";
+    // Jet L1, L2, L3
+    jercJsonPath          = "POG/JME/2016postVFP_UL/jet_jerc.json.gz";
+    jetL1FastJetName      = "Summer19UL16_V7_MC_L1FastJet_AK4PFchs";
+    jetL2RelativeName     = "Summer19UL16_V7_MC_L2Relative_AK4PFchs";
+    jetL3AbsoluteName     = "Summer19UL16_V7_MC_L3Absolute_AK4PFchs";
+    jetL2L3ResidualName   = "Summer19UL16_V7_MC_L2L3Residual_AK4PFchs";
+    if (isData){
+      if(is2016PostFGH){
+        jetL1FastJetName    = "Summer19UL16_RunFGH_V7_DATA_L1FastJet_AK4PFchs";
+        jetL2RelativeName   = "Summer19UL16_RunFGH_V7_DATA_L2Relative_AK4PFchs";
+        jetL3AbsoluteName   = "Summer19UL16_RunFGH_V7_DATA_L3Absolute_AK4PFchs";
+        jetL2L3ResidualName = "Summer19UL16_RunFGH_V7_DATA_L2L3Residual_AK4PFchs";
+      }
+      else{
+        cout<<setw(25)<<"Error: inputs are not set for data in ObjectScale::setInputs()"<<endl;
+        std::abort();
+      }
+    }//isData
+    //JER 
+    JERResoName     = "Summer20UL16_JRV3_MC_PtResolution_AK4PFchs";
+    JERSFName       = "Summer20UL16_JRV3_MC_ScaleFactor_AK4PFchs";
+    //Photon SS 
+    phoSsJsonPath = "POG/EGM/S+SJSON/2022Re-recoBCD/photonSS.json";
+    phoSsName     = "2022Re-recoBCD_SmearingJSON";
+    //Electron SS 
+    eleSsJsonPath = "POG/EGM/electronSS.json";
+    eleSsName     = "2022Re-recoBCD_ScaleJSON";
+    //Lumi golden JSON
+    lumiJsonPath = "POG/LUM/Cert_271036-284044_13TeV_ReReco_07Aug2017_Collisions16_JSON.txt";
+  }
+
+  else if (is2017){
+    // Jet veto
+    jetVetoJsonPath = "POG/JME/2017_UL/jetvetomaps.json.gz";
+    jetVetoName     = "Summer19UL17_V1";
+    jetVetoKey      = "jetvetomap_hot";
+    // Jet L1, L2, L3
+    jercJsonPath          = "POG/JME/2017_UL/jet_jerc.json.gz";
+    jetL1FastJetName      = "Summer19UL17_V5_MC_L1FastJet_AK4PFchs";
+    jetL2RelativeName     = "Summer19UL17_V5_MC_L2Relative_AK4PFchs";
+    jetL3AbsoluteName     = "Summer19UL17_V5_MC_L3Absolute_AK4PFchs";
+    jetL2L3ResidualName   = "Summer19UL17_V5_MC_L2L3Residual_AK4PFchs";
+    if (isData){
+      if(is2017B){
+        jetL1FastJetName    = "Summer19UL17_RunB_V5_DATA_L1FastJet_AK4PFchs";
+        jetL2RelativeName   = "Summer19UL17_RunB_V5_DATA_L2Relative_AK4PFchs";
+        jetL3AbsoluteName   = "Summer19UL17_RunB_V5_DATA_L3Absolute_AK4PFchs";
+        jetL2L3ResidualName = "Summer19UL17_RunB_V5_DATA_L2L3Residual_AK4PFchs";
+      }
+      else if(is2017C){
+        jetL1FastJetName    = "Summer19UL17_RunC_V5_DATA_L1FastJet_AK4PFchs";
+        jetL2RelativeName   = "Summer19UL17_RunC_V5_DATA_L2Relative_AK4PFchs";
+        jetL3AbsoluteName   = "Summer19UL17_RunC_V5_DATA_L3Absolute_AK4PFchs";
+        jetL2L3ResidualName = "Summer19UL17_RunC_V5_DATA_L2L3Residual_AK4PFchs";
+      }
+      else if(is2017D){
+        jetL1FastJetName    = "Summer19UL17_RunD_V5_DATA_L1FastJet_AK4PFchs";
+        jetL2RelativeName   = "Summer19UL17_RunD_V5_DATA_L2Relative_AK4PFchs";
+        jetL3AbsoluteName   = "Summer19UL17_RunD_V5_DATA_L3Absolute_AK4PFchs";
+        jetL2L3ResidualName = "Summer19UL17_RunD_V5_DATA_L2L3Residual_AK4PFchs";
+      }
+      else if(is2017E){
+        jetL1FastJetName    = "Summer19UL17_RunE_V5_DATA_L1FastJet_AK4PFchs";
+        jetL2RelativeName   = "Summer19UL17_RunE_V5_DATA_L2Relative_AK4PFchs";
+        jetL3AbsoluteName   = "Summer19UL17_RunE_V5_DATA_L3Absolute_AK4PFchs";
+        jetL2L3ResidualName = "Summer19UL17_RunE_V5_DATA_L2L3Residual_AK4PFchs";
+      }
+      else if(is2017F){
+        jetL1FastJetName    = "Summer19UL17_RunF_V5_DATA_L1FastJet_AK4PFchs";
+        jetL2RelativeName   = "Summer19UL17_RunF_V5_DATA_L2Relative_AK4PFchs";
+        jetL3AbsoluteName   = "Summer19UL17_RunF_V5_DATA_L3Absolute_AK4PFchs";
+        jetL2L3ResidualName = "Summer19UL17_RunF_V5_DATA_L2L3Residual_AK4PFchs";
+      }
+      else{
+        cout<<setw(25)<<"Error: inputs are not set for data in ObjectScale::setInputs()"<<endl;
+        std::abort();
+      }
+    }//isData
+    //JER 
+    JERResoName     = "Summer19UL17_JRV2_MC_PtResolution_AK4PFchs";
+    JERSFName       = "Summer19UL17_JRV2_MC_ScaleFactor_AK4PFchs";
+    //Photon SS 
+    phoSsJsonPath = "POG/EGM/S+SJSON/2022Re-recoBCD/photonSS.json";
+    phoSsName     = "2022Re-recoBCD_SmearingJSON";
+    //Electron SS 
+    eleSsJsonPath = "POG/EGM/electronSS.json";
+    eleSsName     = "2022Re-recoBCD_ScaleJSON";
+    //Lumi golden JSON
+    lumiJsonPath = "POG/LUM/Cert_294927-306462_13TeV_EOY2017ReReco_Collisions17_JSON_v1.txt";
+  }
+
+  else if (is2018){
+    // Jet veto
+    jetVetoJsonPath = "POG/JME/2018_UL/jetvetomaps.json.gz";
+    jetVetoName     = "Summer19UL18_V1";
+    jetVetoKey      = "jetvetomap_hot";
+    // Jet L1, L2, L3
+    jercJsonPath          = "POG/JME/2018_UL/jet_jerc.json.gz";
+    jetL1FastJetName      = "Summer19UL18_V5_MC_L1FastJet_AK4PFchs";
+    jetL2RelativeName     = "Summer19UL18_V5_MC_L2Relative_AK4PFchs";
+    jetL3AbsoluteName     = "Summer19UL18_V5_MC_L3Absolute_AK4PFchs";
+    jetL2L3ResidualName   = "Summer19UL18_V5_MC_L2L3Residual_AK4PFchs";
+    if (isData){
+      if(is2018A){
+        jetL1FastJetName    = "Summer19UL18_RunA_V5_DATA_L1FastJet_AK4PFchs";
+        jetL2RelativeName   = "Summer19UL18_RunA_V5_DATA_L2Relative_AK4PFchs";
+        jetL3AbsoluteName   = "Summer19UL18_RunA_V5_DATA_L3Absolute_AK4PFchs";
+        jetL2L3ResidualName = "Summer19UL18_RunA_V5_DATA_L2L3Residual_AK4PFchs";
+      }
+      else if(is2018B){
+        jetL1FastJetName    = "Summer19UL18_RunB_V5_DATA_L1FastJet_AK4PFchs";
+        jetL2RelativeName   = "Summer19UL18_RunB_V5_DATA_L2Relative_AK4PFchs";
+        jetL3AbsoluteName   = "Summer19UL18_RunB_V5_DATA_L3Absolute_AK4PFchs";
+        jetL2L3ResidualName = "Summer19UL18_RunB_V5_DATA_L2L3Residual_AK4PFchs";
+      }
+      else if(is2018C){
+        jetL1FastJetName    = "Summer19UL18_RunC_V5_DATA_L1FastJet_AK4PFchs";
+        jetL2RelativeName   = "Summer19UL18_RunC_V5_DATA_L2Relative_AK4PFchs";
+        jetL3AbsoluteName   = "Summer19UL18_RunC_V5_DATA_L3Absolute_AK4PFchs";
+        jetL2L3ResidualName = "Summer19UL18_RunC_V5_DATA_L2L3Residual_AK4PFchs";
+      }
+      else if(is2018D){
+        jetL1FastJetName    = "Summer19UL18_RunD_V5_DATA_L1FastJet_AK4PFchs";
+        jetL2RelativeName   = "Summer19UL18_RunD_V5_DATA_L2Relative_AK4PFchs";
+        jetL3AbsoluteName   = "Summer19UL18_RunD_V5_DATA_L3Absolute_AK4PFchs";
+        jetL2L3ResidualName = "Summer19UL18_RunD_V5_DATA_L2L3Residual_AK4PFchs";
+      }
+      else{
+        cout<<setw(25)<<"Error: inputs are not set for data in ObjectScale::setInputs()"<<endl;
+        std::abort();
+      }
+    }//isData
+    //JER 
+    JERResoName     = "Summer19UL18_JRV2_MC_PtResolution_AK4PFchs";
+    JERSFName       = "Summer19UL18_JRV2_MC_ScaleFactor_AK4PFchs";
+    //Photon SS 
+    phoSsJsonPath = "POG/EGM/S+SJSON/2022Re-recoBCD/photonSS.json";
+    phoSsName     = "2022Re-recoBCD_SmearingJSON";
+    //Electron SS 
+    eleSsJsonPath = "POG/EGM/electronSS.json";
+    eleSsName     = "2022Re-recoBCD_ScaleJSON";
+    //Lumi golden JSON
+    lumiJsonPath = "POG/LUM/Cert_314472-325175_13TeV_17SeptEarlyReReco2018ABC_PromptEraD_Collisions18_JSON.txt";
+  }//is2018
+
+  else{
+    cout<<setw(25)<<"Error: inputs are not set in ObjectScale::setInputs()"<<endl;
+    std::abort();
+  }
+  cout<<"jetVetoJsonPath        = " << jetVetoJsonPath          <<endl;
+  cout<<"jetVetoKey             = " << jetVetoKey               <<endl;
+  cout<<"jetVetoName            = " << jetVetoName              <<endl<<endl;
+  cout<<"jercJsonPath           = " << jercJsonPath             <<endl;
+  cout<<"jetL1FastJetName       = " << jetL1FastJetName         <<endl;
+  cout<<"jetL2RelativeName      = " << jetL2RelativeName        <<endl;
+  cout<<"jetL2L3ResidualName    = " << jetL2L3ResidualName      <<endl;
+  cout<<"JERResoName            = " << JERResoName              <<endl;
+  cout<<"JERSFName              = " << JERSFName                <<endl<<endl;
+  cout<<"phoSsJsonPath          = " << phoSsJsonPath            <<endl;
+  cout<<"phoSsName              = " << phoSsName                <<endl<<endl;
+  cout<<"eleSsJsonPath          = " << eleSsJsonPath            <<endl;
+  cout<<"eleSsName              = " << eleSsName                <<endl<<endl;
+  cout<<"lumiJsonPath           = " << lumiJsonPath             <<endl;
+}//setInputs 
 
 void ObjectScale::loadJetVetoRef(){
     cout<<"==> loadJetVetoRef()"<<endl;
-    auto jvJson      = correction::CorrectionSet::from_file(jetVetoJsonPath);
     try{
+        auto jvJson      = correction::CorrectionSet::from_file(jetVetoJsonPath);
         loadedJetVetoRef = jvJson->at(jetVetoName);
     }catch (const std::exception & e){
         cout<<"\nEXCEPTION: ObjectScale::loadJetVetoRef()"<<endl;
@@ -69,87 +239,20 @@ bool ObjectScale::checkJetVetoMap(SkimTree *tree){
         if(jvNumber>0) isVeto = true; 
       }
     } catch (const std::exception& e) {
-      cout<<"\nEXCEPTION: in objS->checkJetVetoMap(): "<<e.what()<<endl;
+      cout<<"\nEXCEPTION: in checkJetVetoMap(): "<<e.what()<<endl;
       std::abort();
     }
   return isVeto;
 }
 
-//-------------------------------------
-// Jet L1FastJet corrections
-//-------------------------------------
-void ObjectScale::setJetL1FastJetName(TString oName){
-    if (isData){
-        if(is22C){
-            jetL1FastJetName = "Summer22_22Sep2023_RunCD_V2_DATA_L1FastJet_AK4PFPuppi";
-        }
-        if(is22D){
-            jetL1FastJetName = "Summer22_22Sep2023_RunCD_V2_DATA_L1FastJet_AK4PFPuppi";
-        }
-        if(is22E){
-            jetL1FastJetName = "Run22E-22Sep2023_DATA_L1FastJet_AK4PFPuppi";
-        }
-        if(is22F){
-            jetL1FastJetName = "Run22F-Prompt_DATA_L1FastJet_AK4PFPuppi";
-        }
-        if(is22G){
-            jetL1FastJetName = "Run22G-Prompt_DATA_L1FastJet_AK4PFPuppi";
-        }
-        if(is23A || is23B || is23Cv123){
-            jetL1FastJetName = "Summer23Prompt23_RunCv123_V1_DATA_L1FastJet_AK4PFPuppi";
-        }
-        if(is23Cv4){
-            jetL1FastJetName = "Summer23Prompt23_RunCv4_V1_DATA_L1FastJet_AK4PFPuppi";
-        }
-        if(is23D || is23E || is23F || is23G){
-            jetL1FastJetName = "Summer23BPixPrompt23_RunD_V1_DATA_L1FastJet_AK4PFPuppi";
-        }
-        if(is24){//FIXME
-            jetL1FastJetName = "Summer23BPixPrompt23_RunD_V1_DATA_L1FastJet_AK4PFPuppi";
-        }
-    }
-    else{
-        if(is22){ 
-            jetL1FastJetName = "Summer22_22Sep2023_V2_MC_L1FastJet_AK4PFPuppi";
-        }
-        if(is23Pre){ 
-            jetL1FastJetName = "Summer23Prompt23_V1_MC_L1FastJet_AK4PFPuppi";
-        }
-        if(is23Post){ 
-            jetL1FastJetName = "Summer23BPixPrompt23_V1_MC_L1FastJet_AK4PFPuppi";
-        }
-        if(is24){//FIXME
-            jetL1FastJetName = "Summer23BPixPrompt23_V1_MC_L1FastJet_AK4PFPuppi";
-        }
-    }
-    cout<<setw(25)<<"setJetL1FastJetName() = ";
-    cout<<jetL1FastJetName<<endl;
-} 
-   
-void ObjectScale::setJetL1FastJetJsonPath(TString oName){
-    if(is22 || is22D){
-        jetL1FastJetJsonPath = "POG/JME/2022_Summer22/jet_jerc.json.gz";
-    }
-    if(is23A || is23B || is23C || is23Pre){
-        jetL1FastJetJsonPath = "POG/JME/2023_Summer23/jet_jerc.json.gz";
-    }
-    if(is23D || is23E || is23F || is23G || is23Post){
-        jetL1FastJetJsonPath = "POG/JME/2023_Summer23BPix/jet_jerc.json.gz";
-    }
-    if(is24){//FIXME
-        jetL1FastJetJsonPath = "POG/JME/2023_Summer23BPix/jet_jerc.json.gz";
-    }
-    cout<<setw(25)<<"setJetL1FastJetJsonPath() = "<<jetL1FastJetJsonPath<<endl;
-} 
-   
 void ObjectScale::loadJetL1FastJetRef(){
      cout<<"==> loadJetL1FastJetRef()"<<endl;
-     auto jercJson  = correction::CorrectionSet::from_file(jetL1FastJetJsonPath);
     try{
+        auto jercJson  = correction::CorrectionSet::from_file(jercJsonPath);
         loadedJetL1FastJetRef = jercJson->at(jetL1FastJetName);
     }catch (const std::exception & e){
         cout<<"\nEXCEPTION: ObjectScale::loadJetL1FastJetRef"<<endl;
-        cout<<"Check "<<jetL1FastJetJsonPath<<" or jetL1FastJetName"<<endl;
+        cout<<"Check "<<jercJsonPath<<" or "<< jetL1FastJetName<<endl;
         cout<<e.what()<<endl;
         std::abort();
     }
@@ -171,81 +274,14 @@ double ObjectScale::getL1FastJetCorrection(double jetArea, double jetEta, double
   return corrL1FastJet;
 }
 
-//-------------------------------------
-// Jet L2Relative corrections
-//-------------------------------------
-void ObjectScale::setJetL2RelativeName(TString oName){
-    if (isData){
-        if(is22C){
-            jetL2RelativeName = "Summer22_22Sep2023_RunCD_V2_DATA_L2Relative_AK4PFPuppi";
-        }
-        if(is22D){
-            jetL2RelativeName = "Summer22_22Sep2023_RunCD_V2_DATA_L2Relative_AK4PFPuppi";
-        }
-        if(is22E){
-            jetL2RelativeName = "Run22E-22Sep2023_DATA_L2Relative_AK4PFPuppi";
-        }
-        if(is22F){
-            jetL2RelativeName = "Run22F-Prompt_DATA_L2Relative_AK4PFPuppi";
-        }
-        if(is22G){
-            jetL2RelativeName = "Run22G-Prompt_DATA_L2Relative_AK4PFPuppi";
-        }
-        if(is23A || is23B || is23Cv123){
-            jetL2RelativeName = "Summer23Prompt23_RunCv123_V1_DATA_L2Relative_AK4PFPuppi";
-        }
-        if(is23Cv4){
-            jetL2RelativeName = "Summer23Prompt23_RunCv4_V1_DATA_L2Relative_AK4PFPuppi";
-        }
-        if(is23D || is23E || is23F || is23G){
-            jetL2RelativeName = "Summer23BPixPrompt23_RunD_V1_DATA_L2Relative_AK4PFPuppi";
-        }
-        if(is24){//FIXME
-            jetL2RelativeName = "Summer23BPixPrompt23_RunD_V1_DATA_L2Relative_AK4PFPuppi";
-        }
-    }
-    else{
-        if(is22){ 
-            jetL2RelativeName = "Summer22_22Sep2023_V2_MC_L2Relative_AK4PFPuppi";
-        }
-        if(is23Pre){ 
-            jetL2RelativeName = "Summer23Prompt23_V1_MC_L2Relative_AK4PFPuppi";
-        }
-        if(is23Post){ 
-            jetL2RelativeName = "Summer23BPixPrompt23_V1_MC_L2Relative_AK4PFPuppi";
-        }
-        if(is24){//FIXME
-            jetL2RelativeName = "Summer23BPixPrompt23_V1_MC_L2Relative_AK4PFPuppi";
-        }
-    }
-    cout<<setw(25)<<"setJetL2RelativeName() = ";
-    cout<<jetL2RelativeName<<endl;
-} 
-   
-void ObjectScale::setJetL2RelativeJsonPath(TString oName){
-    if(is22 || is22D){
-        jetL2RelativeJsonPath = "POG/JME/2022_Summer22/jet_jerc.json.gz";
-    }
-    if(is23A || is23B || is23C || is23Pre){
-        jetL2RelativeJsonPath = "POG/JME/2023_Summer23/jet_jerc.json.gz";
-    }
-    if(is23D || is23E || is23F || is23G || is23Post){
-        jetL2RelativeJsonPath = "POG/JME/2023_Summer23BPix/jet_jerc.json.gz";
-    }
-    if(is24){//FIXME
-        jetL2RelativeJsonPath = "POG/JME/2023_Summer23BPix/jet_jerc.json.gz";
-    }
-    cout<<setw(25)<<"setJetL2RelativeJsonPath() = "<<jetL2RelativeJsonPath<<endl;
-} 
-   
 void ObjectScale::loadJetL2RelativeRef(){
      cout<<"==> loadJetL2RelativeRef()"<<endl;
-     auto jercJson  = correction::CorrectionSet::from_file(jetL2RelativeJsonPath);
     try{
+        auto jercJson  = correction::CorrectionSet::from_file(jercJsonPath);
         loadedJetL2RelativeRef = jercJson->at(jetL2RelativeName);
     }catch (const std::exception & e){
         cout<<"\nEXCEPTION: ObjectScale::loadJetL2RelativeRef"<<endl;
-        cout<<"Check "<<jetL2RelativeJsonPath<<" or jetL2RelativeName"<<endl;
+        cout<<"Check "<<jercJsonPath<<" or "<<jetL2RelativeName<<endl;
         cout<<e.what()<<endl;
         std::abort();
     }
@@ -266,82 +302,14 @@ double ObjectScale::getL2RelativeCorrection(double jetEta,double jetPhi, double 
   return corrL2Relative;
 }
 
-
-//-------------------------------------
-// Jet L2L3Residual corrections
-//-------------------------------------
-void ObjectScale::setJetL2L3ResidualName(TString oName){
-    if (isData){
-        if(is22C){
-            jetL2L3ResidualName = "Summer22_22Sep2023_RunCD_V2_DATA_L2L3Residual_AK4PFPuppi";
-        }
-        if(is22D){
-            jetL2L3ResidualName = "Summer22_22Sep2023_RunCD_V2_DATA_L2L3Residual_AK4PFPuppi";
-        }
-        if(is22E){
-            jetL2L3ResidualName = "Run22E-22Sep2023_DATA_L2L3Residual_AK4PFPuppi";
-        }
-        if(is22F){
-            jetL2L3ResidualName = "Run22F-Prompt_DATA_L2L3Residual_AK4PFPuppi";
-        }
-        if(is22G){
-            jetL2L3ResidualName = "Run22G-Prompt_DATA_L2L3Residual_AK4PFPuppi";
-        }
-        if(is23A || is23B || is23Cv123){
-            jetL2L3ResidualName = "Summer23Prompt23_RunCv123_V1_DATA_L2L3Residual_AK4PFPuppi";
-        }
-        if(is23Cv4){
-            jetL2L3ResidualName = "Summer23Prompt23_RunCv4_V1_DATA_L2L3Residual_AK4PFPuppi";
-        }
-        if(is23D || is23E || is23F || is23G){
-            jetL2L3ResidualName = "Summer23BPixPrompt23_RunD_V1_DATA_L2L3Residual_AK4PFPuppi";
-        }
-        if(is24){//FIXME
-            jetL2L3ResidualName = "Summer23BPixPrompt23_RunD_V1_DATA_L2L3Residual_AK4PFPuppi";
-        }
-    }
-    else{
-        if(is22){ 
-            jetL2L3ResidualName = "Summer22_22Sep2023_V2_MC_L2L3Residual_AK4PFPuppi";
-        }
-        if(is23Pre){ 
-            jetL2L3ResidualName = "Summer23Prompt23_V1_MC_L2L3Residual_AK4PFPuppi";
-        }
-        if(is23Post){ 
-            jetL2L3ResidualName = "Summer23BPixPrompt23_V1_MC_L2L3Residual_AK4PFPuppi";
-        }
-        if(is24){//FIXME
-            jetL2L3ResidualName = "Summer23BPixPrompt23_V1_MC_L2L3Residual_AK4PFPuppi";
-        }
-    }
-    cout<<setw(25)<<"setJetL2L3ResidualName() = ";
-    cout<<jetL2L3ResidualName<<endl;
-} 
-   
-void ObjectScale::setJetL2L3ResidualJsonPath(TString oName){
-    if(is22 || is22D){
-        jetL2L3ResidualJsonPath = "POG/JME/2022_Summer22/jet_jerc.json.gz";
-    }
-    if(is23A || is23B || is23C || is23Pre){
-        jetL2L3ResidualJsonPath = "POG/JME/2023_Summer23/jet_jerc.json.gz";
-    }
-    if(is23D || is23E || is23F || is23G || is23Post){
-        jetL2L3ResidualJsonPath = "POG/JME/2023_Summer23BPix/jet_jerc.json.gz";
-    }
-    if(is24){//FIXME
-        jetL2L3ResidualJsonPath = "POG/JME/2023_Summer23BPix/jet_jerc.json.gz";
-    }
-    cout<<setw(25)<<"setJetL2L3ResidualJsonPath() = "<<jetL2L3ResidualJsonPath<<endl;
-} 
-   
 void ObjectScale::loadJetL2L3ResidualRef(){
      cout<<"==> loadJetL2L3ResidualRef()"<<endl;
-     auto jercJson  = correction::CorrectionSet::from_file(jetL2L3ResidualJsonPath);
     try{
+        auto jercJson  = correction::CorrectionSet::from_file(jercJsonPath);
         loadedJetL2L3ResidualRef = jercJson->at(jetL2L3ResidualName);
     }catch (const std::exception & e){
         cout<<"\nEXCEPTION: ObjectScale::loadJetL2L3ResidualRef"<<endl;
-        cout<<"Check "<<jetL2L3ResidualJsonPath<<" or jetL2L3ResidualName"<<endl;
+        cout<<"Check "<<jercJsonPath<<" or "<< jetL2L3ResidualName<<endl;
         cout<<e.what()<<endl;
         std::abort();
     }
@@ -361,130 +329,15 @@ double ObjectScale::getL2L3ResidualCorrection(double jetEta, double jetPt){
   return corrL2L3Residual;
 }
 
-
-
-//-------------------------------------
-// Jet L2L3 corrections
-//-------------------------------------
-void ObjectScale::setJetL2L3Names(TString oName){
-    if (isData){
-        if(is22C){
-            jetL2L3Names.push_back("Summer22_22Sep2023_V2_MC_L2Relative_AK4PFPuppi");
-            jetL2L3Names.push_back("Summer22_22Sep2023_RunCD_V2_DATA_L2L3Residual_AK4PFPuppi");
-        }
-        if(is22D){
-            jetL2L3Names.push_back("Summer22_22Sep2023_V2_MC_L2Relative_AK4PFPuppi");
-            jetL2L3Names.push_back("Summer22_22Sep2023_RunCD_V2_DATA_L2L3Residual_AK4PFPuppi");
-        }
-        if(is22E){
-            jetL2L3Names.push_back("Summer22EEVetoRun3_V1_MC_L2Relative_AK4PUPPI");
-            jetL2L3Names.push_back("Run22E-22Sep2023_DATA_L2L3Residual_AK4PFPuppi");
-        }
-        if(is22F){
-            jetL2L3Names.push_back("Summer22EEVetoRun3_V1_MC_L2Relative_AK4PUPPI");
-            jetL2L3Names.push_back("Run22F-Prompt_DATA_L2L3Residual_AK4PFPuppi");
-        }
-        if(is22G){
-            jetL2L3Names.push_back("Summer22EEVetoRun3_V1_MC_L2Relative_AK4PUPPI");
-            jetL2L3Names.push_back("Run22G-Prompt_DATA_L2L3Residual_AK4PFPuppi");
-        }
-        if(is23A || is23B || is23Cv123){
-            jetL2L3Names.push_back("Summer23Prompt23_RunCv123_V1_DATA_L2Relative_AK4PFPuppi");
-            jetL2L3Names.push_back("Summer23Prompt23_RunCv123_V1_DATA_L2L3Residual_AK4PFPuppi");
-        }
-        if(is23Cv4){
-            jetL2L3Names.push_back("Summer23Prompt23_RunCv4_V1_DATA_L2Relative_AK4PFPuppi");
-            jetL2L3Names.push_back("Summer23Prompt23_RunCv4_V1_DATA_L2L3Residual_AK4PFPuppi");
-        }
-        if(is23D || is23E || is23F || is23G){
-            jetL2L3Names.push_back("Summer23BPixPrompt23_RunD_V1_DATA_L2Relative_AK4PFPuppi");
-            jetL2L3Names.push_back("Summer23BPixPrompt23_RunD_V1_DATA_L2L3Residual_AK4PFPuppi");
-        }
-        if(is24){//FIXME
-            jetL2L3Names.push_back("Summer23BPixPrompt23_RunD_V1_DATA_L2Relative_AK4PFPuppi");
-            jetL2L3Names.push_back("Summer23BPixPrompt23_RunD_V1_DATA_L2L3Residual_AK4PFPuppi");
-        }
-    }
-    else{
-        if(is22){ 
-            jetL2L3Names.push_back("Summer22_22Sep2023_V2_MC_L2Relative_AK4PFPuppi");
-        }
-        if(is23Pre){ 
-            jetL2L3Names.push_back("Summer23Prompt23_V1_MC_L2Relative_AK4PFPuppi");
-            jetL2L3Names.push_back("Summer23Prompt23_V1_MC_L2L3Residual_AK4PFPuppi");
-        }
-        if(is23Post){ 
-            jetL2L3Names.push_back("Summer23BPixPrompt23_V1_MC_L2Relative_AK4PFPuppi");
-            jetL2L3Names.push_back("Summer23BPixPrompt23_V1_MC_L2L3Residual_AK4PFPuppi");
-        }
-        if(is24){//FIXME
-            jetL2L3Names.push_back("Summer23BPixPrompt23_V1_MC_L2Relative_AK4PFPuppi");
-            jetL2L3Names.push_back("Summer23BPixPrompt23_V1_MC_L2L3Residual_AK4PFPuppi");
-        }
-    }
-    cout<<setw(25)<<"setJetL2L3Names() = ";
-    for(string jN: jetL2L3Names){ cout<<jN<<", ";}
-    cout<<endl;
-} 
-   
-void ObjectScale::setJetL2L3JsonPath(TString oName){
-    if(is22 || is22D){
-        jetL2L3JsonPath = "POG/JME/2022_Summer22/jet_jerc.json.gz";
-    }
-    if(is23A || is23B || is23C || is23Pre){
-        jetL2L3JsonPath = "POG/JME/2023_Summer23/jet_jerc.json.gz";
-    }
-    if(is23D || is23E || is23F || is23G || is23Post){
-        jetL2L3JsonPath = "POG/JME/2023_Summer23BPix/jet_jerc.json.gz";
-    }
-    if(is24){//FIXME
-        jetL2L3JsonPath = "POG/JME/2023_Summer23BPix/jet_jerc.json.gz";
-    }
-    cout<<setw(25)<<"setJetL2L3JsonPath() = "<<jetL2L3JsonPath<<endl;
-} 
-   
-void ObjectScale::loadJetL2L3Refs(){
-     cout<<"==> loadJetL2L3Refs()"<<endl;
-     auto jercJson  = correction::CorrectionSet::from_file(jetL2L3JsonPath);
-    try{
-        for(auto name: jetL2L3Names){ 
-            loadedJetL2L3Refs.push_back(jercJson->at(name));
-        }
-    }catch (const std::exception & e){
-        cout<<"\nEXCEPTION: ObjectScale::loadJetL2L3Refs"<<endl;
-        cout<<"Check "<<jetL2L3JsonPath<<" or jetL2L3Names"<<endl;
-        cout<<e.what()<<endl;
-        std::abort();
-    }
-} 
-
-
-//-------------------------------------
-// JER Resolution
-//-------------------------------------
-void ObjectScale::setJERResoName(TString oName){
-    if(is24){//FIXME
-        JERResoName = "Summer23BPixPrompt23_RunD_JRV1_MC_PtResolution_AK4PFPuppi";
-    }
-    cout<<setw(25)<<"setJERResoName() = ";
-    cout<<JERResoName<<endl;
-} 
-   
-void ObjectScale::setJERResoJsonPath(TString oName){
-    if(is24){//FIXME
-        JERResoJsonPath = "POG/JME/2023_Summer23BPix/jet_jerc.json.gz";
-    }
-    cout<<setw(25)<<"setJERJsonPath() = "<<JERResoJsonPath<<endl;
-} 
    
 void ObjectScale::loadJERResoRef(){
      cout<<"==> loadJERResoRef()"<<endl;
-     auto jercJson  = correction::CorrectionSet::from_file(JERResoJsonPath);
     try{
+        auto jercJson  = correction::CorrectionSet::from_file(jercJsonPath);
         loadedJERResoRef = jercJson->at(JERResoName);
     }catch (const std::exception & e){
         cout<<"\nEXCEPTION: ObjectScale::loadJERResoRef"<<endl;
-        cout<<"Check "<<JERResoJsonPath<<" or JERResoName"<<endl;
+        cout<<"Check "<<jercJsonPath<<" or "<< JERResoName<<endl;
         cout<<e.what()<<endl;
         std::abort();
     }
@@ -504,32 +357,14 @@ double ObjectScale::getJERResolution(SkimTree *tree, int index){
   return JERReso;
 }
 
-//-------------------------------------
-// JER SF 
-//-------------------------------------
-void ObjectScale::setJERSFName(TString oName){
-    if(is24){//FIXME
-        JERSFName = "Summer23BPixPrompt23_RunD_JRV1_MC_ScaleFactor_AK4PFPuppi";
-    }
-    cout<<setw(25)<<"setJERSFName() = ";
-    cout<<JERSFName<<endl;
-} 
-   
-void ObjectScale::setJERSFJsonPath(TString oName){
-    if(is24){//FIXME
-        JERSFJsonPath = "POG/JME/2023_Summer23BPix/jet_jerc.json.gz";
-    }
-    cout<<setw(25)<<"setJERJsonPath() = "<<JERSFJsonPath<<endl;
-} 
-   
 void ObjectScale::loadJERSFRef(){
      cout<<"==> loadJERSFRef()"<<endl;
-     auto jercJson  = correction::CorrectionSet::from_file(JERSFJsonPath);
     try{
+        auto jercJson  = correction::CorrectionSet::from_file(jercJsonPath);
         loadedJERSFRef = jercJson->at(JERSFName);
     }catch (const std::exception & e){
         cout<<"\nEXCEPTION: ObjectScale::loadJERSFRef"<<endl;
-        cout<<"Check "<<JERSFJsonPath<<" or JERSFName"<<endl;
+        cout<<"Check "<<jercJsonPath<<" or"<< JERSFName<<endl;
         cout<<e.what()<<endl;
         std::abort();
     }
@@ -581,99 +416,85 @@ double ObjectScale::getJERCorrection(SkimTree *tree, int index, string syst){
 //-------------------------------------
 // Photon Scale and Smearing 
 //-------------------------------------
-void ObjectScale::setPhoSsName(TString oName){
-    if(is22B || is22C || is22D || isMC){
-        //phoSsName = "2022Re-recoBCD_ScaleJSON";
-        phoSsName = "2022Re-recoBCD_SmearingJSON";
-    }
-    if(is22E || is22F || is22G || (isMC && isPostEE)){
-        //phoSsName = "2022Re-recoE+PromptFG_ScaleJSON";
-        phoSsName = "2022Re-recoE+PromptFG_SmearingJSON";
-    }
-     cout<<setw(25)<<"setPhoSsName() = "<<phoSsName<<endl;
-} 
-   
-void ObjectScale::setPhoSsJsonPath(TString oName){
-    if(is22B || is22C || is22D || isMC){
-        phoSsJsonPath = "POG/EGM/S+SJSON/2022Re-recoBCD/photonSS.json";
-    }
-    if(is22E || is22F || is22G || (isMC && isPostEE)){
-        phoSsJsonPath = "POG/EGM/S+SJSON/2022Re-recoE+PromptFG/photonSS.json";
-    }
-     cout<<setw(25)<<"setPhoSsJsonPath() = "<<phoSsJsonPath<<endl;
-} 
-
 void ObjectScale::loadPhoSsRef(){
-    cout<<"==> loadPhoSsRef()"<<endl;
-    auto ssJson      = correction::CorrectionSet::from_file(phoSsJsonPath);
-    try{
-        loadedPhoSsRef = ssJson->at(phoSsName);
-    }catch (const std::exception & e){
-        cout<<"\nEXCEPTION: ObjectScale::loadPhoSsRef()"<<endl;
-        cout<<"Check "<<phoSsJsonPath<<" or "<<phoSsName<<endl;
-        cout<<e.what()<<endl;
-        std::abort();
-    }
+  cout<<"==> loadPhoSsRef()"<<endl;
+  auto ssJson      = correction::CorrectionSet::from_file(phoSsJsonPath);
+  try{
+    loadedPhoSsRef = ssJson->at(phoSsName);
+  }catch (const std::exception & e){
+    cout<<"\nEXCEPTION: ObjectScale::loadPhoSsRef()"<<endl;
+    cout<<"Check "<<phoSsJsonPath<<" or "<<phoSsName<<endl;
+    cout<<e.what()<<endl;
+    std::abort();
+  }
 } 
+double ObjectScale::getPhoScaleCorrection(string nomOrSyst, SkimTree *tree, int indexPho){
+  double phoScaleSF = 1.0;
+  try{ 
+    phoScaleSF  = loadedPhoSsRef->evaluate({nomOrSyst, 
+                tree->Photon_seedGain[indexPho], 
+                static_cast<Float_t>(tree->run), 
+                tree->Photon_eta[indexPho], 
+                tree->Photon_r9[indexPho],
+                tree->Photon_pt[indexPho]});
+    if(isDebug)cout <<"nomOrSyst = "<<nomOrSyst 
+                    <<", Photon_seedGain = "<<tree->Rho
+                    <<", run = "<<tree->run
+                    <<", Photon_eta= "<<tree->Photon_eta[indexPho]
+                    <<", Photon_r9 = "<<tree->Photon_r9[indexPho]
+                    <<", Photon_pt = "<<tree->Photon_pt[indexPho]
+                    <<", phoScaleSF= "<<phoScaleSF<<endl;
+  } catch (const std::exception& e) {
+    cout<<"\nEXCEPTION: in ObjectScale::getPhoScaleCorrection(): "<<e.what()<<endl;
+    std::abort();
+  }
+  return phoScaleSF;
+}
+
+double ObjectScale::getPhoSmearCorrection(string nomOrSyst, SkimTree *tree, int indexPho){
+  double phoSmearSF = 1.0;
+  try{ 
+    phoSmearSF  = loadedPhoSsRef->evaluate({nomOrSyst, 
+                tree->Photon_eta[indexPho], 
+                tree->Photon_r9[indexPho]});
+    if(isDebug)cout <<"nomOrSyst = "<<nomOrSyst 
+                    <<", Photon_eta= "<<tree->Photon_eta[indexPho]
+                    <<", Photon_r9 = "<<tree->Photon_r9[indexPho]
+                    <<", phoSmearSF= "<<phoSmearSF<<endl;
+  } catch (const std::exception& e) {
+    cout<<"\nEXCEPTION: in ObjectSmear::getPhoSmearCorrection(): "<<e.what()<<endl;
+    std::abort();
+  }
+  return phoSmearSF;
+}
 
 //-------------------------------------
 // Electron Scale and Smearing 
 //-------------------------------------
-void ObjectScale::setEleSsName(TString oName){
-    if(is22B || is22C || is22D){
-        eleSsName = "2022Re-recoBCD_ScaleJSON";
-    }
-    if(is22E || is22F || is22G){
-        eleSsName = "2022Re-recoE+PromptFG_ScaleJSON";
-    }
-     cout<<setw(25)<<"setEleSsName() = "<<eleSsName<<endl;
-} 
-   
-void ObjectScale::setEleSsJsonPath(TString oName){
-    if(is22B || is22C || is22D || isMC){
-        eleSsJsonPath = "POG/EGM/S+SJSON/2022Re-recoBCD/electronSS.json";
-    }
-    if(is22E || is22F || is22G || (isMC && isPostEE)){
-        eleSsJsonPath = "POG/EGM/S+SJSON/2022Re-recoE+PromptFG/electronSS.json";
-    }
-     cout<<setw(25)<<"setEleSsJsonPath() = "<<eleSsJsonPath<<endl;
-} 
-
 void ObjectScale::loadEleSsRef(){
-    cout<<"==> loadEleSsRef()"<<endl;
-    auto ssJson      = correction::CorrectionSet::from_file(eleSsJsonPath);
-    try{
-        loadedEleSsRef = ssJson->at(eleSsName);
-    }catch (const std::exception & e){
-        cout<<"\nEXCEPTION: ObjectScale::loadEleSsRef()"<<endl;
-        cout<<"Check "<<eleSsJsonPath<<" or "<<eleSsName<<endl;
-        cout<<e.what()<<endl;
-        std::abort();
-    }
+  cout<<"==> loadEleSsRef()"<<endl;
+  auto ssJson      = correction::CorrectionSet::from_file(eleSsJsonPath);
+  try{
+    loadedEleSsRef = ssJson->at(eleSsName);
+  }catch (const std::exception & e){
+    cout<<"\nEXCEPTION: ObjectScale::loadEleSsRef()"<<endl;
+    cout<<"Check "<<eleSsJsonPath<<" or "<<eleSsName<<endl;
+    cout<<e.what()<<endl;
+    std::abort();
+  }
 } 
 
-void ObjectScale::PrintInfo(string info, bool printcout)
-   {
-     //*ferr << info << endl << flush;
-     if (printcout) cout << info << endl << flush;
+void ObjectScale::PrintInfo(string info, bool printcout){
+    //*ferr << info << endl << flush;
+    if (printcout) cout << info << endl << flush;
 }
 //-------------------------------------
 // Golden lumi Json 
 //-------------------------------------
-void ObjectScale::setLumiJsonPath(TString oName){
-    if (is22)
-      lumiJsonPath = "POG/files/Cert_Collisions2022_355100_362760_Golden.json";
-    if (is23)
-      lumiJsonPath = "POG/files/Cert_Collisions2023_366442_370790_Golden.json";
-    if (is24)
-      lumiJsonPath = "POG/files/Cert_Collisions2024_378981_381594_Golden.json";
-    cout<<setw(25)<<"setLumiJsonPath() = "<<lumiJsonPath<<endl;
-} 
-
 void ObjectScale::loadLumiJson(){
-    cout<<"==> loadLumiJson()"<<endl;
-    std::ifstream file(lumiJsonPath);
-    file >> loadedLumiJson;
+  cout<<"==> loadLumiJson()"<<endl;
+  std::ifstream file(lumiJsonPath);
+  file >> loadedLumiJson;
 }
 
 bool ObjectScale::checkGoodLumi(unsigned int &run, unsigned int &lumi){
@@ -692,12 +513,10 @@ bool ObjectScale::checkGoodLumi(unsigned int &run, unsigned int &lumi){
   return false;
 }
 
-void ObjectScale::setThresh(TString oName){
-    double frac = 0.5;
-    if(is22 || is23 || is24){
-      bThresh = 0.4184;
-      cThresh = 0.137+frac*(0.66-0.137);
-    } 
+void ObjectScale::setThresh(){
+  double frac = 0.5;
+  bThresh = 0.4184;
+  cThresh = 0.137+frac*(0.66-0.137);
 }
 
 double ObjectScale::DELTAPHI(double phi1, double phi2)

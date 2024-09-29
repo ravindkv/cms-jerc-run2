@@ -26,8 +26,8 @@ echo "All arguements: "$@
 echo "Number of arguements: "$#
 oName=$1
 outDir=$2
-echo "./makeHist -o oName"
-./makeHist -o ${oName}
+echo "./runMain -o oName"
+./runMain -o ${oName}
 
 printf "Done histograming at ";/bin/date
 #---------------------------------------------
@@ -36,7 +36,7 @@ printf "Done histograming at ";/bin/date
 if [ -z ${_CONDOR_SCRATCH_DIR} ] ; then
     echo "Running Interactively" ;
 else
-    xrdcp -f ${oName} ${outDir}
+    xrdcp -f output/${oName} ${outDir}
     echo "Cleanup"
     rm -rf CMSSW*
     rm *.root 

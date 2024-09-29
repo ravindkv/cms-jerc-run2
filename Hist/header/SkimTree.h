@@ -63,7 +63,7 @@ class SkimTree: public GlobalFlag{
     // Photon (for Jets )
     //--------------------------------------- 
     //UInt_t          nJet; // NanoV11,10
-    Int_t           nJet; // NanoV12
+    UInt_t           nJet; // NanoV12
     Float_t         Jet_pt[nJetMax];
     Float_t         Jet_eta[nJetMax];
     Float_t         Jet_phi[nJetMax];
@@ -143,15 +143,14 @@ class SkimTree: public GlobalFlag{
     //--------------------------------------- 
     // Photon (for GamJet)
     //--------------------------------------- 
-    //UInt_t          nPhoton; // NanoV11,10
-    Int_t           nPhoton; // NanoV12
+    UInt_t          nPhoton; // NanoV11,10
     Float_t         Photon_pt[nPhotonMax];
     Float_t         Photon_eta[nPhotonMax];
     Float_t         Photon_phi[nPhotonMax];
     Float_t         Photon_mass[nPhotonMax]; // Run2
     Float_t         Photon_hoe[nPhotonMax];
-    //Int_t           Photon_cutBased[nPhotonMax]; // NanoV11,10
-    UChar_t         Photon_cutBased[nPhotonMax];   // NanoV12
+    Int_t           Photon_cutBased[nPhotonMax]; // NanoV11,10
+    //UChar_t         Photon_cutBased[nPhotonMax];   // NanoV12
     Int_t           Photon_cutBasedBitmap[nPhotonMax];   // EXTRA
     //Int_t           Photon_jetIdx[nPhotonMax];   // NanoV10,V11
     Short_t         Photon_jetIdx[nPhotonMax];     // NanoV12
@@ -209,7 +208,7 @@ class SkimTree: public GlobalFlag{
     //--------------------------------------- 
     // Electron (for DiEleJet)
     //--------------------------------------- 
-    Int_t           nEle_;
+    UInt_t           nEle_;
     Float_t         elePhi_[100];
     Float_t         elePt_[100];
     Float_t         eleEta_[100];
@@ -217,9 +216,10 @@ class SkimTree: public GlobalFlag{
     Int_t           eleCharge_[100];
     Float_t         eleMass_[100];
     Int_t           eleID_[100];
+    Bool_t  HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL;
     Bool_t  HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ;
 
-    Int_t  nGenDressedLepton;
+    UInt_t  nGenDressedLepton;
     Float_t GenDressedLepton_pt[100];
     Float_t GenDressedLepton_phi[100];
     Float_t GenDressedLepton_mass[100];
@@ -229,7 +229,7 @@ class SkimTree: public GlobalFlag{
     //--------------------------------------- 
     // Muon (for DiMuJet)
     //--------------------------------------- 
-    Int_t          nMuon_;
+    UInt_t          nMuon_;
     Float_t         muPhi_[100];
     Float_t         muPt_[100];
     Float_t         muEta_[100];
@@ -242,6 +242,7 @@ class SkimTree: public GlobalFlag{
     Bool_t          muHighPurity_[100];
     Float_t         muDxy_[100];
     Float_t         muDz_[100];
+    Bool_t  HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ;
     Bool_t  HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8;
 
     Float_t         Rho; // Run2,Run3
@@ -266,43 +267,22 @@ class SkimTree: public GlobalFlag{
     //Float_t         PV_chi2;
     //Float_t         PV_score;
 
-    UChar_t           PV_npvs; // NanoV12
-    UChar_t           PV_npvsGood; // NanoV12
+    Int_t           PV_npvs; // NanoV12
+    Int_t           PV_npvsGood; // NanoV12
     Float_t           PV_z;
     Float_t           GenVtx_z;
  
-    Bool_t          Flag_HBHENoiseFilter;
-    Bool_t          Flag_HBHENoiseIsoFilter;
-    Bool_t          Flag_CSCTightHaloFilter;
-    Bool_t          Flag_CSCTightHaloTrkMuUnvetoFilter;
-    Bool_t          Flag_CSCTightHalo2015Filter;
-    Bool_t          Flag_globalTightHalo2016Filter;
-    Bool_t          Flag_globalSuperTightHalo2016Filter;
-    Bool_t          Flag_HcalStripHaloFilter;
-    Bool_t          Flag_hcalLaserEventFilter;
-    Bool_t          Flag_EcalDeadCellTriggerPrimitiveFilter;
-    Bool_t          Flag_EcalDeadCellBoundaryEnergyFilter;
-    Bool_t          Flag_ecalBadCalibFilter;
-    Bool_t          Flag_goodVertices;
-    Bool_t          Flag_eeBadScFilter;
-    Bool_t          Flag_ecalLaserCorrFilter;
-    Bool_t          Flag_trkPOGFilters;
-    Bool_t          Flag_chargedHadronTrackResolutionFilter;
-    Bool_t          Flag_muonBadTrackFilter;
-    Bool_t          Flag_BadChargedCandidateFilter;
-    Bool_t          Flag_BadPFMuonFilter;
-    Bool_t          Flag_BadPFMuonDzFilter;
-    Bool_t          Flag_hfNoisyHitsFilter;
-    Bool_t          Flag_BadChargedCandidateSummer16Filter;
-    Bool_t          Flag_BadPFMuonSummer16Filter;
-    Bool_t          Flag_trkPOG_manystripclus53X;
-    Bool_t          Flag_trkPOG_toomanystripclus53X;
-    Bool_t          Flag_trkPOG_logErrorTooManyClusters;
-    Bool_t          Flag_METFilters;
+    Bool_t   Flag_goodVertices ;
+    Bool_t   Flag_globalSuperTightHalo2016Filter ;
+    Bool_t   Flag_HBHENoiseFilter ;
+    Bool_t   Flag_HBHENoiseIsoFilter ;
+    Bool_t   Flag_EcalDeadCellTriggerPrimitiveFilter ;
+    Bool_t   Flag_BadPFMuonFilter ;
+    Bool_t   Flag_ecalBadCalibFilter ;
+    Bool_t   Flag_eeBadScFilter ;
 
     // Extras for MC
-    //UInt_t          nGenJet; // NanoV11,10
-    Int_t           nGenJet; // NanoV12
+    UInt_t          nGenJet; // NanoV11,10
     Float_t         GenJet_eta[nGenJetMax];   //[nGenJet]
     Float_t         GenJet_mass[nGenJetMax];   //[nGenJet]
     Float_t         GenJet_phi[nGenJetMax];   //[nGenJet]
@@ -314,8 +294,7 @@ class SkimTree: public GlobalFlag{
     
     Float_t         genWeight;
     Float_t         Pileup_nTrueInt;
-    //UInt_t          nPSWeight; // NanoV11,10
-    Int_t           nPSWeight; // NanoV12
+    UInt_t          nPSWeight; // NanoV11,10
     Float_t         PSWeight[nPSWeightMax];   //[nPSWeight]
 
     //Inputs

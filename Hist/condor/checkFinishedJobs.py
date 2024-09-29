@@ -38,7 +38,7 @@ def checkJobs(jsonFile):
                 print("Empty file: %s"%skim)
                 corruptedList.append(skim)
                 continue
-            h = f.Get("hEvents")
+            h = f.Get("hCutflow")
             if not h:
                 print("hEvents does not exist: %s"%skim)
                 corruptedList.append(skim)
@@ -56,7 +56,7 @@ def checkJobs(jsonFile):
 #-------------------------------------------------
 logDir = "resubLog"
 dResubs = {}
-fResub  = "tmpSub/resubFilesSkim.json"
+fResub  = "tmpSub/resubFilesHist.json"
 jdlFile_ = open('tmpSub/resubJobs.jdl', 'w')
 if os.path.exists(fResub):
     fResub_  = open(fResub, "r")
@@ -72,8 +72,8 @@ if os.path.exists(fResub):
 else:
     for year, ch in itertools.product(Years, Channels):
         print(f"=======> {year}: {ch}")
-        fSkim = open(f"../input/json/FilesSkim_{year}_{ch}.json", "r")
-        jsonFile = json.load(fSkim)
+        fHist = open(f"../input/json/FilesHist_{year}_{ch}.json", "r")
+        jsonFile = json.load(fHist)
         dResub = checkJobs(jsonFile)
         dResubs.update(dResub)
     fResub_  = open(fResub, "w")

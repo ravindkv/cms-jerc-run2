@@ -27,10 +27,16 @@ void SkimTree::loadInput(){
   }
 } 
 void SkimTree::setInputJsonPath(string inDir){
-  string year = "2022";
+  string year;
   TString oN = iName;
-  if(is23) year = "2023";
-  if(is24) year = "2024";
+  if(is2016Pre) year = "2016Pre";
+  else if(is2016Post) year = "2016Post";
+  else if(is2017) year = "2017";
+  else if(is2018) year = "2018";
+  else {
+    cout<<"Error: provide correct year in SkimTree::setInputJsonPath()"<<endl;
+    std::abort();
+  }
   string channel = splitString(loadedSampKey, "_").at(2);
   inputJsonPath = inDir+"/FilesSkim_"+year+"_"+channel+".json";
   cout<<"+ setInputJsonPath() = "<<inputJsonPath<<endl;
@@ -167,7 +173,7 @@ void SkimTree::loadTree(){
 		fChain->SetBranchAddress("Photon_cutBased", &Photon_cutBased);
 		fChain->SetBranchAddress("Photon_jetIdx", &Photon_jetIdx);
 		fChain->SetBranchAddress("Photon_seedGain", &Photon_seedGain);
-		if (is22 || is23) {
+		///if (is22 || is23) {
 	    fChain->SetBranchAddress("HLT_Photon300_NoHE", &HLT_Photon300_NoHE);
 	    fChain->SetBranchAddress("HLT_Photon33", &HLT_Photon33);
 	    fChain->SetBranchAddress("HLT_Photon50", &HLT_Photon50);
@@ -189,7 +195,7 @@ void SkimTree::loadTree(){
 	    fChain->SetBranchAddress("HLT_Photon30EB_TightID_TightIso", &HLT_Photon30EB_TightID_TightIso);
 	    fChain->SetBranchAddress("HLT_Photon100EBHE10", &HLT_Photon100EBHE10);
 	    fChain->SetBranchAddress("HLT_Photon110EB_TightID_TightIso", &HLT_Photon110EB_TightID_TightIso);
-		} // is22 || is23
+		//} // is22 || is23
 	}
 
   //--------------------------------------- 
@@ -209,7 +215,10 @@ void SkimTree::loadTree(){
 		fChain->SetBranchAddress("Electron_mass", &eleMass_);
 		fChain->SetBranchAddress("Electron_cutBased", &eleID_);
 		//address trigger
+		if(is2016Pre || is2016Post)
     fChain->SetBranchAddress("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ", &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ);
+		if(is2017 || is2018)
+    fChain->SetBranchAddress("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL", &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL);
   }
 
   //--------------------------------------- 
@@ -234,45 +243,39 @@ void SkimTree::loadTree(){
 		fChain->SetBranchAddress("Muon_dxy", &muDxy_);
 		fChain->SetBranchAddress("Muon_dz", &muDz_);
 		//address trigger
-    fChain->SetBranchAddress("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8", &HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8);
+		if(is2016Pre || is2016Post)
+      fChain->SetBranchAddress("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ", &HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ);
+		if(is2017 || is2018)
+      fChain->SetBranchAddress("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8", &HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8);
   }
 
 	fChain->SetBranchAddress("RawPuppiMET_phi", &RawPuppiMET_phi);
 	fChain->SetBranchAddress("RawPuppiMET_pt", &RawPuppiMET_pt);
-	fChain->SetBranchAddress("Rho_fixedGridRhoFastjetAll", &Rho);
+	fChain->SetBranchAddress("fixedGridRhoFastjetAll", &Rho);
 	fChain->SetBranchAddress("PV_z", &PV_z);
-	fChain->SetBranchAddress("GenVtx_z", &GenVtx_z);
+	//fChain->SetBranchAddress("GenVtx_z", &GenVtx_z);
 	fChain->SetBranchAddress("PV_npvs", &PV_npvs);
 	fChain->SetBranchAddress("PV_npvsGood", &PV_npvsGood);
+
+  fChain->SetBranchStatus("Flag_goodVertices",1);
+  fChain->SetBranchAddress("Flag_goodVertices",&Flag_goodVertices);
+  fChain->SetBranchStatus("Flag_globalSuperTightHalo2016Filter",1);
+  fChain->SetBranchAddress("Flag_globalSuperTightHalo2016Filter", &Flag_globalSuperTightHalo2016Filter);
+  fChain->SetBranchStatus("Flag_HBHENoiseFilter",1);
+  fChain->SetBranchAddress("Flag_HBHENoiseFilter", &Flag_HBHENoiseFilter);
+  fChain->SetBranchStatus("Flag_HBHENoiseIsoFilter",1);
+  fChain->SetBranchAddress("Flag_HBHENoiseIsoFilter", &Flag_HBHENoiseIsoFilter);
+  fChain->SetBranchStatus("Flag_EcalDeadCellTriggerPrimitiveFilter",1);
+  fChain->SetBranchAddress("Flag_EcalDeadCellTriggerPrimitiveFilter", &Flag_EcalDeadCellTriggerPrimitiveFilter);
+  fChain->SetBranchStatus("Flag_BadPFMuonFilter",1);
+  fChain->SetBranchAddress("Flag_BadPFMuonFilter",&Flag_BadPFMuonFilter);
+  fChain->SetBranchStatus("Flag_eeBadScFilter",1);
+  fChain->SetBranchAddress("Flag_eeBadScFilter", &Flag_eeBadScFilter);
+  if(is2017 || is2018){
+	  fChain->SetBranchStatus("Flag_ecalBadCalibFilter",1);
+	  fChain->SetBranchAddress("Flag_ecalBadCalibFilter",&Flag_ecalBadCalibFilter);
+  }
 	
-	fChain->SetBranchAddress("Flag_HBHENoiseFilter", &Flag_HBHENoiseFilter);
-	fChain->SetBranchAddress("Flag_HBHENoiseIsoFilter", &Flag_HBHENoiseIsoFilter);
-	fChain->SetBranchAddress("Flag_CSCTightHaloFilter", &Flag_CSCTightHaloFilter);
-	fChain->SetBranchAddress("Flag_CSCTightHaloTrkMuUnvetoFilter", &Flag_CSCTightHaloTrkMuUnvetoFilter);
-	fChain->SetBranchAddress("Flag_CSCTightHalo2015Filter", &Flag_CSCTightHalo2015Filter);
-	fChain->SetBranchAddress("Flag_globalTightHalo2016Filter", &Flag_globalTightHalo2016Filter);
-	fChain->SetBranchAddress("Flag_globalSuperTightHalo2016Filter", &Flag_globalSuperTightHalo2016Filter);
-	fChain->SetBranchAddress("Flag_HcalStripHaloFilter", &Flag_HcalStripHaloFilter);
-	fChain->SetBranchAddress("Flag_hcalLaserEventFilter", &Flag_hcalLaserEventFilter);
-	fChain->SetBranchAddress("Flag_EcalDeadCellTriggerPrimitiveFilter", &Flag_EcalDeadCellTriggerPrimitiveFilter);
-	fChain->SetBranchAddress("Flag_EcalDeadCellBoundaryEnergyFilter", &Flag_EcalDeadCellBoundaryEnergyFilter);
-	fChain->SetBranchAddress("Flag_ecalBadCalibFilter", &Flag_ecalBadCalibFilter);
-	fChain->SetBranchAddress("Flag_goodVertices", &Flag_goodVertices);
-	fChain->SetBranchAddress("Flag_eeBadScFilter", &Flag_eeBadScFilter);
-	fChain->SetBranchAddress("Flag_ecalLaserCorrFilter", &Flag_ecalLaserCorrFilter);
-	fChain->SetBranchAddress("Flag_trkPOGFilters", &Flag_trkPOGFilters);
-	fChain->SetBranchAddress("Flag_chargedHadronTrackResolutionFilter", &Flag_chargedHadronTrackResolutionFilter);
-	fChain->SetBranchAddress("Flag_muonBadTrackFilter", &Flag_muonBadTrackFilter);
-	fChain->SetBranchAddress("Flag_BadChargedCandidateFilter", &Flag_BadChargedCandidateFilter);
-	fChain->SetBranchAddress("Flag_BadPFMuonFilter", &Flag_BadPFMuonFilter);
-	fChain->SetBranchAddress("Flag_BadPFMuonDzFilter", &Flag_BadPFMuonDzFilter);
-	fChain->SetBranchAddress("Flag_hfNoisyHitsFilter", &Flag_hfNoisyHitsFilter);
-	fChain->SetBranchAddress("Flag_BadChargedCandidateSummer16Filter", &Flag_BadChargedCandidateSummer16Filter);
-	fChain->SetBranchAddress("Flag_BadPFMuonSummer16Filter", &Flag_BadPFMuonSummer16Filter);
-	fChain->SetBranchAddress("Flag_trkPOG_manystripclus53X", &Flag_trkPOG_manystripclus53X);
-	fChain->SetBranchAddress("Flag_trkPOG_toomanystripclus53X", &Flag_trkPOG_toomanystripclus53X);
-	fChain->SetBranchAddress("Flag_trkPOG_logErrorTooManyClusters", &Flag_trkPOG_logErrorTooManyClusters);
-	fChain->SetBranchAddress("Flag_METFilters", &Flag_METFilters);
 
   if (isMC){ 
     fChain->SetBranchAddress("genWeight", &genWeight);

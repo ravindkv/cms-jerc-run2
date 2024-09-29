@@ -15,10 +15,24 @@ class GlobalFlag{
     
     //Year 
     bool is2016Pre;
+    bool is2016PreBCD;
+    bool is2016PreEF;
+
     bool is2016Post;
+    bool is2016PostFGH;
+
     bool is2017;
+    bool is2017B;
+    bool is2017C;
+    bool is2017D;
+    bool is2017E;
+    bool is2017F;
+
     bool is2018;
-    
+    bool is2018A;
+    bool is2018B;
+    bool is2018C;
+    bool is2018D;
     
     //Data or MC
     bool isData;
