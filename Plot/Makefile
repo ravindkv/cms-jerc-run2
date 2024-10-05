@@ -1,4 +1,3 @@
-
 ROOT_I=-I`root-config --incdir` -I./header
 ROOT_L=`root-config --libs`
 #GCC=g++ -std=c++17
@@ -9,6 +8,9 @@ OBJDIR   = obj
 SOURCES     := $(wildcard $(SRCDIR)/*.cpp)
 OBJECTS     := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 BINS        := runMain
+
+# Define the all target to run clean before building
+all: clean $(BINS)
 
 $(BINS): $(OBJECTS) main.cpp
 	@echo "--> Creating executables $@"
@@ -23,4 +25,3 @@ clean:
 	rm -f $(wildcard $(OBJDIR)/*.o) $(BINS)
 
 .PHONY: all clean
-

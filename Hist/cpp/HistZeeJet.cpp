@@ -7,9 +7,13 @@ int HistZeeJet::Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectS
   string dir = (isMC ? "MC" : "DATA");
 
   //pT binning
+  /*
   double binsPt[] = {15, 20, 25, 30, 35, 40, 50, 60, 75, 90, 110, 130, 175, 230,
   		 300, 400, 500, 600, 700, 850, 1000, 1200, 1450, 1750,
    	  2100, 2500, 3000};
+  */
+  double binsPt[] = {15, 20, 25, 30, 35, 40, 50, 60, 75, 90, 110, 130, 175, 230,
+  		 300, 400, 500, 600, 700, 850, 1000, 1200, 1500}; 
   const int nPt = sizeof(binsPt)/sizeof(binsPt[0])-1;
   //Eta binning
   double binsEta[] = {-5.191, -3.839, -3.489, -3.139, -2.964, -2.853, -2.650,
@@ -240,7 +244,7 @@ int HistZeeJet::Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectS
 			startClock = std::chrono::high_resolution_clock::now();
 		}
    
-    int count_passedCut = 0;
+    int count_passedCut = 1;
     Long64_t ientry = tree->loadEntry(jentry);
     if (ientry < 0) break; 
     tree->fChain->GetTree()->GetEntry(ientry);
@@ -252,7 +256,7 @@ int HistZeeJet::Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectS
     // trigger and golden lumi, MET filter selection 
     //------------------------------------
     if(!eventP->passHLT(tree)) continue; 
-    if(isDebug) cout<<"passHLT"<<endl;
+      if(isDebug) cout<<"passHLT"<<endl;
     count_passedCut++;
     hCutflow->Fill(count_passedCut);
     hCutflowWeight->Fill(count_passedCut, weight);
@@ -361,7 +365,7 @@ int HistZeeJet::Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectS
      
       // Check that jet is not Ref and pTcorr>15 GeV
       bool pass_JetId = tree->Jet_jetId[i] & (1 << 2); // tightLepVeto
-      if (tree->Jet_pt[i]>15 && pass_JetId) {
+      if (tree->Jet_pt[i]>12 && pass_JetId) {
         p4Jeti.SetPtEtaPhiM(tree->Jet_pt[i], tree->Jet_eta[i], tree->Jet_phi[i], tree->Jet_mass[i]);
         if (p4Ref.DeltaR(p4Jeti)<0.2) continue; // should not happen, but does?
         ++nJets;
@@ -481,8 +485,7 @@ int HistZeeJet::Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectS
       continue;
     }
    
-    bool pass_dPhiProbJet1 = (fabs(p4Ref.DeltaPhi(p4Jet1)) > 2.7); // pi-0.44 as in KIT Ref+j
-    if(!pass_dPhiProbJet1) continue; 
+    if(fabs(p4Ref.DeltaPhi(p4Jet1) - 3.14159265) >= 0.44) continue; 
     if(isDebug) cout<<"passDPhiRefJet1"<<endl;
     count_passedCut++;
     hCutflow->Fill(count_passedCut);

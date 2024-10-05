@@ -2,6 +2,11 @@
 #define TDRSTYLE_H
 
 #include "TStyle.h"
+#include "TCanvas.h"
+#include <TGraphErrors.h>
+#include "TProfile.h"
+#include "TLegend.h"
+#include "TFrame.h"
 #include "TPad.h"
 #include "TLatex.h"
 #include "TLine.h"
@@ -22,7 +27,26 @@ public:
     void setExtraText(const TString& extraText) { extraText_ = extraText; }
     void setWriteExtraText(bool writeExtraText) { writeExtraText_ = writeExtraText; }
 
+
+    // Method to set histogram style
+    void setStyle(TH1D* hist, const double& yMin, const double& yMax);
+
+    // Method to set TProfile style
+    void setStyle(TProfile* profile, const double& yMin, const double& yMax);
+
+    void setStyle(TLegend *leg); 
+
+    void setStyleRatio(TProfile* profile, const double& yMin, const double& yMax);
+
+    void setStyleRatio(TGraphErrors* graph, const double& yMin, const double& yMax);
+
+    // Other utility functions can be added as needed
+		void setColor(TH1D* hist, int index);
+    void setColor(TProfile* profile, int index);
+    void setColor(TGraphErrors* graph, int index);
+
 private:
+
     // Global variables
     TString cmsText_ = "CMS";
     float cmsTextFont_ = 61;  // default is helvetic-bold
@@ -44,6 +68,8 @@ private:
     float extraOverCmsTextSize_ = 0.76;
 
     TString lumi_ = "20.1 fb^{-1}"; // default luminosity
+
+    std::vector<std::string> hexColors;  // Vector to store hex color codes
 };
 
 #endif // TDRSTYLE_H

@@ -2,7 +2,12 @@
 #include <iostream>
 
 TDRStyle::TDRStyle() {
-    setTDRStyle();
+    //setTDRStyle();
+    hexColors = {
+        "#3f90da", "#ffa90e", "#bd1f01",
+        "#94a4a2", "#832db6", "#a96b59",
+        "#e76300", "#b9ac70", "#717581", "#92dadd"
+    };
 }
 
 void TDRStyle::setTDRStyle() {
@@ -72,6 +77,23 @@ void TDRStyle::setTDRStyle() {
     tdrStyle->SetLabelOffset(0.007, "XYZ");
     tdrStyle->SetLabelSize(0.05, "XYZ");
 
+    //From Mikko --------
+    tdrStyle->SetAxisColor(1, "XYZ");
+    tdrStyle->SetStripDecimals(kTRUE);
+    tdrStyle->SetTickLength(0.03, "XYZ");
+    tdrStyle->SetNdivisions(510, "XYZ");
+    tdrStyle->SetPadTickX(1);  // To get tick marks on the opposite side of the frame
+    tdrStyle->SetPadTickY(1);
+    //Change for log plots:
+    tdrStyle->SetOptLogx(0);
+    tdrStyle->SetOptLogy(0);
+    tdrStyle->SetOptLogz(0);
+    //Postscript options:
+    tdrStyle->SetPaperSize(20.,20.);
+    tdrStyle->SetHatchesLineWidth(5);
+    tdrStyle->SetHatchesSpacing(0.05);
+    //-------------------
+
     tdrStyle->cd();
 }
 
@@ -140,5 +162,113 @@ void TDRStyle::CMS_lumi(TPad* pad, int iPeriod, int iPosX) {
         latex.SetTextAlign(align_);
         latex.DrawLatex(posX_, 1 - pad->GetTopMargin() + lumiTextOffset_ * pad->GetTopMargin(), extraText_);
     }
+}
+void TDRStyle::setStyle(TLegend *leg){
+  leg->SetFillStyle(kNone);
+  leg->SetBorderSize(0);
+  leg->SetTextSize(0.040);
+}
+
+void TDRStyle::setStyle(TH1D* hist, const double& yMin, const double& yMax) {
+    hist->SetLineWidth(3);
+    hist->SetFillStyle(3001); // Example fill style
+    hist->GetYaxis()->CenterTitle();
+    hist->GetXaxis()->SetTitleOffset(1.0);
+    hist->GetYaxis()->SetTitleOffset(1.0);
+    hist->GetXaxis()->SetTitleSize(0.05);
+    hist->GetYaxis()->SetTitleSize(0.05);
+    hist->GetXaxis()->SetTitleSize(0.05);
+    hist->GetYaxis()->SetTitleSize(0.05);  
+    hist->GetXaxis()->SetMoreLogLabels();
+    hist->GetXaxis()->SetNoExponent();
+    hist->SetMinimum(yMin);
+    hist->SetMaximum(yMax);
+}
+
+void TDRStyle::setStyle(TProfile *profile, const double& yMin, const double& yMax) {
+    profile->SetLineWidth(3);
+    profile->SetMarkerStyle(20);
+		profile->GetYaxis()->CenterTitle();
+    profile->GetXaxis()->SetTitleOffset(1.0);
+    profile->GetYaxis()->SetTitleOffset(1.15);
+    profile->GetXaxis()->SetTitleSize(0.05);
+    profile->GetYaxis()->SetTitleSize(0.07);
+    profile->GetXaxis()->SetLabelSize(0.05);
+    profile->GetYaxis()->SetLabelSize(0.05);
+    profile->GetXaxis()->SetMoreLogLabels();
+    profile->GetXaxis()->SetNoExponent();
+    profile->SetMinimum(yMin);
+    profile->SetMaximum(yMax);
+}
+
+void TDRStyle::setStyleRatio(TGraphErrors* graph, const double& yMin, const double& yMax) {
+    // X-axis styling
+    graph->GetHistogram()->GetXaxis()->SetTitleSize(0.12);
+    graph->GetHistogram()->GetXaxis()->SetLabelSize(0.12);
+    graph->GetHistogram()->GetXaxis()->SetLabelFont(42);
+    graph->GetHistogram()->GetXaxis()->SetTitleOffset(1.1);
+    graph->GetHistogram()->GetXaxis()->SetLabelOffset(0.01);
+
+    // Y-axis styling
+    graph->GetHistogram()->GetYaxis()->SetTitleSize(0.13);
+    graph->GetHistogram()->GetYaxis()->SetLabelSize(0.12);
+    graph->GetHistogram()->GetYaxis()->SetLabelFont(42);
+    graph->GetHistogram()->GetYaxis()->SetNdivisions(6,5,0);
+    graph->GetHistogram()->GetYaxis()->SetTitleOffset(0.6);
+    graph->GetHistogram()->GetYaxis()->SetLabelOffset(0.01);
+    graph->GetHistogram()->GetYaxis()->CenterTitle();
+    graph->GetHistogram()->GetYaxis()->SetRangeUser(yMin, yMax);
+
+    // Additional styling
+    graph->SetMarkerStyle(20);  // Set marker style for points
+    
+    // Optional: Log scale or no exponent for x-axis
+    graph->GetHistogram()->GetXaxis()->SetMoreLogLabels();
+    graph->GetHistogram()->GetXaxis()->SetNoExponent();
+}
+
+
+void TDRStyle::setStyleRatio(TProfile* profile, const double& yMin, const double& yMax) {
+    //profile->GetXaxis()->SetTitle(xLabel);
+    //profile->GetYaxis()->SetTitle(yLabel);
+    profile->GetXaxis()->SetTitleSize(0.12);
+    profile->GetXaxis()->SetLabelSize(0.12);
+    profile->GetXaxis()->SetLabelFont(42);
+    profile->GetXaxis()->SetTitleOffset(1.1);
+    profile->GetXaxis()->SetLabelOffset(0.01);
+    profile->SetMarkerStyle(20); 
+    profile->GetYaxis()->SetTitleSize(0.13);
+    profile->GetYaxis()->SetLabelSize(0.12);
+    profile->GetYaxis()->SetLabelFont(42);
+    profile->GetYaxis()->SetNdivisions(6,5,0);
+    profile->GetYaxis()->SetTitleOffset(0.6);
+    profile->GetYaxis()->SetLabelOffset(0.01);
+    profile->GetYaxis()->CenterTitle();
+    profile->GetYaxis()->SetRangeUser(yMin, yMax);
+    profile->GetXaxis()->SetMoreLogLabels();
+    profile->GetXaxis()->SetNoExponent();
+}
+
+void TDRStyle::setColor(TH1D* hist, int index) {
+    // Retrieve color from hex code
+    int color = TColor::GetColor(hexColors[index % hexColors.size()].c_str());
+    hist->SetLineColor(color);
+    hist->SetMarkerColor(color); // Example marker color
+    //hist->SetFillColor(color);
+}
+
+void TDRStyle::setColor(TProfile* profile, int index) {
+    // Retrieve color from hex code
+    int color = TColor::GetColor(hexColors[index % hexColors.size()].c_str());
+    profile->SetLineColor(color);
+    profile->SetMarkerColor(color); // Example marker color
+    //profile->SetFillColor(color);
+}
+void TDRStyle::setColor(TGraphErrors* graph, int index) {
+    // Retrieve color from hex code
+    int color = TColor::GetColor(hexColors[index % hexColors.size()].c_str());
+    graph->SetLineColor(color);
+    graph->SetMarkerColor(color); // Example marker color
+    //graph->SetFillColor(color);
 }
 

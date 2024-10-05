@@ -1,4 +1,4 @@
-# cms-jerc-run3
+# cms-jerc-run2
 Jet energy and resolution correction for Run3 and Phase 2
 
 ## Basic setups for EL9
@@ -17,4 +17,5 @@ For Debugging (or catching the segmentation violation)
 * Compile the code with flag -g in the Makefile (GCC=g++ -g -std=c++17)
 * Run the code with gdp (gdb --args ./runMain -o Data_2024Cv1_DiJet_JetMET1_Hist_1of100.root)
 * Once inside the gdb, type run
+* Backtrace for any other error, type backtrace
 * Type quit to exit 

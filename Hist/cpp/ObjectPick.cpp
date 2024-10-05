@@ -30,8 +30,8 @@ void ObjectPick::pickMuons(){
     double pt = tree->muPt_[m];
     
     bool passPrompt   = false; 
-    if(pt > 30){
-      passPrompt = (TMath::Abs(eta) <= 2.4 
+    if(pt > 20){
+      passPrompt = (TMath::Abs(eta) <= 2.3 
       && tree->muTightId_[m] 
       && tree->muDxy_[m]<0.2
       && tree->muDz_[m]<0.5);
@@ -62,9 +62,9 @@ void ObjectPick::pickElectrons(){
     // make sure it doesn't fall within the gap
     bool passEtaEBEEGap = (absSCEta < 1.4442) || (absSCEta > 1.566);
     //medium electron ID
-    bool passTightID = tree->eleID_[eleInd];
+    bool passTightID = tree->eleID_[eleInd]==4;
 
-    bool eleSel = (passEtaEBEEGap && absEta <= 2.4 && pt >= 40.0 && passTightID);
+    bool eleSel = (passEtaEBEEGap && absEta <= 2.4 && pt >= 25 && passTightID);
     if(eleSel) pickedElectrons.push_back(eleInd);
     if (isDebug){
       cout << "-- " << eleInd 
@@ -106,42 +106,34 @@ void ObjectPick::pickPhotons(){
 
 void ObjectPick::pickRefs(){
   // Z->ee + jets channel
-  if(isZeeJet && pickedElectrons.size()>1){
-    for (int j=0; j<pickedElectrons.size(); j++){
-    	for (int k=j+1; k<pickedElectrons.size(); k++){
-    		if(j==k) 
-    			continue;
-    		if((tree->eleCharge_[j])*(tree->eleCharge_[k]) == 1)
-    			continue;
-    		TLorentzVector p4Lep1;
-    		TLorentzVector p4Lep2;
-    		p4Lep1.SetPtEtaPhiM(tree->elePt_[j], tree->eleEta_[j], tree->elePhi_[j], tree->eleMass_[j]);
-    		p4Lep2.SetPtEtaPhiM(tree->elePt_[k], tree->eleEta_[k], tree->elePhi_[k], tree->eleMass_[k]);
-    		TLorentzVector p4Probe = p4Lep1 + p4Lep2;
-    		if ( abs(p4Probe.M() - 91.1876) > 10 ) 
-    			continue;
-    		pickedRefs.push_back(p4Probe);
-    	}
+  if(isZeeJet && pickedElectrons.size()==2){
+    int j = pickedElectrons.at(0);
+    int k = pickedElectrons.at(1);
+    TLorentzVector p4Lep1;
+    TLorentzVector p4Lep2;
+    p4Lep1.SetPtEtaPhiM(tree->elePt_[j], tree->eleEta_[j], tree->elePhi_[j], tree->eleMass_[j]);
+    p4Lep2.SetPtEtaPhiM(tree->elePt_[k], tree->eleEta_[k], tree->elePhi_[k], tree->eleMass_[k]);
+    TLorentzVector p4Probe = p4Lep1 + p4Lep2;
+    if((tree->eleCharge_[j] * tree->eleCharge_[k]) ==-1 
+      && abs(p4Probe.M() - 91.1876) < 20
+      && p4Probe.Pt() > 15){
+      pickedRefs.push_back(p4Probe);
     }
   }
 
   // Z->mumu + jets channel
-  if(isZeeJet && pickedMuons.size()>1){
-    for (int j=0; j<pickedMuons.size(); j++){
-    	for (int k=j+1; k<pickedMuons.size(); k++){
-    		if(j==k) 
-    			continue;
-    		if((tree->muCharge_[j])*(tree->muCharge_[k]) == 1)
-    			continue;
-    		TLorentzVector p4Lep1;
-    		TLorentzVector p4Lep2;
-    		p4Lep1.SetPtEtaPhiM(tree->muPt_[j], tree->muEta_[j], tree->muPhi_[j], tree->muMass_[j]);
-    		p4Lep2.SetPtEtaPhiM(tree->muPt_[k], tree->muEta_[k], tree->muPhi_[k], tree->muMass_[k]);
-    		TLorentzVector p4Probe = p4Lep1 + p4Lep2;
-    		if ( abs(p4Probe.M() - 91.1876) > 10 ) 
-    			continue;
-    		pickedRefs.push_back(p4Probe);
-    	}
+  if(isZmmJet && pickedMuons.size()>1){
+    int j = pickedMuons.at(0);
+    int k = pickedMuons.at(1);
+    TLorentzVector p4Lep1;
+    TLorentzVector p4Lep2;
+    p4Lep1.SetPtEtaPhiM(tree->muPt_[j], tree->muEta_[j], tree->muPhi_[j], tree->muMass_[j]);
+    p4Lep2.SetPtEtaPhiM(tree->muPt_[k], tree->muEta_[k], tree->muPhi_[k], tree->muMass_[k]);
+    TLorentzVector p4Probe = p4Lep1 + p4Lep2;
+    if((tree->muCharge_[j] * tree->muCharge_[k]) ==-1 
+      && abs(p4Probe.M() - 91.1876) < 20
+      && p4Probe.Pt() > 15){
+      pickedRefs.push_back(p4Probe);
     }
   }
 

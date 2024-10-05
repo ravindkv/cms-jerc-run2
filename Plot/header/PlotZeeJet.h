@@ -2,17 +2,25 @@
 #define PlotZeeJet_h
 #include <nlohmann/json.hpp>
 #include <TFile.h>
+#include <iostream>
+#include "MakeDPNote.h"
+#include "GlobalFlag.h"
 
-class PlotZeeJet {
+#include "LoadEras1D.h"
+#include "LoadEra2D.h"
+#include "LoadEraXY.h"
+#include "LoadErasXY.h"
+
+class PlotZeeJet : public GlobalFlag {
  public :
-    PlotZeeJet(){}
-    int Run(nlohmann::json inputJson, TFile *outRoot, std::string & outLatex);
+    PlotZeeJet(std::string oName): GlobalFlag(oName){}
     ~PlotZeeJet();
+    
+    int Run(nlohmann::json inputJson, TFile *outRoot, std::string & outLatex);
 
  private :
-    bool smearJets = false;
+    void addZeeJetSlides(MakeDPNote &dpNote);
 
 };
-
 #endif
 

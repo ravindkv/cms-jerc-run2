@@ -8,6 +8,7 @@
 //#include "PlotDiJet.h"
 //#include "PlotMultiJet.h"
 //#include "PlotWqq.h"
+#include "GlobalFlag.h"
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -78,11 +79,17 @@ int main(int argc, char* argv[]){
   outLatex.replace(pos, 5, ".tex");
 
   cout<<"\n--------------------------------------"<<endl;
+  cout<<" Set GlobalFlag.cpp"<<endl;
+  cout<<"--------------------------------------"<<endl;
+  GlobalFlag *globF =  new GlobalFlag(outName);
+  globF->printFlag();
+
+  cout<<"\n--------------------------------------"<<endl;
   cout<<" Loop over events and fill Plotos"<<endl;
   cout<<"--------------------------------------"<<endl;
   //if(globF->isZeeJet){
     cout<<"==> Running ZeeJet"<<endl;
-    PlotZeeJet *zeeJet = new PlotZeeJet();
+    PlotZeeJet *zeeJet = new PlotZeeJet(outName);
     zeeJet->Run(js, outRoot, outLatex);
   //}
   /*
