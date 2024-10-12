@@ -25,6 +25,12 @@ CORRECTION_LIB = -L$(pwd)./corrlib/lib -lcorrectionlib
 # Linker flags
 LDFLAGS  = $(ROOT_L) $(CORRECTION_LIB)
 
+# Add clang-tidy check
+CLANG_TIDY = clang-tidy
+#@echo "--> Running clang-tidy on $<"
+#@$(CLANG_TIDY) $<  --  -std=c++17 $(CXXFLAGS)
+#@$(CLANG_TIDY) $< -fix --  -std=c++17 $(CXXFLAGS) #to fix the warnings
+
 # Build executable
 $(BINS): $(OBJECTS) main.cpp
 	@echo "--> Creating executable $@"

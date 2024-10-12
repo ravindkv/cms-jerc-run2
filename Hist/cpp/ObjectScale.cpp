@@ -199,38 +199,38 @@ void ObjectScale::setInputs() {
     throw std::runtime_error("Error: Year is not specified correctly in ObjectScale::setInputs().");
   }
 
-  std::cout<<"jetVetoJsonPath        = " << jetVetoJsonPath_      <<std::endl;
-  std::cout<<"jetVetoKey             = " << jetVetoKey_           <<std::endl;
-  std::cout<<"jetVetoName            = " << jetVetoName_          <<std::endl<<std::endl;
-  std::cout<<"jercJsonPath           = " << jercJsonPath_         <<std::endl;
-  std::cout<<"jetL1FastJetName       = " << jetL1FastJetName_     <<std::endl;
-  std::cout<<"jetL2RelativeName      = " << jetL2RelativeName_    <<std::endl;
-  std::cout<<"jetL2L3ResidualName    = " << jetL2L3ResidualName_  <<std::endl;
-  std::cout<<"JERResoName            = " << JERResoName_          <<std::endl;
-  std::cout<<"JERSFName              = " << JERSFName_            <<std::endl<<std::endl;
-  std::cout<<"phoSsJsonPath          = " << phoSsJsonPath_        <<std::endl;
-  std::cout<<"phoSsName              = " << phoSsName_            <<std::endl<<std::endl;
-  std::cout<<"eleSsJsonPath          = " << eleSsJsonPath_        <<std::endl;
-  std::cout<<"eleSsName              = " << eleSsName_            <<std::endl<<std::endl;
-  std::cout<<"lumiJsonPath           = " << lumiJsonPath_         <<std::endl;
-  std::cout<<"puJsonPath             = " << puJsonPath_           <<std::endl;
-  std::cout<<"puName                 = " << puName_               <<std::endl;
+  std::cout<<"jetVetoJsonPath        = " << jetVetoJsonPath_      <<'\n';
+  std::cout<<"jetVetoKey             = " << jetVetoKey_           <<'\n';
+  std::cout<<"jetVetoName            = " << jetVetoName_          <<'\n'<<'\n';
+  std::cout<<"jercJsonPath           = " << jercJsonPath_         <<'\n';
+  std::cout<<"jetL1FastJetName       = " << jetL1FastJetName_     <<'\n';
+  std::cout<<"jetL2RelativeName      = " << jetL2RelativeName_    <<'\n';
+  std::cout<<"jetL2L3ResidualName    = " << jetL2L3ResidualName_  <<'\n';
+  std::cout<<"JERResoName            = " << JERResoName_          <<'\n';
+  std::cout<<"JERSFName              = " << JERSFName_            <<'\n'<<'\n';
+  std::cout<<"phoSsJsonPath          = " << phoSsJsonPath_        <<'\n';
+  std::cout<<"phoSsName              = " << phoSsName_            <<'\n'<<'\n';
+  std::cout<<"eleSsJsonPath          = " << eleSsJsonPath_        <<'\n';
+  std::cout<<"eleSsName              = " << eleSsName_            <<'\n'<<'\n';
+  std::cout<<"lumiJsonPath           = " << lumiJsonPath_         <<'\n';
+  std::cout<<"puJsonPath             = " << puJsonPath_           <<'\n';
+  std::cout<<"puName                 = " << puName_               <<'\n';
 }//setInputs 
 
 
 void ObjectScale::loadJetVetoRef() {
-  std::cout << "==> loadJetVetoRef()" << std::endl;
+  std::cout << "==> loadJetVetoRef()" << '\n';
   try {
     loadedJetVetoRef_ = correction::CorrectionSet::from_file(jetVetoJsonPath_)->at(jetVetoName_);
   } catch (const std::exception &e) {
-    std::cerr << "\nEXCEPTION: ObjectScale::loadJetVetoRef()" << std::endl;
-    std::cerr << "Check " << jetVetoJsonPath_ << " or " << jetVetoName_ << std::endl;
-    std::cerr << e.what() << std::endl;
+    std::cerr << "\nEXCEPTION: ObjectScale::loadJetVetoRef()" << '\n';
+    std::cerr << "Check " << jetVetoJsonPath_ << " or " << jetVetoName_ << '\n';
+    std::cerr << e.what() << '\n';
     throw std::runtime_error("Failed to load Jet Veto Reference");
   }
 }
 
-bool ObjectScale::checkJetVetoMap() const {
+auto ObjectScale::checkJetVetoMap() const -> bool {
   bool isVeto = false;
   const double maxEtaInMap = 5.191;
   const double maxPhiInMap = 3.1415926;
@@ -245,7 +245,7 @@ bool ObjectScale::checkJetVetoMap() const {
         std::cout << jetVetoKey_
             << ", jetEta= " << skimTree_->Jet_eta[i]
             << ", jetPhi= " << skimTree_->Jet_phi[i]
-            << ", jetVetoNumber = " << jvNumber << std::endl;
+            << ", jetVetoNumber = " << jvNumber << '\n';
       }
       if (jvNumber > 0) {
         isVeto = true;
@@ -253,25 +253,25 @@ bool ObjectScale::checkJetVetoMap() const {
       }
     }
   } catch (const std::exception &e) {
-    std::cerr << "\nEXCEPTION: in checkJetVetoMap(): " << e.what() << std::endl;
+    std::cerr << "\nEXCEPTION: in checkJetVetoMap(): " << e.what() << '\n';
     throw std::runtime_error("Failed to check Jet Veto Map");
   }
   return isVeto;
 }
 
 void ObjectScale::loadJetL1FastJetRef() {
-  std::cout << "==> loadJetL1FastJetRef()" << std::endl;
+  std::cout << "==> loadJetL1FastJetRef()" << '\n';
   try {
     loadedJetL1FastJetRef_ = correction::CorrectionSet::from_file(jercJsonPath_)->at(jetL1FastJetName_);
   } catch (const std::exception &e) {
-    std::cerr << "\nEXCEPTION: ObjectScale::loadJetL1FastJetRef" << std::endl;
-    std::cerr << "Check " << jercJsonPath_ << " or " << jetL1FastJetName_ << std::endl;
-    std::cerr << e.what() << std::endl;
+    std::cerr << "\nEXCEPTION: ObjectScale::loadJetL1FastJetRef" << '\n';
+    std::cerr << "Check " << jercJsonPath_ << " or " << jetL1FastJetName_ << '\n';
+    std::cerr << e.what() << '\n';
     throw std::runtime_error("Failed to load Jet L1 Fast Jet Reference");
   }
 }
 
-double ObjectScale::getL1FastJetCorrection(double jetArea, double jetEta, double jetPt, double rho) const {
+auto ObjectScale::getL1FastJetCorrection(double jetArea, double jetEta, double jetPt, double rho) const -> double {
   double corrL1FastJet = 1.0;
   try {
     corrL1FastJet = loadedJetL1FastJetRef_->evaluate({jetArea, jetEta, jetPt, rho});
@@ -280,66 +280,66 @@ double ObjectScale::getL1FastJetCorrection(double jetArea, double jetEta, double
             << ", jetEta= " << jetEta
             << ", jetPt= " << jetPt
             << ", rho = " << rho
-            << ", corrL1FastJet = " << corrL1FastJet << std::endl;
+            << ", corrL1FastJet = " << corrL1FastJet << '\n';
     }
   } catch (const std::exception &e) {
-    std::cerr << "\nEXCEPTION: in getL1FastJetCorrection(): " << e.what() << std::endl;
+    std::cerr << "\nEXCEPTION: in getL1FastJetCorrection(): " << e.what() << '\n';
     throw std::runtime_error("Failed to get L1 Fast Jet Correction");
   }
   return corrL1FastJet;
 }
 
 void ObjectScale::loadJetL2RelativeRef() {
-  std::cout << "==> loadJetL2RelativeRef()" << std::endl;
+  std::cout << "==> loadJetL2RelativeRef()" << '\n';
   try {
     loadedJetL2RelativeRef_ = correction::CorrectionSet::from_file(jercJsonPath_)->at(jetL2RelativeName_);
   } catch (const std::exception &e) {
-    std::cerr << "\nEXCEPTION: ObjectScale::loadJetL2RelativeRef" << std::endl;
-    std::cerr << "Check " << jercJsonPath_ << " or " << jetL2RelativeName_ << std::endl;
-    std::cerr << e.what() << std::endl;
+    std::cerr << "\nEXCEPTION: ObjectScale::loadJetL2RelativeRef" << '\n';
+    std::cerr << "Check " << jercJsonPath_ << " or " << jetL2RelativeName_ << '\n';
+    std::cerr << e.what() << '\n';
     throw std::runtime_error("Failed to load Jet L2 Relative Reference");
   }
 }
 
-double ObjectScale::getL2RelativeCorrection(double jetEta, double jetPt) const {
+auto ObjectScale::getL2RelativeCorrection(double jetEta, double jetPt) const -> double {
   double corrL2Relative = 1.0;
   try {
     corrL2Relative = loadedJetL2RelativeRef_->evaluate({jetEta, jetPt});
     if (globalFlags_.isDebug()) {
       std::cout << "jetEta= " << jetEta
             << ", jetPt= " << jetPt
-            << ", corrL2Relative = " << corrL2Relative << std::endl;
+            << ", corrL2Relative = " << corrL2Relative << '\n';
     }
   } catch (const std::exception &e) {
-    std::cerr << "\nEXCEPTION: in getL2RelativeCorrection(): " << e.what() << std::endl;
+    std::cerr << "\nEXCEPTION: in getL2RelativeCorrection(): " << e.what() << '\n';
     throw std::runtime_error("Failed to get L2 Relative Correction");
   }
   return corrL2Relative;
 }
 
 void ObjectScale::loadJetL2L3ResidualRef() {
-  std::cout << "==> loadJetL2L3ResidualRef()" << std::endl;
+  std::cout << "==> loadJetL2L3ResidualRef()" << '\n';
   try {
     loadedJetL2L3ResidualRef_ = correction::CorrectionSet::from_file(jercJsonPath_)->at(jetL2L3ResidualName_);
   } catch (const std::exception &e) {
-    std::cerr << "\nEXCEPTION: ObjectScale::loadJetL2L3ResidualRef" << std::endl;
-    std::cerr << "Check " << jercJsonPath_ << " or " << jetL2L3ResidualName_ << std::endl;
-    std::cerr << e.what() << std::endl;
+    std::cerr << "\nEXCEPTION: ObjectScale::loadJetL2L3ResidualRef" << '\n';
+    std::cerr << "Check " << jercJsonPath_ << " or " << jetL2L3ResidualName_ << '\n';
+    std::cerr << e.what() << '\n';
     throw std::runtime_error("Failed to load Jet L2 L3 Residual Reference");
   }
 }
 
-double ObjectScale::getL2L3ResidualCorrection(double jetEta, double jetPt) const {
+auto ObjectScale::getL2L3ResidualCorrection(double jetEta, double jetPt) const -> double {
   double corrL2L3Residual = 1.0;
   try {
     corrL2L3Residual = loadedJetL2L3ResidualRef_->evaluate({jetEta, jetPt});
     if (globalFlags_.isDebug()) {
       std::cout << ", jetEta= " << jetEta
             << ", jetPt= " << jetPt
-            << ", corrL2L3Residual = " << corrL2L3Residual << std::endl;
+            << ", corrL2L3Residual = " << corrL2L3Residual << '\n';
     }
   } catch (const std::exception &e) {
-    std::cerr << "\nEXCEPTION: in getL2L3ResidualCorrection(): " << e.what() << std::endl;
+    std::cerr << "\nEXCEPTION: in getL2L3ResidualCorrection(): " << e.what() << '\n';
     throw std::runtime_error("Failed to get L2 L3 Residual Correction");
   }
   return corrL2L3Residual;
@@ -347,53 +347,53 @@ double ObjectScale::getL2L3ResidualCorrection(double jetEta, double jetPt) const
 
 
 void ObjectScale::loadJERResoRef() {
-  std::cout << "==> loadJERResoRef()" << std::endl;
+  std::cout << "==> loadJERResoRef()" << '\n';
   try {
     loadedJERResoRef_ = correction::CorrectionSet::from_file(jercJsonPath_)->at(JERResoName_);
   } catch (const std::exception &e) {
-    std::cout << "\nEXCEPTION: ObjectScale::loadJERResoRef" << std::endl;
-    std::cout << "Check " << jercJsonPath_ << " or " << JERResoName_ << std::endl;
-    std::cout << e.what() << std::endl;
+    std::cout << "\nEXCEPTION: ObjectScale::loadJERResoRef" << '\n';
+    std::cout << "Check " << jercJsonPath_ << " or " << JERResoName_ << '\n';
+    std::cout << e.what() << '\n';
     throw std::runtime_error("Error loading JER Resolution Reference.");
   }
 }
 
-double ObjectScale::getJERResolution(int index) const {
+auto ObjectScale::getJERResolution(int index) const -> double {
   double JERReso = 1.0;
   try {
     JERReso = loadedJERResoRef_->evaluate({skimTree_->Jet_eta[index], skimTree_->Jet_pt[index], skimTree_->Rho});
     if (globalFlags_.isDebug()) std::cout << ", jetEta= " << skimTree_->Jet_eta[index]
               << ", jetPt= " << skimTree_->Jet_pt[index]
               << ", rho = " << skimTree_->Rho
-              << ", JERReso = " << JERReso << std::endl;
+              << ", JERReso = " << JERReso << '\n';
   } catch (const std::exception &e) {
-    std::cout << "\nEXCEPTION: in getJERResolution(): " << e.what() << std::endl;
+    std::cout << "\nEXCEPTION: in getJERResolution(): " << e.what() << '\n';
     throw std::runtime_error("Error calculating JER Resolution.");
   }
   return JERReso;
 }
 
 void ObjectScale::loadJERSFRef() {
-  std::cout << "==> loadJERSFRef()" << std::endl;
+  std::cout << "==> loadJERSFRef()" << '\n';
   try {
     loadedJERSFRef_ = correction::CorrectionSet::from_file(jercJsonPath_)->at(JERSFName_);
   } catch (const std::exception &e) {
-    std::cout << "\nEXCEPTION: ObjectScale::loadJERSFRef" << std::endl;
-    std::cout << "Check " << jercJsonPath_ << " or " << JERSFName_ << std::endl;
-    std::cout << e.what() << std::endl;
+    std::cout << "\nEXCEPTION: ObjectScale::loadJERSFRef" << '\n';
+    std::cout << "Check " << jercJsonPath_ << " or " << JERSFName_ << '\n';
+    std::cout << e.what() << '\n';
     throw std::runtime_error("Error loading JER Scale Factor Reference.");
   }
 }
 
-double ObjectScale::getJERScaleFactor(int index, const std::string &syst) const {
+auto ObjectScale::getJERScaleFactor(int index, const std::string &syst) const -> double {
   double JERSF = 1.0;
   try {
     JERSF = loadedJERSFRef_->evaluate({skimTree_->Jet_eta[index], skimTree_->Jet_pt[index], syst});
     if (globalFlags_.isDebug()) std::cout << ", jeteta= " << skimTree_->Jet_eta[index]
               << ", syst  = " << syst
-              << ", JERSF = " << JERSF << std::endl;
+              << ", JERSF = " << JERSF << '\n';
   } catch (const std::exception &e) {
-    std::cout << "\nEXCEPTION: in getJERScaleFactor(): " << e.what() << std::endl;
+    std::cout << "\nEXCEPTION: in getJERScaleFactor(): " << e.what() << '\n';
     throw std::runtime_error("Error calculating JER Scale Factor.");
   }
   return JERSF;
@@ -402,7 +402,7 @@ double ObjectScale::getJERScaleFactor(int index, const std::string &syst) const 
 //-------------------------------------
 // JER Correction
 //-------------------------------------
-double ObjectScale::getJERCorrection(int index, const std::string &syst) const {
+auto ObjectScale::getJERCorrection(int index, const std::string &syst) const -> double {
   double resoJER = getJERResolution(index);
   double sfJER = getJERScaleFactor(index, syst);
   double corrJER = 1.0;
@@ -414,7 +414,7 @@ double ObjectScale::getJERCorrection(int index, const std::string &syst) const {
   bool isMatch = false;
   if ((genIdx > -1) && (genIdx < skimTree_->nGenJet)) {
     double delR = DELTAR(phi, skimTree_->GenJet_phi[genIdx], eta, skimTree_->GenJet_eta[genIdx]);
-    if (delR < 0.2 && abs(pt - skimTree_->GenJet_pt[genIdx]) < 3 * resoJER * pt) {
+    if (delR < 0.2 && std::abs(pt - skimTree_->GenJet_pt[genIdx]) < 3 * resoJER * pt) {
       isMatch = true;
     }
   }
@@ -423,7 +423,7 @@ double ObjectScale::getJERCorrection(int index, const std::string &syst) const {
   } else { // stochastic smearing
     corrJER = std::max(0.0, 1 + generator->Gaus(0, resoJER) * sqrt(std::max(sfJER * sfJER - 1, 0.)));
     if (globalFlags_.isDebug()) {
-      std::cout << "Resolution = " << resoJER << ", sfJER = " << sfJER << ", cJER_Twiki = " << corrJER << std::endl;
+      std::cout << "Resolution = " << resoJER << ", sfJER = " << sfJER << ", cJER_Twiki = " << corrJER << '\n';
     }
   }
   return corrJER;
@@ -433,18 +433,18 @@ double ObjectScale::getJERCorrection(int index, const std::string &syst) const {
 // Photon Scale and Smearing
 //-------------------------------------
 void ObjectScale::loadPhoSsRef() {
-  std::cout << "==> loadPhoSsRef()" << std::endl;
+  std::cout << "==> loadPhoSsRef()" << '\n';
   try {
     loadedPhoSsRef_ = correction::CorrectionSet::from_file(phoSsJsonPath_)->at(phoSsName_);
   } catch (const std::exception &e) {
-    std::cout << "\nEXCEPTION: ObjectScale::loadPhoSsRef()" << std::endl;
-    std::cout << "Check " << phoSsJsonPath_ << " or " << phoSsName_ << std::endl;
-    std::cout << e.what() << std::endl;
+    std::cout << "\nEXCEPTION: ObjectScale::loadPhoSsRef()" << '\n';
+    std::cout << "Check " << phoSsJsonPath_ << " or " << phoSsName_ << '\n';
+    std::cout << e.what() << '\n';
     throw std::runtime_error("Error loading Photon Scale and Smearing Reference.");
   }
 }
 
-double ObjectScale::getPhoScaleCorrection(const std::string &nomOrSyst, int indexPho) const {
+auto ObjectScale::getPhoScaleCorrection(const std::string &nomOrSyst, int indexPho) const -> double {
   double phoScaleSF = 1.0;
   try {
     phoScaleSF = loadedPhoSsRef_->evaluate({
@@ -461,15 +461,15 @@ double ObjectScale::getPhoScaleCorrection(const std::string &nomOrSyst, int inde
               << ", Photon_eta= " << skimTree_->Photon_eta[indexPho]
               << ", Photon_r9 = " << skimTree_->Photon_r9[indexPho]
               << ", Photon_pt = " << skimTree_->Photon_pt[indexPho]
-              << ", phoScaleSF= " << phoScaleSF << std::endl;
+              << ", phoScaleSF= " << phoScaleSF << '\n';
   } catch (const std::exception &e) {
-    std::cout << "\nEXCEPTION: in ObjectScale::getPhoScaleCorrection(): " << e.what() << std::endl;
+    std::cout << "\nEXCEPTION: in ObjectScale::getPhoScaleCorrection(): " << e.what() << '\n';
     throw std::runtime_error("Error calculating Photon Scale Correction.");
   }
   return phoScaleSF;
 }
 
-double ObjectScale::getPhoSmearCorrection(const std::string &nomOrSyst, int indexPho) const {
+auto ObjectScale::getPhoSmearCorrection(const std::string &nomOrSyst, int indexPho) const -> double {
   double phoSmearSF = 1.0;
   try {
     phoSmearSF = loadedPhoSsRef_->evaluate({
@@ -480,9 +480,9 @@ double ObjectScale::getPhoSmearCorrection(const std::string &nomOrSyst, int inde
     if (globalFlags_.isDebug()) std::cout << "nomOrSyst = " << nomOrSyst
               << ", Photon_eta= " << skimTree_->Photon_eta[indexPho]
               << ", Photon_r9 = " << skimTree_->Photon_r9[indexPho]
-              << ", phoSmearSF= " << phoSmearSF << std::endl;
+              << ", phoSmearSF= " << phoSmearSF << '\n';
   } catch (const std::exception &e) {
-    std::cout << "\nEXCEPTION: in ObjectSmear::getPhoSmearCorrection(): " << e.what() << std::endl;
+    std::cout << "\nEXCEPTION: in ObjectSmear::getPhoSmearCorrection(): " << e.what() << '\n';
     throw std::runtime_error("Error calculating Photon Smear Correction.");
   }
   return phoSmearSF;
@@ -492,13 +492,13 @@ double ObjectScale::getPhoSmearCorrection(const std::string &nomOrSyst, int inde
 // Electron Scale and Smearing
 //-------------------------------------
 void ObjectScale::loadEleSsRef() {
-  std::cout << "==> loadEleSsRef()" << std::endl;
+  std::cout << "==> loadEleSsRef()" << '\n';
   try {
     loadedEleSsRef_ = correction::CorrectionSet::from_file(eleSsJsonPath_)->at(eleSsName_);
   } catch (const std::exception &e) {
-    std::cout << "\nEXCEPTION: ObjectScale::loadEleSsRef()" << std::endl;
-    std::cout << "Check " << eleSsJsonPath_ << " or " << eleSsName_ << std::endl;
-    std::cout << e.what() << std::endl;
+    std::cout << "\nEXCEPTION: ObjectScale::loadEleSsRef()" << '\n';
+    std::cout << "Check " << eleSsJsonPath_ << " or " << eleSsName_ << '\n';
+    std::cout << e.what() << '\n';
     throw std::runtime_error("Error loading Electron Scale and Smearing Reference.");
   }
 }
@@ -507,12 +507,12 @@ void ObjectScale::loadEleSsRef() {
 // Golden lumi Json
 //-------------------------------------
 void ObjectScale::loadLumiJson() {
-  std::cout << "==> loadLumiJson()" << std::endl;
+  std::cout << "==> loadLumiJson()" << '\n';
   std::ifstream file(lumiJsonPath_);
   file >> loadedLumiJson_;
 }
 
-bool ObjectScale::checkGoodLumi(const unsigned int &run, const unsigned int &lumi) const {
+auto ObjectScale::checkGoodLumi(const unsigned int &run, const unsigned int &lumi) const -> bool {
   try {
     auto it = loadedLumiJson_.find(std::to_string(run));
     if (it == loadedLumiJson_.end()) {
@@ -524,9 +524,9 @@ bool ObjectScale::checkGoodLumi(const unsigned int &run, const unsigned int &lum
       }
     }
   } catch (const std::exception &e) {
-    std::cout << "\nEXCEPTION: ObjectScale::checkGoodLumi()" << std::endl;
-    std::cout << "Run = " << run << ", Lumi = " << lumi << std::endl;
-    std::cout << e.what() << std::endl;
+    std::cout << "\nEXCEPTION: ObjectScale::checkGoodLumi()" << '\n';
+    std::cout << "Run = " << run << ", Lumi = " << lumi << '\n';
+    std::cout << e.what() << '\n';
     throw std::runtime_error("Error checking good luminosity.");
   }
   return false;
@@ -537,26 +537,26 @@ bool ObjectScale::checkGoodLumi(const unsigned int &run, const unsigned int &lum
 // Pileup Json 
 //-------------------------------------
 void ObjectScale::loadPuRef() {
-  std::cout << "==> loadPuRef()" << std::endl;
+  std::cout << "==> loadPuRef()" << '\n';
   try {
     loadedPuRef_ = correction::CorrectionSet::from_file(puJsonPath_)->at(puName_);
   } catch (const std::exception &e) {
-    std::cout << "\nEXCEPTION: ObjectScale::loadPuRef()" << std::endl;
-    std::cout << "Check " << puJsonPath_ << " or " << puName_ << std::endl;
-    std::cout << e.what() << std::endl;
+    std::cout << "\nEXCEPTION: ObjectScale::loadPuRef()" << '\n';
+    std::cout << "Check " << puJsonPath_ << " or " << puName_ << '\n';
+    std::cout << e.what() << '\n';
     throw std::runtime_error("Error loading Pileup Reference.");
   }
 }
 
-double ObjectScale::getPuCorrection(Float_t nTrueInt, const std::string &nomOrSyst) const {
+auto ObjectScale::getPuCorrection(Float_t nTrueInt, const std::string &nomOrSyst) const -> double {
   double puSF = 1.0;
   try {
     puSF = loadedPuRef_->evaluate({nTrueInt, nomOrSyst.c_str()});
     if (globalFlags_.isDebug()) std::cout << "nomOrSyst = " << nomOrSyst 
               << ", nTrueInt = " << nTrueInt 
-              << ", puSF= " << puSF << std::endl;
+              << ", puSF= " << puSF << '\n';
   } catch (const std::exception &e) {
-    std::cout << "\nEXCEPTION: in ObjectScale::getPuCorrection(): " << e.what() << std::endl;
+    std::cout << "\nEXCEPTION: in ObjectScale::getPuCorrection(): " << e.what() << '\n';
     throw std::runtime_error("Error calculating Pileup Correction.");
   }
   return puSF;
@@ -568,12 +568,12 @@ void ObjectScale::setThresh() {
   cThresh = 0.137 + frac * (0.66 - 0.137);
 }
 
-double ObjectScale::DELTAPHI(double phi1, double phi2) const {
+auto ObjectScale::DELTAPHI(double phi1, double phi2) const -> double {
   double dphi = fabs(phi1 - phi2);
   return (dphi <= TMath::Pi() ? dphi : TMath::TwoPi() - dphi);
 }
 
-double ObjectScale::DELTAR(double phi1, double phi2, double eta1, double eta2) const {
+auto ObjectScale::DELTAR(double phi1, double phi2, double eta1, double eta2) const -> double {
   return sqrt(pow(DELTAPHI(phi1, phi2), 2) + pow(eta1 - eta2, 2));
 }
  

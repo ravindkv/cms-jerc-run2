@@ -1,13 +1,12 @@
 #include "GlobalFlag.h"
 
-GlobalFlag::GlobalFlag(const std::string& outName)
-    : outName_(outName), 
-    isDebug_(false), 
-    nDebug_(100),
-    isData_(false), 
-    isMC_(false), 
-    isQCD_(false), 
-    isMG_(false){ 
+#include <utility>
+
+GlobalFlag::GlobalFlag(std::string  outName)
+    : outName_(std::move(outName)), 
+     
+    nDebug_(100) 
+    { 
     parseFlags();
 }
 
@@ -107,115 +106,115 @@ void GlobalFlag::parseFlags() {
 
 void GlobalFlag::printFlags() const {
     if (isDebug_){
-        std::cout << "isDebug_ = true" << std::endl;
-        std::cout << "nDebug_ = " << nDebug_ << std::endl;
+        std::cout << "isDebug_ = true" << '\n';
+        std::cout << "nDebug_ = " << nDebug_ << '\n';
     }
 
     // Print Year
     switch (year_) {
         case Year::Year2016Pre:
-            std::cout << "Year = 2016Pre" << std::endl;
+            std::cout << "Year = 2016Pre" << '\n';
             break;
         case Year::Year2016Post:
-            std::cout << "Year = 2016Post" << std::endl;
+            std::cout << "Year = 2016Post" << '\n';
             break;
         case Year::Year2017:
-            std::cout << "Year = 2017" << std::endl;
+            std::cout << "Year = 2017" << '\n';
             break;
         case Year::Year2018:
-            std::cout << "Year = 2018" << std::endl;
+            std::cout << "Year = 2018" << '\n';
             break;
         default:
-            std::cout << "Year = NONE" << std::endl;
+            std::cout << "Year = NONE" << '\n';
     }
 
     // Print Era
     switch (era_) {
         case Era::Era2016PreBCD:
-            std::cout << "Era = 2016PreBCD" << std::endl;
+            std::cout << "Era = 2016PreBCD" << '\n';
             break;
         case Era::Era2016PreEF:
-            std::cout << "Era = 2016PreEF" << std::endl;
+            std::cout << "Era = 2016PreEF" << '\n';
             break;
 
         case Era::Era2016PostFGH:
-            std::cout << "Era = 2016PostFGH" << std::endl;
+            std::cout << "Era = 2016PostFGH" << '\n';
             break;
 
         case Era::Era2017B:
-            std::cout << "Era = 2017B" << std::endl;
+            std::cout << "Era = 2017B" << '\n';
             break;
         case Era::Era2017C:
-            std::cout << "Era = 2017C" << std::endl;
+            std::cout << "Era = 2017C" << '\n';
             break;
         case Era::Era2017D:
-            std::cout << "Era = 2017D" << std::endl;
+            std::cout << "Era = 2017D" << '\n';
             break;
         case Era::Era2017E:
-            std::cout << "Era = 2017E" << std::endl;
+            std::cout << "Era = 2017E" << '\n';
             break;
         case Era::Era2017F:
-            std::cout << "Era = 2017F" << std::endl;
+            std::cout << "Era = 2017F" << '\n';
             break;
 
         case Era::Era2018A:
-            std::cout << "Era = 2018A" << std::endl;
+            std::cout << "Era = 2018A" << '\n';
             break;
         case Era::Era2018B:
-            std::cout << "Era = 2018B" << std::endl;
+            std::cout << "Era = 2018B" << '\n';
             break;
         case Era::Era2018C:
-            std::cout << "Era = 2018C" << std::endl;
+            std::cout << "Era = 2018C" << '\n';
             break;
         case Era::Era2018D:
-            std::cout << "Era = 2018D" << std::endl;
+            std::cout << "Era = 2018D" << '\n';
             break;
         default:
-            std::cout << "Era = NONE" << std::endl;
+            std::cout << "Era = NONE" << '\n';
     }
 
     // Print Channel
     switch (channel_) {
         case Channel::GamJet:
-            std::cout << "Channel = GamJet" << std::endl;
+            std::cout << "Channel = GamJet" << '\n';
             break;
         case Channel::ZeeJet:
-            std::cout << "Channel = ZeeJet" << std::endl;
+            std::cout << "Channel = ZeeJet" << '\n';
             break;
         case Channel::ZmmJet:
-            std::cout << "Channel = ZmmJet" << std::endl;
+            std::cout << "Channel = ZmmJet" << '\n';
             break;
         case Channel::MCTruth:
-            std::cout << "Channel = MCTruth" << std::endl;
+            std::cout << "Channel = MCTruth" << '\n';
             break;
         case Channel::Flavour:
-            std::cout << "Channel = Flavour" << std::endl;
+            std::cout << "Channel = Flavour" << '\n';
             break;
         case Channel::VetoMap:
-            std::cout << "Channel = VetoMap" << std::endl;
+            std::cout << "Channel = VetoMap" << '\n';
             break;
         case Channel::DiJet:
-            std::cout << "Channel = DiJet" << std::endl;
+            std::cout << "Channel = DiJet" << '\n';
             break;
         case Channel::IncJet:
-            std::cout << "Channel = IncJet" << std::endl;
+            std::cout << "Channel = IncJet" << '\n';
             break;
         case Channel::MultiJet:
-            std::cout << "Channel = MultiJet" << std::endl;
+            std::cout << "Channel = MultiJet" << '\n';
             break;
         case Channel::Wqq:
-            std::cout << "Channel = Wqq" << std::endl;
+            std::cout << "Channel = Wqq" << '\n';
             break;
         default:
-            std::cout << "Channel = NONE" << std::endl;
+            std::cout << "Channel = NONE" << '\n';
     }
 
     // Print Data or MC
-    if(isData_) std::cout << "isData = true" << std::endl; 
-    if(isMC_) std::cout << "isMC = true" << std::endl; 
+    if(isData_) std::cout << "isData = true" << '\n'; 
+    if(isMC_) std::cout << "isMC = true" << '\n'; 
     // Print Samples
-    if(isQCD_) std::cout << "isQCD = true" << std::endl; 
-    if(isMG_) std::cout << "isMG = true" << std::endl; 
+    if(isQCD_) std::cout << "isQCD = true" << '\n'; 
+    if(isMG_) std::cout << "isMG = true" << '\n'; 
 
 }
 

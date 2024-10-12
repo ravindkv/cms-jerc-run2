@@ -6,18 +6,18 @@ EventPick::EventPick(GlobalFlag& globalFlags) : globalFlags_(globalFlags) {
 
 // Destructor
 EventPick::~EventPick() {
-    std::cout << "Destructor of EventPick" << std::endl;
+    std::cout << "Destructor of EventPick" << '\n';
 }
 
 // Helper function for printing debug messages
 void EventPick::printDebug(const std::string& message) const {
     if (globalFlags_.isDebug()) {
-        std::cout << message << std::endl;
+        std::cout << message << '\n';
     }
 }
 
 // Function to check High-Level Triggers (HLT)
-bool EventPick::passHLT(const std::shared_ptr<SkimTree>& tree) const {
+auto EventPick::passHLT(const std::shared_ptr<SkimTree>& tree) const -> bool {
     bool pass_HLT = false;
 
     if (globalFlags_.getChannel() == GlobalFlag::Channel::ZeeJet) {
@@ -100,7 +100,7 @@ bool EventPick::passHLT(const std::shared_ptr<SkimTree>& tree) const {
 }
 
 // Function to apply event filters
-bool EventPick::passFilter(const std::shared_ptr<SkimTree>& tree) const {
+auto EventPick::passFilter(const std::shared_ptr<SkimTree>& tree) const -> bool {
     bool pass = tree->Flag_goodVertices &&
                 tree->Flag_globalSuperTightHalo2016Filter &&
                 tree->Flag_HBHENoiseFilter &&
@@ -136,7 +136,7 @@ void EventPick::printProgress(Long64_t jentry, Long64_t nentries,
                               std::chrono::time_point<std::chrono::high_resolution_clock>& startClock,
                               double& totTime) const {
     if (globalFlags_.isDebug()) {
-        std::cout << "\n=== Event: " << jentry << " ===\n" << std::endl;
+        std::cout << "\n=== Event: " << jentry << " ===\n" << '\n';
     }
     if (nentries > 100 && jentry % (nentries / 100) == 0) {  // Print progress every 1%
         auto currentTime = std::chrono::high_resolution_clock::now();
@@ -144,7 +144,7 @@ void EventPick::printProgress(Long64_t jentry, Long64_t nentries,
         int sec = static_cast<int>(totTime) % 60;
         int min = static_cast<int>(totTime) / 60;
         std::cout << std::setw(5) << (100 * jentry / nentries) << "% "
-                  << std::setw(5) << min << "m " << sec << "s" << std::endl;
+                  << std::setw(5) << min << "m " << sec << "s" << '\n';
         startClock = currentTime;  // Reset clock after printing progress
     }
 }
@@ -152,8 +152,8 @@ void EventPick::printProgress(Long64_t jentry, Long64_t nentries,
 // Function to print histogram bins and their statistics
 void EventPick::printBins(const TH1D* hist) const {
     // Print the header
-    std::cout << "---------: Cutflow Summary :--------" << std::endl;
-    std::cout << std::setw(20) << "CUT" << std::setw(10) << "ENTRIES" << std::setw(15) << "REDUCED (%)" << std::endl;
+    std::cout << "---------: Cutflow Summary :--------" << '\n';
+    std::cout << std::setw(20) << "CUT" << std::setw(10) << "ENTRIES" << std::setw(15) << "REDUCED (%)" << '\n';
 
     int nBins = hist->GetNbinsX();
     double previous = hist->GetBinContent(1);
@@ -161,7 +161,7 @@ void EventPick::printBins(const TH1D* hist) const {
     // Print the first bin's content (no change for the first bin)
     std::cout << std::setw(20) << hist->GetXaxis()->GetBinLabel(1)
               << std::setw(10) << previous
-              << std::setw(15) << "N/A" << std::endl;
+              << std::setw(15) << "N/A" << '\n';
 
     // Loop over the remaining bins
     for (int i = 2; i <= nBins; ++i) {
@@ -173,7 +173,7 @@ void EventPick::printBins(const TH1D* hist) const {
                   << std::setw(10) << current
                   << std::setw(10) << " => "
                   << std::fixed << std::setprecision(1)
-                  << change << " %" << std::endl;
+                  << change << " %" << '\n';
 
         previous = current;
     }
@@ -181,43 +181,43 @@ void EventPick::printBins(const TH1D* hist) const {
 
 // Function to print information about ROOT objects
 void EventPick::printInfo(const TObject* obj) const {
-    if (const TTree* tree = dynamic_cast<const TTree*>(obj)) {
+    if (const auto* tree = dynamic_cast<const TTree*>(obj)) {
         std::cout << std::setw(15) << "TTree: " << std::setw(35) << tree->GetName()
-                  << std::setw(15) << tree->GetEntries() << std::endl;
+                  << std::setw(15) << tree->GetEntries() << '\n';
     } else if (const TH1* hist = dynamic_cast<const TH1*>(obj)) {
         std::cout << std::setw(15) << hist->ClassName() << ": " << std::setw(35) << hist->GetName()
                   << std::setw(15) << hist->GetEntries()
                   << std::setw(15) << hist->GetMean()
-                  << std::setw(15) << hist->GetRMS() << std::endl;
-    } else if (const TProfile* prof = dynamic_cast<const TProfile*>(obj)) {
+                  << std::setw(15) << hist->GetRMS() << '\n';
+    } else if (const auto* prof = dynamic_cast<const TProfile*>(obj)) {
         std::cout << std::setw(15) << "TProfile: " << std::setw(35) << prof->GetName()
                   << std::setw(15) << prof->GetEntries()
                   << std::setw(15) << prof->GetMean()
-                  << std::setw(15) << prof->GetRMS() << std::endl;
-    } else if (const TProfile2D* prof2d = dynamic_cast<const TProfile2D*>(obj)) {
+                  << std::setw(15) << prof->GetRMS() << '\n';
+    } else if (const auto* prof2d = dynamic_cast<const TProfile2D*>(obj)) {
         std::cout << std::setw(15) << "TProfile2D: " << std::setw(35) << prof2d->GetName()
                   << std::setw(15) << prof2d->GetEntries()
                   << std::setw(15) << prof2d->GetMean()
-                  << std::setw(15) << prof2d->GetRMS() << std::endl;
+                  << std::setw(15) << prof2d->GetRMS() << '\n';
     } else {
         std::cout << std::setw(15) << obj->ClassName() << ": " << std::setw(35) << obj->GetName()
-                  << std::endl;
+                  << '\n';
     }
 }
 
 // Function to scan a directory and its contents recursively
 void EventPick::scanDirectory(TDirectory* dir, const std::string& path) const {
     std::string currentPath = path + dir->GetName() + "/";
-    std::cout << "\nDirectory: " << currentPath << std::endl;
+    std::cout << "\nDirectory: " << currentPath << '\n';
 
     TIter next(dir->GetListOfKeys());
-    TKey* key;
+    TKey* key = nullptr;
 
-    while ((key = static_cast<TKey*>(next()))) {
+    while ((key = dynamic_cast<TKey*>(next()))) {
         TObject* obj = key->ReadObj();
 
         if (obj->InheritsFrom(TDirectory::Class())) {
-            scanDirectory(static_cast<TDirectory*>(obj), currentPath);  // Recursive call for subdirectories
+            scanDirectory(dynamic_cast<TDirectory*>(obj), currentPath);  // Recursive call for subdirectories
         } else {
             printInfo(obj);
         }
@@ -226,7 +226,7 @@ void EventPick::scanDirectory(TDirectory* dir, const std::string& path) const {
 
 // Function to scan a ROOT file and its directories
 void EventPick::scanTFile(TFile* file) const {
-    std::cout << "\n-----------: Scanning All Directories and Printing Entries, Mean, RMS :------------\n" << std::endl;
+    std::cout << "\n-----------: Scanning All Directories and Printing Entries, Mean, RMS :------------\n" << '\n';
     scanDirectory(file, "");
 }
 

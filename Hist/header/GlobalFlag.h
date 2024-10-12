@@ -49,7 +49,7 @@ public:
     };
 
     // Constructor and Destructor
-    explicit GlobalFlag(const std::string& outName);
+    explicit GlobalFlag(std::string  outName);
     virtual ~GlobalFlag() = default;  // Virtual for proper cleanup in derived classes
 
     // Delete copy constructor and assignment operator to enforce Singleton (if needed)

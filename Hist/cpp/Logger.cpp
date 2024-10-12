@@ -15,7 +15,7 @@ LogLevel Logger::consoleLogLevel = INFO;
 Logger* Logger::instance = nullptr;
 
 // Get the singleton instance of the logger
-Logger& Logger::getInstance() {
+auto Logger::getInstance() -> Logger& {
     if (instance == nullptr) {
         instance = new Logger();
     }
@@ -28,7 +28,7 @@ void Logger::init(const std::string& filename)
     if (!logFile.is_open()) {
         logFile.open(filename, std::ios::app);
         if (!logFile.is_open()) {
-            std::cerr << "Error opening log file." << std::endl;
+            std::cerr << "Error opening log file." << '\n';
         }
     }
 }
@@ -42,14 +42,14 @@ void Logger::setConsoleLogLevel(LogLevel level) {
 void Logger::log(LogLevel level, const std::string& message)
 {
     // Get current timestamp
-    time_t now = time(0);
+    time_t now = time(nullptr);
     tm* timeinfo = localtime(&now);
     char timestamp[20];
     strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", timeinfo);
 
     // Create log entry
     std::ostringstream logEntry;
-    logEntry << "[" << timestamp << "] " << levelToString(level) << ": " << message << std::endl;
+    logEntry << "[" << timestamp << "] " << levelToString(level) << ": " << message << '\n';
 
     // Output to console only if the log level meets or exceeds the console log level
     if (level >= consoleLogLevel) {
@@ -85,7 +85,7 @@ void Logger::LogCritical(const std::string& message) {
 }
 
 // Converts log level to a string for output
-std::string Logger::levelToString(LogLevel level)
+auto Logger::levelToString(LogLevel level) -> std::string
 {
     switch (level) {
         case DEBUG:
@@ -104,7 +104,7 @@ std::string Logger::levelToString(LogLevel level)
 }
 
 // Returns the appropriate ANSI color code based on the log level
-std::string Logger::getColorCode(LogLevel level)
+auto Logger::getColorCode(LogLevel level) -> std::string
 {
     switch (level) {
         case DEBUG:
@@ -123,7 +123,7 @@ std::string Logger::getColorCode(LogLevel level)
 }
 
 // Resets the console color
-std::string Logger::resetColor() {
+auto Logger::resetColor() -> std::string {
     return COLOR_RESET;
 }
 

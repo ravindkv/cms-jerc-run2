@@ -29,40 +29,40 @@ void ObjectPick::clearObjects() {
 // Helper function for debug printing
 void ObjectPick::printDebug(const std::string& message) const {
     if (globalFlags_.isDebug()) {
-        std::cout << message << std::endl;
+        std::cout << message << '\n';
     }
 }
 
 // Accessors for picked objects
-const std::vector<int>& ObjectPick::getPickedElectrons() const {
+auto ObjectPick::getPickedElectrons() const -> const std::vector<int>& {
     return pickedElectrons_;
 }
 
-const std::vector<int>& ObjectPick::getPickedMuons() const {
+auto ObjectPick::getPickedMuons() const -> const std::vector<int>& {
     return pickedMuons_;
 }
 
-const std::vector<int>& ObjectPick::getPickedPhotons() const {
+auto ObjectPick::getPickedPhotons() const -> const std::vector<int>& {
     return pickedPhotons_;
 }
 
-const std::vector<TLorentzVector>& ObjectPick::getPickedRefs() const {
+auto ObjectPick::getPickedRefs() const -> const std::vector<TLorentzVector>& {
     return pickedRefs_;
 }
 
-const std::vector<int>& ObjectPick::getPickedGenElectrons() const {
+auto ObjectPick::getPickedGenElectrons() const -> const std::vector<int>& {
     return pickedGenElectrons_;
 }
 
-const std::vector<int>& ObjectPick::getPickedGenMuons() const {
+auto ObjectPick::getPickedGenMuons() const -> const std::vector<int>& {
     return pickedGenMuons_;
 }
 
-const std::vector<int>& ObjectPick::getPickedGenPhotons() const {
+auto ObjectPick::getPickedGenPhotons() const -> const std::vector<int>& {
     return pickedGenPhotons_;
 }
 
-const std::vector<TLorentzVector>& ObjectPick::getPickedGenRefs() const {
+auto ObjectPick::getPickedGenRefs() const -> const std::vector<TLorentzVector>& {
     return pickedGenRefs_;
 }
 

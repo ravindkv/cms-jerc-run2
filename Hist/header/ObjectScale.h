@@ -70,8 +70,8 @@ public:
     void loadPuRef();
     double getPuCorrection(Float_t nTrueInt, const std::string& nomOrSyst) const;
 
-    double bThresh;
-    double cThresh;
+    double bThresh{};
+    double cThresh{};
     void setThresh();
 
 private:
@@ -109,7 +109,7 @@ private:
     // sfJER 
     std::string JERSFName_;
     correction::Correction::Ref loadedJERSFRef_;
-		std::unique_ptr<TRandom> generator = std::make_unique<TRandom3>(0);
+	std::unique_ptr<TRandom> generator = std::make_unique<TRandom3>(0);
     
     // Photon Scale and Smearing (Ss)
     std::string phoSsJsonPath_;
@@ -130,7 +130,7 @@ private:
     std::string puName_;
     correction::Correction::Ref loadedPuRef_;
     
-    double minbXsec_;
+    double minbXsec_{};
     double DELTAPHI(double phi1, double phi2) const;
     double DELTAR(double phi1, double phi2, double eta1, double eta2) const;
 

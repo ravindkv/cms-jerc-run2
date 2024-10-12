@@ -6,7 +6,7 @@ HistZeeJet::HistZeeJet(GlobalFlag& globalFlags)
 }
 
 
-int HistZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectPick *objP, ObjectScale *objS, TFile *fout){
+auto HistZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectPick *objP, ObjectScale *objS, TFile *fout) -> int{
    
   TDirectory *curdir = gDirectory;
   assert(fout && !fout->IsZombie());
@@ -238,11 +238,11 @@ TLorentzVector p4GenJeti, p4GenJet1, p4GenJet2;
 TLorentzVector p4Refx; // for MPFX
 
 Long64_t nentries = skimT->getEntries(); 
-std::cout << "\nStarting loop over " << nentries << " entries" << std::endl;
+std::cout << "\nStarting loop over " << nentries << " entries" << '\n';
 
-std::cout << "---------------------------" << std::endl;
-std::cout << std::setw(10) << "Progress" << std::setw(10) << "Time" << std::endl;
-std::cout << "---------------------------" << std::endl;
+std::cout << "---------------------------" << '\n';
+std::cout << std::setw(10) << "Progress" << std::setw(10) << "Time" << '\n';
+std::cout << "---------------------------" << '\n';
 double totTime = 0.0;
 auto startClock = std::chrono::high_resolution_clock::now();
 
@@ -436,11 +436,11 @@ for (Long64_t jentry = 0; jentry < nentries; ++jentry) {
     // Sanity checks for HDM inputs
     if (!(fabs(mpf1 + mpfn + mpfu - mpf) < 1e-4)) {
         std::cout << "\nHDM input error: mpf=" << mpf << " mpf1=" << mpf1
-                  << " mpfn=" << mpfn << " mpfu=" << mpfu << std::endl;
-        std::cout << "Difference = " << mpf1 + mpfn + mpfu - mpf << std::endl << std::flush;
+                  << " mpfn=" << mpfn << " mpfu=" << mpfu << '\n';
+        std::cout << "Difference = " << mpf1 + mpfn + mpfu - mpf << '\n' << std::flush;
         std::cout << "Skip entry " << jentry
                   << " (" << skimT->run << "," << skimT->luminosityBlock << "," << skimT->event << ")"
-                  << " in file " << fout->GetName() << std::endl << std::flush;
+                  << " in file " << fout->GetName() << '\n' << std::flush;
         continue;
     }
    
@@ -655,8 +655,7 @@ if (globalFlags_.isMC()) {
 fout->Write();
 eventP->printBins(h1Cutflow.get());
 // eventP->scanTFile(fout);
-std::cout << "Output file: " << fout->GetName() << std::endl;
-fout->Close();
+std::cout << "Output file: " << fout->GetName() << '\n';
 return 0;
 
 }

@@ -10,7 +10,7 @@ SkimTree::SkimTree(GlobalFlag& globalFlags)
 	fCurrent_(-1), 
 	outName_(""), 
 	fChain_(std::make_unique<TChain>("Events")) {
-    std::cout << "+ SkimTree initialized with outName = " << outName_ << std::endl;
+    std::cout << "+ SkimTree initialized with outName = " << outName_ << '\n';
 }
 
 SkimTree::~SkimTree() {
@@ -19,18 +19,18 @@ SkimTree::~SkimTree() {
 
 void SkimTree::setInput(const std::string& outName) {
     outName_ = outName;
-    std::cout << "+ setInput() = " << outName_ << std::endl;
+    std::cout << "+ setInput() = " << outName_ << '\n';
 }
 
 void SkimTree::loadInput() {
-    std::cout << "==> loadInput()" << std::endl;
+    std::cout << "==> loadInput()" << '\n';
     try {
         std::vector<std::string> v_outName = splitString(outName_, "_Hist_");
         if (v_outName.size() < 2) {
             throw std::runtime_error("Invalid outName format: Expected at least two parts separated by '_Hist_'");
         }
         loadedSampKey_ = v_outName.at(0);
-        std::cout << "loadedSampKey_: " << loadedSampKey_ << std::endl;
+        std::cout << "loadedSampKey_: " << loadedSampKey_ << '\n';
 
         std::string nofN_root = v_outName.at(1);
         std::vector<std::string> v_nofN_root = splitString(nofN_root, ".root");
@@ -39,7 +39,7 @@ void SkimTree::loadInput() {
         }
 
         std::string nofN = v_nofN_root.at(0);
-        std::cout << "nofN: " << nofN << std::endl;
+        std::cout << "nofN: " << nofN << '\n';
 
         std::vector<std::string> v_nofN = splitString(nofN, "of");
         if (v_nofN.size() != 2) {
@@ -78,11 +78,11 @@ void SkimTree::setInputJsonPath(const std::string& inDir) {
     }
     std::string channel = tokens.at(2);
     inputJsonPath_ = inDir + "/FilesSkim_" + year + "_" + channel + ".json";
-    std::cout << "+ setInputJsonPath() = " << inputJsonPath_ << std::endl;
+    std::cout << "+ setInputJsonPath() = " << inputJsonPath_ << '\n';
 }
 
 void SkimTree::loadInputJson() {
-    std::cout << "==> loadInputJson()" << std::endl;
+    std::cout << "==> loadInputJson()" << '\n';
     std::ifstream fileName(inputJsonPath_);
     if (!fileName.is_open()) {
         throw std::runtime_error("Unable to open input JSON file: " + inputJsonPath_);
@@ -113,12 +113,12 @@ void SkimTree::loadInputJson() {
 }
 
 void SkimTree::loadJobFileNames() {
-    std::cout << "==> loadJobFileNames()" << std::endl;
+    std::cout << "==> loadJobFileNames()" << '\n';
     int nFiles = static_cast<int>(loadedAllFileNames_.size());
-    std::cout << "Total files = " << nFiles << std::endl;
+    std::cout << "Total files = " << nFiles << '\n';
 
     if (loadedTotJob_ > nFiles) {
-        std::cout << "Since loadedTotJob_ > nFiles, setting loadedTotJob_ to nFiles: " << nFiles << std::endl;
+        std::cout << "Since loadedTotJob_ > nFiles, setting loadedTotJob_ to nFiles: " << nFiles << '\n';
         loadedTotJob_ = nFiles;
     }
 
@@ -127,8 +127,8 @@ void SkimTree::loadJobFileNames() {
     }
 
     if (loadedNthJob_ > 0 && loadedTotJob_ > 0) {
-        std::cout << "Jobs: " << loadedNthJob_ << " of " << loadedTotJob_ << std::endl;
-        std::cout << static_cast<double>(nFiles) / loadedTotJob_ << " files per job on average" << std::endl;
+        std::cout << "Jobs: " << loadedNthJob_ << " of " << loadedTotJob_ << '\n';
+        std::cout << static_cast<double>(nFiles) / loadedTotJob_ << " files per job on average" << '\n';
     } else {
         throw std::runtime_error("Error: Make sure loadedNthJob_ > 0 and loadedTotJob_ > 0 in loadJobFileNames()");
     }
@@ -141,7 +141,7 @@ void SkimTree::loadJobFileNames() {
 }
 
 void SkimTree::loadTree() {
-    std::cout << "==> loadTree()" << std::endl;
+    std::cout << "==> loadTree()" << '\n';
     if (!fChain_) {
         fChain_ = std::make_unique<TChain>("Events");
     }
@@ -156,10 +156,10 @@ void SkimTree::loadTree() {
         if (fChain_->Add((dir + fName).c_str()) == 0) {
             throw std::runtime_error("Error adding file to TChain: " + dir + fName);
         }
-        std::cout << dir + fName << "  " << fChain_->GetEntries() << std::endl;
+        std::cout << dir + fName << "  " << fChain_->GetEntries() << '\n';
     }
 
-    fChain_->SetBranchStatus("*", 1);
+    fChain_->SetBranchStatus("*", true);
     fChain_->SetBranchAddress("run", &run);
     fChain_->SetBranchAddress("luminosityBlock", &luminosityBlock);
     fChain_->SetBranchAddress("event", &event);
@@ -262,8 +262,8 @@ void SkimTree::loadTree() {
 	//--------------------------------------- 
 	if(globalFlags_.getChannel() == GlobalFlag::Channel::ZeeJet){
 		//status
-		fChain_->SetBranchStatus("nElectron",1);
-		fChain_->SetBranchStatus("Electron_*",1);
+		fChain_->SetBranchStatus("nElectron",true);
+		fChain_->SetBranchStatus("Electron_*",true);
 		//address
 		fChain_->SetBranchAddress("nElectron", &nElectron);
 		fChain_->SetBranchAddress("Electron_charge", &Electron_charge);	
@@ -285,8 +285,8 @@ void SkimTree::loadTree() {
 	//--------------------------------------- 
 	if (globalFlags_.getChannel() == GlobalFlag::Channel::ZmmJet){
 	  	//status
-	  	fChain_->SetBranchStatus("nMuon",1);
-	  	fChain_->SetBranchStatus("Muon_*",1);
+	  	fChain_->SetBranchStatus("nMuon",true);
+	  	fChain_->SetBranchStatus("Muon_*",true);
 	  	//address
 	  	fChain_->SetBranchAddress("nMuon", &nMuon);
 	  	fChain_->SetBranchAddress("Muoncharge", &Muon_charge);
@@ -316,22 +316,22 @@ void SkimTree::loadTree() {
 	fChain_->SetBranchAddress("PV_npvs", &PV_npvs);
 	fChain_->SetBranchAddress("PV_npvsGood", &PV_npvsGood);
 	
-	fChain_->SetBranchStatus("Flag_goodVertices",1);
+	fChain_->SetBranchStatus("Flag_goodVertices",true);
 	fChain_->SetBranchAddress("Flag_goodVertices",&Flag_goodVertices);
-	fChain_->SetBranchStatus("Flag_globalSuperTightHalo2016Filter",1);
+	fChain_->SetBranchStatus("Flag_globalSuperTightHalo2016Filter",true);
 	fChain_->SetBranchAddress("Flag_globalSuperTightHalo2016Filter", &Flag_globalSuperTightHalo2016Filter);
-	fChain_->SetBranchStatus("Flag_HBHENoiseFilter",1);
+	fChain_->SetBranchStatus("Flag_HBHENoiseFilter",true);
 	fChain_->SetBranchAddress("Flag_HBHENoiseFilter", &Flag_HBHENoiseFilter);
-	fChain_->SetBranchStatus("Flag_HBHENoiseIsoFilter",1);
+	fChain_->SetBranchStatus("Flag_HBHENoiseIsoFilter",true);
 	fChain_->SetBranchAddress("Flag_HBHENoiseIsoFilter", &Flag_HBHENoiseIsoFilter);
-	fChain_->SetBranchStatus("Flag_EcalDeadCellTriggerPrimitiveFilter",1);
+	fChain_->SetBranchStatus("Flag_EcalDeadCellTriggerPrimitiveFilter",true);
 	fChain_->SetBranchAddress("Flag_EcalDeadCellTriggerPrimitiveFilter", &Flag_EcalDeadCellTriggerPrimitiveFilter);
-	fChain_->SetBranchStatus("Flag_BadPFMuonFilter",1);
+	fChain_->SetBranchStatus("Flag_BadPFMuonFilter",true);
 	fChain_->SetBranchAddress("Flag_BadPFMuonFilter",&Flag_BadPFMuonFilter);
-	fChain_->SetBranchStatus("Flag_eeBadScFilter",1);
+	fChain_->SetBranchStatus("Flag_eeBadScFilter",true);
 	fChain_->SetBranchAddress("Flag_eeBadScFilter", &Flag_eeBadScFilter);
 	if(globalFlags_.getYear() == GlobalFlag::Year::Year2017 || globalFlags_.getYear() == GlobalFlag::Year::Year2018){
-	    fChain_->SetBranchStatus("Flag_ecalBadCalibFilter",1);
+	    fChain_->SetBranchStatus("Flag_ecalBadCalibFilter",true);
 	    fChain_->SetBranchAddress("Flag_ecalBadCalibFilter",&Flag_ecalBadCalibFilter);
 	}
 	  
@@ -369,19 +369,19 @@ void SkimTree::loadTree() {
 	} // globalFlags_.isMC()
 }
 
-Long64_t SkimTree::getEntries() const {
+auto SkimTree::getEntries() const -> Long64_t {
     return fChain_ ? fChain_->GetEntries() : 0;
 }
 
-TChain* SkimTree::getChain() const {
+auto SkimTree::getChain() const -> TChain* {
     return fChain_.get();  // Return raw pointer to fChain_
 }
 
-Int_t SkimTree::getEntry(Long64_t entry) {
+auto SkimTree::getEntry(Long64_t entry) -> Int_t {
     return fChain_ ? fChain_->GetEntry(entry) : 0;
 }
 
-Long64_t SkimTree::loadEntry(Long64_t entry) {
+auto SkimTree::loadEntry(Long64_t entry) -> Long64_t {
     // Set the environment to read one entry
     if (!fChain_) {
         throw std::runtime_error("Error: fChain_ is not initialized in loadEntry()");
@@ -398,7 +398,7 @@ Long64_t SkimTree::loadEntry(Long64_t entry) {
     return centry;
 }
 
-std::vector<std::vector<std::string>> SkimTree::splitVector(const std::vector<std::string>& strings, int n) const {
+auto SkimTree::splitVector(const std::vector<std::string>& strings, int n) const -> std::vector<std::vector<std::string>> {
     if (n <= 0) {
         throw std::invalid_argument("n must be greater than 0 in splitVector");
     }
@@ -416,7 +416,7 @@ std::vector<std::vector<std::string>> SkimTree::splitVector(const std::vector<st
     return smallVectors;
 }
 
-std::vector<std::string> SkimTree::splitString(const std::string& s, const std::string& delimiter) const {
+auto SkimTree::splitString(const std::string& s, const std::string& delimiter) const -> std::vector<std::string> {
     std::vector<std::string> tokens;
     size_t start = 0, end = 0;
 
