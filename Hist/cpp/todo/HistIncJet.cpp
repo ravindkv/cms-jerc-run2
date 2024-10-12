@@ -297,7 +297,7 @@ int HistIncJet::Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectS
       tree->Jet_mass[i] = tree->Jet_mass[i] * corrL1FastJet;
 
       //Data+MC: MCTruth correction is applied to the L1RC corrected jet;
-      double corrL2Relative = objS->getL2RelativeCorrection(tree->Jet_eta[i], tree->Jet_phi[i],tree->Jet_pt[i]);
+      double corrL2Relative = objS->getL2RelativeCorrection(tree->Jet_eta[i], tree->Jet_pt[i]);
       tree->Jet_pt[i]   = tree->Jet_pt[i] * corrL2Relative;
       tree->Jet_mass[i] = tree->Jet_mass[i] * corrL2Relative;
 

@@ -1,5 +1,5 @@
-#ifndef HistGamJet_h
-#define HistGamJet_h
+#ifndef HistWqq_h
+#define HistWqq_h
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
@@ -28,11 +28,11 @@
 #include "GlobalFlag.h"
 #include "correction.h"
 
-class HistGamJet: public GlobalFlag{
+class HistWqq: public GlobalFlag{
  public :
-    HistGamJet(TString oName): GlobalFlag(oName){}
+    HistWqq(std::string outName): GlobalFlag(outName){}
     int Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectScale *objS, TFile *fout);
-    ~HistGamJet();
+    ~HistWqq(){}
 
  private :
     ObjectPick* objectPick;   

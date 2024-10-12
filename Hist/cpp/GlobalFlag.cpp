@@ -1,126 +1,221 @@
 #include "GlobalFlag.h"
 
-GlobalFlag::GlobalFlag(TString oName){
-  outName = oName;
-  isDebug = false;
-  
-  //Years
-  is2016Pre     = false;
-  is2016PreBCD  = false;
-  is2016PreEF   = false;
-  is2016Post    = false;
-  is2016PostFGH = false;
-  is2017  = false;
-  is2017B = false;
-  is2017C = false;
-  is2017D = false;
-  is2017E = false;
-  is2017F = false;
-  is2018  = false;
-  is2018A = false;
-  is2018B = false;
-  is2018C = false;
-  is2018D = false;
-  
-  //Data or MC
-  isData  = false;
-  isMC    = false;
-  
-  //Channels
-  isGamJet    = false;
-  isZeeJet    = false;
-  isZmmJet    = false;
-  isMCTruth   = false;
-  isFlavour   = false;
-  isVetoMap   = false;
-  isDiJet     = false;
-  isIncJet    = false;
-  isMultiJet  = false;
-  isWqq       = false;
-  
-  //Sample (e.g. QCD)
-  isQCD = false;
-  isMG  = false;
-  
-  if (outName.find("2016Pre")!= string::npos) is2016Pre     = true;
-  if (outName.find("2016PreB")!= string::npos) is2016PreBCD = true;
-  if (outName.find("2016PreC")!= string::npos) is2016PreBCD = true;
-  if (outName.find("2016PreD")!= string::npos) is2016PreBCD = true;
-  if (outName.find("2016PreE")!= string::npos) is2016PreEF  = true;
-  if (outName.find("2016PreF")!= string::npos) is2016PreEF  = true;
-
-  if (outName.find("2016Post")!= string::npos) is2016Post = true;
-  if (outName.find("2016PostF")!= string::npos) is2016PostFGH = true;
-  if (outName.find("2016PostG")!= string::npos) is2016PostFGH = true;
-  if (outName.find("2016PostH")!= string::npos) is2016PostFGH = true;
-
-  if (outName.find("2017")!= string::npos) is2017 = true;
-  if (outName.find("2017B")!= string::npos) is2017B = true;
-  if (outName.find("2017C")!= string::npos) is2017C = true;
-  if (outName.find("2017D")!= string::npos) is2017D = true;
-  if (outName.find("2017E")!= string::npos) is2017E = true;
-  if (outName.find("2017F")!= string::npos) is2017F = true;
-
-  if (outName.find("2018")!= string::npos) is2018 = true;
-  if (outName.find("2018A")!= string::npos) is2018A = true;
-  if (outName.find("2018B")!= string::npos) is2018B = true;
-  if (outName.find("2018C")!= string::npos) is2018C = true;
-  if (outName.find("2018D")!= string::npos) is2018D = true;
-  
-  if (outName.find("Data")!= string::npos) isData = true;
-  if (outName.find("MC")!= string::npos)   isMC = true;
-  
-  if(outName.find("GamJet")!= string::npos)    isGamJet    = true;
-  if(outName.find("ZeeJet")!= string::npos)    isZeeJet   = true;
-  if(outName.find("ZmmJet")!= string::npos)    isZmmJet    = true;
-  if(outName.find("MCTruth")!= string::npos)   isMCTruth   = true;
-  if(outName.find("Flavour")!= string::npos)   isFlavour   = true;
-  if(outName.find("VetoMap")!= string::npos)   isVetoMap   = true;
-  if(outName.find("DiJet")!= string::npos)     isDiJet     = true;
-  if(outName.find("IncJet")!= string::npos)    isIncJet    = true;
-  if(outName.find("MultiJet")!= string::npos)  isMultiJet  = true;
-  if(outName.find("Wqq")!= string::npos)       isWqq       = true;
-  
-  if(outName.find("QCD")!= string::npos)    isQCD    = true;
-  if(outName.find("MC")!= string::npos)     isMG     = true;
+GlobalFlag::GlobalFlag(const std::string& outName)
+    : outName_(outName), 
+    isDebug_(false), 
+    nDebug_(100),
+    isData_(false), 
+    isMC_(false), 
+    isQCD_(false), 
+    isMG_(false){ 
+    parseFlags();
 }
 
-void GlobalFlag::printFlag(){
-  if(isDebug   )cout<<"isDebug   = true"<<endl;
-  if(is2016Pre   )cout<<"is2016Pre   = true"<<endl;
-  if(is2016PreBCD   )cout<<"is2016PreBCD   = true"<<endl;
-  if(is2016PreEF   )cout<<"is2016PreEF   = true"<<endl;
-
-  if(is2016Post   )cout<<"is2016Post   = true"<<endl;
-  if(is2016PostFGH   )cout<<"is2016PostFGH   = true"<<endl;
-
-  if(is2017   )cout<<"is2017   = true"<<endl;
-  if(is2017B   )cout<<"is2017B   = true"<<endl;
-  if(is2017C   )cout<<"is2017C   = true"<<endl;
-  if(is2017D   )cout<<"is2017D   = true"<<endl;
-  if(is2017E   )cout<<"is2017E   = true"<<endl;
-  if(is2017F   )cout<<"is2017F   = true"<<endl;
-
-  if(is2018   )cout<<"is2018   = true"<<endl;
-  if(is2018A   )cout<<"is2018A   = true"<<endl;
-  if(is2018B   )cout<<"is2018B   = true"<<endl;
-  if(is2018C   )cout<<"is2018C   = true"<<endl;
-  if(is2018D   )cout<<"is2018D   = true"<<endl;
-
-  if(isData    )cout<<"isData    = true"<<endl;
-  if(isMC      )cout<<"isMC      = true"<<endl;
-  if(isGamJet  )cout<<"isGamJet  = true"<<endl;
-  if(isZeeJet  )cout<<"isZeeJet  = true"<<endl;
-  if(isZmmJet  )cout<<"isZmmJet  = true"<<endl;
-  if(isMCTruth )cout<<"isMCTruth = true"<<endl;
-  if(isFlavour)cout<<"isFlavour= true"<<endl;
-  if(isIncJet  )cout<<"isIncJet  = true"<<endl;
-  if(isMultiJet)cout<<"isMultiJet= true"<<endl;
-  if(isWqq     )cout<<"isWqq     = true"<<endl;
-  
-  if(isQCD     )cout<<"isQCD     = true"<<endl;
-  if(isMG      )cout<<"isMG      = true"<<endl;
+void GlobalFlag::setDebug(const bool& debug){
+    isDebug_ = debug;
+}
+void GlobalFlag::setNDebug(const int & nDebug){
+    nDebug_ = nDebug;
 }
 
-GlobalFlag::~GlobalFlag(){
+void GlobalFlag::parseFlags() {
+    // Parsing Year
+    if (outName_.find("2016Pre") != std::string::npos) {
+        year_ = Year::Year2016Pre;
+    } else if (outName_.find("2016Post") != std::string::npos) {
+        year_ = Year::Year2016Post;
+    } else if (outName_.find("2017") != std::string::npos) {
+        year_ = Year::Year2017;
+    } else if (outName_.find("2018") != std::string::npos) {
+        year_ = Year::Year2018;
+    }
+
+    // Parsing Era
+    if (outName_.find("2016PreB") != std::string::npos ||
+		outName_.find("2016PreC") != std::string::npos ||
+		outName_.find("2016PreD") != std::string::npos) {
+        era_ = Era::Era2016PreBCD;
+    } else if (outName_.find("2016PreE") != std::string::npos||
+		outName_.find("2016PreF") != std::string::npos) {
+        era_ = Era::Era2016PreEF;
+
+    } else if (outName_.find("2016PostF") != std::string::npos||
+		outName_.find("2016PostG") != std::string::npos||
+		outName_.find("2016PostH") != std::string::npos) {
+        era_ = Era::Era2016PostFGH;
+
+    } else if (outName_.find("2017B") != std::string::npos) {
+        era_ = Era::Era2017B;
+    } else if (outName_.find("2017C") != std::string::npos) {
+        era_ = Era::Era2017C;
+    } else if (outName_.find("2017D") != std::string::npos) {
+        era_ = Era::Era2017D;
+    } else if (outName_.find("2017E") != std::string::npos) {
+        era_ = Era::Era2017E;
+    } else if (outName_.find("2017F") != std::string::npos) {
+        era_ = Era::Era2017F;
+
+    } else if (outName_.find("2018A") != std::string::npos) {
+        era_ = Era::Era2018A;
+    } else if (outName_.find("2018B") != std::string::npos) {
+        era_ = Era::Era2018B;
+    } else if (outName_.find("2018C") != std::string::npos) {
+        era_ = Era::Era2018C;
+    } else if (outName_.find("2018D") != std::string::npos) {
+        era_ = Era::Era2018D;
+	}
+
+    // Parsing Data or MC
+    if (outName_.find("Data") != std::string::npos) {
+        isData_ = true;
+    }
+    if (outName_.find("MC") != std::string::npos) {
+        isMC_ = true;
+    }
+
+    // Parsing Channels
+    if (outName_.find("GamJet") != std::string::npos) {
+        channel_ = Channel::GamJet;
+    } else if (outName_.find("ZeeJet") != std::string::npos) {
+        channel_ = Channel::ZeeJet;
+    } else if (outName_.find("ZmmJet") != std::string::npos) {
+        channel_ = Channel::ZmmJet;
+    } else if (outName_.find("MCTruth") != std::string::npos) {
+        channel_ = Channel::MCTruth;
+    } else if (outName_.find("Flavour") != std::string::npos) {
+        channel_ = Channel::Flavour;
+    } else if (outName_.find("VetoMap") != std::string::npos) {
+        channel_ = Channel::VetoMap;
+    } else if (outName_.find("DiJet") != std::string::npos) {
+        channel_ = Channel::DiJet;
+    } else if (outName_.find("IncJet") != std::string::npos) {
+        channel_ = Channel::IncJet;
+    } else if (outName_.find("MultiJet") != std::string::npos) {
+        channel_ = Channel::MultiJet;
+    } else if (outName_.find("Wqq") != std::string::npos) {
+        channel_ = Channel::Wqq;
+    }
+
+    // Parsing Samples
+    if (outName_.find("QCD") != std::string::npos) {
+        isQCD_ = true;
+    }
+    if (outName_.find("MG") != std::string::npos) { // Assuming "MG" refers to MadGraph
+        isMG_ = true;
+    }
 }
+
+void GlobalFlag::printFlags() const {
+    if (isDebug_){
+        std::cout << "isDebug_ = true" << std::endl;
+        std::cout << "nDebug_ = " << nDebug_ << std::endl;
+    }
+
+    // Print Year
+    switch (year_) {
+        case Year::Year2016Pre:
+            std::cout << "Year = 2016Pre" << std::endl;
+            break;
+        case Year::Year2016Post:
+            std::cout << "Year = 2016Post" << std::endl;
+            break;
+        case Year::Year2017:
+            std::cout << "Year = 2017" << std::endl;
+            break;
+        case Year::Year2018:
+            std::cout << "Year = 2018" << std::endl;
+            break;
+        default:
+            std::cout << "Year = NONE" << std::endl;
+    }
+
+    // Print Era
+    switch (era_) {
+        case Era::Era2016PreBCD:
+            std::cout << "Era = 2016PreBCD" << std::endl;
+            break;
+        case Era::Era2016PreEF:
+            std::cout << "Era = 2016PreEF" << std::endl;
+            break;
+
+        case Era::Era2016PostFGH:
+            std::cout << "Era = 2016PostFGH" << std::endl;
+            break;
+
+        case Era::Era2017B:
+            std::cout << "Era = 2017B" << std::endl;
+            break;
+        case Era::Era2017C:
+            std::cout << "Era = 2017C" << std::endl;
+            break;
+        case Era::Era2017D:
+            std::cout << "Era = 2017D" << std::endl;
+            break;
+        case Era::Era2017E:
+            std::cout << "Era = 2017E" << std::endl;
+            break;
+        case Era::Era2017F:
+            std::cout << "Era = 2017F" << std::endl;
+            break;
+
+        case Era::Era2018A:
+            std::cout << "Era = 2018A" << std::endl;
+            break;
+        case Era::Era2018B:
+            std::cout << "Era = 2018B" << std::endl;
+            break;
+        case Era::Era2018C:
+            std::cout << "Era = 2018C" << std::endl;
+            break;
+        case Era::Era2018D:
+            std::cout << "Era = 2018D" << std::endl;
+            break;
+        default:
+            std::cout << "Era = NONE" << std::endl;
+    }
+
+    // Print Channel
+    switch (channel_) {
+        case Channel::GamJet:
+            std::cout << "Channel = GamJet" << std::endl;
+            break;
+        case Channel::ZeeJet:
+            std::cout << "Channel = ZeeJet" << std::endl;
+            break;
+        case Channel::ZmmJet:
+            std::cout << "Channel = ZmmJet" << std::endl;
+            break;
+        case Channel::MCTruth:
+            std::cout << "Channel = MCTruth" << std::endl;
+            break;
+        case Channel::Flavour:
+            std::cout << "Channel = Flavour" << std::endl;
+            break;
+        case Channel::VetoMap:
+            std::cout << "Channel = VetoMap" << std::endl;
+            break;
+        case Channel::DiJet:
+            std::cout << "Channel = DiJet" << std::endl;
+            break;
+        case Channel::IncJet:
+            std::cout << "Channel = IncJet" << std::endl;
+            break;
+        case Channel::MultiJet:
+            std::cout << "Channel = MultiJet" << std::endl;
+            break;
+        case Channel::Wqq:
+            std::cout << "Channel = Wqq" << std::endl;
+            break;
+        default:
+            std::cout << "Channel = NONE" << std::endl;
+    }
+
+    // Print Data or MC
+    if(isData_) std::cout << "isData = true" << std::endl; 
+    if(isMC_) std::cout << "isMC = true" << std::endl; 
+    // Print Samples
+    if(isQCD_) std::cout << "isQCD = true" << std::endl; 
+    if(isMG_) std::cout << "isMG = true" << std::endl; 
+
+}
+

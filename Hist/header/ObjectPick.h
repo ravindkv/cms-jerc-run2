@@ -1,49 +1,77 @@
 #ifndef OBJECTPICK_H
 #define OBJECTPICK_H
 
-#include<vector>
-#include<string>
-#include<set>
-#include<iostream>
-#include<fstream>
-#include<TH1F.h>
-#include<TH1D.h>
+#include <vector>
+#include <string>
+#include <set>
+#include <iostream>
+#include <fstream>
+#include <memory>
+#include <cmath>
 
-#include"SkimTree.h"
-#include"GlobalFlag.h"
-#include "TLorentzVector.h"
+#include <TH1F.h>
+#include <TH1D.h>
+#include <TLorentzVector.h>
 
-class ObjectPick: public GlobalFlag{
+#include "SkimTree.h"
+#include "GlobalFlag.h"
+
+class ObjectPick{
 public:
-	ObjectPick(TString oName): GlobalFlag(oName){};
-  //Reco objects
-  void pickElectrons();
-  void pickMuons();
-  void pickPhotons();
-  void pickRefs();
+    // Constructor accepting a reference to GlobalFlag
+    explicit ObjectPick(GlobalFlag& globalFlags);
+    ~ObjectPick();
 
-  vector<int> pickedElectrons;
-  vector<int> pickedMuons;
-  vector<int> pickedPhotons;
-  vector<TLorentzVector> pickedRefs;
+    // Set the SkimTree pointer
+    void setTree(const std::shared_ptr<SkimTree>& skimTree);
 
-  //Gen objects
-  void pickGenElectrons();
-  void pickGenMuons();
-  void pickGenPhotons();
-  void pickGenRefs();
+    // Clear picked objects
+    void clearObjects();
 
-  vector<int> pickedGenElectrons;
-  vector<int> pickedGenMuons;
-  vector<int> pickedGenPhotons;
-  vector<TLorentzVector> pickedGenRefs;
+    // Reco objects
+    void pickElectrons();
+    void pickMuons();
+    void pickPhotons();
+    void pickRefs();
 
-  void clearObjects();
-  void setTree(SkimTree *skimT);
-  
-	~ObjectPick();
+    // Gen objects
+    void pickGenElectrons();
+    void pickGenMuons();
+    void pickGenPhotons();
+    void pickGenRefs();
+
+    // Accessors for picked objects
+    const std::vector<int>& getPickedElectrons() const;
+    const std::vector<int>& getPickedMuons() const;
+    const std::vector<int>& getPickedPhotons() const;
+    const std::vector<TLorentzVector>& getPickedRefs() const;
+
+    const std::vector<int>& getPickedGenElectrons() const;
+    const std::vector<int>& getPickedGenMuons() const;
+    const std::vector<int>& getPickedGenPhotons() const;
+    const std::vector<TLorentzVector>& getPickedGenRefs() const;
 
 private:
-  SkimTree * tree;
+    // Pointer to SkimTree
+    std::shared_ptr<SkimTree> skimTree_;
+
+    // Reco objects
+    std::vector<int> pickedElectrons_;
+    std::vector<int> pickedMuons_;
+    std::vector<int> pickedPhotons_;
+    std::vector<TLorentzVector> pickedRefs_;
+
+    // Gen objects
+    std::vector<int> pickedGenElectrons_;
+    std::vector<int> pickedGenMuons_;
+    std::vector<int> pickedGenPhotons_;
+    std::vector<TLorentzVector> pickedGenRefs_;
+
+    // Reference to GlobalFlag instance
+    GlobalFlag& globalFlags_;
+    // Helper function for debug printing
+    void printDebug(const std::string& message) const;
 };
-#endif
+
+#endif  // OBJECTPICK_H
+

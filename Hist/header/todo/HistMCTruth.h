@@ -12,7 +12,7 @@ class TFile;
 
 class HistMCTruth: public GlobalFlag{
 public :
-  explicit HistMCTruth(TString oName): GlobalFlag(oName){}
+  explicit HistMCTruth(std::string outName): GlobalFlag(outName){}
   int Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectScale *objS, TFile *fout);
   
   ~HistMCTruth() = default;

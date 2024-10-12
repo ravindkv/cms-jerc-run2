@@ -1,60 +1,101 @@
-#ifndef GlobalFlag_H
-#define GlobalFlag_H
-        
+#ifndef GLOBALFLAG_H
+#define GLOBALFLAG_H
+
+#include <string>
 #include <iostream>
 #include <TString.h>
 
-using namespace std;
+class GlobalFlag {
+public:
+    // Enum classes for better organization
+    enum class Year {
+        NONE,
+        Year2016Pre,
+        Year2016Post,
+        Year2017,
+        Year2018
+    };
 
-class GlobalFlag{
-  public: 
-    GlobalFlag(TString oName);
-    ~GlobalFlag();
-    
-    bool isDebug;
-    
-    //Year 
-    bool is2016Pre;
-    bool is2016PreBCD;
-    bool is2016PreEF;
+    enum class Era {
+        NONE,
+     	Era2016PreBCD,
+     	Era2016PreEF,
+     	Era2016PostFGH,
 
-    bool is2016Post;
-    bool is2016PostFGH;
+     	Era2017B,
+     	Era2017C,
+     	Era2017D,
+     	Era2017E,
+     	Era2017F,
 
-    bool is2017;
-    bool is2017B;
-    bool is2017C;
-    bool is2017D;
-    bool is2017E;
-    bool is2017F;
+     	Era2018A,
+     	Era2018B,
+     	Era2018C,
+     	Era2018D,
+    };
 
-    bool is2018;
-    bool is2018A;
-    bool is2018B;
-    bool is2018C;
-    bool is2018D;
-    
-    //Data or MC
-    bool isData;
-    bool isMC;
-    
-    //Channels
-    bool isGamJet;
-    bool isZeeJet;
-    bool isZmmJet;
-    bool isMCTruth;
-    bool isFlavour;
-    bool isVetoMap;
-    bool isDiJet;
-    bool isIncJet;
-    bool isMultiJet;
-    bool isWqq;
-    
-    //Sample (e.g. QCD)
-    bool isQCD;
-    bool isMG;
-    void printFlag();
-  private:
-    string outName;
+    enum class Channel {
+        NONE,
+        GamJet,
+        ZeeJet,
+        ZmmJet,
+        MCTruth,
+        Flavour,
+        VetoMap,
+        DiJet,
+        IncJet,
+        MultiJet,
+        Wqq
+    };
+
+    // Constructor and Destructor
+    explicit GlobalFlag(const std::string& outName);
+    virtual ~GlobalFlag() = default;  // Virtual for proper cleanup in derived classes
+
+    // Delete copy constructor and assignment operator to enforce Singleton (if needed)
+    GlobalFlag(const GlobalFlag&) = delete;
+    GlobalFlag& operator=(const GlobalFlag&) = delete;
+
+    // Setter methods
+    void setDebug(const bool& debug);
+    void setNDebug(const int & nDebug);
+
+    // Getter methods
+    bool isDebug() const { return isDebug_; }
+    int getNDebug() const { return nDebug_; }
+
+    Year getYear() const { return year_; }
+    Era getEra() const { return era_; }
+    bool isData() const { return isData_; }
+    bool isMC() const { return isMC_; }
+    Channel getChannel() const { return channel_; }
+
+    bool isQCD() const { return isQCD_; }
+    bool isMG() const { return isMG_; }
+
+    // Method to print active flags
+    void printFlags() const;
+
+private:
+    // Private member variables
+    std::string outName_;
+
+    // Flags
+    bool isDebug_ = false;
+    int nDebug_ = 0;
+
+    Year year_ = Year::NONE;
+    Era  era_  = Era::NONE;
+    bool isData_ = false;
+    bool isMC_   = false;
+    Channel channel_ = Channel::NONE;
+
+    bool isQCD_ = false;
+    bool isMG_ = false;
+
+    // Helper methods
+    void parseFlags();
 };
-#endif
+
+#endif // GLOBALFLAG_H
+

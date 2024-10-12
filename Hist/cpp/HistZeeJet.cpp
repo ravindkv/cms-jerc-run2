@@ -1,446 +1,411 @@
 #include "HistZeeJet.h"
    
-int HistZeeJet::Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectScale *objS, TFile *fout){
+// Constructor implementation
+HistZeeJet::HistZeeJet(GlobalFlag& globalFlags)
+    :globalFlags_(globalFlags) {
+}
+
+
+int HistZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectPick *objP, ObjectScale *objS, TFile *fout){
    
   TDirectory *curdir = gDirectory;
   assert(fout && !fout->IsZombie());
-  string dir = (isMC ? "MC" : "DATA");
-
-  //pT binning
-  /*
-  double binsPt[] = {15, 20, 25, 30, 35, 40, 50, 60, 75, 90, 110, 130, 175, 230,
-  		 300, 400, 500, 600, 700, 850, 1000, 1200, 1450, 1750,
-   	  2100, 2500, 3000};
-  */
-  double binsPt[] = {15, 20, 25, 30, 35, 40, 50, 60, 75, 90, 110, 130, 175, 230,
-  		 300, 400, 500, 600, 700, 850, 1000, 1200, 1500}; 
-  const int nPt = sizeof(binsPt)/sizeof(binsPt[0])-1;
-  //Eta binning
-  double binsEta[] = {-5.191, -3.839, -3.489, -3.139, -2.964, -2.853, -2.650,
-   	  -2.500, -2.322, -2.172, -1.930, -1.653, -1.479, -1.305,
-   	  -1.044, -0.783, -0.522, -0.261, 0.000, 0.261, 0.522, 0.783,
-   	  1.044, 1.305, 1.479, 1.653, 1.930, 2.172, 2.322, 2.500,
-   	  2.650, 2.853, 2.964, 3.139, 3.489, 3.839, 5.191};
-  const int nEta = sizeof(binsEta)/sizeof(binsEta[0])-1;
-
+  std::string dir = (globalFlags_.isMC() ? "MC" : "DATA");
+  
+  // pT binning
+  std::vector<double> binsPt = {15, 20, 25, 30, 35, 40, 50, 60, 75, 90, 110, 130, 175, 230,
+  															300, 400, 500, 600, 700, 850, 1000, 1200, 1500};
+  const int nPt = binsPt.size() - 1;
+  
+  // Eta binning
+  std::vector<double> binsEta = {-5.191, -3.839, -3.489, -3.139, -2.964, -2.853, -2.650,
+  															 -2.500, -2.322, -2.172, -1.930, -1.653, -1.479, -1.305,
+  															 -1.044, -0.783, -0.522, -0.261, 0.000, 0.261, 0.522, 0.783,
+  															 1.044, 1.305, 1.479, 1.653, 1.930, 2.172, 2.322, 2.500,
+  															 2.650, 2.853, 2.964, 3.139, 3.489, 3.839, 5.191};
+  const int nEta = binsEta.size() - 1;
+  
   //------------------------------------
-  // Cutflow histograms 
+  // Cutflow histograms
   //------------------------------------
-  TH1D *hCutflow = new TH1D("hCutflow",";hCutflow",15,0.5,15.5);
-  TH1D *hCutflowWeight = new TH1D("hCutflowWeight",";hCutflowWeight",15,0.5,15.5);
-  vector<string> cuts;
-  cuts.push_back("passHLT");
-  cuts.push_back("passGoodLumi");
-  cuts.push_back("passMetFilter");
-  cuts.push_back("passAtleast1Ref");
-  cuts.push_back("passAtleast1Jet");
-  cuts.push_back("passJetVetoMap");
-  cuts.push_back("passDPhiRefJet1");
-  cuts.push_back("passRefBarrel");
-  cuts.push_back("passJet1EtaJet2Pt");
-  cuts.push_back("passResponse");
-  for (int i = 0; i != cuts.size(); ++i) {
-    hCutflow->GetXaxis()->SetBinLabel(i+1, cuts[i].c_str());
-    hCutflowWeight->GetXaxis()->SetBinLabel(i+1, cuts[i].c_str());
+  std::vector<std::string> cuts = {
+  		"passSkim", "passHLT", "passGoodLumi", "passMetFilter", "passAtleast1Ref",
+  		"passAtleast1Jet", "passJetVetoMap", "passDPhiRefJet1", "passRefBarrel",
+  		"passJet1EtaJet2Pt", "passResponse"
+  };
+  
+  // Create the histogram with the number of bins equal to the number of cuts
+  auto h1Cutflow = std::make_unique<TH1D>("h1Cutflow", ";Cutflow;Events", cuts.size(), 0.5, cuts.size() + 0.5);
+  
+  // Map each cut name to a bin number (1-based bin number for ROOT)
+  std::map<std::string, int> cutToBinMap;
+  for (size_t i = 0; i < cuts.size(); ++i) {
+  		cutToBinMap[cuts[i]] = i + 1;  // Bin numbers are 1-based in ROOT
+  		h1Cutflow->GetXaxis()->SetBinLabel(i + 1, cuts[i].c_str());  // Set bin labels
   }
   
-  //Ref = Z->ee, Z->mumu, Gamma, Jet
   //------------------------------------
-  // Variables after at least 1 Ref 
+  // Variables after at least 1 Ref
   //------------------------------------
   fout->mkdir("passAtleast1Ref");
   fout->cd("passAtleast1Ref");
-  TH1D *hRefPt = new TH1D("hRefPt","",197,15,1000);
-  TH1D *hRefPtBarrel = new TH1D("hRefPtBarrel","",197,15,1000);
-  TH2D *h2RefEtaRefPhi = new TH2D("h2RefEtaRefPhi","",30,-1.305,+1.305,
-   	   	     72,-TMath::Pi(),TMath::Pi());
+  
+  auto h1RefPt = std::make_unique<TH1D>("h1RefPt", ";Reference #it{p}_{T} (GeV);Events", 197, 15, 1000);
+  auto h1RefPtBarrel = std::make_unique<TH1D>("h1RefPtBarrel", ";Barrel Reference #it{p}_{T} (GeV);Events", 197, 15, 1000);
+  
+  auto h2RefEtaRefPhi = std::make_unique<TH2D>("h2RefEtaRefPhi", ";Reference #eta;Reference #phi", 30, -1.305, 1.305,
+  																						 72, -TMath::Pi(), TMath::Pi());
+  
   // Match barrel edge to 1.305 with 3.132, even though EC edge should be 3.139
-  TH2D *h2RefEtaRefPhiRebin = new TH2D("h2RefEtaRefPhiRebin","",360,-3.132,+3.132,
-   	   		360,-TMath::Pi(),TMath::Pi());
-  TH2D *h2RefEtaRefPhiRefPt110 = new TH2D("h2RefEtaRefPhiRefPt110","",30,-1.305,+1.305,
-   	   	     72,-TMath::Pi(),TMath::Pi());
-  TH2D *h2RefEtaRefPhiRefPt110Rebin = new TH2D("h2RefEtaRefPhiRefPt110Rebin","",360,-3.132,+3.132,
-   	   		360,-TMath::Pi(),TMath::Pi());
-  TH2D *h2RefPtCountRef = new TH2D("h2RefPtCountRef","",nPt,binsPt,5,0,5);
-
-  TH1D *hGenRefPt = new TH1D("hGenRefPt","",nPt,binsPt);
-  TProfile *pRefPtOgenRefPtInGenRefPt = new TProfile("pRefPtOgenRefPtInGenRefPt","",nPt,binsPt);// O = Over
-  TProfile *pGenRefPtORefPtInRefPt  = new TProfile("pGenRefPtORefPtInRefPt","",nPt,binsPt);
-   
+  auto h2RefEtaRefPhiRebin = std::make_unique<TH2D>("h2RefEtaRefPhiRebin", ";Reference #eta;Reference #phi",
+  																									360, -3.132, 3.132, 360, -TMath::Pi(), TMath::Pi());
+  
+  auto h2RefEtaRefPhiRefPt110 = std::make_unique<TH2D>("h2RefEtaRefPhiRefPt110", ";Reference #eta;Reference #phi",
+  																										 30, -1.305, 1.305, 72, -TMath::Pi(), TMath::Pi());
+  
+  auto h2RefEtaRefPhiRefPt110Rebin = std::make_unique<TH2D>("h2RefEtaRefPhiRefPt110Rebin", ";Reference #eta;Reference #phi",
+  																													360, -3.132, 3.132, 360, -TMath::Pi(), TMath::Pi());
+  
+  auto h2RefPtCountRef = std::make_unique<TH2D>("h2RefPtCountRef", ";Reference #it{p}_{T} (GeV);Counts", nPt, binsPt.data(), 5, 0, 5);
+  
+  auto h1GenRefPt = std::make_unique<TH1D>("h1GenRefPt", ";Generated Reference #it{p}_{T} (GeV);Events", nPt, binsPt.data());
+  
+  auto p1RefPtOverGenRefPtInGenRefPt = std::make_unique<TProfile>("p1RefPtOverGenRefPtInGenRefPt", ";Generated Reference #it{p}_{T} (GeV);RefPt/GenRefPt", nPt, binsPt.data());
+  auto p1GenRefPtOverRefPtInRefPt = std::make_unique<TProfile>("p1GenRefPtOverRefPtInRefPt", ";Reference #it{p}_{T} (GeV);GenRefPt/RefPt", nPt, binsPt.data());
+  
   //------------------------------------
-  // Variables after leading Ref in barrel (eta < 1.33) 
+  // Variables after leading Ref in barrel (eta < 1.33)
   //------------------------------------
   fout->mkdir("passRefBarrel");
   fout->cd("passRefBarrel");
+  
   // Follow up on problematic cuts
-  TH1D *hDphiJetRef = new TH1D("hDphiJetRef",";#Delta#phi;N_{events}",
-   	   	 126,-TMath::TwoPi(),TMath::TwoPi());
-  TH1D *hDrJetRef = new TH1D("hDrJetRef",";#DeltaR;N_{events}",100,0,10);
-  TH2D *h2RefPtDbResp = new TH2D("h2RefPtDbResp","",nPt,binsPt,200,0,4);
-  TH2D *h2RefPtMpfResp = new TH2D("h2RefPtMpfResp","",nPt,binsPt,300,-2,4);
+  auto h1DphiJetRef = std::make_unique<TH1D>("h1DphiJetRef", ";#Delta#phi;Events", 126, -TMath::TwoPi(), TMath::TwoPi());
+  auto h1DrJetRef = std::make_unique<TH1D>("h1DrJetRef", ";#DeltaR;Events", 100, 0, 10);
+  auto h2RefPtDbResp = std::make_unique<TH2D>("h2RefPtDbResp", ";Reference #it{p}_{T} (GeV);Direct Balance Response", nPt, binsPt.data(), 200, 0, 4);
+  auto h2RefPtMpfResp = std::make_unique<TH2D>("h2RefPtMpfResp", ";Reference #it{p}_{T} (GeV);MPF Response", nPt, binsPt.data(), 300, -2, 4);
+  
   // Plots for jet properties
-  TProfile *pGenJ1ptOprobePtInRefPt = new TProfile("pGenJ1ptOprobePtInRefPt","",nPt,binsPt);
-  TProfile *pJ1ptOprobePtInRefPt = new TProfile("pJ1ptOprobePtInRefPt","",nPt,binsPt);
-  TProfile *pJ1ptOgenJ1ptInGenJ1pt = new TProfile("pJ1ptOgenJ1ptInGenJ1pt","",nPt,binsPt);
-   
+  auto p1GenJ1PtOverProbePtInRefPt = std::make_unique<TProfile>("p1GenJ1PtOverProbePtInRefPt", ";Reference #it{p}_{T} (GeV);GenJet1Pt/ProbePt", nPt, binsPt.data());
+  auto p1J1PtOverProbePtInRefPt = std::make_unique<TProfile>("p1J1PtOverProbePtInRefPt", ";Reference #it{p}_{T} (GeV);Jet1Pt/ProbePt", nPt, binsPt.data());
+  auto p1J1PtOverGenJ1PtInGenJ1Pt = std::make_unique<TProfile>("p1J1PtOverGenJ1PtInGenJ1Pt", ";Generated Jet1 #it{p}_{T} (GeV);Jet1Pt/GenJet1Pt", nPt, binsPt.data());
+  
+  //------------------------------------
+  // Variables in 'flavourXTaggedY' directory
+  //------------------------------------
   fout->mkdir("passRefBarrel/flavourXTaggedY");
   fout->cd("passRefBarrel/flavourXTaggedY");
-  map<string, double> mvar;
-  map<string, map<string, map<string, TH1*> > > mp;
-  string avar[] = {"hRefPt",
-                  "pMpfRespInRefPt",
-                  "pDbRespInRefPt",
-                  "pMpfResp1InRefPt",
-                  "pMpfRespNInRefPt",
-                  "pMpfRespUInRefPt",
-                  "pRhoInRefPt",
-                  "pJet1PtORefPtInRefPt",
-                  "pGenJet1PtORefPtInRefPt",
-                  "pJet1PtOGenJet1PtInGenJet1Pt"};
-  string atag[] = {"i","b","c","q","g","n"};
-  string aflv[] = {"i","b","c","q","s","ud","g","n"};
-  const int nvar = sizeof(avar)/sizeof(avar[0]);
-  const int ntag = sizeof(atag)/sizeof(atag[0]);
-  const int nflv = sizeof(aflv)/sizeof(aflv[0]);
-  for (int ivar = 0; ivar != nvar; ++ivar) {
-    for (int itag = 0; itag != ntag; ++itag) {
-      for (int iflv = 0; iflv != nflv; ++iflv) {
-        string& var = avar[ivar]; const char *cv = var.c_str();
-        string& tag = atag[itag]; const char *ct = tag.c_str();
-        string& flv = aflv[iflv]; const char *cf = flv.c_str();
-        if (var=="hGenJet1Pt")
-          mp[var][tag][flv] = new TH1D(Form("%s_%s%s",cv,ct,cf),"",nPt,binsPt);
-        else
-          mp[var][tag][flv] = new TProfile(Form("%s_%s%s",cv,ct,cf),"",nPt,binsPt);
-      } // for iflv
-    } // for itag
-  } // for ivar
-
-
+  
+  std::map<std::string, double> mvar;
+  std::map<std::string, std::map<std::string, std::map<std::string, std::unique_ptr<TH1>>>> mp;
+  
+  std::vector<std::string> avar = {
+  		"h1RefPt",
+  		"h1GenJet1Pt",
+  		"p1MpfRespInRefPt",
+  		"p1DbRespInRefPt",
+  		"p1MpfResp1InRefPt",
+  		"p1MpfRespNInRefPt",
+  		"p1MpfRespUInRefPt",
+  		"p1RhoInRefPt",
+  		"p1Jet1PtORefPtInRefPt",
+  		"p1GenJet1PtORefPtInRefPt",
+  		"p1Jet1PtOGenJet1PtInGenJet1Pt"
+  };
+  
+  std::vector<std::string> atag = {"i", "b", "c", "q", "g", "n"};
+  std::vector<std::string> aflv = {"i", "b", "c", "q", "s", "ud", "g", "n"};
+  
+  for (const auto& var : avar) {
+  		for (const auto& tag : atag) {
+  				for (const auto& flv : aflv) {
+  						std::string histName = var + "_" + tag + flv;
+  						if (var == "h1GenJet1Pt") {
+  								mp[var][tag][flv] = std::make_unique<TH1D>(histName.c_str(), ";#it{p}_{T} (GeV);Events", nPt, binsPt.data());
+  						} else {
+  								mp[var][tag][flv] = std::make_unique<TProfile>(histName.c_str(), ";#it{p}_{T} (GeV);Value", nPt, binsPt.data());
+  						}
+  				}
+  		}
+  }
+  
   //------------------------------------
-  // Variables after Jet1Eta, Jet2Pt cut 
+  // Variables after Jet1Eta, Jet2Pt cut
   //------------------------------------
   fout->mkdir("passJet1EtaJet2Pt");
   fout->cd("passJet1EtaJet2Pt");
-  TProfile *pJetEtaInRefPt = new TProfile("pJetEtaInRefPt","",nPt,binsPt);
-  TH2D *h2JetEtaRefPt = new TH2D("h2JetEtaRefPt","",nPt,binsPt,nEta,binsEta);
-  TProfile *pGenJ2ptOprobePtInRefPt = new TProfile("pGenJ2ptOprobePtInRefPt","",nPt,binsPt);
-  TProfile *pJ2ptOprobePtInRefPt = new TProfile("pJ2ptOprobePtInRefPt","",nPt,binsPt);
-  TProfile *pJ2ptOgenJ2ptInGenJ2pt = new TProfile("pJ2ptOgenJ2ptInGenJ2pt","",nPt,binsPt);
-
-  // 1D composition and response
-  // p = Profile
-  // Db = Direct Balance, MPF = MET Projection Fraction
-  // Resp = Response
-  // Chhef = Charged Hadron Energy Fraction
-  // Nehef = Neutral Hadron Energy Fraction
-  // Neemef = Neutral ElectronMagnetic Energy Fraction
-  // Chemef = Charged ElectronMagnetic Energy Fraction
-  // Muef = Muon Energy Fraction
-  // Chpv0ef = Charged PV=0 Energy Fraction
-  TProfile *pDbRespInRefPt  = new TProfile("pDbRespInRefPt","",nPt,binsPt);
-  TProfile *pMpfRespInRefPt = new TProfile("pMpfRespInRefPt","",nPt,binsPt);
-  TProfile *pJetChhefInRefPt = new TProfile("pJetChhefInRefPt","",nPt,binsPt);
-  TProfile *pJetNehefInRefPt = new TProfile("pJetNhefInRefPt","",nPt,binsPt);
-  TProfile *pJetNeemefInRefPt  = new TProfile("pJetNeemefInRefPt","",nPt,binsPt);
-  TProfile *pJetChemefInRefPt  = new TProfile("pJetChemefInRefPt","",nPt,binsPt);
-  TProfile *pJetMuefInRefPt  = new TProfile("pJetMuefInRefPt","",nPt,binsPt);
-  TProfile *pJetChpv0efInRefPt  = new TProfile("pJetChpv0efInRefPt","",nPt,binsPt);
   
-  // for (int i = 0; i != 72; ++i) cout << Form("%1.3f, ",-TMath::Pi()+i*TMath::TwoPi()/72.); cout << endl;
+  auto p1JetEtaInRefPt = std::make_unique<TProfile>("p1JetEtaInRefPt", ";Reference #it{p}_{T} (GeV);Jet #eta", nPt, binsPt.data());
+  auto h2JetEtaRefPt = std::make_unique<TH2D>("h2JetEtaRefPt", ";Reference #it{p}_{T} (GeV);Jet #eta", nPt, binsPt.data(), nEta, binsEta.data());
+  
+  auto p1GenJ2PtOverProbePtInRefPt = std::make_unique<TProfile>("p1GenJ2PtOverProbePtInRefPt", ";Reference #it{p}_{T} (GeV);GenJet2Pt/ProbePt", nPt, binsPt.data());
+  auto p1J2PtOverProbePtInRefPt = std::make_unique<TProfile>("p1J2PtOverProbePtInRefPt", ";Reference #it{p}_{T} (GeV);Jet2Pt/ProbePt", nPt, binsPt.data());
+  auto p1J2PtOverGenJ2PtInGenJ2Pt = std::make_unique<TProfile>("p1J2PtOverGenJ2PtInGenJ2Pt", ";Generated Jet2 #it{p}_{T} (GeV);Jet2Pt/GenJet2Pt", nPt, binsPt.data());
+  
+  // 1D composition and response
+  auto p1DbRespInRefPt = std::make_unique<TProfile>("p1DbRespInRefPt", ";Reference #it{p}_{T} (GeV);Direct Balance Response", nPt, binsPt.data());
+  auto p1MpfRespInRefPt = std::make_unique<TProfile>("p1MpfRespInRefPt", ";Reference #it{p}_{T} (GeV);MPF Response", nPt, binsPt.data());
+  auto p1JetChhefInRefPt = std::make_unique<TProfile>("p1JetChhefInRefPt", ";Reference #it{p}_{T} (GeV);Charged Hadron Energy Fraction", nPt, binsPt.data());
+  auto p1JetNehefInRefPt = std::make_unique<TProfile>("p1JetNehefInRefPt", ";Reference #it{p}_{T} (GeV);Neutral Hadron Energy Fraction", nPt, binsPt.data());
+  auto p1JetNeemefInRefPt = std::make_unique<TProfile>("p1JetNeemefInRefPt", ";Reference #it{p}_{T} (GeV);Neutral EM Energy Fraction", nPt, binsPt.data());
+  auto p1JetChemefInRefPt = std::make_unique<TProfile>("p1JetChemefInRefPt", ";Reference #it{p}_{T} (GeV);Charged EM Energy Fraction", nPt, binsPt.data());
+  auto p1JetMuefInRefPt = std::make_unique<TProfile>("p1JetMuefInRefPt", ";Reference #it{p}_{T} (GeV);Muon Energy Fraction", nPt, binsPt.data());
+  auto p1JetChpv0efInRefPt = std::make_unique<TProfile>("p1JetChpv0efInRefPt", ";Reference #it{p}_{T} (GeV);Charged PV=0 Energy Fraction", nPt, binsPt.data());
+  
+  // Phi binning
   const int nPhi = 72;
-  const double binsPhi[nPhi+1] = 
-    {-3.142, -3.054, -2.967, -2.880, -2.793, -2.705, -2.618, -2.531, -2.443,
-     -2.356, -2.269, -2.182, -2.094, -2.007, -1.920, -1.833, -1.745, -1.658,
-     -1.571, -1.484, -1.396, -1.309, -1.222, -1.134, -1.047, -0.960, -0.873,
-     -0.785, -0.698, -0.611, -0.524, -0.436, -0.349, -0.262, -0.175, -0.087,
-     0.000, 0.087, 0.175, 0.262, 0.349, 0.436, 0.524, 0.611, 0.698, 0.785,
-     0.873, 0.960, 1.047, 1.134, 1.222, 1.309, 1.396, 1.484, 1.571, 1.658,
-     1.745, 1.833, 1.920, 2.007, 2.094, 2.182, 2.269, 2.356, 2.443, 2.531,
-     2.618, 2.705, 2.793, 2.880, 2.967, 3.054,3.142};
+  const double binsPhi[nPhi + 1] = {
+  		-3.142, -3.054, -2.967, -2.880, -2.793, -2.705, -2.618, -2.531, -2.443,
+  		-2.356, -2.269, -2.182, -2.094, -2.007, -1.920, -1.833, -1.745, -1.658,
+  		-1.571, -1.484, -1.396, -1.309, -1.222, -1.134, -1.047, -0.960, -0.873,
+  		-0.785, -0.698, -0.611, -0.524, -0.436, -0.349, -0.262, -0.175, -0.087,
+  		0.000, 0.087, 0.175, 0.262, 0.349, 0.436, 0.524, 0.611, 0.698, 0.785,
+  		0.873, 0.960, 1.047, 1.134, 1.222, 1.309, 1.396, 1.484, 1.571, 1.658,
+  		1.745, 1.833, 1.920, 2.007, 2.094, 2.182, 2.269, 2.356, 2.443, 2.531,
+  		2.618, 2.705, 2.793, 2.880, 2.967, 3.054, 3.142
+  };
+  
   // 2D composition and response
-  TProfile2D *p2DbRespInJetEtaJetPhiRefPt230  = new TProfile2D("p2DbRespInJetEtaJetPhiRefPt230","",nEta,binsEta,nPhi,binsPhi);
-  TProfile2D *p2MpfRespInJetEtaJetPhiRefPt230 = new TProfile2D("p2MpfRespInJetEtaJetPhiRefPt230","",nEta,binsEta,nPhi,binsPhi);
-  TProfile2D *p2JetChhefInJetEtaJetPhiRefPt230 = new TProfile2D("p2JetChhefInJetEtaJetPhiRefPt230","",nEta,binsEta,nPhi,binsPhi);
-  TProfile2D *p2JetNehefInJetEtaJetPhiRefPt230 = new TProfile2D("p2JetNehefInJetEtaJetPhiRefPt230","",nEta,binsEta,nPhi,binsPhi);
-  TProfile2D *p2JetNeemefInJetEtaJetPhiRefPt230 = new TProfile2D("p2JetNeemefInJetEtaJetPhiRefPt230","",nEta,binsEta,nPhi,binsPhi);
-  TProfile2D *p2JetChemefInJetEtaJetPhiRefPt230 = new TProfile2D("p2JetChemefInJetEtaJetPhiRefPt230","",nEta,binsEta,nPhi,binsPhi);
-  TProfile2D *p2JetMuefInJetEtaJetPhiRefPt230 = new TProfile2D("p2JetMuefInJetEtaJetPhiRefPt230","",nEta,binsEta,nPhi,binsPhi);
-  TProfile2D *p2JetChfpv0efInJetEtaJetPhiRefPt230 = new TProfile2D("p2JetChfpv0efInJetEtaJetPhiRefPt230","",nEta,binsEta,nPhi,binsPhi);
-
+  auto p2DbRespInJetEtaJetPhiRefPt230 = std::make_unique<TProfile2D>("p2DbRespInJetEtaJetPhiRefPt230", ";Jet #eta;Jet #phi;Direct Balance Response", nEta, binsEta.data(), nPhi, binsPhi);
+  auto p2MpfRespInJetEtaJetPhiRefPt230 = std::make_unique<TProfile2D>("p2MpfRespInJetEtaJetPhiRefPt230", ";Jet #eta;Jet #phi;MPF Response", nEta, binsEta.data(), nPhi, binsPhi);
+  auto p2JetChhefInJetEtaJetPhiRefPt230 = std::make_unique<TProfile2D>("p2JetChhefInJetEtaJetPhiRefPt230", ";Jet #eta;Jet #phi;Charged Hadron Energy Fraction", nEta, binsEta.data(), nPhi, binsPhi);
+  auto p2JetNehefInJetEtaJetPhiRefPt230 = std::make_unique<TProfile2D>("p2JetNehefInJetEtaJetPhiRefPt230", ";Jet #eta;Jet #phi;Neutral Hadron Energy Fraction", nEta, binsEta.data(), nPhi, binsPhi);
+  auto p2JetNeemefInJetEtaJetPhiRefPt230 = std::make_unique<TProfile2D>("p2JetNeemefInJetEtaJetPhiRefPt230", ";Jet #eta;Jet #phi;Neutral EM Energy Fraction", nEta, binsEta.data(), nPhi, binsPhi);
+  auto p2JetChemefInJetEtaJetPhiRefPt230 = std::make_unique<TProfile2D>("p2JetChemefInJetEtaJetPhiRefPt230", ";Jet #eta;Jet #phi;Charged EM Energy Fraction", nEta, binsEta.data(), nPhi, binsPhi);
+  auto p2JetMuefInJetEtaJetPhiRefPt230 = std::make_unique<TProfile2D>("p2JetMuefInJetEtaJetPhiRefPt230", ";Jet #eta;Jet #phi;Muon Energy Fraction", nEta, binsEta.data(), nPhi, binsPhi);
+  auto p2JetChfpv0efInJetEtaJetPhiRefPt230 = std::make_unique<TProfile2D>("p2JetChfpv0efInJetEtaJetPhiRefPt230", ";Jet #eta;Jet #phi;Charged PV=0 Energy Fraction", nEta, binsEta.data(), nPhi, binsPhi);
+  
   // Plots of npv, npvgood
-  TProfile *pRhoInRefPt = new TProfile("pRhoInRefPt","",nPt,binsPt);
-  TProfile *pNpvgoodInRefPt = new TProfile("pNpvgoodInRefPt","",nPt,binsPt);
-  TProfile *pNpvInRefPt = new TProfile("pNpvInRefPt","",nPt,binsPt);
-
-  TH2D *h2RefPtDbRespPassMpf = new TH2D("h2RefPtDbRespPassMpf","",nPt,binsPt,200,0,4);
-  TH2D *h2RefPtMpfRespPassDb = new TH2D("h2RefPtMpfRespPassDb","",nPt,binsPt,300,-2,4);
-  TH2D *h2RefPtDbRespPassBoth = new TH2D("h2RefPtDbRespPassBoth","",nPt,binsPt,200,0,4);
-  TH2D *h2RefPtMpfRespPassBoth = new TH2D("h2RefPtMpfRespPassBoth","",nPt,binsPt,300,-2,4);
-
+  auto p1RhoInRefPt = std::make_unique<TProfile>("p1RhoInRefPt", ";Reference #it{p}_{T} (GeV);#rho", nPt, binsPt.data());
+  auto p1NpvgoodInRefPt = std::make_unique<TProfile>("p1NpvgoodInRefPt", ";Reference #it{p}_{T} (GeV);N_{PV}^{good}", nPt, binsPt.data());
+  auto p1NpvInRefPt = std::make_unique<TProfile>("p1NpvInRefPt", ";Reference #it{p}_{T} (GeV);N_{PV}", nPt, binsPt.data());
+  
+  auto h2RefPtDbRespPassMpf = std::make_unique<TH2D>("h2RefPtDbRespPassMpf", ";Reference #it{p}_{T} (GeV);Direct Balance Response", nPt, binsPt.data(), 200, 0, 4);
+  auto h2RefPtMpfRespPassDb = std::make_unique<TH2D>("h2RefPtMpfRespPassDb", ";Reference #it{p}_{T} (GeV);MPF Response", nPt, binsPt.data(), 300, -2, 4);
+  auto h2RefPtDbRespPassBoth = std::make_unique<TH2D>("h2RefPtDbRespPassBoth", ";Reference #it{p}_{T} (GeV);Direct Balance Response", nPt, binsPt.data(), 200, 0, 4);
+  auto h2RefPtMpfRespPassBoth = std::make_unique<TH2D>("h2RefPtMpfRespPassBoth", ";Reference #it{p}_{T} (GeV);MPF Response", nPt, binsPt.data(), 300, -2, 4);
+  
   //------------------------------------
-  // Variables after response cuts 
+  // Variables after response cuts
   //------------------------------------
   fout->mkdir("passResponse");
   fout->cd("passResponse");
-   
+  
   Int_t runN = 20000;
   Double_t runMin = 370000.5;
   Double_t runMax = 390000.5;
-
-  // Time stability of xsec
-  TH1D *hRunRefPt30 = new TH1D("hRunRefPt30",";Run;N_{events};",runN, runMin, runMax);
-  TH1D *hRunRefPt110 = new TH1D("hRunRefPt110",";Run;N_{events};",runN, runMin, runMax);
-  TH1D *hRunRefPt230 = new TH1D("hRunRefPt230",";Run;N_{events};",runN, runMin, runMax);
+  
+  // Time stability of cross-section
+  auto h1RunRefPt30 = std::make_unique<TH1D>("h1RunRefPt30", ";Run;Events", runN, runMin, runMax);
+  auto h1RunRefPt110 = std::make_unique<TH1D>("h1RunRefPt110", ";Run;Events", runN, runMin, runMax);
+  auto h1RunRefPt230 = std::make_unique<TH1D>("h1RunRefPt230", ";Run;Events", runN, runMin, runMax);
   
   // Time stability of JEC
-  TProfile *pDbRespInRunRefPt30 = new TProfile("pDbRespInRunRefPt30",";Run;BAL;",runN, runMin, runMax);
-  TProfile *pDbRespInRunRefPt110 = new TProfile("pDbRespInRunRefPt110",";Run;BAL;",runN, runMin, runMax);
-  TProfile *pDbRespInRunRefPt230 = new TProfile("pDbRespInRunRefPt230",";Run;BAL;",runN, runMin, runMax);
-  TProfile *pMpfRespInRunRefPt30 = new TProfile("pMpfRespInRunRefPt30",";Run;MPF;",runN, runMin, runMax);
-  TProfile *pMpfRespInRunRefPt110 = new TProfile("pMpfRespInRunRefPt110",";Run;MPF;",runN, runMin, runMax);
-  TProfile *pMpfRespInRunRefPt230 = new TProfile("pMpfRespInRunRefPt230",";Run;MPF;",runN, runMin, runMax);
-   
-  // Time stability of PF composition
-  TProfile *pJetChhefInRunRefPt30 = new TProfile("pJetChhefInRunRefPt30",";Run;CHF;",runN, runMin, runMax);
-  TProfile *pJetChhefInRunRefPt110 = new TProfile("pJetChhefInRunRefPt110",";Run;CHF;",runN, runMin, runMax);
-  TProfile *pJetChhefInRunRefPt230 = new TProfile("pJetChhefInRunRefPt230",";Run;CHF;",runN, runMin, runMax);
-
-  TProfile *pJetNehefInRunRefPt30 = new TProfile("pJetNehefInRunRefPt30",";Run;NHF;",runN, runMin, runMax);
-  TProfile *pJetNehefInRunRefPt110 = new TProfile("pJetNehefInRunRefPt110",";Run;NHF;",runN, runMin, runMax);
-  TProfile *pJetNehefInRunRefPt230 = new TProfile("pJetNehefInRunRefPt230",";Run;NHF;",runN, runMin, runMax);
-
-  TProfile *pJetNeemefInRunRefPt30 = new TProfile("pJetNeemefInRunRefPt30",";Run;NHF;",runN, runMin, runMax);
-  TProfile *pJetNeemefInRunRefPt110 = new TProfile("pJetNeemefInRunRefPt110",";Run;NHF;",runN, runMin, runMax);
-  TProfile *pJetNeemefInRunRefPt230 = new TProfile("pJetNeemefInRunRefPt230",";Run;NHF;",runN, runMin, runMax);
-   
-  curdir->cd();
+  auto p1DbRespInRunRefPt30 = std::make_unique<TProfile>("p1DbRespInRunRefPt30", ";Run;Direct Balance Response", runN, runMin, runMax);
+  auto p1DbRespInRunRefPt110 = std::make_unique<TProfile>("p1DbRespInRunRefPt110", ";Run;Direct Balance Response", runN, runMin, runMax);
+  auto p1DbRespInRunRefPt230 = std::make_unique<TProfile>("p1DbRespInRunRefPt230", ";Run;Direct Balance Response", runN, runMin, runMax);
   
-  //------------------------------------
-  // Event for loop 
-  //------------------------------------
-  TLorentzVector p4Ref, p4GenRef, p4Jet1, p4Jet2, p4Jetn;
-  TLorentzVector p4Met, p4Met1, p4Metn, p4Metu, p4Metnu, p4RawMet, p4CorrMet, p4RawRef;
-  TLorentzVector p4Jeti, p4CorrJets, p4RawJet, p4RawJets, p4RcJets, p4RcOffsets;
-  TLorentzVector p4GenJeti, p4GenJet1, p4GenJet2;
-  TLorentzVector p4Refx; // for MPFX
-   
-  Long64_t nentries = tree->GetEntries(); 
-  cout << "\nStarting loop over " << nentries << " entries" << endl;
- 
-  std::cout<<"---------------------------"<<std::endl;
-  std::cout<<setw(10)<<"Progress"<<setw(10)<<"Time"<<std::endl;
-  std::cout<<"---------------------------"<<std::endl;
-  double totTime = 0.0;
-	auto startClock = std::chrono::high_resolution_clock::now();
- 
-  for (Long64_t jentry=0; jentry<nentries;jentry++) {
-    //if (jentry>100) break;
-		if(nentries > 100  && jentry%(nentries/100) == 0){// print after every 1% of events
-      totTime+= std::chrono::duration<double>(std::chrono::high_resolution_clock::now()-startClock).count();
-      int sec = (int)(totTime)%60;
-      int min = (int)(totTime)/60;
-	    std::cout<<setw(10)<<100*jentry/nentries<<" %"<<setw(10)<<min<<"m "<<sec<<"s"<<std::endl;
-			startClock = std::chrono::high_resolution_clock::now();
-		}
-   
-    int count_passedCut = 1;
-    Long64_t ientry = tree->loadEntry(jentry);
-    if (ientry < 0) break; 
-    tree->fChain->GetTree()->GetEntry(ientry);
-    if(isDebug) cout<<"Loaded jentry = "<<jentry<<endl;
+  auto p1MpfRespInRunRefPt30 = std::make_unique<TProfile>("p1MpfRespInRunRefPt30", ";Run;MPF Response", runN, runMin, runMax);
+  auto p1MpfRespInRunRefPt110 = std::make_unique<TProfile>("p1MpfRespInRunRefPt110", ";Run;MPF Response", runN, runMin, runMax);
+  auto p1MpfRespInRunRefPt230 = std::make_unique<TProfile>("p1MpfRespInRunRefPt230", ";Run;MPF Response", runN, runMin, runMax);
+  
+  // Time stability of PF composition
+  auto p1JetChhefInRunRefPt30 = std::make_unique<TProfile>("p1JetChhefInRunRefPt30", ";Run;Charged Hadron Energy Fraction", runN, runMin, runMax);
+  auto p1JetChhefInRunRefPt110 = std::make_unique<TProfile>("p1JetChhefInRunRefPt110", ";Run;Charged Hadron Energy Fraction", runN, runMin, runMax);
+  auto p1JetChhefInRunRefPt230 = std::make_unique<TProfile>("p1JetChhefInRunRefPt230", ";Run;Charged Hadron Energy Fraction", runN, runMin, runMax);
+  
+  auto p1JetNehefInRunRefPt30 = std::make_unique<TProfile>("p1JetNehefInRunRefPt30", ";Run;Neutral Hadron Energy Fraction", runN, runMin, runMax);
+  auto p1JetNehefInRunRefPt110 = std::make_unique<TProfile>("p1JetNehefInRunRefPt110", ";Run;Neutral Hadron Energy Fraction", runN, runMin, runMax);
+  auto p1JetNehefInRunRefPt230 = std::make_unique<TProfile>("p1JetNehefInRunRefPt230", ";Run;Neutral Hadron Energy Fraction", runN, runMin, runMax);
+  
+  auto p1JetNeemefInRunRefPt30 = std::make_unique<TProfile>("p1JetNeemefInRunRefPt30", ";Run;Neutral EM Energy Fraction", runN, runMin, runMax);
+  auto p1JetNeemefInRunRefPt110 = std::make_unique<TProfile>("p1JetNeemefInRunRefPt110", ";Run;Neutral EM Energy Fraction", runN, runMin, runMax);
+  auto p1JetNeemefInRunRefPt230 = std::make_unique<TProfile>("p1JetNeemefInRunRefPt230", ";Run;Neutral EM Energy Fraction", runN, runMin, runMax);
+  
+  curdir->cd();
 
-    // Weight
-    double weight = (isMC ? tree->genWeight : 1);
+
+  
+//------------------------------------
+// Event loop
+//------------------------------------
+
+// Initialize TLorentzVectors
+TLorentzVector p4Ref, p4GenRef, p4Jet1, p4Jet2, p4Jetn;
+TLorentzVector p4Met, p4Met1, p4Metn, p4Metu, p4Metnu, p4RawMet, p4CorrMet, p4RawRef;
+TLorentzVector p4Jeti, p4CorrJets, p4RawJet, p4RawJets, p4RcJet, p4RcJets, p4RcOffsets;
+TLorentzVector p4GenJeti, p4GenJet1, p4GenJet2;
+TLorentzVector p4Refx; // for MPFX
+
+Long64_t nentries = skimT->getEntries(); 
+std::cout << "\nStarting loop over " << nentries << " entries" << std::endl;
+
+std::cout << "---------------------------" << std::endl;
+std::cout << std::setw(10) << "Progress" << std::setw(10) << "Time" << std::endl;
+std::cout << "---------------------------" << std::endl;
+double totTime = 0.0;
+auto startClock = std::chrono::high_resolution_clock::now();
+
+for (Long64_t jentry = 0; jentry < nentries; ++jentry) {
+    if (globalFlags_.isDebug() && jentry > globalFlags_.getNDebug()) break;
+    eventP->printProgress(jentry, nentries, startClock, totTime);
+   
+    Long64_t ientry = skimT->loadEntry(jentry);
+    if (ientry < 0) break; 
+    skimT->getChain()->GetTree()->GetEntry(ientry);
+    h1Cutflow->Fill(cutToBinMap["passSkim"]);
+
     //------------------------------------
-    // trigger and golden lumi, MET filter selection 
+    // Trigger and golden lumi, MET filter selection 
     //------------------------------------
-    if(!eventP->passHLT(tree)) continue; 
-      if(isDebug) cout<<"passHLT"<<endl;
-    count_passedCut++;
-    hCutflow->Fill(count_passedCut);
-    hCutflowWeight->Fill(count_passedCut, weight);
+    if (!eventP->passHLT(skimT)) continue; 
+    h1Cutflow->Fill(cutToBinMap["passHLT"]);
 
     bool passGoodLumi = true; 
-    if(isData){
-      passGoodLumi = objS->checkGoodLumi(tree->run, tree->luminosityBlock);
+    if (globalFlags_.isData()){
+        passGoodLumi = objS->checkGoodLumi(skimT->run, skimT->luminosityBlock);
     }
-    //if(!passGoodLumi) continue; 
-    if(isDebug) cout<<"passLumi"<<endl;
-    count_passedCut++;
-    hCutflow->Fill(count_passedCut);
-    hCutflowWeight->Fill(count_passedCut, weight);
+    if (!passGoodLumi) continue; 
+    h1Cutflow->Fill(cutToBinMap["passGoodLumi"]);
 
-    if(!eventP->passFilter(tree)) continue; 
-    if(isDebug) cout<<"passMetFilter"<<endl;
-    count_passedCut++;
-    hCutflow->Fill(count_passedCut);
-    hCutflowWeight->Fill(count_passedCut, weight);
+    if (!eventP->passFilter(skimT)) continue; 
+    h1Cutflow->Fill(cutToBinMap["passMetFilter"]);
 
     //------------------------------------------
     // Select objects
     //------------------------------------------
     // Reco objects
     objP->clearObjects();
-    if(isZeeJet) objP->pickElectrons();
+    objP->pickElectrons();
+    if (objP->getPickedElectrons().size() < 2) continue;
+    if (objP->getPickedElectrons().size() > 3) continue;
     objP->pickRefs();
-    vector<TLorentzVector> p4Refs = objP->pickedRefs;
+    std::vector<TLorentzVector> p4Refs = objP->getPickedRefs();
 
-    int nRef(0);
-    nRef = p4Refs.size();
-    if(nRef<1) continue; 
-    if(isDebug) cout<<"passAtleast1Ref"<<endl;
-    count_passedCut++;
-    hCutflow->Fill(count_passedCut);
-    hCutflowWeight->Fill(count_passedCut, weight);
+    if (p4Refs.empty()) continue; 
+    h1Cutflow->Fill(cutToBinMap["passAtleast1Ref"]);
+
+    // Weight
+    double weight = (globalFlags_.isMC() ? skimT->genWeight : 1.0);
+    if (globalFlags_.isMC()) weight *= objS->getPuCorrection(skimT->Pileup_nTrueInt, "nominal");
+
     p4Ref = p4Refs.at(0);
     p4RawRef = p4Refs.at(0);
     double ptRef = p4Ref.Pt();
-    if(!ptRef>0.0) continue;
-
-    //Fill histograms
-    h2RefPtCountRef->Fill(ptRef, nRef, weight);
-    hRefPt ->Fill(ptRef, weight);
+    // Fill histograms
+    h2RefPtCountRef->Fill(ptRef, p4Refs.size(), weight);
+    h1RefPt->Fill(ptRef, weight);
     h2RefEtaRefPhi->Fill(p4RawRef.Eta(), p4RawRef.Phi(), weight);
     h2RefEtaRefPhiRebin->Fill(p4RawRef.Eta(), p4RawRef.Phi(), weight);
-    if (ptRef>=110){
-      h2RefEtaRefPhiRefPt110->Fill(p4RawRef.Eta(), p4RawRef.Phi(), weight);
-      h2RefEtaRefPhiRefPt110Rebin->Fill(p4RawRef.Eta(), p4RawRef.Phi(), weight);
+    if (ptRef >= 110) {
+        h2RefEtaRefPhiRefPt110->Fill(p4RawRef.Eta(), p4RawRef.Phi(), weight);
+        h2RefEtaRefPhiRefPt110Rebin->Fill(p4RawRef.Eta(), p4RawRef.Phi(), weight);
     }
 
     // Gen objects
-    p4GenRef.SetPtEtaPhiM(0,0,0,0);
-    if(isMC){
-      if(isZeeJet) objP->pickGenElectrons();
-      objP->pickGenRefs();
-      vector<TLorentzVector> p4GenRefs = objP->pickedGenRefs;
-      if(p4GenRefs.size()<1) continue;
-      p4GenRef = p4GenRefs.at(0);
-      if (p4GenRef.Pt()>0 && fabs(p4GenRef.Eta()) < 1.3) {
-        hGenRefPt->Fill(p4GenRef.Pt(), weight);
-      }
-      if (fabs(p4Ref.Eta()) < 1.3) {
-        if (p4GenRef.Pt()>0) {
-          hRefPtBarrel->Fill(ptRef, weight);
-          pRefPtOgenRefPtInGenRefPt->Fill(p4GenRef.Pt(), ptRef / p4GenRef.Pt(), weight);
-          pGenRefPtORefPtInRefPt->Fill(ptRef, p4GenRef.Pt() / ptRef, weight);
+    p4GenRef.SetPtEtaPhiM(0, 0, 0, 0);
+    if (globalFlags_.isMC()) {
+        objP->pickGenElectrons();
+        objP->pickGenRefs();
+        std::vector<TLorentzVector> p4GenRefs = objP->getPickedGenRefs();
+        if (p4GenRefs.empty()) continue;
+        p4GenRef = p4GenRefs.at(0);
+        if (p4GenRef.Pt() > 0 && fabs(p4GenRef.Eta()) < 1.3) {
+            h1GenRefPt->Fill(p4GenRef.Pt(), weight);
         }
-      }
-    }//isMC
+        if (fabs(p4Ref.Eta()) < 1.3) {
+            if (p4GenRef.Pt() > 0) {
+                h1RefPtBarrel->Fill(ptRef, weight);
+                p1RefPtOverGenRefPtInGenRefPt->Fill(p4GenRef.Pt(), ptRef / p4GenRef.Pt(), weight);
+                p1GenRefPtOverRefPtInRefPt->Fill(ptRef, p4GenRef.Pt() / ptRef, weight);
+            }
+        }
+    }
 
     //------------------------------------------------
     // Jet loop: Apply JEC
     //------------------------------------------------
     // Select leading jets. Just exclude Ref, don't apply JetID yet
-    Float_t     Jet_resFactor[tree->nJetMax]; // Custom addition
-    Float_t     Jet_deltaJES[tree->nJetMax]; // Custom addition
-    Float_t     Jet_CF[tree->nJetMax]; // Custom addition
-    int iJet(-1), iJet2(-1), nJets(0);
-    double djes(1), jes(1), res(1);
-    p4Jet1.SetPtEtaPhiM(0,0,0,0);
-    p4Jet2.SetPtEtaPhiM(0,0,0,0);
-    p4Jetn.SetPtEtaPhiM(0,0,0,0);
+    int iJet1(-1), iJet2(-1), nJets(0);
+    p4Jet1.SetPtEtaPhiM(0, 0, 0, 0);
+    p4Jet2.SetPtEtaPhiM(0, 0, 0, 0);
+    p4Jetn.SetPtEtaPhiM(0, 0, 0, 0);
     // Also calculate corrected type-I chsMET and HDM inputs
-    p4CorrJets.SetPtEtaPhiM(0,0,0,0);
-    p4RawJets.SetPtEtaPhiM(0,0,0,0);
-    p4RcJets.SetPtEtaPhiM(0,0,0,0);
-    p4RcOffsets.SetPtEtaPhiM(0,0,0,0);
+    p4RawJets.SetPtEtaPhiM(0, 0, 0, 0);
+    p4RcJets.SetPtEtaPhiM(0, 0, 0, 0);
+    p4RcOffsets.SetPtEtaPhiM(0, 0, 0, 0);
+    p4CorrJets.SetPtEtaPhiM(0, 0, 0, 0);
 
-    for (int i = 0; i != tree->nJet; ++i) {
-      double rawJetPt = tree->Jet_pt[i] * (1.0 - tree->Jet_rawFactor[i]);
-      double rawJetMass = tree->Jet_mass[i] * (1.0 - tree->Jet_rawFactor[i]);
-      double corrs = 1.0;
-      //double res = (v.size()>1 ? v[v.size()-1]/v[v.size()-2] : 1.);
-      //Jet_RES[i] = 1./res;
-      res  = 1.0;
-      Jet_deltaJES[i] = (1./corrs) / (1.0 - tree->Jet_rawFactor[i]);
-      tree->Jet_pt[i] = rawJetPt ;
-      tree->Jet_mass[i] = rawJetMass; 
-      tree->Jet_rawFactor[i] = (1.0 - 1.0/corrs);
-      Jet_resFactor[i] = (1.0 - 1.0/res);
-      // Smear jets
-      if (smearJets) {
-        //assert(false);
-      }
-     
-      // Check that jet is not Ref and pTcorr>15 GeV
-      bool pass_JetId = tree->Jet_jetId[i] & (1 << 2); // tightLepVeto
-      if (tree->Jet_pt[i]>12 && pass_JetId) {
-        p4Jeti.SetPtEtaPhiM(tree->Jet_pt[i], tree->Jet_eta[i], tree->Jet_phi[i], tree->Jet_mass[i]);
-        if (p4Ref.DeltaR(p4Jeti)<0.2) continue; // should not happen, but does?
-        ++nJets;
-      
-        if (iJet==-1) { // Leading jet for balance
-          iJet = i;
-          p4Jet1 = p4Jeti;
-          djes = Jet_deltaJES[i];
-          jes = (1.-tree->Jet_rawFactor[i]);
-          res = (1.-Jet_resFactor[i]);
-        }
-        else { // Subleading jets 
-          p4Jetn += p4Jeti;
-          if (iJet2==-1) { // First subleading jet for alpha
-          iJet2 = i;
-          p4Jet2 = p4Jeti;
-          }
-        }
-        // Calculate L1RC correction
-        p4RawJet = (1-tree->Jet_rawFactor[i]) * p4Jeti;
-        double corrl1rc(1.); // tree->isRun3
-        p4RcJets = corrl1rc * p4RawJet;
-        
-        // Corrected type-I chsMET calculation
-        p4CorrJets += p4Jeti;
+    for (int i = 0; i != skimT->nJet; ++i) {
+        if (!(skimT->Jet_jetId[i] & (1 << 2))) continue; // tightLepVeto
+
+        // Data+MC: undo the correction already applied in NanoAOD
+        skimT->Jet_pt[i] *= (1.0 - skimT->Jet_rawFactor[i]);
+        skimT->Jet_mass[i] *= (1.0 - skimT->Jet_rawFactor[i]);
+        p4RawJet.SetPtEtaPhiM(skimT->Jet_pt[i], skimT->Jet_eta[i], skimT->Jet_phi[i], skimT->Jet_mass[i]);
         p4RawJets += p4RawJet;
-        p4RcJets += p4RcJets;
-        p4RcOffsets += (p4RawJet - p4RcJets);
-      } // non-Ref jet
-    } // for i in nJet
-    
-    if(nJets < 1) continue; 
-    if(isDebug) cout<<"passAtleast1Jet"<<endl;
-    count_passedCut++;
-    hCutflow->Fill(count_passedCut);
-    hCutflowWeight->Fill(count_passedCut, weight);
 
-    //------------------------------------------------
-    // GenJet loop
-    //------------------------------------------------
-    // Select p4GenJet1 matching leading and subleading reco jet
-    int iGenJet(-1), iGenJet2(-1);
-    p4GenJet1.SetPtEtaPhiM(0,0,0,0);
-    p4GenJet2.SetPtEtaPhiM(0,0,0,0);
-    if (isMC) {
-      for (Int_t i = 0; i != tree->nGenJet; ++i) {
-   	      p4GenJeti.SetPtEtaPhiM(tree->GenJet_pt[i],tree->GenJet_eta[i],
-                  tree->GenJet_phi[i], tree->GenJet_mass[i]);
-        if (iJet!=-1 && p4GenJeti.DeltaR(p4Jet1)<0.4 && iGenJet==-1) {
-          iGenJet = i;
-          p4GenJet1 = p4GenJeti;
+        // Data+MC: L1RC correction is applied to the uncorrected jet
+        double corrL1FastJet = objS->getL1FastJetCorrection(skimT->Jet_area[i], skimT->Jet_eta[i], 
+                                                            skimT->Jet_pt[i], skimT->Rho);
+        skimT->Jet_pt[i] *= corrL1FastJet;
+        skimT->Jet_mass[i] *= corrL1FastJet;
+        p4RcJet.SetPtEtaPhiM(skimT->Jet_pt[i], skimT->Jet_eta[i], skimT->Jet_phi[i], skimT->Jet_mass[i]);
+        p4RcJets += p4RcJet;
+        p4RcOffsets += (p4RawJet - p4RcJet);
+
+        // Data+MC: MCTruth correction is applied to the L1RC corrected jet
+        double corrL2Relative = objS->getL2RelativeCorrection(skimT->Jet_eta[i], skimT->Jet_pt[i]);
+        skimT->Jet_pt[i] *= corrL2Relative;
+        skimT->Jet_mass[i] *= corrL2Relative;
+
+        // Only Data: L2Residual+L3Residual correction is applied to the MCTruth corrected jet
+        if (globalFlags_.isData()) {
+            double corrL2L3Residual = objS->getL2L3ResidualCorrection(skimT->Jet_eta[i], skimT->Jet_pt[i]);
+            skimT->Jet_pt[i] *= corrL2L3Residual;
+            skimT->Jet_mass[i] *= corrL2L3Residual;
         }
-        else if (iJet2!=-1 && p4GenJeti.DeltaR(p4Jet2)<0.4 && iGenJet2==-1) {
-          iGenJet2 = i;
-          p4GenJet2 = p4GenJeti;
+
+        p4Jeti.SetPtEtaPhiM(skimT->Jet_pt[i], skimT->Jet_eta[i], skimT->Jet_phi[i], skimT->Jet_mass[i]);
+        if (smearJets_) {
+            // Apply JER correction if necessary
+            // double corrJER = objS->getJERCorrection(skimT, i, "nom");
+            // skimT->Jet_pt[i] *= corrJER;
         }
-      } // for i in tree->nGenJet
-    } // isMC
-    bool pass_gen = (iGenJet!=-1);
-   
+       
+        if (skimT->Jet_pt[i] < 12) continue;
+        if (p4Ref.DeltaR(p4Jeti) < 0.2) continue; // should not happen, but does?
+        ++nJets;
+        if (iJet1 == -1) { // Leading jet for balance
+            iJet1 = i;
+            p4Jet1 = p4Jeti;
+        } else { // Subleading jets 
+            p4Jetn += p4Jeti;
+            if (iJet2 == -1) { // First subleading jet for alpha
+                iJet2 = i;
+                p4Jet2 = p4Jeti;
+            }
+        }
+        p4CorrJets += p4Jeti;
+    }//nJet
+
+    if (nJets < 1) continue; 
+    h1Cutflow->Fill(cutToBinMap["passAtleast1Jet"]);
+
+    if (objS->checkJetVetoMap()) continue; // expensive function
+    h1Cutflow->Fill(cutToBinMap["passJetVetoMap"]);
+    
     //------------------------------------------------
     // Set MET vectors
     //------------------------------------------------
-    p4RawMet.SetPtEtaPhiM(tree->RawPuppiMET_pt, 0, tree->RawPuppiMET_phi, 0);
+    p4RawMet.SetPtEtaPhiM(skimT->ChsMET_pt, 0, skimT->ChsMET_phi, 0);
     p4RawMet += p4RawRef - p4Ref; // replace PF Ref with Reco Ref
     p4Met1 = -p4Jet1 - p4Ref;
     p4Metn = -p4Jetn;
-    //p4CorrMet = p4RawMet +p4RawJets -p4CorrJets -p4RcOffsets;
-    p4CorrMet = p4RawMet +p4RcJets -p4CorrJets; // same as above
-    // Unclustered MET from rawMET by taking out all the hard stuff
-    // p4Metu = p4RawMet +Ref +p4RawJets -p4RcOffsets;
-    // p4Metu = p4RawMet +Ref +p4RcJets;
-    // Or equally well, from corrMET (modulo rounding errors)
-    p4Metu = p4CorrMet + p4Ref +p4CorrJets;
-    p4Metnu = p4Metn + 1.1*p4Metu;
+    p4CorrMet = p4RawMet + p4RcJets - p4CorrJets; // Corrected MET
+    // Unclustered MET from corrMET
+    p4Metu = p4CorrMet + p4Ref + p4CorrJets;
+    p4Metnu = p4Metn + 1.1 * p4Metu;
     p4Met = p4CorrMet;
     
     // Make MET transverse
@@ -453,229 +418,246 @@ int HistZeeJet::Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectS
     //------------------------------------------------
     // Calculate basic variables
     //------------------------------------------------
-    double ptjet = p4Jet1.Pt();
-    double abseta = fabs(p4Jet1.Eta());
-    double ptJet2 = p4Jet2.Pt();
-    double ptJet2Min = 30;
-    double bal(0), mpf(0), mpf1(0), mpfn(0), mpfu(0), mpfnu(0);
-    double mpfx(0), mpf1x(0), mpfnPt(0), mpfux(0), mpfnux(0);
-    bal = ptjet / ptRef;
-    mpf = 1 + p4Met.Vect().Dot(p4Ref.Vect()) / (ptRef*ptRef);
-    mpf1 = 1 + p4Met1.Vect().Dot(p4Ref.Vect()) / (ptRef*ptRef);
-    mpfn = p4Metn.Vect().Dot(p4Ref.Vect()) / (ptRef*ptRef);
-    mpfu = p4Metu.Vect().Dot(p4Ref.Vect()) / (ptRef*ptRef);
-    mpfnu = p4Metnu.Vect().Dot(p4Ref.Vect()) / (ptRef*ptRef);
-    //
-    p4Refx.SetPtEtaPhiM(p4Ref.Pt(),p4Ref.Eta(),p4Ref.Phi()+0.5*TMath::Pi(),0.);
-    mpfx = 1 + p4Met.Vect().Dot(p4Refx.Vect()) / (ptRef*ptRef);
-    mpf1x = 1 + p4Met1.Vect().Dot(p4Refx.Vect()) / (ptRef*ptRef);
-    mpfnPt = p4Metn.Vect().Dot(p4Refx.Vect()) / (ptRef*ptRef);
-    mpfux = p4Metu.Vect().Dot(p4Refx.Vect()) / (ptRef*ptRef);
-    mpfnux = p4Metnu.Vect().Dot(p4Refx.Vect()) / (ptRef*ptRef);
+    double bal = p4Jet1.Pt() / ptRef;
+    double mpf = 1 + p4Met.Vect().Dot(p4Ref.Vect()) / (ptRef * ptRef);
+    double mpf1 = 1 + p4Met1.Vect().Dot(p4Ref.Vect()) / (ptRef * ptRef);
+    double mpfn = p4Metn.Vect().Dot(p4Ref.Vect()) / (ptRef * ptRef);
+    double mpfu = p4Metu.Vect().Dot(p4Ref.Vect()) / (ptRef * ptRef);
+    double mpfnu = p4Metnu.Vect().Dot(p4Ref.Vect()) / (ptRef * ptRef);
+
+    // For MPFX
+    p4Refx.SetPtEtaPhiM(p4Ref.Pt(), p4Ref.Eta(), p4Ref.Phi() + 0.5 * TMath::Pi(), 0.0);
+    double mpfx = 1 + p4Met.Vect().Dot(p4Refx.Vect()) / (ptRef * ptRef);
+    double mpf1x = 1 + p4Met1.Vect().Dot(p4Refx.Vect()) / (ptRef * ptRef);
+    double mpfnPt = p4Metn.Vect().Dot(p4Refx.Vect()) / (ptRef * ptRef);
+    double mpfux = p4Metu.Vect().Dot(p4Refx.Vect()) / (ptRef * ptRef);
+    double mpfnux = p4Metnu.Vect().Dot(p4Refx.Vect()) / (ptRef * ptRef);
      
     // Sanity checks for HDM inputs
-    if (!(fabs(mpf1+mpfn+mpfu-mpf)<1e-4)) {
-      cout << "\nHDM input error: mpf=" << mpf << " mpf1=" << mpf1
-        << " mpfn=" << mpfn << " mpfu=" << mpfu << endl;
-      cout << "Difference = " << mpf1+mpfn+mpfu-mpf << endl << flush;
-      //assert(false);
-      cout << "Skip entry " << jentry
-        << " ("<<tree->run<<","<<tree->luminosityBlock<<","<<tree->event<<")"
-        << " in file " << fout->GetName() << endl << flush;
-      continue;
+    if (!(fabs(mpf1 + mpfn + mpfu - mpf) < 1e-4)) {
+        std::cout << "\nHDM input error: mpf=" << mpf << " mpf1=" << mpf1
+                  << " mpfn=" << mpfn << " mpfu=" << mpfu << std::endl;
+        std::cout << "Difference = " << mpf1 + mpfn + mpfu - mpf << std::endl << std::flush;
+        std::cout << "Skip entry " << jentry
+                  << " (" << skimT->run << "," << skimT->luminosityBlock << "," << skimT->event << ")"
+                  << " in file " << fout->GetName() << std::endl << std::flush;
+        continue;
     }
    
-    if(fabs(p4Ref.DeltaPhi(p4Jet1) - 3.14159265) >= 0.44) continue; 
-    if(isDebug) cout<<"passDPhiRefJet1"<<endl;
-    count_passedCut++;
-    hCutflow->Fill(count_passedCut);
-    hCutflowWeight->Fill(count_passedCut, weight);
+    if (fabs(p4Ref.DeltaPhi(p4Jet1) - TMath::Pi()) >= 0.44) continue; 
+    h1Cutflow->Fill(cutToBinMap["passDPhiRefJet1"]);
 
-    if(fabs(p4Ref.Eta()) > 1.3) continue; 
-    if(isDebug) cout<<"passRefBarrel"<<endl;
-    count_passedCut++;
-    hCutflow->Fill(count_passedCut);
-    hCutflowWeight->Fill(count_passedCut, weight);
-   	hDphiJetRef->Fill(p4Ref.DeltaPhi(p4Jet1), weight);
-   	hDrJetRef->Fill(p4Ref.DeltaR(p4Jet1), weight);
+    if (fabs(p4Ref.Eta()) > 1.3) continue; 
+    h1Cutflow->Fill(cutToBinMap["passRefBarrel"]);
 
-    if (pass_gen || isData) {
-      pJ1ptOprobePtInRefPt->Fill(ptRef, p4Jet1.Pt() / ptRef, weight);
+    h1DphiJetRef->Fill(p4Ref.DeltaPhi(p4Jet1), weight);
+    h1DrJetRef->Fill(p4Ref.DeltaR(p4Jet1), weight);
+
+    //------------------------------------------------
+    // GenJet loop
+    //------------------------------------------------
+    // Select p4GenJet1 matching leading and subleading reco jet
+    int iGenJet(-1), iGenJet2(-1);
+    p4GenJet1.SetPtEtaPhiM(0, 0, 0, 0);
+    p4GenJet2.SetPtEtaPhiM(0, 0, 0, 0);
+    if (globalFlags_.isMC()) {
+        for (Int_t i = 0; i != skimT->nGenJet; ++i) {
+            p4GenJeti.SetPtEtaPhiM(skimT->GenJet_pt[i], skimT->GenJet_eta[i],
+                                   skimT->GenJet_phi[i], skimT->GenJet_mass[i]);
+            if (iJet1 != -1 && p4GenJeti.DeltaR(p4Jet1) < 0.4 && iGenJet == -1) {
+                iGenJet = i;
+                p4GenJet1 = p4GenJeti;
+            } else if (iJet2 != -1 && p4GenJeti.DeltaR(p4Jet2) < 0.4 && iGenJet2 == -1) {
+                iGenJet2 = i;
+                p4GenJet2 = p4GenJeti;
+            }
+        }
+    }
+    bool pass_gen = (iGenJet != -1);
+   
+    if (pass_gen || globalFlags_.isData()) {
+        p1J1PtOverProbePtInRefPt->Fill(ptRef, p4Jet1.Pt() / ptRef, weight);
     }
     if (pass_gen) {
-      pGenJ1ptOprobePtInRefPt->Fill(ptRef, p4GenJet1.Pt() / ptRef, weight);
-      pJ1ptOgenJ1ptInGenJ1pt->Fill(p4GenJet1.Pt(), p4Jet1.Pt() / p4GenJet1.Pt(), weight);
+        p1GenJ1PtOverProbePtInRefPt->Fill(ptRef, p4GenJet1.Pt() / ptRef, weight);
+        p1J1PtOverGenJ1PtInGenJ1Pt->Fill(p4GenJet1.Pt(), p4Jet1.Pt() / p4GenJet1.Pt(), weight);
     }
-    int flv = (isMC ? tree->GenJet_partonFlavour[iGenJet] : 99);
-    mvar["hRefPt"] = 1;
-    mvar["pMpfRespInRefPt"] = mpf;
-    mvar["pDbRespInRefPt"] = bal;
-    mvar["pMpfResp1InRefPt"] = mpf1;
-    mvar["pMpfRespNInRefPt"] = mpfn;
-    mvar["pMpfRespUInRefPt"] = mpfu;
-    mvar["pRhoInRefPt"] = tree->Rho;
-    mvar["pJet1PtORefPtInRefPt"] = (p4Jet1.Pt() / ptRef);
-    mvar["pGenJet1PtORefPtInRefPt"] = (p4GenJet1.Pt() / ptRef);
-    mvar["pJet1PtOGenJet1PtInGenJet1Pt"] = (p4GenJet1.Pt()!=0 ? p4Jet1.Pt() / p4GenJet1.Pt() : 0);
+    /*
+    int flv = (globalFlags_.isMC() ? skimT->GenJet_partonFlavour[iGenJet] : 99);
+    mvar["h1RefPt"] = 1.0;
+    mvar["p1MpfRespInRefPt"] = mpf;
+    mvar["p1DbRespInRefPt"] = bal;
+    mvar["p1MpfResp1InRefPt"] = mpf1;
+    mvar["p1MpfRespNInRefPt"] = mpfn;
+    mvar["p1MpfRespUInRefPt"] = mpfu;
+    mvar["p1RhoInRefPt"] = skimT->Rho;
+    mvar["p1Jet1PtORefPtInRefPt"] = (p4Jet1.Pt() / ptRef);
+    mvar["p1GenJet1PtORefPtInRefPt"] = (p4GenJet1.Pt() / ptRef);
+    mvar["p1Jet1PtOGenJet1PtInGenJet1Pt"] = (p4GenJet1.Pt() != 0 ? p4Jet1.Pt() / p4GenJet1.Pt() : 0.0);
     
-    tree->Jet_btagDeepB[iJet] = tree->Jet_btagDeepFlavB[iJet];
-    tree->Jet_btagDeepC[iJet] = 0.5*(tree->Jet_btagDeepFlavCvB[iJet] +
-    		     tree->Jet_btagDeepFlavCvL[iJet]);
-    tree->Jet_qgl[iJet] = tree->Jet_btagDeepFlavQG[iJet];
-    bool isb = (tree->Jet_btagDeepB[iJet] > objS->bThresh);
-    bool isc = (tree->Jet_btagDeepC[iJet] > objS->cThresh && !isb);
-    bool isq = (tree->Jet_qgl[iJet]>=0.5 && tree->Jet_qgl[iJet] && !isb && !isc);
-    bool isg = (tree->Jet_qgl[iJet]>=0 && tree->Jet_qgl[iJet]<0.5 && !isb && !isc);
+    bool isb = (skimT->Jet_btagDeepB[iJet1] > objS->bThresh);
+    bool isc = (skimT->Jet_btagDeepC[iJet1] > objS->cThresh && !isb);
+    bool isq = (skimT->Jet_qgl[iJet1] >= 0.5 && skimT->Jet_qgl[iJet1] && !isb && !isc);
+    bool isg = (skimT->Jet_qgl[iJet1] >= 0.0 && skimT->Jet_qgl[iJet1] < 0.5 && !isb && !isc);
     bool isn = (!isb && !isc && !isq && !isg);
     
-    for (int ivar = 0; ivar != nvar; ++ivar) {
-      for (int itag = 0; itag != ntag; ++itag) {
-        for (int iflv = 0; iflv != nflv; ++iflv) {
-          string& svr = avar[ivar]; const char *cv = svr.c_str();
-          string& stg = atag[itag]; const char *ct = stg.c_str();
-          string& sfl = aflv[iflv]; const char *cf = sfl.c_str();
-          
-          if (((sfl=="i") ||
-             (sfl=="b" && abs(flv)==5) ||
-             (sfl=="c" && abs(flv)==4) ||
-             (sfl=="q" && abs(flv)<=3 && flv!=0) ||
-             (sfl=="s" && abs(flv)==3) ||
-             (sfl=="ud" && abs(flv)<=2 && flv!=0) ||
-             (sfl=="g" && flv==21) ||
-             (sfl=="n" && flv==0)) &&
-            ((stg=="i") ||
-             (stg=="b" && isb) ||
-             (stg=="c" && isc) ||
-             (stg=="q" && isq) ||
-             (stg=="g" && isg) ||
-             (stg=="n" && isn))) {
-             double x = ptRef;
-             if (svr=="pJet1PtOGenJet1PtInGenJet1Pt") x = p4GenJet1.Pt();
-             if ((svr=="pJet1PtORefPtInRefPt" || svr=="pGenJet1PtORefPtInRefPt") && iGenJet==-1) x = 0;
-             double var = mvar[svr];
-             TH1* h = mp[svr][stg][sfl];
-             if (!h) {
-               cout << "Missing "<<svr<<stg<<sfl<<endl<<flush;
-               assert(h);
-             }
-          
-             if (svr=="hRefPt")
-               ((TH1D*)h)->Fill(x, weight);
-             else
-               ((TProfile*)h)->Fill(x, var, weight);
-          }
-        } // for iflv
-      } // for itag
-    } // for ivar
+    for (const auto& var : avar) {
+        for (const auto& tag : atag) {
+            for (const auto& flv_str : aflv) {
+                if (((flv_str == "i") ||
+                    (flv_str == "b" && abs(flv) == 5) ||
+                    (flv_str == "c" && abs(flv) == 4) ||
+                    (flv_str == "q" && abs(flv) <= 3 && flv != 0) ||
+                    (flv_str == "s" && abs(flv) == 3) ||
+                    (flv_str == "ud" && abs(flv) <= 2 && flv != 0) ||
+                    (flv_str == "g" && flv == 21) ||
+                    (flv_str == "n" && flv == 0)) &&
+                   ((tag == "i") ||
+                    (tag == "b" && isb) ||
+                    (tag == "c" && isc) ||
+                    (tag == "q" && isq) ||
+                    (tag == "g" && isg) ||
+                    (tag == "n" && isn))) {
+                    
+                    double x = ptRef;
+                    if (var == "p1Jet1PtOGenJet1PtInGenJet1Pt") x = p4GenJet1.Pt();
+                    if ((var == "p1Jet1PtORefPtInRefPt" || var == "p1GenJet1PtORefPtInRefPt") && iGenJet == -1) x = 0.0;
+                    double val = mvar[var];
+                    TH1* h = mp[var][tag][flv_str].get();
+                    if (!h) {
+                        std::cout << "Missing " << var << tag << flv_str << std::endl << std::flush;
+                        assert(h);
+                    }
+                    if (var == "h1RefPt") {
+                        static_cast<TH1D*>(h)->Fill(x, weight);
+                    } else {
+                        static_cast<TProfile*>(h)->Fill(x, val, weight);
+                    }
+                }
+            }
+        }
+    }
   
+    if (!((fabs(p4Jet1.Eta()) < 1.3) && (p4Jet2.Pt() < ptRef || p4Jet2.Pt() < 30))) continue; 
+    h1Cutflow->Fill(cutToBinMap["passJet1EtaJet2Pt"]);
 
-    bool pass_Jet1Eta = (abseta < 1.3);
-    bool pass_Jet2Pt = (ptJet2 < ptRef || ptJet2 < ptJet2Min);    
-    if(!(pass_Jet1Eta &&  pass_Jet2Pt)) continue; 
-    if(isDebug) cout<<"passJet1EtaJet2Pt"<<endl;
-    count_passedCut++;
-    hCutflow->Fill(count_passedCut);
-    hCutflowWeight->Fill(count_passedCut, weight);
     h2RefPtDbResp->Fill(ptRef, bal, weight);
     h2RefPtMpfResp->Fill(ptRef, mpf, weight);
-    if (p4Jet2.Pt()>0) {
-      if (iGenJet2!=-1 || !isMC) {
-        pJ2ptOprobePtInRefPt->Fill(ptRef, p4Jet2.Pt() / ptRef, weight);
-      }
-      if (iGenJet2!=-1) {
-        pGenJ2ptOprobePtInRefPt->Fill(ptRef, p4GenJet2.Pt() / ptRef, weight);
-        pJ2ptOgenJ2ptInGenJ2pt->Fill(p4GenJet2.Pt(), p4Jet2.Pt() / p4GenJet2.Pt(), weight);
-      }
+    if (p4Jet2.Pt() > 0) {
+        if (iGenJet2 != -1 || !globalFlags_.isMC()) {
+            p1J2PtOverProbePtInRefPt->Fill(ptRef, p4Jet2.Pt() / ptRef, weight);
+        }
+        if (iGenJet2 != -1) {
+            p1GenJ2PtOverProbePtInRefPt->Fill(ptRef, p4GenJet2.Pt() / ptRef, weight);
+            p1J2PtOverGenJ2PtInGenJ2Pt->Fill(p4GenJet2.Pt(), p4Jet2.Pt() / p4GenJet2.Pt(), weight);
+        }
     }
     // Control plots for Ref-jet 
     // PF composition plots
-    h2JetEtaRefPt->Fill(ptRef, tree->Jet_eta[iJet], weight);
-    pJetEtaInRefPt->Fill(ptRef, fabs(tree->Jet_eta[iJet]), weight);
+    h2JetEtaRefPt->Fill(ptRef, skimT->Jet_eta[iJet1], weight);
+    p1JetEtaInRefPt->Fill(ptRef, fabs(skimT->Jet_eta[iJet1]), weight);
     
     // 1D composition and response
-    pDbRespInRefPt->Fill(ptRef, bal, weight);
-    pMpfRespInRefPt->Fill(ptRef, mpf, weight);
-    pJetChhefInRefPt->Fill(ptRef, tree->Jet_chHEF[iJet], weight);
-    pJetNehefInRefPt->Fill(ptRef, tree->Jet_neHEF[iJet], weight);
-    pJetNeemefInRefPt->Fill(ptRef, tree->Jet_neEmEF[iJet], weight);
-    pJetChemefInRefPt->Fill(ptRef, tree->Jet_chEmEF[iJet], weight);
-    pJetMuefInRefPt->Fill(ptRef, tree->Jet_muEF[iJet], weight);
-    //pJetChpv0efInRefPt->Fill(ptRef, tree->Jet_chFPV0EF[iJet], weight);
-    
-    pRhoInRefPt->Fill(ptRef, tree->Rho, weight);
-    pNpvgoodInRefPt->Fill(ptRef, tree->PV_npvsGood, weight);
-    pNpvInRefPt->Fill(ptRef, tree->PV_npvs, weight);
-    // 2D composition and response
-    if (ptRef>230) {
-      double eta = tree->Jet_eta[iJet];
-      double phi = tree->Jet_phi[iJet];
-      p2DbRespInJetEtaJetPhiRefPt230->Fill(eta, phi, bal, weight);
-      p2MpfRespInJetEtaJetPhiRefPt230->Fill(eta, phi, mpf, weight);
-      p2JetChhefInJetEtaJetPhiRefPt230->Fill(eta, phi, tree->Jet_chHEF[iJet], weight);
-      p2JetNehefInJetEtaJetPhiRefPt230->Fill(eta, phi, tree->Jet_neHEF[iJet], weight);
-      p2JetNeemefInJetEtaJetPhiRefPt230->Fill(eta, phi, tree->Jet_neEmEF[iJet], weight);
-      p2JetChemefInJetEtaJetPhiRefPt230->Fill(eta, phi, tree->Jet_chEmEF[iJet], weight);
-      p2JetMuefInJetEtaJetPhiRefPt230->Fill(eta, phi, tree->Jet_muEF[iJet], weight);
-      //p2JetChfpv0efInJetEtaJetPhiRefPt230->Fill(eta, phi, tree->Jet_chFPV0EF[iJet], weight);
-    } // high pT range
-    
+    p1DbRespInRefPt->Fill(ptRef, bal, weight);
+    p1MpfRespInRefPt->Fill(ptRef, mpf, weight);
+    p1JetChhefInRefPt->Fill(ptRef, skimT->Jet_chHEF[iJet1], weight);
+   
 
-    bool pass_DbResp = (fabs(1-bal)<0.7);
-    bool pass_MpfResp = (fabs(1-mpf)<0.7);
+
+    // Control plots for Ref-jet
+    // PF composition plots
+    h2JetEtaRefPt->Fill(ptRef, skimT->Jet_eta[iJet1], weight);
+    p1JetEtaInRefPt->Fill(ptRef, fabs(skimT->Jet_eta[iJet1]), weight);
+
+    // 1D composition and response
+    p1DbRespInRefPt->Fill(ptRef, bal, weight);
+    p1MpfRespInRefPt->Fill(ptRef, mpf, weight);
+    p1JetChhefInRefPt->Fill(ptRef, skimT->Jet_chHEF[iJet1], weight);
+    p1JetNehefInRefPt->Fill(ptRef, skimT->Jet_neHEF[iJet1], weight);
+    p1JetNeemefInRefPt->Fill(ptRef, skimT->Jet_neEmEF[iJet1], weight);
+    p1JetChemefInRefPt->Fill(ptRef, skimT->Jet_chEmEF[iJet1], weight);
+    p1JetMuefInRefPt->Fill(ptRef, skimT->Jet_muEF[iJet1], weight);
+    // p1JetChpv0efInRefPt->Fill(ptRef, skimT->Jet_chFPV0EF[iJet1], weight);
+
+    p1RhoInRefPt->Fill(ptRef, skimT->Rho, weight);
+    p1NpvgoodInRefPt->Fill(ptRef, skimT->PV_npvsGood, weight);
+    p1NpvInRefPt->Fill(ptRef, skimT->PV_npvs, weight);
+
+    // 2D composition and response
+    if (ptRef > 230) {
+        double eta = skimT->Jet_eta[iJet1];
+        double phi = skimT->Jet_phi[iJet1];
+        p2DbRespInJetEtaJetPhiRefPt230->Fill(eta, phi, bal, weight);
+        p2MpfRespInJetEtaJetPhiRefPt230->Fill(eta, phi, mpf, weight);
+        p2JetChhefInJetEtaJetPhiRefPt230->Fill(eta, phi, skimT->Jet_chHEF[iJet1], weight);
+        p2JetNehefInJetEtaJetPhiRefPt230->Fill(eta, phi, skimT->Jet_neHEF[iJet1], weight);
+        p2JetNeemefInJetEtaJetPhiRefPt230->Fill(eta, phi, skimT->Jet_neEmEF[iJet1], weight);
+        p2JetChemefInJetEtaJetPhiRefPt230->Fill(eta, phi, skimT->Jet_chEmEF[iJet1], weight);
+        p2JetMuefInJetEtaJetPhiRefPt230->Fill(eta, phi, skimT->Jet_muEF[iJet1], weight);
+        // p2JetChfpv0efInJetEtaJetPhiRefPt230->Fill(eta, phi, skimT->Jet_chFPV0EF[iJet1], weight);
+    }  // high pT range
+
+    bool pass_DbResp = (fabs(1 - bal) < 0.7);
+    bool pass_MpfResp = (fabs(1 - mpf) < 0.7);
+
     if (pass_MpfResp) h2RefPtDbRespPassMpf->Fill(ptRef, bal, weight);
     if (pass_DbResp) h2RefPtMpfRespPassDb->Fill(ptRef, mpf, weight);
-    if (pass_MpfResp && pass_DbResp) h2RefPtDbRespPassBoth->Fill(ptRef, bal, weight);
-    if (pass_MpfResp && pass_DbResp) h2RefPtMpfRespPassBoth->Fill(ptRef, mpf, weight);
+    if (pass_MpfResp && pass_DbResp) {
+        h2RefPtDbRespPassBoth->Fill(ptRef, bal, weight);
+        h2RefPtMpfRespPassBoth->Fill(ptRef, mpf, weight);
+    }
 
-    if(!(pass_DbResp && pass_MpfResp)) continue; 
-    if(isDebug) cout<<"passResponse"<<endl;
-    count_passedCut++;
-    hCutflow->Fill(count_passedCut);
-    hCutflowWeight->Fill(count_passedCut, weight);
+    if (!(pass_DbResp && pass_MpfResp)) continue;
+    h1Cutflow->Fill(cutToBinMap["passResponse"]);
 
-    if (ptRef>30) {
-      hRunRefPt30->Fill(tree->run, weight); 
-      pDbRespInRunRefPt30->Fill(tree->run, bal, weight); 
-      pMpfRespInRunRefPt30->Fill(tree->run, mpf, weight);
-      pJetChhefInRunRefPt30->Fill(tree->run, tree->Jet_chHEF[iJet], weight);
-      pJetNehefInRunRefPt30->Fill(tree->run, tree->Jet_neHEF[iJet], weight);
-      pJetNeemefInRunRefPt30->Fill(tree->run, tree->Jet_neEmEF[iJet], weight);
+    if (ptRef > 30) {
+        h1RunRefPt30->Fill(skimT->run, weight);
+        p1DbRespInRunRefPt30->Fill(skimT->run, bal, weight);
+        p1MpfRespInRunRefPt30->Fill(skimT->run, mpf, weight);
+        p1JetChhefInRunRefPt30->Fill(skimT->run, skimT->Jet_chHEF[iJet1], weight);
+        p1JetNehefInRunRefPt30->Fill(skimT->run, skimT->Jet_neHEF[iJet1], weight);
+        p1JetNeemefInRunRefPt30->Fill(skimT->run, skimT->Jet_neEmEF[iJet1], weight);
     }
-    if (ptRef>110) {
-      hRunRefPt110->Fill(tree->run, weight);
-      pDbRespInRunRefPt110->Fill(tree->run, bal, weight); 
-      pMpfRespInRunRefPt110->Fill(tree->run, mpf, weight);
-      pJetChhefInRunRefPt110->Fill(tree->run, tree->Jet_chHEF[iJet], weight);
-      pJetNehefInRunRefPt110->Fill(tree->run, tree->Jet_neHEF[iJet], weight);
-      pJetNeemefInRunRefPt110->Fill(tree->run, tree->Jet_neEmEF[iJet], weight);
+    if (ptRef > 110) {
+        h1RunRefPt110->Fill(skimT->run, weight);
+        p1DbRespInRunRefPt110->Fill(skimT->run, bal, weight);
+        p1MpfRespInRunRefPt110->Fill(skimT->run, mpf, weight);
+        p1JetChhefInRunRefPt110->Fill(skimT->run, skimT->Jet_chHEF[iJet1], weight);
+        p1JetNehefInRunRefPt110->Fill(skimT->run, skimT->Jet_neHEF[iJet1], weight);
+        p1JetNeemefInRunRefPt110->Fill(skimT->run, skimT->Jet_neEmEF[iJet1], weight);
     }
-    if (ptRef>230) {
-      hRunRefPt230->Fill(tree->run, weight);
-      pDbRespInRunRefPt230->Fill(tree->run, bal, weight); 
-      pMpfRespInRunRefPt230->Fill(tree->run, mpf, weight);
-      pJetChhefInRunRefPt230->Fill(tree->run, tree->Jet_chHEF[iJet], weight);
-      pJetNehefInRunRefPt230->Fill(tree->run, tree->Jet_neHEF[iJet], weight);
-      pJetNeemefInRunRefPt230->Fill(tree->run, tree->Jet_neEmEF[iJet], weight);
+    if (ptRef > 230) {
+        h1RunRefPt230->Fill(skimT->run, weight);
+        p1DbRespInRunRefPt230->Fill(skimT->run, bal, weight);
+        p1MpfRespInRunRefPt230->Fill(skimT->run, mpf, weight);
+        p1JetChhefInRunRefPt230->Fill(skimT->run, skimT->Jet_chHEF[iJet1], weight);
+        p1JetNehefInRunRefPt230->Fill(skimT->run, skimT->Jet_neHEF[iJet1], weight);
+        p1JetNeemefInRunRefPt230->Fill(skimT->run, skimT->Jet_neEmEF[iJet1], weight);
     }
-  }//event for loop
-  
-  // Add extra plot for jet response vs Ref pT
-  if (isMC) {
+    */
+}  // end of event loop
+
+// Add extra plot for jet response vs Ref pT
+if (globalFlags_.isMC()) {
     fout->cd("passRefBarrel");
-    TH1D *hrgenvgen = pJ1ptOgenJ1ptInGenJ1pt->ProjectionX("hrgenvgen");
-    TH1D *hrgenvRef = pJ1ptOprobePtInRefPt->ProjectionX("hrgenvRef");
-    hrgenvRef->Divide(pGenJ1ptOprobePtInRefPt);
+    auto hrgenvgen = std::unique_ptr<TH1D>(p1J1PtOverGenJ1PtInGenJ1Pt->ProjectionX("hrgenvgen"));
+    auto hrgenvRef = std::unique_ptr<TH1D>(p1J1PtOverProbePtInRefPt->ProjectionX("hrgenvRef"));
+    hrgenvRef->Divide(p1GenJ1PtOverProbePtInRefPt.get());
+
     fout->cd("passJet1EtaJet2Pt");
-    TH1D *hrgen2vgen = pJ2ptOgenJ2ptInGenJ2pt->ProjectionX("hrgen2vgen");
-    TH1D *hrgen2vRef = pJ2ptOprobePtInRefPt->ProjectionX("hrgen2vRef");
-    hrgen2vRef->Divide(pGenJ2ptOprobePtInRefPt);
+    auto hrgen2vgen = std::unique_ptr<TH1D>(p1J2PtOverGenJ2PtInGenJ2Pt->ProjectionX("hrgen2vgen"));
+    auto hrgen2vRef = std::unique_ptr<TH1D>(p1J2PtOverProbePtInRefPt->ProjectionX("hrgen2vRef"));
+    hrgen2vRef->Divide(p1GenJ2PtOverProbePtInRefPt.get());
+
     curdir->cd();
-  }
-  fout->Write();
-  eventP->printBins(hCutflow);
-  eventP->scanTFile(fout);
-  cout<<"Output file: "<<fout->GetName()<<endl;
-  fout->Close();
-  return 0;
+}
+
+fout->Write();
+eventP->printBins(h1Cutflow.get());
+// eventP->scanTFile(fout);
+std::cout << "Output file: " << fout->GetName() << std::endl;
+fout->Close();
+return 0;
+
 }
    

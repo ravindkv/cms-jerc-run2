@@ -1,5 +1,5 @@
-#ifndef HistWqq_h
-#define HistWqq_h
+#ifndef HistZmmJet_h
+#define HistZmmJet_h
 #include <TH2.h>
 #include <TStyle.h>
 #include <TCanvas.h>
@@ -28,14 +28,13 @@
 #include "GlobalFlag.h"
 #include "correction.h"
 
-class HistWqq: public GlobalFlag{
+class HistZmmJet: public GlobalFlag{
  public :
-    HistWqq(TString oName): GlobalFlag(oName){}
+    HistZmmJet(std::string outName): GlobalFlag(outName){}
     int Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectScale *objS, TFile *fout);
-    ~HistWqq();
+    ~HistZmmJet(){}
 
  private :
-    ObjectPick* objectPick;   
     bool smearJets = false;
 
 };

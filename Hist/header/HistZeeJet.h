@@ -1,43 +1,47 @@
-#ifndef HistZeeJet_h
-#define HistZeeJet_h
-#include <TH2.h>
-#include <TStyle.h>
-#include <TCanvas.h>
+#ifndef HISTZEEJET_H
+#define HISTZEEJET_H
 
-#include "TH1D.h"
-#include "TProfile.h"
-#include "TProfile2D.h"
-#include "TLorentzVector.h"
-#include "TStopwatch.h"
-
-#include <TROOT.h>
-#include <TChain.h>
-#include <TFile.h>
-#include <TH2.h>
+#include <memory>
 #include <iostream>
 #include <algorithm>
 #include <ctime>
 #include <iomanip>
 #include <cmath>
 
-#include "TRandom3.h"
+// ROOT includes
+#include <TROOT.h>
+#include <TChain.h>
+#include <TFile.h>
+#include <TH1D.h>
+#include <TH2D.h>
+#include <TProfile.h>
+#include <TProfile2D.h>
+#include <TLorentzVector.h>
+#include <TStopwatch.h>
+#include <TRandom3.h>
+
+// User-defined includes
 #include "SkimTree.h"
 #include "EventPick.h"
 #include "ObjectPick.h"
 #include "ObjectScale.h"
 #include "GlobalFlag.h"
-#include "correction.h"
 
-class HistZeeJet: public GlobalFlag{
- public :
-    HistZeeJet(TString oName): GlobalFlag(oName){}
-    int Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectScale *objS, TFile *fout);
-    ~HistZeeJet();
+class HistZeeJet{
+public:
+    // Constructor accepting a reference to GlobalFlag
+    explicit HistZeeJet(GlobalFlag& globalFlags);
+    ~HistZeeJet() = default;
 
- private :
-    bool smearJets = false;
+    int Run(std::shared_ptr<SkimTree>& skimT, EventPick* eventP, ObjectPick* objP, ObjectScale* objS, TFile* fout);
 
+private:
+    bool smearJets_ = false;
+    // Reference to GlobalFlag instance
+    GlobalFlag& globalFlags_;
+
+    // Add any private member variables or methods here if needed
 };
 
-#endif
+#endif // HISTZEEJET_H
 

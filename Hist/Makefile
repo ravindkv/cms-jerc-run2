@@ -1,25 +1,42 @@
+# Compiler and standard
+#GCC = g++ -std=c++17
+GCC = g++ -g -std=c++17
 
-ROOT_I=-I`root-config --incdir` -I./header
-ROOT_L=`root-config --libs`
-CORR_A=`correction config --cflags --ldflags --rpath`
-GCC=g++ -std=c++17
-#GCC=g++ -g -std=c++17
+# Directories
+SRCDIR = cpp
+OBJDIR = obj
 
-SRCDIR   = cpp
-OBJDIR   = obj
-SOURCES     := $(wildcard $(SRCDIR)/*.cpp)
-OBJECTS     := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
-BINS        := runMain
+# Sources and objects
+SOURCES := $(wildcard $(SRCDIR)/*.cpp)
+OBJECTS := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
+BINS    := runMain
 
+# Include directories
+ROOT_I = -I`root-config --incdir` -I./header
+CORRECTION_INC = -I$(pwd)./corrlib/include
+
+# Compiler flags
+CXXFLAGS = $(ROOT_I) $(CORRECTION_INC) 
+
+# Libraries
+ROOT_L = `root-config --libs`
+CORRECTION_LIB = -L$(pwd)./corrlib/lib -lcorrectionlib
+
+# Linker flags
+LDFLAGS  = $(ROOT_L) $(CORRECTION_LIB)
+
+# Build executable
 $(BINS): $(OBJECTS) main.cpp
-	@echo "--> Creating executables $@"
-	@$(GCC) -o $@ main.cpp ${CORR_A} ${ROOT_L} ${ROOT_I} $(OBJECTS)
+	@echo "--> Creating executable $@"
+	@$(GCC) main.cpp $(OBJECTS) -o $@ $(CXXFLAGS) $(LDFLAGS)
 
+# Build object files
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp header/%.h
 	@echo "--> Creating object $@"
 	@mkdir -p $(OBJDIR)
-	@$(GCC) -c $< -o $@ ${CORR_A} ${ROOT_L} ${ROOT_I}
+	@$(GCC) -c $< -o $@ $(CXXFLAGS) $(LDFLAGS)
 
+# Clean up
 clean:
 	rm -f $(wildcard $(OBJDIR)/*.o) $(BINS)
 

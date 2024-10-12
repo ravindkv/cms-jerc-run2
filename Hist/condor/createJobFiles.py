@@ -12,7 +12,7 @@ def createJobs(jsonFile, jdlFile, logDir="log"):
     'Universe   = vanilla\n\
     should_transfer_files = YES\n\
     when_to_transfer_output = ON_EXIT\n\
-    Transfer_Input_Files = Hist.tar.gz, runMain.sh\n\
+    Transfer_Input_Files = Hist.tar.gz, runMain.sh, libcorrectionlib.so\n\
     x509userproxy        = %s\n\
     +MaxRuntime = 60*60*24\n\
     max_retries = 2\n\
@@ -45,6 +45,9 @@ if __name__=="__main__":
     tarFile = "tmpSub/Hist.tar.gz"
     os.system("tar --exclude condor --exclude tmp --exclude output -zcvf %s ../../Hist"%tarFile)
     os.system("cp runMain.sh tmpSub/")
+    libPath = "./../corrlib/lib/libcorrectionlib.so"
+    os.system(f"ls {libPath}")
+    os.system(f"cp {libPath} tmpSub/")
     os.system("cp /tmp/%s tmpSub"%vomsProxy)
     print("Created dir: tmpSub")
     submitAll = open("tmpSub/submitAll.sh", "w") 

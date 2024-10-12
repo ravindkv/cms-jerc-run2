@@ -12,7 +12,7 @@ class TFile;
 
 class HistIncJet: public GlobalFlag{
 public :
-  explicit HistIncJet(TString oName): GlobalFlag(oName){}
+  explicit HistIncJet(std::string outName): GlobalFlag(outName){}
   // UTILITIES
   struct TrigRange
   { 

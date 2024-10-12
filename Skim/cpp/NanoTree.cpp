@@ -122,6 +122,7 @@ void NanoTree::loadTree(){
   //Jet for all channels 
   //--------------------------------------- 
   fChain->SetBranchStatus("Jet_btagDeep*",1);
+  fChain->SetBranchStatus("Jet_qgl",1);
   fChain->SetBranchStatus("Jet_chEmEF",1);
   fChain->SetBranchStatus("Jet_chHEF" ,1);
   fChain->SetBranchStatus("Jet_eta"   ,1);

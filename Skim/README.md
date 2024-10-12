@@ -34,3 +34,9 @@ This will open each file and perform many checks. It  will  create job files for
 jobs which can be resubmitted
 * cd tmpSub
 * condor_submit resubJobs.jdl
+
+Once condor_q is DONE. Check the finished jobs again
+* cd ..
+* python3 checkFinishedJobs.py
+and follow the above steps untill all jobs are finished
+

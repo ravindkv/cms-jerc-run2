@@ -1,5 +1,5 @@
-#ifndef HistVetoMap_h
-#define HistVetoMap_h
+#ifndef HistFlavour_h
+#define HistFlavour_h
 
 #include "GlobalFlag.h"  // Necessary header for inheritance
 
@@ -10,21 +10,13 @@ class ObjectPick;
 class ObjectScale;
 class TFile;
 
-class HistVetoMap: public GlobalFlag{
+class HistFlavour: public GlobalFlag{
 public :
-  explicit HistVetoMap(TString oName): GlobalFlag(oName){}
-  // UTILITIES
-  struct TrigRange
-  { 
-    double ptThresh;
-    double ptMin;
-    double ptMax;
-    double absEtaMin;
-    double absEtaMax;
-  };
+  explicit HistFlavour(std::string outName): GlobalFlag(outName){}
   int Run(SkimTree *tree, EventPick *eventP, ObjectPick *objP, ObjectScale *objS, TFile *fout);
   
-  ~HistVetoMap() = default;
+  ~HistFlavour() = default;
 };
 
 #endif
+

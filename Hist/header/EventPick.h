@@ -1,8 +1,13 @@
 #ifndef EVENTPICK_H
 #define EVENTPICK_H
 
-#include<vector>
-#include<string>
+#include <vector>
+#include <string>
+#include <map>
+#include <memory>
+#include <iostream>
+#include <iomanip>
+#include <chrono>
 
 #include <TFile.h>
 #include <TDirectory.h>
@@ -13,27 +18,37 @@
 #include <TH2D.h>
 #include <TProfile.h>
 #include <TProfile2D.h>
-#include <iostream>
-#include <iomanip>
 
-#include"SkimTree.h"
-#include"GlobalFlag.h"
+#include "SkimTree.h"
+#include "GlobalFlag.h"
 
-class EventPick: public GlobalFlag{
+class EventPick{
 public:
-	EventPick(TString oName): GlobalFlag(oName){};
+    // Constructor accepting a reference to GlobalFlag
+    explicit EventPick(GlobalFlag& globalFlags);
 
-    bool passFilter(SkimTree *tree);
-    bool passHLT(SkimTree *tree);
-    vector<string> getTrigNames();
-    map<string, const Bool_t *> getTrigValues();
-
-    void printBins(TH1D *hist);
-    void printInfo(TObject *obj);
-    void scanDirectory(TDirectory *dir, const std::string &path);
-    void scanTFile(TFile *file);
+    bool passFilter(const std::shared_ptr<SkimTree>& tree) const;
+    bool passHLT(const std::shared_ptr<SkimTree>& tree) const;
     
-	~EventPick();
-	
+    std::vector<std::string> getTrigNames() const;
+    std::map<std::string, const Bool_t*> getTrigValues() const;
+
+    void printProgress(Long64_t jentry, Long64_t nentries, 
+                       std::chrono::time_point<std::chrono::high_resolution_clock>& startClock, 
+                       double& totTime) const;
+    
+    void printBins(const TH1D* hist) const;
+    void printInfo(const TObject* obj) const;
+    void scanDirectory(TDirectory* dir, const std::string& path) const;
+    void scanTFile(TFile* file) const;
+
+    ~EventPick();
+
+private:
+    // Reference to GlobalFlag instance
+    GlobalFlag& globalFlags_;
+    void printDebug(const std::string& message) const;
 };
-#endif
+
+#endif // EVENTPICK_H
+

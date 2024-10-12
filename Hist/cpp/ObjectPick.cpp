@@ -1,240 +1,300 @@
-#include"ObjectPick.h"
+#include "ObjectPick.h"
 
-void ObjectPick::setTree(SkimTree *skimT){
-  tree = skimT;
+// Constructor implementation
+ObjectPick::ObjectPick(GlobalFlag& globalFlags) : globalFlags_(globalFlags) {
+}
+// Destructor
+ObjectPick::~ObjectPick() {
+    // Cleanup if necessary
 }
 
-void ObjectPick::clearObjects(){
-  pickedElectrons.clear();
-  pickedMuons.clear();
-  pickedPhotons.clear();
-  pickedRefs.clear();
-
-  pickedGenElectrons.clear();
-  pickedGenMuons.clear();
-  pickedGenPhotons.clear();
-  pickedGenRefs.clear();
+// Set the SkimTree pointer
+void ObjectPick::setTree(const std::shared_ptr<SkimTree>& skimTree) {
+    skimTree_ = skimTree;
 }
 
-//https://twiki.cern.ch/twiki/bin/view/CMS/MuonUL2016#High_pT_above_120_GeV
-//https://twiki.cern.ch/twiki/bin/viewauth/CMS/SWGuideMuonIdRun2#HighPt_Muon
-//https://twiki.cern.ch/twiki/bin/view/CMS/SWGuideMuonSelection#HighPt_Tracker_Muon
-//https://github.com/cms-sw/cmssw/blob/master/DataFormats/MuonReco/src/MuonObjectPicks.cc#L933-L960
-void ObjectPick::pickMuons(){
-  if (isDebug){
-	  cout << "Found Event, Starting Muons" << endl;
-	  cout << " nMu=" << tree->nMuon_ << endl;
-  }
-  for(UInt_t m = 0; m < tree->nMuon_; ++m){
-    double eta = tree->muEta_[m];
-    double pt = tree->muPt_[m];
-    
-    bool passPrompt   = false; 
-    if(pt > 20){
-      passPrompt = (TMath::Abs(eta) <= 2.3 
-      && tree->muTightId_[m] 
-      && tree->muDxy_[m]<0.2
-      && tree->muDz_[m]<0.5);
+// Clear picked objects
+void ObjectPick::clearObjects() {
+    pickedElectrons_.clear();
+    pickedMuons_.clear();
+    pickedPhotons_.clear();
+    pickedRefs_.clear();
+
+    pickedGenElectrons_.clear();
+    pickedGenMuons_.clear();
+    pickedGenPhotons_.clear();
+    pickedGenRefs_.clear();
+}
+
+// Helper function for debug printing
+void ObjectPick::printDebug(const std::string& message) const {
+    if (globalFlags_.isDebug()) {
+        std::cout << message << std::endl;
     }
-    if(passPrompt) pickedMuons.push_back(m);
-    if (isDebug){
-      cout << "-- " << m 
-      << " passPrompt="<<passPrompt
-      << " pt="<<pt
-      << " eta="<<eta
-      << endl;
-    } 
-  }//nMuon
-  if(isDebug) cout<<"pickedMuons.size() = "<<pickedMuons.size()<<endl;
 }
 
-void ObjectPick::pickElectrons(){
-  if(isDebug){
-	  cout << "Found Event, Starting Electrons" << endl;
-	  cout << " nEle=" << tree->nEle_ << endl;
-  }
-  for(int eleInd = 0; eleInd < tree->nEle_; ++eleInd){
-    double eta = tree->eleEta_[eleInd];
-    double absEta = TMath::Abs(eta);
-    double SCeta = eta + tree->eleDeltaEtaSC_[eleInd];
-    double absSCEta = TMath::Abs(SCeta);
-    double pt = tree->elePt_[eleInd];
-    // make sure it doesn't fall within the gap
-    bool passEtaEBEEGap = (absSCEta < 1.4442) || (absSCEta > 1.566);
-    //medium electron ID
-    bool passTightID = tree->eleID_[eleInd]==4;
-
-    bool eleSel = (passEtaEBEEGap && absEta <= 2.4 && pt >= 25 && passTightID);
-    if(eleSel) pickedElectrons.push_back(eleInd);
-    if (isDebug){
-      cout << "-- " << eleInd 
-      << " eleSel=" <<  eleSel 
-      << " pt="<<pt
-      << " eta="<<eta
-      << " phi="<<tree->elePhi_[eleInd]
-      << " eleID="<<passTightID; 
-    } 
-  }//nEle
-  if(isDebug) cout<<"pickedElectrons.size() = "<<pickedElectrons.size()<<endl;
+// Accessors for picked objects
+const std::vector<int>& ObjectPick::getPickedElectrons() const {
+    return pickedElectrons_;
 }
 
-//https://twiki.cern.ch/twiki/bin/view/CMS/MultivariatePhotonIdentificationRun2
-void ObjectPick::pickPhotons(){
-  if(isDebug){
-	  cout << "Found Event Staring Photons" << endl;
-	  cout << " nPho=" << tree->nPhoton << endl;
-  }
-  for(int phoInd = 0; phoInd < tree->nPhoton; ++phoInd){
-    double et = tree->Photon_pt[phoInd];
-    double eta = tree->Photon_eta[phoInd];
-    double absEta = TMath::Abs(eta);
-    double phi = tree->Photon_phi[phoInd];
-    bool passPhoId  = tree->Photon_cutBased[phoInd];//tight 
-    bool phoPresel = (et >= 20.0 && absEta <= 1.4442);
-    if(phoPresel && passPhoId) pickedPhotons.push_back(phoInd);
-    if (isDebug){
-      cout << "-- " << phoInd 
-      << " pt="<<et
-      << " eta="<<eta
-      << " phi="<<phi
-      <<"presel="<< phoPresel
-      << " medID="<<passPhoId<<endl;
-    } 
-  }//nPho
-  if(isDebug) cout<<"pickedPhotons.size() = "<<pickedPhotons.size()<<endl;
+const std::vector<int>& ObjectPick::getPickedMuons() const {
+    return pickedMuons_;
 }
 
-void ObjectPick::pickRefs(){
-  // Z->ee + jets channel
-  if(isZeeJet && pickedElectrons.size()==2){
-    int j = pickedElectrons.at(0);
-    int k = pickedElectrons.at(1);
-    TLorentzVector p4Lep1;
-    TLorentzVector p4Lep2;
-    p4Lep1.SetPtEtaPhiM(tree->elePt_[j], tree->eleEta_[j], tree->elePhi_[j], tree->eleMass_[j]);
-    p4Lep2.SetPtEtaPhiM(tree->elePt_[k], tree->eleEta_[k], tree->elePhi_[k], tree->eleMass_[k]);
-    TLorentzVector p4Probe = p4Lep1 + p4Lep2;
-    if((tree->eleCharge_[j] * tree->eleCharge_[k]) ==-1 
-      && abs(p4Probe.M() - 91.1876) < 20
-      && p4Probe.Pt() > 15){
-      pickedRefs.push_back(p4Probe);
+const std::vector<int>& ObjectPick::getPickedPhotons() const {
+    return pickedPhotons_;
+}
+
+const std::vector<TLorentzVector>& ObjectPick::getPickedRefs() const {
+    return pickedRefs_;
+}
+
+const std::vector<int>& ObjectPick::getPickedGenElectrons() const {
+    return pickedGenElectrons_;
+}
+
+const std::vector<int>& ObjectPick::getPickedGenMuons() const {
+    return pickedGenMuons_;
+}
+
+const std::vector<int>& ObjectPick::getPickedGenPhotons() const {
+    return pickedGenPhotons_;
+}
+
+const std::vector<TLorentzVector>& ObjectPick::getPickedGenRefs() const {
+    return pickedGenRefs_;
+}
+
+// Reco objects
+void ObjectPick::pickMuons() {
+    printDebug("Starting Selection, nMuon = "+std::to_string(skimTree_->nMuon));
+
+    for (UInt_t m = 0; m < skimTree_->nMuon; ++m) {
+        double eta = skimTree_->Muon_eta[m];
+        double pt = skimTree_->Muon_pt[m];
+
+        bool passPrompt = false;
+        if (pt > 20) {
+            passPrompt = (std::abs(eta) <= 2.3 &&
+                          skimTree_->Muon_tightId[m] &&
+                          skimTree_->Muon_dxy[m] < 0.2 &&
+                          skimTree_->Muon_dz[m] < 0.5);
+        }
+
+        if (passPrompt) {
+            pickedMuons_.push_back(m);
+            printDebug("Muon " + std::to_string(m) + " selected: pt=" + std::to_string(pt) + ", eta=" + std::to_string(eta));
+        } else {
+            printDebug("Muon " + std::to_string(m) + " rejected: pt=" + std::to_string(pt) + ", eta=" + std::to_string(eta));
+        }
     }
-  }
 
-  // Z->mumu + jets channel
-  if(isZmmJet && pickedMuons.size()>1){
-    int j = pickedMuons.at(0);
-    int k = pickedMuons.at(1);
-    TLorentzVector p4Lep1;
-    TLorentzVector p4Lep2;
-    p4Lep1.SetPtEtaPhiM(tree->muPt_[j], tree->muEta_[j], tree->muPhi_[j], tree->muMass_[j]);
-    p4Lep2.SetPtEtaPhiM(tree->muPt_[k], tree->muEta_[k], tree->muPhi_[k], tree->muMass_[k]);
-    TLorentzVector p4Probe = p4Lep1 + p4Lep2;
-    if((tree->muCharge_[j] * tree->muCharge_[k]) ==-1 
-      && abs(p4Probe.M() - 91.1876) < 20
-      && p4Probe.Pt() > 15){
-      pickedRefs.push_back(p4Probe);
+    printDebug("Total Muons Selected: " + std::to_string(pickedMuons_.size()));
+}
+
+void ObjectPick::pickElectrons() {
+    printDebug("Starting Selection, nElectron = "+std::to_string(skimTree_->nElectron));
+
+    for (int eleInd = 0; eleInd < skimTree_->nElectron; ++eleInd) {
+        double eta = skimTree_->Electron_eta[eleInd];
+        double absEta = std::abs(eta);
+        double SCeta = eta + skimTree_->Electron_deltaEtaSC[eleInd];
+        double absSCEta = std::abs(SCeta);
+        double pt = skimTree_->Electron_pt[eleInd];
+
+        // Ensure it doesn't fall within the gap
+        bool passEtaEBEEGap = (absSCEta < 1.4442) || (absSCEta > 1.566);
+        // Tight electron ID
+        bool passTightID = skimTree_->Electron_cutBased[eleInd] == 4;
+
+        bool eleSel = (passEtaEBEEGap && absEta <= 2.4 && pt >= 25 && passTightID);
+        if (eleSel) {
+            pickedElectrons_.push_back(eleInd);
+            printDebug("Electron " + std::to_string(eleInd) + " selected: pt=" + std::to_string(pt) + ", eta=" + std::to_string(eta));
+        } else {
+            printDebug("Electron " + std::to_string(eleInd) + " rejected: pt=" + std::to_string(pt) + ", eta=" + std::to_string(eta));
+        }
     }
-  }
 
-  // Gamma + jets channel
-  if(isGamJet && pickedPhotons.size()>1){
-    for (int j=0; j<pickedPhotons.size(); j++){
-    		TLorentzVector p4Pho;
-    		p4Pho.SetPtEtaPhiM(tree->Photon_pt[j], tree->Photon_eta[j], tree->Photon_phi[j], tree->Photon_mass[j]);
-        pickedRefs.push_back(p4Pho); 
+    printDebug("Total Electrons Selected: " + std::to_string(pickedElectrons_.size()));
+}
+
+// Photon selection
+void ObjectPick::pickPhotons() {
+    printDebug("Starting Selection, nPhoton = "+std::to_string(skimTree_->nPhoton));
+
+    for (int phoInd = 0; phoInd < skimTree_->nPhoton; ++phoInd) {
+        double et = skimTree_->Photon_pt[phoInd];
+        double eta = skimTree_->Photon_eta[phoInd];
+        double absEta = std::abs(eta);
+        bool passPhoId = skimTree_->Photon_cutBased[phoInd];  // Tight ID
+        bool phoPresel = (et >= 20.0 && absEta <= 1.4442);
+
+        if (phoPresel && passPhoId) {
+            pickedPhotons_.push_back(phoInd);
+            printDebug("Photon " + std::to_string(phoInd) + " selected: et=" + std::to_string(et) + ", eta=" + std::to_string(eta));
+        } else {
+            printDebug("Photon " + std::to_string(phoInd) + " rejected: et=" + std::to_string(et) + ", eta=" + std::to_string(eta));
+        }
     }
-  }
-  if(isDebug) cout<<"pickedRefs.size() = "<<pickedRefs.size()<<endl;
-}//pickRefs
 
+    printDebug("Total Photons Selected: " + std::to_string(pickedPhotons_.size()));
+}
 
-//--------------------------------------------
+// Reference object selection
+void ObjectPick::pickRefs() {
+    // Z->ee + jets channel
+    if (globalFlags_.getChannel() == GlobalFlag::Channel::ZeeJet && pickedElectrons_.size() > 1) {
+        int j = pickedElectrons_.at(0);
+        int k = pickedElectrons_.at(1);
+
+        TLorentzVector p4Lep1, p4Lep2;
+        p4Lep1.SetPtEtaPhiM(skimTree_->Electron_pt[j], skimTree_->Electron_eta[j], skimTree_->Electron_phi[j], skimTree_->Electron_mass[j]);
+        p4Lep2.SetPtEtaPhiM(skimTree_->Electron_pt[k], skimTree_->Electron_eta[k], skimTree_->Electron_phi[k], skimTree_->Electron_mass[k]);
+        TLorentzVector p4Ref = p4Lep1 + p4Lep2;
+
+        if ((skimTree_->Electron_charge[j] * skimTree_->Electron_charge[k]) == -1 &&
+            std::abs(p4Ref.M() - 91.1876) < 20 &&
+            p4Ref.Pt() > 15) {
+            pickedRefs_.push_back(p4Ref);
+            printDebug("Z->ee candidate selected with mass " + std::to_string(p4Ref.M()));
+        }
+    }
+
+    // Z->mumu + jets channel
+    if (globalFlags_.getChannel() == GlobalFlag::Channel::ZmmJet && pickedMuons_.size() > 1) {
+        int j = pickedMuons_.at(0);
+        int k = pickedMuons_.at(1);
+
+        TLorentzVector p4Lep1, p4Lep2;
+        p4Lep1.SetPtEtaPhiM(skimTree_->Muon_pt[j], skimTree_->Muon_eta[j], skimTree_->Muon_phi[j], skimTree_->Muon_mass[j]);
+        p4Lep2.SetPtEtaPhiM(skimTree_->Muon_pt[k], skimTree_->Muon_eta[k], skimTree_->Muon_phi[k], skimTree_->Muon_mass[k]);
+        TLorentzVector p4Ref = p4Lep1 + p4Lep2;
+
+        if ((skimTree_->Muon_charge[j] * skimTree_->Muon_charge[k]) == -1 &&
+            std::abs(p4Ref.M() - 91.1876) < 20 &&
+            p4Ref.Pt() > 15) {
+            pickedRefs_.push_back(p4Ref);
+            printDebug("Z->mumu candidate selected with mass " + std::to_string(p4Ref.M()));
+        }
+    }
+
+    // Gamma + jets channel
+    if (globalFlags_.getChannel() == GlobalFlag::Channel::GamJet && !pickedPhotons_.empty()) {
+        for (int idx : pickedPhotons_) {
+            TLorentzVector p4Pho;
+            p4Pho.SetPtEtaPhiM(skimTree_->Photon_pt[idx], skimTree_->Photon_eta[idx], skimTree_->Photon_phi[idx], skimTree_->Photon_mass[idx]);
+            pickedRefs_.push_back(p4Pho);
+            printDebug("Photon added to references: et=" + std::to_string(skimTree_->Photon_pt[idx]));
+        }
+    }
+
+    printDebug("Total Reference Objects Selected: " + std::to_string(pickedRefs_.size()));
+}
+
 // Gen objects
-//--------------------------------------------
-void ObjectPick::pickGenMuons(){
-  for(int i = 0; i < tree->nGenDressedLepton; ++i){
-  	if(fabs(tree->GenDressedLepton_pdgId[i])==13) 
-      pickedGenMuons.push_back(i);
-  }
-  if(isDebug) cout<<"pickedGenMuons.size() = "<<pickedGenMuons.size()<<endl;
-}
+void ObjectPick::pickGenMuons() {
+    printDebug("Starting Selection, nGenDressedLepton = "+std::to_string(skimTree_->nGenDressedLepton));
 
-void ObjectPick::pickGenElectrons(){
-  for(int i = 0; i < tree->nGenDressedLepton; ++i){
-  	if(fabs(tree->GenDressedLepton_pdgId[i])==11) 
-      pickedGenElectrons.push_back(i);
-  }
-  if(isDebug) cout<<"pickedGenElectrons.size() = "<<pickedGenElectrons.size()<<endl;
-}
-
-void ObjectPick::pickGenPhotons(){
-  for(int i = 0; i < tree->nGenIsolatedPhoton; ++i){
-    pickedGenPhotons.push_back(i);
-  }
-  if(isDebug) cout<<"pickedGenPhotons.size() = "<<pickedGenPhotons.size()<<endl;
-}
-
-void ObjectPick::pickGenRefs(){
-  // Z->ee + jets channel
-  if(isZeeJet && pickedGenElectrons.size()>1){
-    for (int j=0; j<pickedGenElectrons.size(); j++){
-    	for (int k=j+1; k<pickedGenElectrons.size(); k++){
-    		if(j==k) continue;
-    		TLorentzVector p4Lep1;
-    		TLorentzVector p4Lep2;
-    		p4Lep1.SetPtEtaPhiM(tree->GenDressedLepton_pt[j], 
-                            tree->GenDressedLepton_eta[j], 
-                            tree->GenDressedLepton_phi[j], 
-                            tree->GenDressedLepton_mass[j]);
-    		p4Lep2.SetPtEtaPhiM(tree->GenDressedLepton_pt[k], 
-                            tree->GenDressedLepton_eta[k], 
-                            tree->GenDressedLepton_phi[k], 
-                            tree->GenDressedLepton_mass[k]);
-    		TLorentzVector p4GenProbe = p4Lep1 + p4Lep2;
-    		pickedGenRefs.push_back(p4GenProbe);
-    	}
+    for (int i = 0; i < skimTree_->nGenDressedLepton; ++i) {
+        if (std::abs(skimTree_->GenDressedLepton_pdgId[i]) == 13) {
+            pickedGenMuons_.push_back(i);
+            printDebug("Gen Muon " + std::to_string(i) + " selected");
+        }
     }
-  }
 
-  // Z->mumu + jets channel
-  if(isZeeJet && pickedGenMuons.size()>1){
-    for (int j=0; j<pickedGenMuons.size(); j++){
-    	for (int k=j+1; k<pickedGenMuons.size(); k++){
-    		if(j==k) continue;
-    		TLorentzVector p4Lep1;
-    		TLorentzVector p4Lep2;
-    		p4Lep1.SetPtEtaPhiM(tree->GenDressedLepton_pt[j], 
-                            tree->GenDressedLepton_eta[j], 
-                            tree->GenDressedLepton_phi[j], 
-                            tree->GenDressedLepton_mass[j]);
-    		p4Lep2.SetPtEtaPhiM(tree->GenDressedLepton_pt[k], 
-                            tree->GenDressedLepton_eta[k], 
-                            tree->GenDressedLepton_phi[k], 
-                            tree->GenDressedLepton_mass[k]);
-    		TLorentzVector p4GenProbe = p4Lep1 + p4Lep2;
-    		pickedGenRefs.push_back(p4GenProbe);
-    	}
-    }
-  }
-
-  // Gamma + jets channel
-  if(isGamJet && pickedGenPhotons.size()>0){
-    for (int j=0; j<pickedPhotons.size(); j++){
-      for (int k=j+1; k<pickedGenPhotons.size(); k++){
-    		if(j==k) continue;
-    		TLorentzVector p4Pho;
-    		TLorentzVector p4GenPho;
-    		p4Pho.SetPtEtaPhiM(tree->Photon_pt[j], tree->Photon_eta[j], tree->Photon_phi[j], tree->Photon_mass[j]);
-        p4GenPho.SetPtEtaPhiM(tree->GenIsolatedPhoton_pt[k],tree->GenIsolatedPhoton_eta[k],
-   			  tree->GenIsolatedPhoton_phi[k],tree->GenIsolatedPhoton_mass[k]);
-        if(p4GenPho.DeltaR(p4Pho) < 0.2) pickedRefs.push_back(p4Pho); 
-      }
-    }
-  }
-  if(isDebug) cout<<"pickedGenRefs.size() = "<<pickedGenRefs.size()<<endl;
-}//pickGenRefs
-
-
-ObjectPick::~ObjectPick(){
+    printDebug("Total Gen Muons Selected: " + std::to_string(pickedGenMuons_.size()));
 }
+
+void ObjectPick::pickGenElectrons() {
+    printDebug("Starting Selection, nGenDressedLepton = "+std::to_string(skimTree_->nGenDressedLepton));
+
+    for (int i = 0; i < skimTree_->nGenDressedLepton; ++i) {
+        if (std::abs(skimTree_->GenDressedLepton_pdgId[i]) == 11) {
+            pickedGenElectrons_.push_back(i);
+            printDebug("Gen Electron " + std::to_string(i) + " selected");
+        }
+    }
+
+    printDebug("Total Gen Electrons Selected: " + std::to_string(pickedGenElectrons_.size()));
+}
+
+void ObjectPick::pickGenPhotons() {
+    printDebug("Starting Selection, nGenIsolatedPhoton = "+std::to_string(skimTree_->nGenIsolatedPhoton));
+
+    for (int i = 0; i < skimTree_->nGenIsolatedPhoton; ++i) {
+        pickedGenPhotons_.push_back(i);
+        printDebug("Gen Photon " + std::to_string(i) + " selected");
+    }
+
+    printDebug("Total Gen Photons Selected: " + std::to_string(pickedGenPhotons_.size()));
+}
+
+void ObjectPick::pickGenRefs() {
+    // Z->ee + jets channel
+    if (globalFlags_.getChannel() == GlobalFlag::Channel::ZeeJet && pickedGenElectrons_.size() > 1) {
+        for (size_t j = 0; j < pickedGenElectrons_.size(); ++j) {
+            for (size_t k = j + 1; k < pickedGenElectrons_.size(); ++k) {
+                TLorentzVector p4Lep1, p4Lep2;
+                int idx1 = pickedGenElectrons_[j];
+                int idx2 = pickedGenElectrons_[k];
+
+                p4Lep1.SetPtEtaPhiM(skimTree_->GenDressedLepton_pt[idx1],
+                                    skimTree_->GenDressedLepton_eta[idx1],
+                                    skimTree_->GenDressedLepton_phi[idx1],
+                                    skimTree_->GenDressedLepton_mass[idx1]);
+
+                p4Lep2.SetPtEtaPhiM(skimTree_->GenDressedLepton_pt[idx2],
+                                    skimTree_->GenDressedLepton_eta[idx2],
+                                    skimTree_->GenDressedLepton_phi[idx2],
+                                    skimTree_->GenDressedLepton_mass[idx2]);
+
+                TLorentzVector p4GenRef = p4Lep1 + p4Lep2;
+                pickedGenRefs_.push_back(p4GenRef);
+                printDebug("Gen Z->ee candidate selected with mass " + std::to_string(p4GenRef.M()));
+            }
+        }
+    }
+
+    // Z->mumu + jets channel
+    if (globalFlags_.getChannel() == GlobalFlag::Channel::ZmmJet && pickedGenMuons_.size() > 1) {
+        for (size_t j = 0; j < pickedGenMuons_.size(); ++j) {
+            for (size_t k = j + 1; k < pickedGenMuons_.size(); ++k) {
+                TLorentzVector p4Lep1, p4Lep2;
+                int idx1 = pickedGenMuons_[j];
+                int idx2 = pickedGenMuons_[k];
+
+                p4Lep1.SetPtEtaPhiM(skimTree_->GenDressedLepton_pt[idx1],
+                                    skimTree_->GenDressedLepton_eta[idx1],
+                                    skimTree_->GenDressedLepton_phi[idx1],
+                                    skimTree_->GenDressedLepton_mass[idx1]);
+
+                p4Lep2.SetPtEtaPhiM(skimTree_->GenDressedLepton_pt[idx2],
+                                    skimTree_->GenDressedLepton_eta[idx2],
+                                    skimTree_->GenDressedLepton_phi[idx2],
+                                    skimTree_->GenDressedLepton_mass[idx2]);
+
+                TLorentzVector p4GenRef = p4Lep1 + p4Lep2;
+                pickedGenRefs_.push_back(p4GenRef);
+                printDebug("Gen Z->mumu candidate selected with mass " + std::to_string(p4GenRef.M()));
+            }
+        }
+    }
+
+    // Gamma + jets channel
+    if (globalFlags_.getChannel() == GlobalFlag::Channel::GamJet && !pickedGenPhotons_.empty()) {
+        for (int idx : pickedGenPhotons_) {
+            TLorentzVector p4GenPho;
+            p4GenPho.SetPtEtaPhiM(skimTree_->GenIsolatedPhoton_pt[idx],
+                                  skimTree_->GenIsolatedPhoton_eta[idx],
+                                  skimTree_->GenIsolatedPhoton_phi[idx],
+                                  skimTree_->GenIsolatedPhoton_mass[idx]);
+            pickedGenRefs_.push_back(p4GenPho);
+            printDebug("Gen Photon added to references: pt=" + std::to_string(skimTree_->GenIsolatedPhoton_pt[idx]));
+        }
+    }
+
+    printDebug("Total Gen Reference Objects Selected: " + std::to_string(pickedGenRefs_.size()));
+}
+
