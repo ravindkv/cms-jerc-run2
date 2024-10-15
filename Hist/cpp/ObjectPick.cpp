@@ -1,7 +1,15 @@
 #include "ObjectPick.h"
 
 // Constructor implementation
-ObjectPick::ObjectPick(GlobalFlag& globalFlags) : globalFlags_(globalFlags) {
+ObjectPick::ObjectPick(GlobalFlag& globalFlags) : 
+    globalFlags_(globalFlags),
+    year_(globalFlags_.getYear()),
+    channel_(globalFlags_.getChannel()),
+    isDebug_(globalFlags_.isDebug()),
+    bTagThresh_(0.4184),
+    cTagThresh_(0.137 + 0.5 * (0.66 - 0.137)),
+    qTagThresh_(0.0),
+    gTagThresh_(0.0){
 }
 // Destructor
 ObjectPick::~ObjectPick() {
@@ -28,7 +36,7 @@ void ObjectPick::clearObjects() {
 
 // Helper function for debug printing
 void ObjectPick::printDebug(const std::string& message) const {
-    if (globalFlags_.isDebug()) {
+    if (isDebug_) {
         std::cout << message << '\n';
     }
 }
@@ -66,6 +74,22 @@ auto ObjectPick::getPickedGenRefs() const -> const std::vector<TLorentzVector>& 
     return pickedGenRefs_;
 }
 
+auto ObjectPick:: getBtagThresh() const-> const double{
+    return bTagThresh_;
+}
+
+auto ObjectPick:: getCtagThresh() const -> const double{
+    return cTagThresh_;
+}
+
+auto ObjectPick:: getQtagThresh() const-> const double{
+    return qTagThresh_;
+}
+
+auto ObjectPick:: getGtagThresh() const-> const double{
+    return gTagThresh_;
+}
+
 // Reco objects
 void ObjectPick::pickMuons() {
     printDebug("Starting Selection, nMuon = "+std::to_string(skimTree_->nMuon));
@@ -78,6 +102,7 @@ void ObjectPick::pickMuons() {
         if (pt > 20) {
             passPrompt = (std::abs(eta) <= 2.3 &&
                           skimTree_->Muon_tightId[m] &&
+                          skimTree_->Muon_pfRelIso04_all[m] < 0.15 &&
                           skimTree_->Muon_dxy[m] < 0.2 &&
                           skimTree_->Muon_dz[m] < 0.5);
         }
@@ -145,7 +170,7 @@ void ObjectPick::pickPhotons() {
 // Reference object selection
 void ObjectPick::pickRefs() {
     // Z->ee + jets channel
-    if (globalFlags_.getChannel() == GlobalFlag::Channel::ZeeJet && pickedElectrons_.size() > 1) {
+    if (channel_ == GlobalFlag::Channel::ZeeJet && pickedElectrons_.size() > 1) {
         int j = pickedElectrons_.at(0);
         int k = pickedElectrons_.at(1);
 
@@ -163,7 +188,7 @@ void ObjectPick::pickRefs() {
     }
 
     // Z->mumu + jets channel
-    if (globalFlags_.getChannel() == GlobalFlag::Channel::ZmmJet && pickedMuons_.size() > 1) {
+    if (channel_ == GlobalFlag::Channel::ZmmJet && pickedMuons_.size() > 1) {
         int j = pickedMuons_.at(0);
         int k = pickedMuons_.at(1);
 
@@ -181,7 +206,7 @@ void ObjectPick::pickRefs() {
     }
 
     // Gamma + jets channel
-    if (globalFlags_.getChannel() == GlobalFlag::Channel::GamJet && !pickedPhotons_.empty()) {
+    if (channel_ == GlobalFlag::Channel::GamJet && !pickedPhotons_.empty()) {
         for (int idx : pickedPhotons_) {
             TLorentzVector p4Pho;
             p4Pho.SetPtEtaPhiM(skimTree_->Photon_pt[idx], skimTree_->Photon_eta[idx], skimTree_->Photon_phi[idx], skimTree_->Photon_mass[idx]);
@@ -233,7 +258,7 @@ void ObjectPick::pickGenPhotons() {
 
 void ObjectPick::pickGenRefs() {
     // Z->ee + jets channel
-    if (globalFlags_.getChannel() == GlobalFlag::Channel::ZeeJet && pickedGenElectrons_.size() > 1) {
+    if (channel_ == GlobalFlag::Channel::ZeeJet && pickedGenElectrons_.size() > 1) {
         for (size_t j = 0; j < pickedGenElectrons_.size(); ++j) {
             for (size_t k = j + 1; k < pickedGenElectrons_.size(); ++k) {
                 TLorentzVector p4Lep1, p4Lep2;
@@ -258,7 +283,7 @@ void ObjectPick::pickGenRefs() {
     }
 
     // Z->mumu + jets channel
-    if (globalFlags_.getChannel() == GlobalFlag::Channel::ZmmJet && pickedGenMuons_.size() > 1) {
+    if (channel_ == GlobalFlag::Channel::ZmmJet && pickedGenMuons_.size() > 1) {
         for (size_t j = 0; j < pickedGenMuons_.size(); ++j) {
             for (size_t k = j + 1; k < pickedGenMuons_.size(); ++k) {
                 TLorentzVector p4Lep1, p4Lep2;
@@ -283,7 +308,7 @@ void ObjectPick::pickGenRefs() {
     }
 
     // Gamma + jets channel
-    if (globalFlags_.getChannel() == GlobalFlag::Channel::GamJet && !pickedGenPhotons_.empty()) {
+    if (channel_ == GlobalFlag::Channel::GamJet && !pickedGenPhotons_.empty()) {
         for (int idx : pickedGenPhotons_) {
             TLorentzVector p4GenPho;
             p4GenPho.SetPtEtaPhiM(skimTree_->GenIsolatedPhoton_pt[idx],

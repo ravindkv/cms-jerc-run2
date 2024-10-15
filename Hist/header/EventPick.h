@@ -47,6 +47,9 @@ public:
 private:
     // Reference to GlobalFlag instance
     GlobalFlag& globalFlags_;
+    const GlobalFlag::Year year_;
+    const GlobalFlag::Channel channel_;
+    const bool isDebug_;
     void printDebug(const std::string& message) const;
 };
 

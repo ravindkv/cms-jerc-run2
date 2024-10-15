@@ -171,7 +171,8 @@ void TDRStyle::setStyle(TLegend *leg){
 
 void TDRStyle::setStyle(TH1D* hist, const double& yMin, const double& yMax) {
     hist->SetLineWidth(3);
-    hist->SetFillStyle(3001); // Example fill style
+    //hist->SetFillStyle(3001); // Example fill style
+    hist->GetYaxis()->SetTitle("Events (normalized to 1)");
     hist->GetYaxis()->CenterTitle();
     hist->GetXaxis()->SetTitleOffset(1.0);
     hist->GetYaxis()->SetTitleOffset(1.0);
@@ -188,7 +189,7 @@ void TDRStyle::setStyle(TH1D* hist, const double& yMin, const double& yMax) {
 void TDRStyle::setStyle(TProfile *profile, const double& yMin, const double& yMax) {
     profile->SetLineWidth(3);
     profile->SetMarkerStyle(20);
-		profile->GetYaxis()->CenterTitle();
+	profile->GetYaxis()->CenterTitle();
     profile->GetXaxis()->SetTitleOffset(1.0);
     profile->GetYaxis()->SetTitleOffset(1.15);
     profile->GetXaxis()->SetTitleSize(0.05);
@@ -202,11 +203,12 @@ void TDRStyle::setStyle(TProfile *profile, const double& yMin, const double& yMa
 }
 
 void TDRStyle::setStyleRatio(TGraphErrors* graph, const double& yMin, const double& yMax) {
+    graph->GetHistogram()->SetTitle("");
     // X-axis styling
     graph->GetHistogram()->GetXaxis()->SetTitleSize(0.12);
     graph->GetHistogram()->GetXaxis()->SetLabelSize(0.12);
     graph->GetHistogram()->GetXaxis()->SetLabelFont(42);
-    graph->GetHistogram()->GetXaxis()->SetTitleOffset(1.1);
+    graph->GetHistogram()->GetXaxis()->SetTitleOffset(1.2);
     graph->GetHistogram()->GetXaxis()->SetLabelOffset(0.01);
 
     // Y-axis styling

@@ -1,6 +1,6 @@
-//#include "PlotGamJet.h"
-//#include "PlotZmmJet.h"
+#include "PlotZmmJet.h"
 #include "PlotZeeJet.h"
+//#include "PlotGamJet.h"
 //#include "PlotMCTruth.h"
 //#include "PlotFlavour.h"
 //#include "PlotVetoMap.h"
@@ -87,26 +87,22 @@ int main(int argc, char* argv[]){
   cout<<"\n--------------------------------------"<<endl;
   cout<<" Loop over events and fill Plotos"<<endl;
   cout<<"--------------------------------------"<<endl;
-  //if(globF->isZeeJet){
+  if(globF->isZeeJet){
     cout<<"==> Running ZeeJet"<<endl;
     PlotZeeJet *zeeJet = new PlotZeeJet(outName);
     zeeJet->Run(js, outRoot, outLatex);
-  //}
+  }
+  if(globF->isZmmJet){
+    cout<<"==> Running ZmmJet"<<endl;
+    PlotZmmJet *zmmJet = new PlotZmmJet(outName);
+    zmmJet->Run(js, outRoot, outLatex);
+  }
+
   /*
   if(globF->isGamJet){
     cout<<"==> Running GamJet"<<endl;
     PlotGamJet *gamJet = new PlotGamJet(oName);
     gamJet->Run(js, outRoot, outLatex);  
-  }
-  if(globF->isZeeJet){
-    cout<<"==> Running ZeeJet"<<endl;
-    PlotZeeJet *zeeJet = new PlotZeeJet(oName);
-    zeeJet->Run(js, outRoot, outLatex);  
-  }
-  if(globF->isZmmJet){
-    cout<<"==> Running ZmmJet"<<endl;
-    PlotZmmJet *zmmJet = new PlotZmmJet(oName);
-    zmmJet->Run(js, outRoot, outLatex);  
   }
   if(globF->isMCTruth){
     cout<<"==> Running MCTruth"<<endl;

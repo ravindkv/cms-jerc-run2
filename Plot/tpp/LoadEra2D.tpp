@@ -73,6 +73,10 @@ void LoadEra2D<T>::drawHist2D(TFile* outRootFile, const std::string &outputFile)
     outRootFile->cd();
     TCanvas canvas("c", "Data and MC Ratio", 600, 600);
     canvas.cd();
+    //gPad->SetLogx();
+    //gPad->SetLogz();
+    gPad->SetRightMargin(0.12);
+
     TDRStyle tdrS;
     tdrS.setTDRStyle();
     TLegend *leg = new TLegend(0.25, 0.80, 0.90, 0.90, "", "brNDC");
@@ -80,9 +84,13 @@ void LoadEra2D<T>::drawHist2D(TFile* outRootFile, const std::string &outputFile)
 
     //tdrS.setStyle(hist, 0.0, 1.5);
     //tdrS.setColor(hist, i);
-    hist->Draw("colz");
-    leg->AddEntry(hist, hist->GetName(), "L");
-    leg->Draw();
+    hist->SetTitle(dataEraOrMCBin_.c_str());
+    hist->GetXaxis()->SetMoreLogLabels();
+    hist->GetXaxis()->SetNoExponent();
+    //hist->GetZaxis()->SetRangeUser(1e-4,1.0);
+    hist->Draw("COLZ");
+    //leg->AddEntry(hist, hist->GetName(), "L");
+    //leg->Draw();
 
     canvas.Update();
     canvas.SaveAs(outputFile.c_str());

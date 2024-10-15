@@ -37,8 +37,8 @@ public:
     void setHistName(const std::string &histName);
 
     // Loaders (use templates for histogram type)
-    void loadDataHists();
-    void loadMCHists();
+    void loadDataHists(const bool & normTo1);
+    void loadMCHists(const bool & normTo1);
     void drawHists(TDRStyle &tdrS, const std::vector<T*>& hists);
 
     void overlayDataWithMCInRatio(TFile* outRootFile, const std::string& outputFileName);

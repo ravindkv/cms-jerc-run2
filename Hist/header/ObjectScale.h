@@ -70,10 +70,6 @@ public:
     void loadPuRef();
     double getPuCorrection(Float_t nTrueInt, const std::string& nomOrSyst) const;
 
-    double bThresh{};
-    double cThresh{};
-    void setThresh();
-
 private:
     // Pointer to SkimTree
     std::shared_ptr<SkimTree> skimTree_;
@@ -136,6 +132,12 @@ private:
 
     // Reference to GlobalFlag instance
     GlobalFlag& globalFlags_;
+    const GlobalFlag::Year year_;
+    const GlobalFlag::Era era_;
+    const GlobalFlag::Channel channel_;
+    const bool isDebug_;
+    const bool isData_;
+    const bool isMC_;
 };
 
 #endif

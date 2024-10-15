@@ -1,12 +1,12 @@
-#include "HistZeeJet.h"
+#include "HistZmmJet.h"
    
 // Constructor implementation
-HistZeeJet::HistZeeJet(GlobalFlag& globalFlags)
+HistZmmJet::HistZmmJet(GlobalFlag& globalFlags)
     :globalFlags_(globalFlags) {
 }
 
 
-auto HistZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectPick *objP, ObjectScale *objS, TFile *fout) -> int{
+auto HistZmmJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectPick *objP, ObjectScale *objS, TFile *fout) -> int{
    
   TDirectory *curdir = gDirectory;
   assert(fout && !fout->IsZombie());
@@ -297,9 +297,9 @@ for (Long64_t jentry = 0; jentry < nentries; ++jentry) {
     //------------------------------------------
     // Reco objects
     objP->clearObjects();
-    objP->pickElectrons();
-    if (objP->getPickedElectrons().size() < 2) continue;
-    if (objP->getPickedElectrons().size() > 3) continue;
+    objP->pickMuons();
+    if (objP->getPickedMuons().size() < 2) continue;
+    if (objP->getPickedMuons().size() > 3) continue;
     objP->pickRefs();
     std::vector<TLorentzVector> p4Refs = objP->getPickedRefs();
 
@@ -326,7 +326,7 @@ for (Long64_t jentry = 0; jentry < nentries; ++jentry) {
     // Gen objects
     p4GenRef.SetPtEtaPhiM(0, 0, 0, 0);
     if (globalFlags_.isMC()) {
-        objP->pickGenElectrons();
+        objP->pickGenMuons();
         objP->pickGenRefs();
         std::vector<TLorentzVector> p4GenRefs = objP->getPickedGenRefs();
         if (p4GenRefs.empty()) continue;

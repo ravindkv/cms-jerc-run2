@@ -3,7 +3,14 @@
 #include<stdexcept>  // For std::runtime_error
 
 // Constructor implementation
-ObjectScale::ObjectScale(GlobalFlag& globalFlags) : globalFlags_(globalFlags) {
+ObjectScale::ObjectScale(GlobalFlag& globalFlags) : 
+    globalFlags_(globalFlags),
+    year_(globalFlags_.getYear()),
+    era_(globalFlags_.getEra()),
+    channel_(globalFlags_.getChannel()),
+    isDebug_(globalFlags_.isDebug()),
+    isData_(isData_),
+    isMC_(globalFlags_.isMC()){
 }
 
 // Set the SkimTree pointer
@@ -12,7 +19,7 @@ void ObjectScale::setTree(const std::shared_ptr<SkimTree>& skimTree) {
 }
 
 void ObjectScale::setInputs() {
-  if (globalFlags_.getYear() == GlobalFlag::Year::Year2016Pre) {
+  if (year_ == GlobalFlag::Year::Year2016Pre) {
     // Jet veto
     jetVetoJsonPath_ = "POG/JME/2016preVFP_UL/jetvetomaps.json.gz";
     jetVetoName_     = "Summer19UL16_V1";
@@ -23,13 +30,13 @@ void ObjectScale::setInputs() {
     jetL2RelativeName_     = "Summer19UL16APV_V7_MC_L2Relative_AK4PFchs";
     jetL3AbsoluteName_     = "Summer19UL16APV_V7_MC_L3Absolute_AK4PFchs";
     jetL2L3ResidualName_   = "Summer19UL16APV_V7_MC_L2L3Residual_AK4PFchs";
-    if (globalFlags_.isData()) {
-      if (globalFlags_.getEra() == GlobalFlag::Era::Era2016PreBCD) {
+    if (isData_) {
+      if (era_ == GlobalFlag::Era::Era2016PreBCD) {
         jetL1FastJetName_    = "Summer19UL16APV_RunBCD_V7_DATA_L1FastJet_AK4PFchs";
         jetL2RelativeName_   = "Summer19UL16APV_RunBCD_V7_DATA_L2Relative_AK4PFchs";
         jetL3AbsoluteName_   = "Summer19UL16APV_RunBCD_V7_DATA_L3Absolute_AK4PFchs";
         jetL2L3ResidualName_ = "Summer19UL16APV_RunBCD_V7_DATA_L2L3Residual_AK4PFchs";
-      } else if (globalFlags_.getEra() == GlobalFlag::Era::Era2016PreEF) {
+      } else if (era_ == GlobalFlag::Era::Era2016PreEF) {
         jetL1FastJetName_    = "Summer19UL16APV_RunEF_V7_DATA_L1FastJet_AK4PFchs";
         jetL2RelativeName_   = "Summer19UL16APV_RunEF_V7_DATA_L2Relative_AK4PFchs";
         jetL3AbsoluteName_   = "Summer19UL16APV_RunEF_V7_DATA_L3Absolute_AK4PFchs";
@@ -53,7 +60,7 @@ void ObjectScale::setInputs() {
     puName_          = "Collisions16_UltraLegacy_goldenJSON";
 	} 
 
-  else if (globalFlags_.getYear() == GlobalFlag::Year::Year2016Post) {
+  else if (year_ == GlobalFlag::Year::Year2016Post) {
     // Jet veto
     jetVetoJsonPath_ = "POG/JME/2016postVFP_UL/jetvetomaps.json.gz";
     jetVetoName_     = "Summer19UL16_V1";
@@ -64,8 +71,8 @@ void ObjectScale::setInputs() {
     jetL2RelativeName_     = "Summer19UL16_V7_MC_L2Relative_AK4PFchs";
     jetL3AbsoluteName_     = "Summer19UL16_V7_MC_L3Absolute_AK4PFchs";
     jetL2L3ResidualName_   = "Summer19UL16_V7_MC_L2L3Residual_AK4PFchs";
-    if (globalFlags_.isData()) {
-      if (globalFlags_.getEra() == GlobalFlag::Era::Era2016PostFGH) {
+    if (isData_) {
+      if (era_ == GlobalFlag::Era::Era2016PostFGH) {
         jetL1FastJetName_    = "Summer19UL16_RunFGH_V7_DATA_L1FastJet_AK4PFchs";
         jetL2RelativeName_   = "Summer19UL16_RunFGH_V7_DATA_L2Relative_AK4PFchs";
         jetL3AbsoluteName_   = "Summer19UL16_RunFGH_V7_DATA_L3Absolute_AK4PFchs";
@@ -89,7 +96,7 @@ void ObjectScale::setInputs() {
     puName_          = "Collisions16_UltraLegacy_goldenJSON";
   }
 
-  else if (globalFlags_.getYear() == GlobalFlag::Year::Year2017) {
+  else if (year_ == GlobalFlag::Year::Year2017) {
     // Jet veto
     jetVetoJsonPath_ = "POG/JME/2017_UL/jetvetomaps.json.gz";
     jetVetoName_     = "Summer19UL17_V1";
@@ -100,28 +107,28 @@ void ObjectScale::setInputs() {
     jetL2RelativeName_     = "Summer19UL17_V5_MC_L2Relative_AK4PFchs";
     jetL3AbsoluteName_     = "Summer19UL17_V5_MC_L3Absolute_AK4PFchs";
     jetL2L3ResidualName_   = "Summer19UL17_V5_MC_L2L3Residual_AK4PFchs";
-    if (globalFlags_.isData()) {
-      if (globalFlags_.getEra() == GlobalFlag::Era::Era2017B) {
+    if (isData_) {
+      if (era_ == GlobalFlag::Era::Era2017B) {
         jetL1FastJetName_    = "Summer19UL17_RunB_V5_DATA_L1FastJet_AK4PFchs";
         jetL2RelativeName_   = "Summer19UL17_RunB_V5_DATA_L2Relative_AK4PFchs";
         jetL3AbsoluteName_   = "Summer19UL17_RunB_V5_DATA_L3Absolute_AK4PFchs";
         jetL2L3ResidualName_ = "Summer19UL17_RunB_V5_DATA_L2L3Residual_AK4PFchs";
-      } else if (globalFlags_.getEra() == GlobalFlag::Era::Era2017C) {
+      } else if (era_ == GlobalFlag::Era::Era2017C) {
         jetL1FastJetName_    = "Summer19UL17_RunC_V5_DATA_L1FastJet_AK4PFchs";
         jetL2RelativeName_   = "Summer19UL17_RunC_V5_DATA_L2Relative_AK4PFchs";
         jetL3AbsoluteName_   = "Summer19UL17_RunC_V5_DATA_L3Absolute_AK4PFchs";
         jetL2L3ResidualName_ = "Summer19UL17_RunC_V5_DATA_L2L3Residual_AK4PFchs";
-      } else if (globalFlags_.getEra() == GlobalFlag::Era::Era2017D) {
+      } else if (era_ == GlobalFlag::Era::Era2017D) {
         jetL1FastJetName_    = "Summer19UL17_RunD_V5_DATA_L1FastJet_AK4PFchs";
         jetL2RelativeName_   = "Summer19UL17_RunD_V5_DATA_L2Relative_AK4PFchs";
         jetL3AbsoluteName_   = "Summer19UL17_RunD_V5_DATA_L3Absolute_AK4PFchs";
         jetL2L3ResidualName_ = "Summer19UL17_RunD_V5_DATA_L2L3Residual_AK4PFchs";
-      } else if (globalFlags_.getEra() == GlobalFlag::Era::Era2017E) {
+      } else if (era_ == GlobalFlag::Era::Era2017E) {
         jetL1FastJetName_    = "Summer19UL17_RunE_V5_DATA_L1FastJet_AK4PFchs";
         jetL2RelativeName_   = "Summer19UL17_RunE_V5_DATA_L2Relative_AK4PFchs";
         jetL3AbsoluteName_   = "Summer19UL17_RunE_V5_DATA_L3Absolute_AK4PFchs";
         jetL2L3ResidualName_ = "Summer19UL17_RunE_V5_DATA_L2L3Residual_AK4PFchs";
-      } else if (globalFlags_.getEra() == GlobalFlag::Era::Era2017F) {
+      } else if (era_ == GlobalFlag::Era::Era2017F) {
         jetL1FastJetName_    = "Summer19UL17_RunF_V5_DATA_L1FastJet_AK4PFchs";
         jetL2RelativeName_   = "Summer19UL17_RunF_V5_DATA_L2Relative_AK4PFchs";
         jetL3AbsoluteName_   = "Summer19UL17_RunF_V5_DATA_L3Absolute_AK4PFchs";
@@ -145,7 +152,7 @@ void ObjectScale::setInputs() {
     puName_          = "Collisions17_UltraLegacy_goldenJSON";
   } 
 
-  else if (globalFlags_.getYear() == GlobalFlag::Year::Year2018) {
+  else if (year_ == GlobalFlag::Year::Year2018) {
     // Jet veto
     jetVetoJsonPath_ = "POG/JME/2018_UL/jetvetomaps.json.gz";
     jetVetoName_     = "Summer19UL18_V1";
@@ -156,23 +163,23 @@ void ObjectScale::setInputs() {
     jetL2RelativeName_     = "Summer19UL18_V5_MC_L2Relative_AK4PFchs";
     jetL3AbsoluteName_     = "Summer19UL18_V5_MC_L3Absolute_AK4PFchs";
     jetL2L3ResidualName_   = "Summer19UL18_V5_MC_L2L3Residual_AK4PFchs";
-    if (globalFlags_.isData()) {
-      if (globalFlags_.getEra() == GlobalFlag::Era::Era2018A) {
+    if (isData_) {
+      if (era_ == GlobalFlag::Era::Era2018A) {
         jetL1FastJetName_    = "Summer19UL18_RunA_V5_DATA_L1FastJet_AK4PFchs";
         jetL2RelativeName_   = "Summer19UL18_RunA_V5_DATA_L2Relative_AK4PFchs";
         jetL3AbsoluteName_   = "Summer19UL18_RunA_V5_DATA_L3Absolute_AK4PFchs";
         jetL2L3ResidualName_ = "Summer19UL18_RunA_V5_DATA_L2L3Residual_AK4PFchs";
-      } else if (globalFlags_.getEra() == GlobalFlag::Era::Era2018B) {
+      } else if (era_ == GlobalFlag::Era::Era2018B) {
         jetL1FastJetName_    = "Summer19UL18_RunB_V5_DATA_L1FastJet_AK4PFchs";
         jetL2RelativeName_   = "Summer19UL18_RunB_V5_DATA_L2Relative_AK4PFchs";
         jetL3AbsoluteName_   = "Summer19UL18_RunB_V5_DATA_L3Absolute_AK4PFchs";
         jetL2L3ResidualName_ = "Summer19UL18_RunB_V5_DATA_L2L3Residual_AK4PFchs";
-      } else if (globalFlags_.getEra() == GlobalFlag::Era::Era2018C) {
+      } else if (era_ == GlobalFlag::Era::Era2018C) {
         jetL1FastJetName_    = "Summer19UL18_RunC_V5_DATA_L1FastJet_AK4PFchs";
         jetL2RelativeName_   = "Summer19UL18_RunC_V5_DATA_L2Relative_AK4PFchs";
         jetL3AbsoluteName_   = "Summer19UL18_RunC_V5_DATA_L3Absolute_AK4PFchs";
         jetL2L3ResidualName_ = "Summer19UL18_RunC_V5_DATA_L2L3Residual_AK4PFchs";
-      } else if (globalFlags_.getEra() == GlobalFlag::Era::Era2018D) {
+      } else if (era_ == GlobalFlag::Era::Era2018D) {
         jetL1FastJetName_    = "Summer19UL18_RunD_V5_DATA_L1FastJet_AK4PFchs";
         jetL2RelativeName_   = "Summer19UL18_RunD_V5_DATA_L2Relative_AK4PFchs";
         jetL3AbsoluteName_   = "Summer19UL18_RunD_V5_DATA_L3Absolute_AK4PFchs";
@@ -241,7 +248,7 @@ auto ObjectScale::checkJetVetoMap() const -> bool {
       if (std::abs(skimTree_->Jet_phi[i]) > maxPhiInMap) continue;
 
       auto jvNumber = loadedJetVetoRef_->evaluate({jetVetoKey_, skimTree_->Jet_eta[i], skimTree_->Jet_phi[i]});
-      if (globalFlags_.isDebug()) {
+      if (isDebug_) {
         std::cout << jetVetoKey_
             << ", jetEta= " << skimTree_->Jet_eta[i]
             << ", jetPhi= " << skimTree_->Jet_phi[i]
@@ -275,7 +282,7 @@ auto ObjectScale::getL1FastJetCorrection(double jetArea, double jetEta, double j
   double corrL1FastJet = 1.0;
   try {
     corrL1FastJet = loadedJetL1FastJetRef_->evaluate({jetArea, jetEta, jetPt, rho});
-    if (globalFlags_.isDebug()) {
+    if (isDebug_) {
       std::cout << "jetArea = " << jetArea
             << ", jetEta= " << jetEta
             << ", jetPt= " << jetPt
@@ -305,7 +312,7 @@ auto ObjectScale::getL2RelativeCorrection(double jetEta, double jetPt) const -> 
   double corrL2Relative = 1.0;
   try {
     corrL2Relative = loadedJetL2RelativeRef_->evaluate({jetEta, jetPt});
-    if (globalFlags_.isDebug()) {
+    if (isDebug_) {
       std::cout << "jetEta= " << jetEta
             << ", jetPt= " << jetPt
             << ", corrL2Relative = " << corrL2Relative << '\n';
@@ -333,7 +340,7 @@ auto ObjectScale::getL2L3ResidualCorrection(double jetEta, double jetPt) const -
   double corrL2L3Residual = 1.0;
   try {
     corrL2L3Residual = loadedJetL2L3ResidualRef_->evaluate({jetEta, jetPt});
-    if (globalFlags_.isDebug()) {
+    if (isDebug_) {
       std::cout << ", jetEta= " << jetEta
             << ", jetPt= " << jetPt
             << ", corrL2L3Residual = " << corrL2L3Residual << '\n';
@@ -362,7 +369,7 @@ auto ObjectScale::getJERResolution(int index) const -> double {
   double JERReso = 1.0;
   try {
     JERReso = loadedJERResoRef_->evaluate({skimTree_->Jet_eta[index], skimTree_->Jet_pt[index], skimTree_->Rho});
-    if (globalFlags_.isDebug()) std::cout << ", jetEta= " << skimTree_->Jet_eta[index]
+    if (isDebug_) std::cout << ", jetEta= " << skimTree_->Jet_eta[index]
               << ", jetPt= " << skimTree_->Jet_pt[index]
               << ", rho = " << skimTree_->Rho
               << ", JERReso = " << JERReso << '\n';
@@ -389,7 +396,7 @@ auto ObjectScale::getJERScaleFactor(int index, const std::string &syst) const ->
   double JERSF = 1.0;
   try {
     JERSF = loadedJERSFRef_->evaluate({skimTree_->Jet_eta[index], skimTree_->Jet_pt[index], syst});
-    if (globalFlags_.isDebug()) std::cout << ", jeteta= " << skimTree_->Jet_eta[index]
+    if (isDebug_) std::cout << ", jeteta= " << skimTree_->Jet_eta[index]
               << ", syst  = " << syst
               << ", JERSF = " << JERSF << '\n';
   } catch (const std::exception &e) {
@@ -422,7 +429,7 @@ auto ObjectScale::getJERCorrection(int index, const std::string &syst) const -> 
     corrJER = std::max(0.0, 1. + (sfJER - 1.) * (pt - skimTree_->GenJet_pt[genIdx]) / pt);
   } else { // stochastic smearing
     corrJER = std::max(0.0, 1 + generator->Gaus(0, resoJER) * sqrt(std::max(sfJER * sfJER - 1, 0.)));
-    if (globalFlags_.isDebug()) {
+    if (isDebug_) {
       std::cout << "Resolution = " << resoJER << ", sfJER = " << sfJER << ", cJER_Twiki = " << corrJER << '\n';
     }
   }
@@ -455,7 +462,7 @@ auto ObjectScale::getPhoScaleCorrection(const std::string &nomOrSyst, int indexP
       skimTree_->Photon_r9[indexPho],
       skimTree_->Photon_pt[indexPho]
     });
-    if (globalFlags_.isDebug()) std::cout << "nomOrSyst = " << nomOrSyst
+    if (isDebug_) std::cout << "nomOrSyst = " << nomOrSyst
               << ", Photon_seedGain = " << skimTree_->Rho
               << ", run = " << skimTree_->run
               << ", Photon_eta= " << skimTree_->Photon_eta[indexPho]
@@ -477,7 +484,7 @@ auto ObjectScale::getPhoSmearCorrection(const std::string &nomOrSyst, int indexP
       skimTree_->Photon_eta[indexPho],
       skimTree_->Photon_r9[indexPho]
     });
-    if (globalFlags_.isDebug()) std::cout << "nomOrSyst = " << nomOrSyst
+    if (isDebug_) std::cout << "nomOrSyst = " << nomOrSyst
               << ", Photon_eta= " << skimTree_->Photon_eta[indexPho]
               << ", Photon_r9 = " << skimTree_->Photon_r9[indexPho]
               << ", phoSmearSF= " << phoSmearSF << '\n';
@@ -552,7 +559,7 @@ auto ObjectScale::getPuCorrection(Float_t nTrueInt, const std::string &nomOrSyst
   double puSF = 1.0;
   try {
     puSF = loadedPuRef_->evaluate({nTrueInt, nomOrSyst.c_str()});
-    if (globalFlags_.isDebug()) std::cout << "nomOrSyst = " << nomOrSyst 
+    if (isDebug_) std::cout << "nomOrSyst = " << nomOrSyst 
               << ", nTrueInt = " << nTrueInt 
               << ", puSF= " << puSF << '\n';
   } catch (const std::exception &e) {
@@ -560,12 +567,6 @@ auto ObjectScale::getPuCorrection(Float_t nTrueInt, const std::string &nomOrSyst
     throw std::runtime_error("Error calculating Pileup Correction.");
   }
   return puSF;
-}
-
-void ObjectScale::setThresh() {
-  double frac = 0.5;
-  bThresh = 0.4184;
-  cThresh = 0.137 + frac * (0.66 - 0.137);
 }
 
 auto ObjectScale::DELTAPHI(double phi1, double phi2) const -> double {

@@ -62,7 +62,7 @@ void LoadEras1D<T>::setHistName(const std::string & histName) {
 
 // Load Data Histograms
 template<typename T>
-void LoadEras1D<T>::loadDataHists() {
+void LoadEras1D<T>::loadDataHists(const bool &normTo1) {
   for (const auto& era : dataEras_) {
     std::string fileName = inputJson_[channel_][year_]["Data"][era];
     std::string path = histDir_ + "/" + histName_;
@@ -76,6 +76,7 @@ void LoadEras1D<T>::loadDataHists() {
     if (hist) {
       gROOT->cd();  // Change the directory to ROOT's global directory
       T* clonedHist = (T*)hist->Clone(era.c_str());  // Clone the histogram
+      if(normTo1 && clonedHist->Integral()>0.0) clonedHist->Scale(1/clonedHist->Integral());
       dataHists_.push_back(clonedHist);
     } else {
       std::cerr << "Error: Could not retrieve histogram " << path << " from " << fileName << std::endl;
@@ -86,7 +87,7 @@ void LoadEras1D<T>::loadDataHists() {
 
 // Load MC Histograms
 template<typename T>
-void LoadEras1D<T>::loadMCHists() {
+void LoadEras1D<T>::loadMCHists(const bool& normTo1) {
   for (const auto& htBin : mcHTBins_) {
     std::string fileName = inputJson_[channel_][year_]["MC"][htBin];
     std::string path = histDir_ + "/" + histName_;
@@ -100,6 +101,7 @@ void LoadEras1D<T>::loadMCHists() {
     if (hist) {
       gROOT->cd();  // Change the directory to ROOT's global directory
       T* clonedHist = (T*)hist->Clone(htBin.c_str());  // Clone the histogram
+      if(normTo1 && clonedHist->Integral()>0.0) clonedHist->Scale(1/clonedHist->Integral());
       mcHists_.push_back(clonedHist);
     } else {
       std::cerr << "Error: Could not retrieve histogram " << path << " from " << fileName << std::endl;
@@ -119,11 +121,11 @@ void LoadEras1D<T>::drawHists(TDRStyle &tdrS, const std::vector<T*>& hists) {
   double legYmin = 0.85 - 0.05*hists.size();
   TLegend *leg = new TLegend(0.25, legYmin, 0.90, 0.90, "", "brNDC");
   tdrS.setStyle(leg);
-
+  //gPad->SetLogy(true);
   for (size_t i = 0; i < hists.size(); i++) {
     auto hist = hists.at(i);
     if (hist != nullptr) {
-      tdrS.setStyle(hist, 0.0, 1.5);
+      tdrS.setStyle(hist, hist->GetMinimum(), 1.5*hist->GetMaximum());
       tdrS.setColor(hist, i);
       hist->Draw(i == 0 ? "Pz" : "Pz SAME");
       leg->AddEntry(hist, hist->GetName(), "L");
@@ -177,6 +179,8 @@ void LoadEras1D<T>::overlayDataWithMCInRatio(TFile* outRootFile, const std::stri
     std::vector<TGraphErrors*> ratioGraphs;
     for (auto dataHist : dataHists_) {
       TGraphErrors* ratioGraph = new TGraphErrors(dataHist->GetNbinsX());
+      ratioGraph->GetHistogram()->GetYaxis()->SetTitle("Data/MC");
+      ratioGraph->GetHistogram()->GetXaxis()->SetTitle(dataHist->GetXaxis()->GetTitle());
       calculateHistRatio(dataHist, mergedMCHist, ratioGraph);
       ratioGraphs.push_back(ratioGraph);
     }

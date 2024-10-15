@@ -5,8 +5,14 @@
 #include <algorithm>
 #include "SkimTree.h"
 
-SkimTree::SkimTree(GlobalFlag& globalFlags)
-    : globalFlags_(globalFlags),
+SkimTree::SkimTree(GlobalFlag& globalFlags): 
+    globalFlags_(globalFlags),
+    year_(globalFlags_.getYear()),
+    era_(globalFlags_.getEra()),
+    channel_(globalFlags_.getChannel()),
+    isDebug_(globalFlags_.isDebug()),
+    isData_(isData_),
+    isMC_(globalFlags_.isMC()),
 	fCurrent_(-1), 
 	outName_(""), 
 	fChain_(std::make_unique<TChain>("Events")) {
@@ -60,13 +66,13 @@ void SkimTree::loadInput() {
 
 void SkimTree::setInputJsonPath(const std::string& inDir) {
     std::string year;
-    if (globalFlags_.getYear() == GlobalFlag::Year::Year2016Pre)
+    if (year_ == GlobalFlag::Year::Year2016Pre)
         year = "2016Pre";
-    else if (globalFlags_.getYear() == GlobalFlag::Year::Year2016Post)
+    else if (year_ == GlobalFlag::Year::Year2016Post)
         year = "2016Post";
-    else if (globalFlags_.getYear() == GlobalFlag::Year::Year2017)
+    else if (year_ == GlobalFlag::Year::Year2017)
         year = "2017";
-    else if (globalFlags_.getYear() == GlobalFlag::Year::Year2018)
+    else if (year_ == GlobalFlag::Year::Year2018)
         year = "2018";
     else {
         throw std::runtime_error("Error: Provide correct year in SkimTree::setInputJsonPath()");
@@ -184,11 +190,11 @@ void SkimTree::loadTree() {
 	fChain_->SetBranchAddress("Jet_rawFactor", &Jet_rawFactor);
 	fChain_->SetBranchAddress("Jet_jetId", &Jet_jetId);
 	
-	if(globalFlags_.getChannel() == GlobalFlag::Channel::VetoMap || 
-        globalFlags_.getChannel() == GlobalFlag::Channel::DiJet || 
-        globalFlags_.getChannel() == GlobalFlag::Channel::IncJet || 
-        globalFlags_.getChannel() == GlobalFlag::Channel::MultiJet || 
-        globalFlags_.getChannel() == GlobalFlag::Channel::Wqq){
+	if(channel_ == GlobalFlag::Channel::VetoMap || 
+        channel_ == GlobalFlag::Channel::DiJet || 
+        channel_ == GlobalFlag::Channel::IncJet || 
+        channel_ == GlobalFlag::Channel::MultiJet || 
+        channel_ == GlobalFlag::Channel::Wqq){
 	    fChain_->SetBranchAddress("HLT_PFJet40"            , & HLT_PFJet40            );
 	    fChain_->SetBranchAddress("HLT_PFJet60"            , & HLT_PFJet60            );
 	    fChain_->SetBranchAddress("HLT_PFJet80"            , & HLT_PFJet80            );
@@ -219,7 +225,7 @@ void SkimTree::loadTree() {
 	//--------------------------------------- 
 	// Photon (for GamJet)
 	//--------------------------------------- 
-	if(globalFlags_.getChannel() == GlobalFlag::Channel::GamJet){
+	if(channel_ == GlobalFlag::Channel::GamJet){
 	  	fChain_->SetBranchAddress("nPhoton", &nPhoton);
 	  	fChain_->SetBranchAddress("Photon_eCorr", &Photon_eCorr);
 	  	fChain_->SetBranchAddress("Photon_energyErr", &Photon_energyErr);
@@ -260,7 +266,7 @@ void SkimTree::loadTree() {
 	//--------------------------------------- 
 	// Electron (for DiEleJet)
 	//--------------------------------------- 
-	if(globalFlags_.getChannel() == GlobalFlag::Channel::ZeeJet){
+	if(channel_ == GlobalFlag::Channel::ZeeJet){
 		//status
 		fChain_->SetBranchStatus("nElectron",true);
 		fChain_->SetBranchStatus("Electron_*",true);
@@ -274,37 +280,37 @@ void SkimTree::loadTree() {
 		fChain_->SetBranchAddress("Electron_mass", &Electron_mass);
 		fChain_->SetBranchAddress("Electron_cutBased", &Electron_cutBased);
 		//address trigger
-		if(globalFlags_.getYear() == GlobalFlag::Year::Year2016Pre || globalFlags_.getYear() == GlobalFlag::Year::Year2016Post)
+		if(year_ == GlobalFlag::Year::Year2016Pre || year_ == GlobalFlag::Year::Year2016Post)
 			fChain_->SetBranchAddress("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ", &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ);
-		if(globalFlags_.getYear() == GlobalFlag::Year::Year2017 || globalFlags_.getYear() == GlobalFlag::Year::Year2018)
+		if(year_ == GlobalFlag::Year::Year2017 || year_ == GlobalFlag::Year::Year2018)
 			fChain_->SetBranchAddress("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL", &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL);
 	}
 	
 	//--------------------------------------- 
 	// Muon (for DiMuJet)
 	//--------------------------------------- 
-	if (globalFlags_.getChannel() == GlobalFlag::Channel::ZmmJet){
+	if (channel_ == GlobalFlag::Channel::ZmmJet){
 	  	//status
 	  	fChain_->SetBranchStatus("nMuon",true);
 	  	fChain_->SetBranchStatus("Muon_*",true);
 	  	//address
 	  	fChain_->SetBranchAddress("nMuon", &nMuon);
-	  	fChain_->SetBranchAddress("Muoncharge", &Muon_charge);
-	  	fChain_->SetBranchAddress("Muonpt", &Muon_pt);
-	  	fChain_->SetBranchAddress("Muoneta", &Muon_eta);
-	  	fChain_->SetBranchAddress("Muonphi", &Muon_phi);
-	  	fChain_->SetBranchAddress("Muonmass", &Muon_mass);
-	  	fChain_->SetBranchAddress("MuonmediumId", &Muon_mediumId);
-	  	fChain_->SetBranchAddress("MuontightId", &Muon_tightId);
-	  	fChain_->SetBranchAddress("MuonhighPurity", &Muon_highPurity);
-	  	fChain_->SetBranchAddress("MuonpfRelIso04all", &Muon_pfRelIso04_all);
-	  	fChain_->SetBranchAddress("MuontkRelIso", &Muon_tkRelIso);
-	  	fChain_->SetBranchAddress("Muondxy", &Muon_dxy);
-	  	fChain_->SetBranchAddress("Muondz", &Muon_dz);
+	  	fChain_->SetBranchAddress("Muon_charge", &Muon_charge);
+	  	fChain_->SetBranchAddress("Muon_pt", &Muon_pt);
+	  	fChain_->SetBranchAddress("Muon_eta", &Muon_eta);
+	  	fChain_->SetBranchAddress("Muon_phi", &Muon_phi);
+	  	fChain_->SetBranchAddress("Muon_mass", &Muon_mass);
+	  	fChain_->SetBranchAddress("Muon_mediumId", &Muon_mediumId);
+	  	fChain_->SetBranchAddress("Muon_tightId", &Muon_tightId);
+	  	fChain_->SetBranchAddress("Muon_highPurity", &Muon_highPurity);
+	  	fChain_->SetBranchAddress("Muon_pfRelIso04_all", &Muon_pfRelIso04_all);
+	  	fChain_->SetBranchAddress("Muon_tkRelIso", &Muon_tkRelIso);
+	  	fChain_->SetBranchAddress("Muon_dxy", &Muon_dxy);
+	  	fChain_->SetBranchAddress("Muon_dz", &Muon_dz);
 	  	//address trigger
-	  	if(globalFlags_.getYear() == GlobalFlag::Year::Year2016Pre || globalFlags_.getYear() == GlobalFlag::Year::Year2016Post)
+	  	if(year_ == GlobalFlag::Year::Year2016Pre || year_ == GlobalFlag::Year::Year2016Post)
 	    fChain_->SetBranchAddress("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ", &HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ);
-	  	if(globalFlags_.getYear() == GlobalFlag::Year::Year2017 || globalFlags_.getYear() == GlobalFlag::Year::Year2018)
+	  	if(year_ == GlobalFlag::Year::Year2017 || year_ == GlobalFlag::Year::Year2018)
 	    fChain_->SetBranchAddress("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8", &HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8);
 	}
 	
@@ -330,13 +336,13 @@ void SkimTree::loadTree() {
 	fChain_->SetBranchAddress("Flag_BadPFMuonFilter",&Flag_BadPFMuonFilter);
 	fChain_->SetBranchStatus("Flag_eeBadScFilter",true);
 	fChain_->SetBranchAddress("Flag_eeBadScFilter", &Flag_eeBadScFilter);
-	if(globalFlags_.getYear() == GlobalFlag::Year::Year2017 || globalFlags_.getYear() == GlobalFlag::Year::Year2018){
+	if(year_ == GlobalFlag::Year::Year2017 || year_ == GlobalFlag::Year::Year2018){
 	    fChain_->SetBranchStatus("Flag_ecalBadCalibFilter",true);
 	    fChain_->SetBranchAddress("Flag_ecalBadCalibFilter",&Flag_ecalBadCalibFilter);
 	}
 	  
 	
-	if (globalFlags_.isMC()){ 
+	if (isMC_){ 
 		fChain_->SetBranchAddress("genWeight", &genWeight);
 		fChain_->SetBranchAddress("nPSWeight", &nPSWeight);
 		//fChain_->SetBranchAddress("PSWeight", &PSWeight);//seg fault
@@ -350,7 +356,7 @@ void SkimTree::loadTree() {
 		fChain_->SetBranchAddress("GenJet_partonFlavour", &GenJet_partonFlavour);
 		fChain_->SetBranchAddress("LHE_HT", &LHE_HT);
 		fChain_->SetBranchAddress("Jet_genJetIdx", &Jet_genJetIdx);
-	  	if (globalFlags_.getChannel() == GlobalFlag::Channel::GamJet){
+	  	if (channel_ == GlobalFlag::Channel::GamJet){
 	   		fChain_->SetBranchAddress("nGenIsolatedPhoton", &nGenIsolatedPhoton);
 	   		fChain_->SetBranchAddress("GenIsolatedPhoton_eta", &GenIsolatedPhoton_eta);
 	   		fChain_->SetBranchAddress("GenIsolatedPhoton_mass", &GenIsolatedPhoton_mass);
@@ -358,7 +364,7 @@ void SkimTree::loadTree() {
 	   		fChain_->SetBranchAddress("GenIsolatedPhoton_pt", &GenIsolatedPhoton_pt);
 	   		fChain_->SetBranchAddress("GenIsolatedPhoton_pdgId", &GenIsolatedPhoton_pdgId);
 	  	}
-	  	if (globalFlags_.getChannel() == GlobalFlag::Channel::ZeeJet || globalFlags_.getChannel() == GlobalFlag::Channel::ZmmJet){
+	  	if (channel_ == GlobalFlag::Channel::ZeeJet || channel_ == GlobalFlag::Channel::ZmmJet){
 	   		fChain_->SetBranchAddress("nGenDressedLepton", &nGenDressedLepton);
 	   		fChain_->SetBranchAddress("GenDressedLepton_eta", &GenDressedLepton_eta);
 	   		fChain_->SetBranchAddress("GenDressedLepton_mass", &GenDressedLepton_mass);
@@ -366,7 +372,7 @@ void SkimTree::loadTree() {
 	   		fChain_->SetBranchAddress("GenDressedLepton_pt", &GenDressedLepton_pt);
 	   		fChain_->SetBranchAddress("GenDressedLepton_pdgId", &GenDressedLepton_pdgId);
 	  	}
-	} // globalFlags_.isMC()
+	} // isMC_
 }
 
 auto SkimTree::getEntries() const -> Long64_t {

@@ -276,6 +276,12 @@ private:
 
     // Reference to GlobalFlag instance
     GlobalFlag& globalFlags_;
+    const GlobalFlag::Year year_;
+    const GlobalFlag::Era era_;
+    const GlobalFlag::Channel channel_;
+    const bool isDebug_;
+    const bool isData_;
+    const bool isMC_;
 };
 
 #endif // SKIMTREE_H

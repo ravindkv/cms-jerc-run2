@@ -1,7 +1,11 @@
 #include "EventPick.h"
 
 // Constructor implementation
-EventPick::EventPick(GlobalFlag& globalFlags) : globalFlags_(globalFlags) {
+EventPick::EventPick(GlobalFlag& globalFlags) : 
+    globalFlags_(globalFlags),
+    year_(globalFlags_.getYear()),
+    channel_(globalFlags_.getChannel()),
+    isDebug_(globalFlags_.isDebug()){
 }
 
 // Destructor
@@ -11,7 +15,7 @@ EventPick::~EventPick() {
 
 // Helper function for printing debug messages
 void EventPick::printDebug(const std::string& message) const {
-    if (globalFlags_.isDebug()) {
+    if (isDebug_) {
         std::cout << message << '\n';
     }
 }
@@ -20,31 +24,31 @@ void EventPick::printDebug(const std::string& message) const {
 auto EventPick::passHLT(const std::shared_ptr<SkimTree>& tree) const -> bool {
     bool pass_HLT = false;
 
-    if (globalFlags_.getChannel() == GlobalFlag::Channel::ZeeJet) {
-        if (globalFlags_.getYear() == GlobalFlag::Year::Year2016Pre || globalFlags_.getYear() == GlobalFlag::Year::Year2016Post) {
+    if (channel_ == GlobalFlag::Channel::ZeeJet) {
+        if (year_ == GlobalFlag::Year::Year2016Pre || year_ == GlobalFlag::Year::Year2016Post) {
             pass_HLT = tree->HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ;
             printDebug("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ: " +
                        std::to_string(tree->HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ));
-        } else if (globalFlags_.getYear() == GlobalFlag::Year::Year2017 || globalFlags_.getYear() == GlobalFlag::Year::Year2018) {
+        } else if (year_ == GlobalFlag::Year::Year2017 || year_ == GlobalFlag::Year::Year2018) {
             pass_HLT = tree->HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL;
             printDebug("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL: " +
                        std::to_string(tree->HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL));
         }
     }
 
-    if (globalFlags_.getChannel() == GlobalFlag::Channel::ZmmJet) {
-        if (globalFlags_.getYear() == GlobalFlag::Year::Year2016Pre || globalFlags_.getYear() == GlobalFlag::Year::Year2016Post) {
+    if (channel_ == GlobalFlag::Channel::ZmmJet) {
+        if (year_ == GlobalFlag::Year::Year2016Pre || year_ == GlobalFlag::Year::Year2016Post) {
             pass_HLT = tree->HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ;
             printDebug("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ: " +
                        std::to_string(tree->HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ));
-        } else if (globalFlags_.getYear() == GlobalFlag::Year::Year2017 || globalFlags_.getYear() == GlobalFlag::Year::Year2018) {
+        } else if (year_ == GlobalFlag::Year::Year2017 || year_ == GlobalFlag::Year::Year2018) {
             pass_HLT = tree->HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8;
             printDebug("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8: " +
                        std::to_string(tree->HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8));
         }
     }
 
-    if (globalFlags_.getChannel() == GlobalFlag::Channel::GamJet) {
+    if (channel_ == GlobalFlag::Channel::GamJet) {
         // Combine all HLT conditions into a vector for easier management
         std::vector<bool> hlt_conditions = {
             tree->HLT_Photon200,
@@ -69,7 +73,7 @@ auto EventPick::passHLT(const std::shared_ptr<SkimTree>& tree) const -> bool {
         pass_HLT = std::any_of(hlt_conditions.begin(), hlt_conditions.end(), [](bool hlt) { return hlt; });
 
         // Debugging output
-        if (globalFlags_.isDebug()) {
+        if (isDebug_) {
             printDebug("HLT Photon Triggers:");
             printDebug("HLT_Photon200: " + std::to_string(tree->HLT_Photon200));
             printDebug("HLT_Photon175: " + std::to_string(tree->HLT_Photon175));
@@ -88,11 +92,11 @@ auto EventPick::passHLT(const std::shared_ptr<SkimTree>& tree) const -> bool {
             printDebug("HLT_Photon30_HoverELoose: " + std::to_string(tree->HLT_Photon30_HoverELoose));
             printDebug("HLT_Photon20_HoverELoose: " + std::to_string(tree->HLT_Photon20_HoverELoose));
         }
-    }//globalFlags_.getChannel() == GlobalFlag::Channel::GamJet
+    }//channel_ == GlobalFlag::Channel::GamJet
 
-    if (globalFlags_.getChannel() == GlobalFlag::Channel::MCTruth || globalFlags_.getChannel() == GlobalFlag::Channel::VetoMap) {
+    if (channel_ == GlobalFlag::Channel::MCTruth || channel_ == GlobalFlag::Channel::VetoMap) {
         pass_HLT = tree->HLT_MC;
-        if(globalFlags_.isDebug())
+        if(isDebug_)
             printDebug("HLT_MC: " + std::to_string(tree->HLT_MC));
     }
 
@@ -109,12 +113,12 @@ auto EventPick::passFilter(const std::shared_ptr<SkimTree>& tree) const -> bool 
                 tree->Flag_BadPFMuonFilter &&
                 tree->Flag_eeBadScFilter;
 
-    if (globalFlags_.getYear() == GlobalFlag::Year::Year2017 || globalFlags_.getYear() == GlobalFlag::Year::Year2018) {
+    if (year_ == GlobalFlag::Year::Year2017 || year_ == GlobalFlag::Year::Year2018) {
         pass = pass && tree->Flag_ecalBadCalibFilter;
     }
 
     // Debugging output
-    if (globalFlags_.isDebug()) {
+    if (isDebug_) {
         printDebug("Event Filters:");
         printDebug("Flag_goodVertices: " + std::to_string(tree->Flag_goodVertices));
         printDebug("Flag_globalSuperTightHalo2016Filter: " + std::to_string(tree->Flag_globalSuperTightHalo2016Filter));
@@ -123,7 +127,7 @@ auto EventPick::passFilter(const std::shared_ptr<SkimTree>& tree) const -> bool 
         printDebug("Flag_EcalDeadCellTriggerPrimitiveFilter: " + std::to_string(tree->Flag_EcalDeadCellTriggerPrimitiveFilter));
         printDebug("Flag_BadPFMuonFilter: " + std::to_string(tree->Flag_BadPFMuonFilter));
         printDebug("Flag_eeBadScFilter: " + std::to_string(tree->Flag_eeBadScFilter));
-        if (globalFlags_.getYear() == GlobalFlag::Year::Year2017 || globalFlags_.getYear() == GlobalFlag::Year::Year2018) {
+        if (year_ == GlobalFlag::Year::Year2017 || year_ == GlobalFlag::Year::Year2018) {
             printDebug("Flag_ecalBadCalibFilter: " + std::to_string(tree->Flag_ecalBadCalibFilter));
         }
     }
@@ -135,7 +139,7 @@ auto EventPick::passFilter(const std::shared_ptr<SkimTree>& tree) const -> bool 
 void EventPick::printProgress(Long64_t jentry, Long64_t nentries,
                               std::chrono::time_point<std::chrono::high_resolution_clock>& startClock,
                               double& totTime) const {
-    if (globalFlags_.isDebug()) {
+    if (isDebug_) {
         std::cout << "\n=== Event: " << jentry << " ===\n" << '\n';
     }
     if (nentries > 100 && jentry % (nentries / 100) == 0) {  // Print progress every 1%

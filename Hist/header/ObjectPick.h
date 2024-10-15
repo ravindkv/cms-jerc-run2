@@ -51,6 +51,12 @@ public:
     const std::vector<int>& getPickedGenPhotons() const;
     const std::vector<TLorentzVector>& getPickedGenRefs() const;
 
+    const double getBtagThresh()const;
+    const double getCtagThresh()const;
+    const double getQtagThresh()const;
+    const double getGtagThresh()const;
+
+
 private:
     // Pointer to SkimTree
     std::shared_ptr<SkimTree> skimTree_;
@@ -69,8 +75,16 @@ private:
 
     // Reference to GlobalFlag instance
     GlobalFlag& globalFlags_;
+    const GlobalFlag::Year year_;
+    const GlobalFlag::Channel channel_;
+    const bool isDebug_;
+
     // Helper function for debug printing
     void printDebug(const std::string& message) const;
+    double bTagThresh_;
+    double cTagThresh_;
+    double qTagThresh_;
+    double gTagThresh_;
 };
 
 #endif  // OBJECTPICK_H

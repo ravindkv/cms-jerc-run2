@@ -15,23 +15,80 @@ MakeDPNote::~MakeDPNote() {
     }
 }
 
-double MakeDPNote:: calculateWidth(int totalPlots){
-    double margin = 0.02;
-		double titleFraction = 0.2;
-    // Calculate the optimal number of columns (closest integer to the square root of totalPlots)
-    int columns = static_cast<int>(std::ceil(std::sqrt(totalPlots)));
-    
-    // Calculate the number of rows needed
-    int rows = (totalPlots + columns - 1) / columns;  // Ensures any leftover plots get a row
+double MakeDPNote::calculateWidth(int totalPlots) {
+    double plotWidth = 0.2; // Default width
+    int rows = 1;
+    int columns = 1;
 
-    // Calculate plot width based on columns and margin
-    double  plotWidth = (1.0 - (columns - 1) * margin) / columns;
+    // Mapping totalPlots to specific grid layouts and widths
+    if (totalPlots == 1) {
+        rows = 1;
+        columns = 1;
+        plotWidth = 0.75;
+    }
+    else if (totalPlots == 2) {
+        rows = 1;
+        columns = 2;
+        plotWidth = 0.45;
+    }
+    else if (totalPlots == 3 || totalPlots == 4) {
+        rows = 2;
+        columns = 2;
+        plotWidth = 0.38;
+    }
+    else if (totalPlots == 5 || totalPlots == 6) {
+        rows = 2;
+        columns = 3;
+        plotWidth = 0.3;
+    }
+    else if (totalPlots >= 7 && totalPlots <= 9) {
+        rows = 3;
+        columns = 3;
+        plotWidth = 0.27;
+    }
+    else if (totalPlots == 10) {
+        rows = 4;
+        columns = 3;
+        plotWidth = 0.22;
+    }
+    else {
+        // Dynamic calculation for totalPlots > 10 or other unspecified cases
+        double margin = 0.02;
+        // Calculate the optimal number of columns (closest integer to the square root of totalPlots)
+        columns = static_cast<int>(std::ceil(std::sqrt(totalPlots)));
 
-   	 // Vertical space: Account for the title reducing available space
-    // Assuming titleFraction is the fraction of vertical space taken by the title (e.g., 0.1 for 10%)
+        // Calculate the number of rows needed
+        rows = (totalPlots + columns - 1) / columns;  // Ensures any leftover plots get a row
+
+        // Recalculate columns if the total width exceeds 1.0 (slide width)
+        plotWidth = (1.0 - (columns - 1) * margin) / columns;
+        while (plotWidth <= 0 && columns > 1) {
+            columns--;  // Reduce columns to fit the width
+            rows = (totalPlots + columns - 1) / columns;  // Update rows accordingly
+            plotWidth = (1.0 - (columns - 1) * margin) / columns;
+        }
+
+        // If plotWidth is still non-positive, set to a minimal default
+        if (plotWidth <= 0) {
+            plotWidth = 0.1;  // Minimal width to prevent negative or zero width
+        }
+    }
+
+    // Vertical space: Account for the title reducing available space
+    double margin = 0.02;       // Assuming margin is also used vertically
+    double titleFraction = 0.2;
     double availableHeight = 1.0 - titleFraction;  // Remaining vertical space after the title
-    double plotHeight = availableHeight / rows;           // Divide remaining height by the number of rows
-    return plotHeight;
+    double plotHeight = (availableHeight - (rows - 1) * margin) / rows;  // Divide remaining height by the number of rows
+
+    // Debugging output
+    std::cout << "Total Plots: " << totalPlots 
+              << " | Rows: " << rows 
+              << ", Columns: " << columns 
+              << ", PlotWidth: " << plotWidth 
+              << ", PlotHeight: " << plotHeight 
+              << std::endl;
+
+    return plotWidth;
 }
 
 void MakeDPNote::startDocument(const std::string& title) {
@@ -125,7 +182,7 @@ void MakeDPNote::addCenteredTextSlide(const std::string& centeredText) {
     // Start writing the slide structure
     file_ << "\\begin{frame}\n";
     file_ << "    \\centering\n";
-    file_ << "    {\\Huge " << centeredText << "}\n"; // Adding centered large text
+    file_ << "    {\\Large " << centeredText << "}\n"; // Adding centered large text
     file_ << "\\end{frame}\n\n";
 }
 

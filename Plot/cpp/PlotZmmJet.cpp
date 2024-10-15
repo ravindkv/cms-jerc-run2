@@ -1,15 +1,15 @@
-#include "PlotZeeJet.h"
+#include "PlotZmmJet.h"
 
 using json = nlohmann::json;
 using namespace std;
    
-int PlotZeeJet::Run(nlohmann::json inputJson, TFile *outRoot, string & outLatex){
+int PlotZmmJet::Run(nlohmann::json inputJson, TFile *outRoot, string & outLatex){
     MakeDPNote dpNote(outLatex);
-    dpNote.startDocument("JME-21-001: L3Residual from ZeeJet channel");
+    dpNote.startDocument("JME-21-001: L3Residual from ZmmJet channel");
 		
-    addZeeJetSlides(dpNote);
+    addZmmJetSlides(dpNote);
 
-    string channel = "ZeeJet";
+    string channel = "ZmmJet";
     //Eras in one plot. Make plots for all year
     std::vector<std::string> years;
     for (const auto& element : inputJson[channel].items()) {
@@ -240,7 +240,7 @@ int PlotZeeJet::Run(nlohmann::json inputJson, TFile *outRoot, string & outLatex)
 
 		//----------------------------
     if(isPlotTH2D){
-      dpNote.addCenteredTextSlide("Next we show TH2D for responses");
+      dpNote.addCenteredTextSlide("Next we show TH2D for events");
 
       std::vector<std::pair<std::string, std::string>> h2NamesAndDir;
       std::string dir_ = "passAtleast1Ref";
@@ -289,21 +289,20 @@ int PlotZeeJet::Run(nlohmann::json inputJson, TFile *outRoot, string & outLatex)
 }
 
 
-void PlotZeeJet::addZeeJetSlides(MakeDPNote & dpNote){
+void PlotZmmJet::addZmmJetSlides(MakeDPNote & dpNote){
   //----------------------------
   // Samples
   //----------------------------
 	std::vector<std::pair<std::string, std::vector<std::string>>> samples16 = {
   {"2016Pre", {
     "/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16NanoAODAPVv9-20UL16APVJMENano_106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM",
-    "/DoubleEG/Run2016B-ver1_HIPM_UL2016_MiniAODv2_JMENanoAODv9-v1/NANOAOD",
-    "/DoubleEG/Run2016B-ver2_HIPM_UL2016_MiniAODv2_JMENanoAODv9-v1/NANOAOD",
-    "/DoubleEG/Run2016C/D/E/F-HIPM_UL2016_MiniAODv2_JMENanoAODv9-v1/v2/NANOAOD",
+    "/DoubleMuon/Run2016B-ver1/ver2_HIPM_UL2016_MiniAODv2_JMENanoAODv9-v1/NANOAOD",
+    "/DoubleMuon/Run2016C/D/E/F-HIPM_UL2016_MiniAODv2_JMENanoAODv9-v1/v2/NANOAOD",
   }},
   {"2016Post", {
     "/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL16NanoAODv9-20UL16JMENano_106X_mcRun2_asymptotic_v17-v1/NANOAODSIM",
-    "/DoubleEG/Run2016F-UL2016_MiniAODv2_JMENanoAODv9-v2/NANOAOD",
-    "/DoubleEG/Run2016G/H-UL2016_MiniAODv2_JMENanoAODv9-v1/NANOAOD",
+    "/DoubleMuon/Run2016F-UL2016_MiniAODv2_JMENanoAODv9-v2/NANOAOD",
+    "/DoubleMuon/Run2016G/H-UL2016_MiniAODv2_JMENanoAODv9-v1/NANOAOD",
     }}
   };
   dpNote.addTextSlide(samples16, "List of samples for 2016Pre and 2016Post"); 
@@ -315,11 +314,11 @@ void PlotZeeJet::addZeeJetSlides(MakeDPNote & dpNote){
 	std::vector<std::pair<std::string, std::vector<std::string>>> samples17_18 = {
   {"2017",{
     "/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL17NanoAODv9-20UL17JMENano_106X_mc2017_realistic_v9-v1/NANOAODSIM",
-    "/DoubleEG/Run2017B/C/D/E/F-UL2017_MiniAODv2_JMENanoAODv9-v1/NANOAOD",
+    "/DoubleMuon/Run2017B/C/D/E/F-UL2017_MiniAODv2_JMENanoAODv9-v1/NANOAOD",
   }},
   {"2018", {
       "/DYJetsToLL_M-50_TuneCP5_13TeV-amcatnloFXFX-pythia8/RunIISummer20UL18NanoAODv9-20UL18JMENano_106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM",
-      "/EGamma/Run2018A/B/C/D-UL2018_MiniAODv2_JMENanoAODv9-v1/NANOAOD",
+      "/DoubleMuon/Run2018A/B/C/D-UL2018_MiniAODv2_JMENanoAODv9-v1/NANOAOD"
 	}}
   };
   dpNote.addTextSlide(samples17_18, "List of samples for 2017 and 2018"); 
@@ -330,13 +329,13 @@ void PlotZeeJet::addZeeJetSlides(MakeDPNote & dpNote){
   //----------------------------
   std::vector<std::pair<std::string, std::vector<std::string>>> triggers = {
   {"2016UL", {
-      "HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ",
+      "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ"
   }},
   {"2017UL", {
-      "HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL"
+      "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8",
   }},
   {"2018UL",{
-      "HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL"
+      "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8",
   }}
   };
   dpNote.addTextSlide(triggers, "List of triggers for Run-2"); 
@@ -393,9 +392,9 @@ void PlotZeeJet::addZeeJetSlides(MakeDPNote & dpNote){
   // Object selection
   //----------------------------
 	std::vector<std::pair<std::string, std::vector<std::string>>> objSel = {
-    {"Electron", {
+    {"Muon", {
         "Tight cut based ID",
-        "pT > = 25 GeV, |eta| =< 2.4, outside the gap",
+        "pT > = 20 GeV, |eta| =< 2.3, dxy < 0.2, dz < 0.5",
     }},
     {"Jets", {
         "Tight lepton veto ID",

@@ -1,6 +1,6 @@
 #include "HistZeeJet.h"
+#include "HistZmmJet.h"
 //#include "HistGamJet.h"
-//#include "HistZmmJet.h"
 //#include "HistMCTruth.h"
 //#include "HistFlavour.h"
 //#include "HistVetoMap.h"
@@ -186,13 +186,13 @@ int main(int argc, char* argv[]) {
         auto zeeJet = std::make_unique<HistZeeJet>(globalFlag);
         zeeJet->Run(skimT, eventP.get(), objP.get(), objS.get(), fout.get());
     }
+    if (globalFlag.getChannel() == GlobalFlag::Channel::ZmmJet) {
+        std::cout << "==> Running ZmmJet" << std::endl;
+        auto zmmJet = std::make_unique<HistZmmJet>(globalFlag);
+        zmmJet->Run(skimT, eventP.get(), objP.get(), objS.get(), fout.get());
+    }
 
 /*
-  if (globF->isZmmJet) {
-    std::cout << "==> Running ZmmJet" << std::endl;
-    auto zmmJet = std::make_unique<HistZmmJet>(outName);
-    zmmJet->Run(skimT.get(), eventP.get(), objP.get(), objS.get(), fout.get());
-  }
   if (globF->isGamJet) {
     std::cout << "==> Running GamJet" << std::endl;
     auto gamJet = std::make_unique<HistGamJet>(outName);
