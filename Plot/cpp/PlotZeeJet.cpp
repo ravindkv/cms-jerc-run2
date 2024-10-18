@@ -1,295 +1,176 @@
 #include "PlotZeeJet.h"
+#include "FigConfig.h"
+#include "ReadConfig.h"
+#include "Helper.h"
+#include "LoadEras1D.h"
+#include "LoadEra2D.h"
+#include "LoadEraXY.h"
+#include "LoadErasXY.h"
 
 using json = nlohmann::json;
-using namespace std;
    
-int PlotZeeJet::Run(nlohmann::json inputJson, TFile *outRoot, string & outLatex){
-    MakeDPNote dpNote(outLatex);
-    dpNote.startDocument("JME-21-001: L3Residual from ZeeJet channel");
-		
-    addZeeJetSlides(dpNote);
+int PlotZeeJet::Run(nlohmann::json inputJson, TFile *outRoot, MakeDPNote &chNote, MakeDPNote &allNote){
+    chNote.startDocument("JME-21-001: L3Residual from ZeeJet channel");
+    addZeeJetSlides(chNote);
 
-    string channel = "ZeeJet";
-    //Eras in one plot. Make plots for all year
+    allNote.addCenteredTextSlide("Next we show results from ZeeJet channel");
+
+    std::string channel = "ZeeJet";
     std::vector<std::string> years;
     for (const auto& element : inputJson[channel].items()) {
-      years.push_back(element.key());
+        years.push_back(element.key());
     }
 
-		//----------------------------
-    if(isPlotTProfile){
-      dpNote.addCenteredTextSlide("Next we show TProfiles for responses and energy fractions");
+    ReadConfig readConfig("config/FigZeeJet.json");
+    const auto& figConfigMap = readConfig.getFigConfigMap();
 
-      std::vector<std::pair<std::string, std::string>> pNamesAndDir;
-      std::string dir_ = "passJet1EtaJet2Pt";
-      //pNamesAndDir.push_back(std::make_pair("p1JetEtaInRefPt", dir_));
-      pNamesAndDir.push_back(std::make_pair("p1DbRespInRefPt", dir_));
-      pNamesAndDir.push_back(std::make_pair("p1MpfRespInRefPt", dir_));
-      pNamesAndDir.push_back(std::make_pair("p1JetChhefInRefPt", dir_));
-      pNamesAndDir.push_back(std::make_pair("p1JetNehefInRefPt", dir_));
-      pNamesAndDir.push_back(std::make_pair("p1JetNeemefInRefPt", dir_));
-      pNamesAndDir.push_back(std::make_pair("p1JetChemefInRefPt", dir_));
-      pNamesAndDir.push_back(std::make_pair("p1JetMuefInRefPt", dir_));
+    bool added1DSlide = false;
+    bool added2DSlide = false;
+    bool addedXYSlide = false;
 
-      for (const auto & nameAndDir: pNamesAndDir){
-        string name = nameAndDir.first;
-        string dir  = nameAndDir.second;
-        // Create a map of plot paths and their corresponding descriptions
-        vector<string> plotsForSlide;
-        for (auto &year: years){
-          vector<string> dataEras;
-          for (const auto& element : inputJson[channel][year]["Data"].items()) {
-            dataEras.push_back(element.key());
-          }
-          vector<string> mcBins;
-          for (const auto& element : inputJson[channel][year]["MC"].items()) {
-            mcBins.push_back(element.key());
-          }
-          string plotOutPath = channel+"_"+year+"_"+dir+"_"+name+".pdf";
-          plotsForSlide.push_back(plotOutPath);
-          if(!justLatex){
-            auto eras1D = std::make_unique<LoadEras1D<TProfile>>();
-            eras1D->setInputJson(inputJson);
-            eras1D->setChannel(channel);
-            eras1D->setYear(year);
-            eras1D->setMCHTBins(mcBins);
-            eras1D->setDataEras(dataEras);
-            eras1D->setHistDir(dir);
-            eras1D->setHistName(name);
-            eras1D->loadDataHists(false);
-            eras1D->loadMCHists(false);
-            eras1D->overlayDataWithMCInRatio(outRoot, plotOutPath);
-          }
-        }//year
-        // Add slide with multiple plots and descriptions
-        dpNote.addPlotSlide(plotsForSlide, name+" for different years");
-      }//nameAndDir
-    }//isPlotTProfile
-
-		//----------------------------
-    if(isPlotTH1D){
-      dpNote.addCenteredTextSlide("Next we show TH1D for events");
-
-      std::vector<std::pair<std::string, std::string>> hNamesAndDir;
-      std::string dir_ = "passAtleast1Ref";
-      hNamesAndDir.push_back(std::make_pair("h1EventInRefPt", dir_));
-      hNamesAndDir.push_back(std::make_pair("h1EventInDphiJetRef", "passRefBarrel"));
-      hNamesAndDir.push_back(std::make_pair("h1EventInDrJetRef", "passRefBarrel"));
-
-      for (const auto & nameAndDir: hNamesAndDir){
-        string name = nameAndDir.first;
-        string dir  = nameAndDir.second;
-        // Create a map of plot paths and their corresponding descriptions
-        vector<string> plotsForSlide;
-        for (auto &year: years){
-          vector<string> dataEras;
-          for (const auto& element : inputJson[channel][year]["Data"].items()) {
-            dataEras.push_back(element.key());
-          }
-          vector<string> mcBins;
-          for (const auto& element : inputJson[channel][year]["MC"].items()) {
-            mcBins.push_back(element.key());
-          }
-          string plotOutPath = channel+"_"+year+"_"+dir+"_"+name+".pdf";
-          plotsForSlide.push_back(plotOutPath);
-          if(!justLatex){
-            auto eras1D = std::make_unique<LoadEras1D<TH1D>>();
-            eras1D->setInputJson(inputJson);
-            eras1D->setChannel(channel);
-            eras1D->setYear(year);
-            eras1D->setMCHTBins(mcBins);
-            eras1D->setDataEras(dataEras);
-            eras1D->setHistDir(dir);
-            eras1D->setHistName(name);
-            eras1D->loadDataHists(true);
-            eras1D->loadMCHists(true);
-            eras1D->overlayDataWithMCInRatio(outRoot, plotOutPath);
-          }
-        }//year
-        // Add slide with multiple plots and descriptions
-        dpNote.addPlotSlide(plotsForSlide, name+" for different years");
-      }//nameAndDir
-    }//isPlotTH1D
-
-    //----------------------------
-    if(isPlotProjectXorY){
-      std::vector<std::pair<std::string, std::string>> p2NamesAndDir;
-      std::string dir_ = "passJet1EtaJet2Pt";
-      p2NamesAndDir.push_back(std::make_pair("p2DbRespInJet1EtaRefPt", dir_));
-      dpNote.addCenteredTextSlide("Next we show Projection of X in Y bins");
-      for (const auto & nameAndDir: p2NamesAndDir){
-        string name = nameAndDir.first;
-        string dir  = nameAndDir.second;
-        // Create a map of plot paths and their corresponding descriptions
-        for (auto &year: years){
-          vector<string> dataEras;
-          for (const auto& element : inputJson[channel][year]["Data"].items()) {
-            dataEras.push_back(element.key());
-          }
-          vector<string> mcBins;
-          for (const auto& element : inputJson[channel][year]["MC"].items()) {
-            mcBins.push_back(element.key());
-          }
-          vector<string> plotsForSlide;
-          for (const auto& dataEra: dataEras){
-            string plotOutPath = dataEra+"_"+dir+"_"+name+".pdf";
-            plotsForSlide.push_back(plotOutPath);
-            if(!justLatex){
-              auto eraXY = std::make_unique<LoadEraXY<TProfile2D>>();
-              eraXY->setInputJson(inputJson);
-              eraXY->setChannel(channel);
-              eraXY->setYear(year);
-              eraXY->setMCHTBins(mcBins);
-              eraXY->setDataEra(dataEra);
-              eraXY->setVarBins({0.0, 1.3, 2.5, 3.0, 3.5});
-              eraXY->setVarName("#eta");
-              eraXY->setVarIsOnXaxis(true);
-              eraXY->setHistDir(dir);
-              eraXY->setHistName(name);
-              eraXY->loadDataHists();
-              //eraXY->loadMCHists();
-              eraXY->overlayDataWithMCInRatio(outRoot, plotOutPath);
+    for (const auto & config: figConfigMap){
+        std::string name = config.first;
+        FigConfig figConfig = config.second;
+        figConfig.print();
+        std::string dir = figConfig.dirName;
+		//-------------------------------------
+		// Plot1D: multiple eras in one plot
+		//-------------------------------------
+		bool isH1 = name.rfind("h1", 0) == 0;
+		bool isP1 = name.rfind("p1", 0) == 0;
+        if(isPlot1D && (isH1 || isP1)){
+            if (!added1DSlide) {
+                chNote.addCenteredTextSlide("Next we show 1D plots");
+                added1DSlide = true;
             }
-          }//eras
-          // Add slide with multiple plots and descriptions
-          dpNote.addPlotSlide(plotsForSlide, name+" for "+ year);
-        }//year
-      }//nameAndDir
-
-      dpNote.addCenteredTextSlide("Next we show Projection of X in ONE Y bin");
-      for (const auto & nameAndDir: p2NamesAndDir){
-        string name = nameAndDir.first;
-        string dir  = nameAndDir.second;
-        // Create a map of plot paths and their corresponding descriptions
-        vector<string> plotsForSlide;
-        for (auto &year: years){
-          vector<string> dataEras;
-          for (const auto& element : inputJson[channel][year]["Data"].items()) {
-            dataEras.push_back(element.key());
-          }
-          vector<string> mcBins;
-          for (const auto& element : inputJson[channel][year]["MC"].items()) {
-            mcBins.push_back(element.key());
-          }
-          string plotOutPath = channel+"_"+year+"_"+dir+"_"+name+".pdf";
-          plotsForSlide.push_back(plotOutPath);
-          if(!justLatex){
-            auto erasXY = std::make_unique<LoadErasXY<TProfile2D>>();
-            erasXY->setInputJson(inputJson);
-            erasXY->setChannel(channel);
-            erasXY->setYear(year);
-            erasXY->setMCHTBins(mcBins);
-            erasXY->setDataEras(dataEras);
-            erasXY->setVarMin(0.0);
-            erasXY->setVarMax(1.3);
-            erasXY->setVarName("#eta");
-            erasXY->setVarIsOnXaxis(true);
-            erasXY->setHistDir(dir);
-            erasXY->setHistName(name);
-            erasXY->loadDataHists();
-            erasXY->loadMCHists();
-            erasXY->overlayDataWithMCInRatio(outRoot, plotOutPath);
-          }
-        }//year
-        dpNote.addPlotSlide(plotsForSlide, name+" for different years");
-      }//nameAndDir
-    }//isPlotProjectXorY
+            std::vector<std::string> plotsForSlide;
+            for (auto &year: years){
+                auto dataEras = Helper::getEras(inputJson, channel, year, "Data");
+                auto mcBins = Helper::getEras(inputJson, channel, year, "Mc");
+                std::string plotOutPath = channel+"_"+year+"_"+dir+"_"+name+".pdf";
+                plotsForSlide.push_back(plotOutPath);
+                auto eras1D = std::make_unique<LoadEras1D<TProfile>>();
+                eras1D->setInputJson(inputJson);
+                eras1D->setChannel(channel);
+                eras1D->setYear(year);
+                eras1D->setMcHtBins(mcBins);
+                eras1D->setDataEras(dataEras);
+                eras1D->setHistDir(dir);
+                eras1D->setHistName(name);
+                eras1D->setFigConfig(figConfig);
+                eras1D->loadDataHists();
+                eras1D->loadMcHists();
+                eras1D->overlayDataWithMcInRatio(outRoot, plotOutPath);
+            }//year
+            chNote.addPlotSlide(plotsForSlide, name+" for different years");
+            allNote.addPlotSlide(plotsForSlide, name+" from ZeeJet channel for different years");
+        }//isPlot1D
 
 
-    //----------------------------
-    if(isPlotTProfile2D){
-      dpNote.addCenteredTextSlide("Next we show TProfile2D for responses");
-
-      std::vector<std::pair<std::string, std::string>> h2NamesAndDir;
-      std::string dir_ = "passJet1EtaJet2Pt";
-      h2NamesAndDir.push_back(std::make_pair("p2DbRespInJet1EtaRefPt", dir_));
-      h2NamesAndDir.push_back(std::make_pair("p2MpfRespInJet1EtaRefPt", dir_));
-
-      for (const auto & nameAndDir: h2NamesAndDir){
-        string name = nameAndDir.first;
-        string dir  = nameAndDir.second;
-        // Create a map of plot paths and their corresponding descriptions
-        for (auto &year: years){
-          vector<string> dataErasOrMCBins;
-          for (const auto& element : inputJson[channel][year]["Data"].items()) {
-            dataErasOrMCBins.push_back(element.key());
-          }
-          for (const auto& element : inputJson[channel][year]["MC"].items()) {
-            dataErasOrMCBins.push_back(element.key());
-          }
-          vector<string> plotsForSlide;
-          for (auto dataEraOrMCBin: dataErasOrMCBins){
-            string plotOutPath = dataEraOrMCBin+"_"+dir+"_"+name+".pdf";
-            plotsForSlide.push_back(plotOutPath);
-            if(!justLatex){
-              auto era2D = std::make_unique<LoadEra2D<TProfile2D>>();
-              era2D->setInputJson(inputJson);
-              era2D->setChannel(channel);
-              era2D->setYear(year);
-              era2D->setDataEraOrMCBin(dataEraOrMCBin);
-              era2D->setHistDir(dir);
-              era2D->setHistName(name);
-              era2D->drawHist2D(outRoot, plotOutPath);
+		//-------------------------------------
+		// Plot2D: one era in one plot
+		//-------------------------------------
+		bool isH2 = name.rfind("h2", 0) == 0;
+		bool isP2 = name.rfind("p2", 0) == 0;
+        int varBinSize =  figConfig.varBins.size();
+        if(isPlot2D && (isH2 || isP2) && varBinSize>0){
+            if (!added2DSlide) {
+                chNote.addCenteredTextSlide("Next we show 2D plots");
+                added2DSlide = true;
             }
-          }//eras
-          dpNote.addPlotSlide(plotsForSlide, name+" for "+ year);
-        }//year
-      }//nameAndDir
-    }//isPlotTProfile2D
+            for (auto &year: years){
+                auto dataEras = Helper::getEras(inputJson, channel, year, "Data");
+                auto mcBins = Helper::getEras(inputJson, channel, year, "Mc");
+                auto dataErasOrMcBins = dataEras;
+                dataErasOrMcBins.insert(dataErasOrMcBins.end(), mcBins.begin(), mcBins.end());
+                std::vector<std::string> plotsForSlide;
+                for (auto dataEraOrMcBin: dataErasOrMcBins){
+                    std::string plotOutPath = dataEraOrMcBin+"_"+dir+"_"+name+".pdf";
+                    plotsForSlide.push_back(plotOutPath);
+                    auto era2D = std::make_unique<LoadEra2D<TProfile2D>>();
+                    era2D->setInputJson(inputJson);
+                    era2D->setChannel(channel);
+                    era2D->setYear(year);
+                    era2D->setDataEraOrMcBin(dataEraOrMcBin);
+                    era2D->setHistDir(dir);
+                    era2D->setHistName(name);
+                    era2D->setFigConfig(figConfig);
+                    era2D->drawHist2D(outRoot, plotOutPath);
+                }//eras
+                chNote.addPlotSlide(plotsForSlide, name+" for "+ year);
+            }//year
+        }//isPlot2D
 
-
-		//----------------------------
-    if(isPlotTH2D){
-      dpNote.addCenteredTextSlide("Next we show TH2D for responses");
-
-      std::vector<std::pair<std::string, std::string>> h2NamesAndDir;
-      std::string dir_ = "passAtleast1Ref";
-      h2NamesAndDir.push_back(std::make_pair("h2EventInRefEtaRefPhi", dir_));
-
-      for (const auto & nameAndDir: h2NamesAndDir){
-        string name = nameAndDir.first;
-        string dir  = nameAndDir.second;
-        // Create a map of plot paths and their corresponding descriptions
-        for (auto &year: years){
-          vector<string> dataErasOrMCBins;
-          for (const auto& element : inputJson[channel][year]["Data"].items()) {
-            dataErasOrMCBins.push_back(element.key());
-          }
-          for (const auto& element : inputJson[channel][year]["MC"].items()) {
-            dataErasOrMCBins.push_back(element.key());
-          }
-          
-          vector<string> plotsForSlide;
-          for (auto dataEraOrMCBin: dataErasOrMCBins){
-            string plotOutPath = dataEraOrMCBin+"_"+dir+"_"+name+".pdf";
-            plotsForSlide.push_back(plotOutPath);
-            if(!justLatex){
-              auto era2D = std::make_unique<LoadEra2D<TH2D>>();
-              era2D->setInputJson(inputJson);
-              era2D->setChannel(channel);
-              era2D->setYear(year);
-              era2D->setDataEraOrMCBin(dataEraOrMCBin);
-              era2D->setHistDir(dir);
-              era2D->setHistName(name);
-              era2D->drawHist2D(outRoot, plotOutPath);
+		//-------------------------------------
+		// PlotXY: 
+		//-------------------------------------
+        if(isPlotXY && (isP2)){
+	        //--------------------------
+	        // multiple eras in one plot
+	        //--------------------------
+            std::vector<std::string> plotsForSlide;
+            if (!addedXYSlide) {
+                chNote.addCenteredTextSlide("Next we show XY plots");
+                addedXYSlide = true;
             }
-          }//eras
-          dpNote.addPlotSlide(plotsForSlide, name+" for "+ year);
-        }//year
-      }//nameAndDir
-    }//isPlotTH2D
+            for (auto &year: years){
+                auto dataEras = Helper::getEras(inputJson, channel, year, "Data");
+                auto mcBins = Helper::getEras(inputJson, channel, year, "Mc");
+                auto erasXY = std::make_unique<LoadErasXY<TProfile2D>>();
+                erasXY->setInputJson(inputJson);
+                erasXY->setChannel(channel);
+                erasXY->setYear(year);
+                erasXY->setMcHtBins(mcBins);
+                erasXY->setDataEras(dataEras);
+                erasXY->setFigConfig(figConfig);
+                erasXY->setHistDir(dir);
+                erasXY->setHistName(name);
+                erasXY->loadDataHists();
+                erasXY->loadMcHists();
+                std::string plotOutPath = channel+"_"+year+"_"+dir+"_"+name+".pdf";
+                erasXY->overlayDataWithMcInRatio(outRoot, plotOutPath);
+                plotsForSlide.push_back(plotOutPath);
+            }
+            chNote.addPlotSlide(plotsForSlide, name+" for different years");
 
+	        //--------------------------
+	        // one era in one plot
+	        //--------------------------
+            for (auto &year: years){
+                auto dataEras = Helper::getEras(inputJson, channel, year, "Data");
+                auto mcBins = Helper::getEras(inputJson, channel, year, "Mc");
+                std::vector<std::string> plotsForSlide;
+                for (const auto& dataEra: dataEras){
+                    std::string plotOutPath = dataEra+"_"+dir+"_"+name+".pdf";
+                    plotsForSlide.push_back(plotOutPath);
+                    auto eraXY = std::make_unique<LoadEraXY<TProfile2D>>();
+                    eraXY->setInputJson(inputJson);
+                    eraXY->setChannel(channel);
+                    eraXY->setYear(year);
+                    eraXY->setMcHtBins(mcBins);
+                    eraXY->setDataEra(dataEra);
+                    eraXY->setFigConfig(figConfig);
+                    eraXY->setHistDir(dir);
+                    eraXY->setHistName(name);
+                    eraXY->loadDataHists();
+                    //eraXY->loadMcHists();
+                    eraXY->overlayDataWithMcInRatio(outRoot, plotOutPath);
+                }//eras
+                chNote.addPlotSlide(plotsForSlide, name+" for "+ year);
+                allNote.addPlotSlide(plotsForSlide, name+" from ZeeJet channel for "+ year);
+            }//year
+        }//isPlotXY
+    }//figConfigs
 
     // After all plots are generated
-    dpNote.addCenteredTextSlide("Thank you!");
-    dpNote.endDocument();
+    chNote.addCenteredTextSlide("Thank you!");
+    chNote.endDocument();
     cout<<outRoot->GetName()<<endl;
-    cout<<outLatex<<endl;
     return 0;
 }
 
 
-void PlotZeeJet::addZeeJetSlides(MakeDPNote & dpNote){
+void PlotZeeJet::addZeeJetSlides(MakeDPNote & chNote){
   //----------------------------
   // Samples
   //----------------------------
@@ -306,7 +187,7 @@ void PlotZeeJet::addZeeJetSlides(MakeDPNote & dpNote){
     "/DoubleEG/Run2016G/H-UL2016_MiniAODv2_JMENanoAODv9-v1/NANOAOD",
     }}
   };
-  dpNote.addTextSlide(samples16, "List of samples for 2016Pre and 2016Post"); 
+  chNote.addTextSlide(samples16, "List of samples for 2016Pre and 2016Post"); 
 
 
   //----------------------------
@@ -322,7 +203,7 @@ void PlotZeeJet::addZeeJetSlides(MakeDPNote & dpNote){
       "/EGamma/Run2018A/B/C/D-UL2018_MiniAODv2_JMENanoAODv9-v1/NANOAOD",
 	}}
   };
-  dpNote.addTextSlide(samples17_18, "List of samples for 2017 and 2018"); 
+  chNote.addTextSlide(samples17_18, "List of samples for 2017 and 2018"); 
 
 
   //----------------------------
@@ -339,7 +220,7 @@ void PlotZeeJet::addZeeJetSlides(MakeDPNote & dpNote){
       "HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL"
   }}
   };
-  dpNote.addTextSlide(triggers, "List of triggers for Run-2"); 
+  chNote.addTextSlide(triggers, "List of triggers for Run-2"); 
 
   //----------------------------
   // Filters 
@@ -359,7 +240,7 @@ void PlotZeeJet::addZeeJetSlides(MakeDPNote & dpNote){
         "2016UL + Flag_ecalBadCalibFilter"
   }}
   };
-  dpNote.addTextSlide(filters, "List of MET filters for Run-2"); 
+  chNote.addTextSlide(filters, "List of MET filters for Run-2"); 
 
 
   //----------------------------
@@ -387,7 +268,7 @@ void PlotZeeJet::addZeeJetSlides(MakeDPNote & dpNote){
         "jetVetoKey: jetvetomap_hot"
     }}
 	};
-  dpNote.addTextSlide(jetVetoInfo, "The jet veto map"); 
+  chNote.addTextSlide(jetVetoInfo, "The jet veto map"); 
 
   //----------------------------
   // Object selection
@@ -406,7 +287,7 @@ void PlotZeeJet::addZeeJetSlides(MakeDPNote & dpNote){
         "| mass - 91.1876 | < 20, pT > 15, |eta| = < 1.3",
     }}
 	};
-  dpNote.addTextSlide(objSel, "Object selection"); 
+  chNote.addTextSlide(objSel, "Object selection"); 
 
   //----------------------------
   // Event selection
@@ -428,7 +309,7 @@ void PlotZeeJet::addZeeJetSlides(MakeDPNote & dpNote){
         "sub-leading jet pT < 30 or < pT of Z "
     }}
 	};
-  dpNote.addTextSlide(evtSel, "Event selection"); 
+  chNote.addTextSlide(evtSel, "Event selection"); 
 
 
   //----------------------------
@@ -448,5 +329,5 @@ void PlotZeeJet::addZeeJetSlides(MakeDPNote & dpNote){
         "Muef = Muon Energy Fraction"
     }}
 	};
-  dpNote.addTextSlide(respAndFrac, "Response and energy fractions in Z pT bins"); 
+  chNote.addTextSlide(respAndFrac, "Response and energy fractions in Z pT bins"); 
 } 

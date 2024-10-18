@@ -6,8 +6,9 @@ LoadEra2D<T>::LoadEra2D() :
   channel_(""), 
   year_(""), 
   histDir_(""), 
-  dataEraOrMCBin_(""),
-  histName_("")
+  dataEraOrMcBin_(""),
+  histName_(""),
+  tdrStyle_(std::make_shared<TDRStyle>())
  {
 }
 // Clean up each cloned histogram
@@ -31,8 +32,8 @@ void LoadEra2D<T>::setYear(const std::string & year) {
 }
 
 template<typename T>
-void LoadEra2D<T>::setDataEraOrMCBin(const std::string & dataEraOrMCBin) {
-  dataEraOrMCBin_ = dataEraOrMCBin;
+void LoadEra2D<T>::setDataEraOrMcBin(const std::string & dataEraOrMcBin) {
+  dataEraOrMcBin_ = dataEraOrMcBin;
 }
 
 template<typename T>
@@ -45,19 +46,24 @@ void LoadEra2D<T>::setHistName(const std::string & histName) {
   histName_ = histName;
 }
 
+template<typename T>
+void LoadEra2D<T>::setFigConfig(const FigConfig & params) {
+  tdrStyle_->setFigConfig(params);
+}
+
 // Load Data Histograms
 template<typename T>
-void LoadEra2D<T>::drawHist2D(TFile* outRootFile, const std::string &outputFile) {
+void LoadEra2D<T>::drawHist2D(TFile* outRootFile, const std::string &outPdfName) {
 
   std::string fileName;
-  if (dataEraOrMCBin_.find("Data_")!= std::string::npos){
-    fileName = inputJson_[channel_][year_]["Data"][dataEraOrMCBin_];
+  if (dataEraOrMcBin_.find("Data_")!= std::string::npos){
+    fileName = inputJson_[channel_][year_]["Data"][dataEraOrMcBin_];
   }
-  else if (dataEraOrMCBin_.find("MC_")!= std::string::npos){
-    fileName = inputJson_[channel_][year_]["MC"][dataEraOrMCBin_];
+  else if (dataEraOrMcBin_.find("Mc_")!= std::string::npos){
+    fileName = inputJson_[channel_][year_]["Mc"][dataEraOrMcBin_];
   }
   else{
-    std::cerr << "Error: check dataEraOrMCBin_ =  " << dataEraOrMCBin_ << std::endl;
+    std::cerr << "Error: check dataEraOrMcBin_ =  " << dataEraOrMcBin_ << std::endl;
     return;
   }
   
@@ -69,22 +75,22 @@ void LoadEra2D<T>::drawHist2D(TFile* outRootFile, const std::string &outputFile)
   }
   T* hist = (T*)file.Get(path.c_str());
   if (hist){
+    tdrStyle_->setTDRStyle();
+    if(tdrStyle_->getIsNorm() && hist->Integral()>0.0)
+      hist->Scale(1/hist->Integral());
+    //tdrStyle_->setStyle(hist);
     gROOT->cd();  // Change the directory to ROOT's global directory
     outRootFile->cd();
-    TCanvas canvas("c", "Data and MC Ratio", 600, 600);
+    TCanvas canvas("c", "Data and Mc Ratio", 600, 600);
     canvas.cd();
-    //gPad->SetLogx();
-    //gPad->SetLogz();
     gPad->SetRightMargin(0.12);
+    if(tdrStyle_->getXLog())gPad->SetLogx(true);
+    if(tdrStyle_->getYLog())gPad->SetLogy(true);
 
-    TDRStyle tdrS;
-    tdrS.setTDRStyle();
     TLegend *leg = new TLegend(0.25, 0.80, 0.90, 0.90, "", "brNDC");
-    tdrS.setStyle(leg);
+    tdrStyle_->setStyle(leg);
 
-    //tdrS.setStyle(hist, 0.0, 1.5);
-    //tdrS.setColor(hist, i);
-    hist->SetTitle(dataEraOrMCBin_.c_str());
+    hist->SetTitle(dataEraOrMcBin_.c_str());
     hist->GetXaxis()->SetMoreLogLabels();
     hist->GetXaxis()->SetNoExponent();
     //hist->GetZaxis()->SetRangeUser(1e-4,1.0);
@@ -93,7 +99,7 @@ void LoadEra2D<T>::drawHist2D(TFile* outRootFile, const std::string &outputFile)
     //leg->Draw();
 
     canvas.Update();
-    canvas.SaveAs(outputFile.c_str());
+    canvas.SaveAs(outPdfName.c_str());
     outRootFile->Write();
     file.Close();  // Now it's safe to close the file since the histogram has been cloned
   } 

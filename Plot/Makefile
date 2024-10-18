@@ -10,7 +10,7 @@ OBJECTS     := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
 BINS        := runMain
 
 # Define the all target to run clean before building
-all: clean $(BINS)
+#all: clean $(BINS)
 
 $(BINS): $(OBJECTS) main.cpp
 	@echo "--> Creating executables $@"
@@ -24,4 +24,4 @@ $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp header/%.h
 clean:
 	rm -f $(wildcard $(OBJDIR)/*.o) $(BINS)
 
-.PHONY: all clean
+#.PHONY: all clean

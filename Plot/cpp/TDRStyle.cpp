@@ -169,10 +169,9 @@ void TDRStyle::setStyle(TLegend *leg){
   leg->SetTextSize(0.040);
 }
 
-void TDRStyle::setStyle(TH1D* hist, const double& yMin, const double& yMax) {
+void TDRStyle::setStyle(TH1D* hist){
     hist->SetLineWidth(3);
     //hist->SetFillStyle(3001); // Example fill style
-    hist->GetYaxis()->SetTitle("Events (normalized to 1)");
     hist->GetYaxis()->CenterTitle();
     hist->GetXaxis()->SetTitleOffset(1.0);
     hist->GetYaxis()->SetTitleOffset(1.0);
@@ -182,11 +181,14 @@ void TDRStyle::setStyle(TH1D* hist, const double& yMin, const double& yMax) {
     hist->GetYaxis()->SetTitleSize(0.05);  
     hist->GetXaxis()->SetMoreLogLabels();
     hist->GetXaxis()->SetNoExponent();
-    hist->SetMinimum(yMin);
-    hist->SetMaximum(yMax);
+    hist->GetXaxis()->SetTitle(xTitle_.c_str());
+    hist->GetYaxis()->SetTitle(yTitle_.c_str());
+    hist->GetXaxis()->SetRangeUser(xMin_, xMax_);
+    if(yMin_!=-1) hist->SetMinimum(yMin_);
+    if(yMax_!=-1) hist->SetMaximum(yMax_);
 }
 
-void TDRStyle::setStyle(TProfile *profile, const double& yMin, const double& yMax) {
+void TDRStyle::setStyle(TProfile *profile){
     profile->SetLineWidth(3);
     profile->SetMarkerStyle(20);
 	profile->GetYaxis()->CenterTitle();
@@ -198,11 +200,14 @@ void TDRStyle::setStyle(TProfile *profile, const double& yMin, const double& yMa
     profile->GetYaxis()->SetLabelSize(0.05);
     profile->GetXaxis()->SetMoreLogLabels();
     profile->GetXaxis()->SetNoExponent();
-    profile->SetMinimum(yMin);
-    profile->SetMaximum(yMax);
+    profile->GetXaxis()->SetTitle(xTitle_.c_str());
+    profile->GetYaxis()->SetTitle(yTitle_.c_str());
+    profile->GetXaxis()->SetRangeUser(xMin_, xMax_);
+    if(yMin_!=-1) profile->SetMinimum(yMin_);
+    if(yMax_!=-1) profile->SetMaximum(yMax_);
 }
 
-void TDRStyle::setStyleRatio(TGraphErrors* graph, const double& yMin, const double& yMax) {
+void TDRStyle::setStyleRatio(TGraphErrors* graph){
     graph->GetHistogram()->SetTitle("");
     // X-axis styling
     graph->GetHistogram()->GetXaxis()->SetTitleSize(0.12);
@@ -219,7 +224,6 @@ void TDRStyle::setStyleRatio(TGraphErrors* graph, const double& yMin, const doub
     graph->GetHistogram()->GetYaxis()->SetTitleOffset(0.6);
     graph->GetHistogram()->GetYaxis()->SetLabelOffset(0.01);
     graph->GetHistogram()->GetYaxis()->CenterTitle();
-    graph->GetHistogram()->GetYaxis()->SetRangeUser(yMin, yMax);
 
     // Additional styling
     graph->SetMarkerStyle(20);  // Set marker style for points
@@ -227,12 +231,14 @@ void TDRStyle::setStyleRatio(TGraphErrors* graph, const double& yMin, const doub
     // Optional: Log scale or no exponent for x-axis
     graph->GetHistogram()->GetXaxis()->SetMoreLogLabels();
     graph->GetHistogram()->GetXaxis()->SetNoExponent();
+    graph->GetHistogram()->GetXaxis()->SetTitle(xTitle_.c_str());
+    graph->GetHistogram()->GetYaxis()->SetTitle(rTitle_.c_str());
+    graph->GetHistogram()->GetXaxis()->SetRangeUser(xMin_, xMax_);
+    graph->GetHistogram()->GetYaxis()->SetRangeUser(rMin_, rMax_);
 }
 
 
-void TDRStyle::setStyleRatio(TProfile* profile, const double& yMin, const double& yMax) {
-    //profile->GetXaxis()->SetTitle(xLabel);
-    //profile->GetYaxis()->SetTitle(yLabel);
+void TDRStyle::setStyleRatio(TProfile* profile){
     profile->GetXaxis()->SetTitleSize(0.12);
     profile->GetXaxis()->SetLabelSize(0.12);
     profile->GetXaxis()->SetLabelFont(42);
@@ -246,9 +252,12 @@ void TDRStyle::setStyleRatio(TProfile* profile, const double& yMin, const double
     profile->GetYaxis()->SetTitleOffset(0.6);
     profile->GetYaxis()->SetLabelOffset(0.01);
     profile->GetYaxis()->CenterTitle();
-    profile->GetYaxis()->SetRangeUser(yMin, yMax);
     profile->GetXaxis()->SetMoreLogLabels();
     profile->GetXaxis()->SetNoExponent();
+    profile->GetXaxis()->SetTitle(xTitle_.c_str());
+    profile->GetYaxis()->SetTitle(rTitle_.c_str());
+    profile->GetXaxis()->SetRangeUser(xMin_, xMax_);
+    profile->GetYaxis()->SetRangeUser(rMin_, rMax_);
 }
 
 void TDRStyle::setColor(TH1D* hist, int index) {
@@ -274,3 +283,17 @@ void TDRStyle::setColor(TGraphErrors* graph, int index) {
     //graph->SetFillColor(color);
 }
 
+void TDRStyle::setFigConfig(const FigConfig& params) {
+    xTitle_ = params.xTitle;
+    yTitle_ = params.yTitle;
+    rTitle_ = params.rTitle;
+    xMin_ = params.xMin;
+    xMax_ = params.xMax;
+    yMin_ = params.yMin;
+    yMax_ = params.yMax;
+    rMin_ = params.rMin;
+    rMax_ = params.rMax;
+    xLog_ = params.xLog;
+    yLog_ = params.yLog;
+    isNorm_ = params.isNorm;
+}

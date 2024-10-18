@@ -10,9 +10,10 @@ LoadErasXY<T>::LoadErasXY() :
   varName_(""),
   histDir_(""), 
   histName_(""),
-  varIsOnXaxis_(true)
+  varIsOnXaxis_(true),
+  tdrStyle_(std::make_shared<TDRStyle>())
  {
-  mcHTBins_.clear();
+  mcHtBins_.clear();
   dataEras_.clear();
   dataHists_.clear();
   mcHists_.clear();
@@ -45,33 +46,13 @@ void LoadErasXY<T>::setYear(const std::string & year) {
 }
 
 template<typename T>
-void LoadErasXY<T>::setMCHTBins(const std::vector<std::string>& htBins) {
-  mcHTBins_ = htBins;
+void LoadErasXY<T>::setMcHtBins(const std::vector<std::string>& htBins) {
+  mcHtBins_ = htBins;
 }
 
 template<typename T>
 void LoadErasXY<T>::setDataEras(const std::vector<std::string>& dataEras) {
   dataEras_ = dataEras;
-}
-
-template<typename T>
-void LoadErasXY<T>::setVarMin(const double& varMin) {
-  varMin_ = varMin;
-}
-
-template<typename T>
-void LoadErasXY<T>::setVarMax(const double& varMax) {
-  varMax_ = varMax;
-}
-
-template<typename T>
-void LoadErasXY<T>::setVarName(const std::string & varName) {
-  varName_ = varName;
-}
-
-template<typename T>
-void LoadErasXY<T>::setVarIsOnXaxis(const bool& varIsOnXaxis) {
-  varIsOnXaxis_ = varIsOnXaxis;
 }
 
 template<typename T>
@@ -82,6 +63,15 @@ void LoadErasXY<T>::setHistDir(const std::string & histDir) {
 template<typename T>
 void LoadErasXY<T>::setHistName(const std::string & histName) {
   histName_ = histName;
+}
+
+template<typename T>
+void LoadErasXY<T>::setFigConfig(const FigConfig & params) {
+  tdrStyle_->setFigConfig(params);
+  varMin_ = params.varMin;
+  varMax_ = params.varMax;
+  varName_ = params.varName;
+  varIsOnXaxis_ = params.isVarOnX;
 }
 
 // Load Data Histograms
@@ -112,6 +102,9 @@ void LoadErasXY<T>::loadDataHists() {
         int endBin   = hist->GetYaxis()->FindBin(varMax_);
 				clonedHist = (TH1D*)hist->ProjectionY(nameBin.c_str(), startBin, endBin)->Clone(era.c_str()); 
 			}
+      if(tdrStyle_->getIsNorm() && clonedHist->Integral()>0.0)
+        clonedHist->Scale(1/clonedHist->Integral());
+      tdrStyle_->setStyle(clonedHist);
       dataHists_.push_back(clonedHist);
 		}
     else {
@@ -121,11 +114,11 @@ void LoadErasXY<T>::loadDataHists() {
   }//dataEras_
 }
 
-// Load MC Histograms
+// Load Mc Histograms
 template<typename T>
-void LoadErasXY<T>::loadMCHists(){
-  for (const auto& htBin : mcHTBins_) {
-    std::string fileName = inputJson_[channel_][year_]["MC"][htBin];
+void LoadErasXY<T>::loadMcHists(){
+  for (const auto& htBin : mcHtBins_) {
+    std::string fileName = inputJson_[channel_][year_]["Mc"][htBin];
     std::string path = histDir_ + "/" + histName_;
     TFile file(fileName.c_str());
     if (file.IsZombie()) {
@@ -147,18 +140,21 @@ void LoadErasXY<T>::loadMCHists(){
         int endBin   = hist->GetYaxis()->FindBin(varMax_);
     		clonedHist = (TH1D*)hist->ProjectionY(nameBin.c_str(), startBin, endBin)->Clone(htBin.c_str()); 
     	}
+      if(tdrStyle_->getIsNorm() && clonedHist->Integral()>0.0)
+        clonedHist->Scale(1/clonedHist->Integral());
+      tdrStyle_->setStyle(clonedHist);
       mcHists_.push_back(clonedHist);
     }//hist
     else {
       std::cerr << "Error: Could not retrieve histogram " << path << " from " << fileName << std::endl;
     }
     file.Close();  // Now it's safe to close the file since the histogram has been cloned
-  }//mcHTBins
+  }//mcHtBins
 }
 
-// Helper function to draw histograms (Data/MC), set styles, and handle the legend
+// Helper function to draw histograms (Data/Mc), set styles, and handle the legend
 template<typename T>
-void LoadErasXY<T>::drawHists(TDRStyle &tdrS, const std::vector<TH1D*>& hists) {
+void LoadErasXY<T>::drawHists(const std::vector<TH1D*>& hists) {
   if (hists.empty()) {
     std::cerr << "Error: Histograms vector is empty." << std::endl;
     return;
@@ -166,13 +162,14 @@ void LoadErasXY<T>::drawHists(TDRStyle &tdrS, const std::vector<TH1D*>& hists) {
 
   double legYmin = 0.85 - 0.05*hists.size();
   TLegend *leg = new TLegend(0.25, legYmin, 0.90, 0.90, "", "brNDC");
-  tdrS.setStyle(leg);
+  tdrStyle_->setStyle(leg);
+  if(tdrStyle_->getXLog())gPad->SetLogx(true);
+  if(tdrStyle_->getYLog())gPad->SetLogy(true);
 
   for (size_t i = 0; i < hists.size(); i++) {
     auto hist = hists.at(i);
     if (hist != nullptr) {
-      tdrS.setStyle(hist, 0.0, 1.5);
-      tdrS.setColor(hist, i);
+      tdrStyle_->setColor(hist, i);
       hist->Draw(i == 0 ? "Pz" : "Pz SAME");
       leg->AddEntry(hist, hist->GetName(), "L");
     } else {
@@ -184,21 +181,20 @@ void LoadErasXY<T>::drawHists(TDRStyle &tdrS, const std::vector<TH1D*>& hists) {
   leg->Draw();
 }
 
-// Overlay Data with MC and Plot Ratio
+// Overlay Data with Mc and Plot Ratio
 template<typename T>
-void LoadErasXY<T>::overlayDataWithMCInRatio(TFile* outRootFile, const std::string &outputFile) {
+void LoadErasXY<T>::overlayDataWithMcInRatio(TFile* outRootFile, const std::string &outputFile) {
   outRootFile->cd();
-  TCanvas canvas("c", "Data and MC Ratio", 600, 600);
+  TCanvas canvas("c", "Data and Mc Ratio", 600, 600);
   canvas.cd();
-  TDRStyle tdrS;
-  tdrS.setTDRStyle();
+  tdrStyle_->setTDRStyle();
 
   if (dataHists_.size() > 0 && mcHists_.size() == 0) {
-    //drawHists(tdrS, dataHists_);
+    drawHists(dataHists_);
   }
   
   if (mcHists_.size() > 0 && dataHists_.size() == 0) {
-    drawHists(tdrS, mcHists_);
+    drawHists(mcHists_);
   }
   
   if (mcHists_.size() > 0 && dataHists_.size() > 0) {
@@ -207,7 +203,7 @@ void LoadErasXY<T>::overlayDataWithMCInRatio(TFile* outRootFile, const std::stri
     pad1->Draw();
     pad1->cd();
 
-    drawHists(tdrS, dataHists_);
+    drawHists(dataHists_);
     canvas.cd();
 
     TPad *pad2 = new TPad("pad2", "pad2", 0.0, 0.0, 1.0, 0.3);
@@ -215,21 +211,22 @@ void LoadErasXY<T>::overlayDataWithMCInRatio(TFile* outRootFile, const std::stri
     pad2->SetBottomMargin(0.4);
     pad2->Draw();
     pad2->cd();
-    TH1D* mergedMCHist = combineHists(mcHists_);
-    if (!mergedMCHist) {
-      std::cerr << "Error: Could not create merged MC histogram." << std::endl;
+    if(tdrStyle_->getXLog())gPad->SetLogx(true);
+    TH1D* mergedMcHist = combineHists(mcHists_);
+    if (!mergedMcHist) {
+      std::cerr << "Error: Could not create merged Mc histogram." << std::endl;
       return;
     }
     std::vector<TGraphErrors*> ratioGraphs;
     for (auto dataHist : dataHists_) {
       TGraphErrors* ratioGraph = new TGraphErrors(dataHist->GetNbinsX());
-      calculateHistRatio(dataHist, mergedMCHist, ratioGraph);
+      calculateHistRatio(dataHist, mergedMcHist, ratioGraph);
       ratioGraphs.push_back(ratioGraph);
     }
     for (int i = 0; i < dataHists_.size(); i++) {
       auto rGraph = ratioGraphs.at(i);
-      tdrS.setStyleRatio(rGraph, 0.9, 1.1);
-      tdrS.setColor(rGraph, i);
+      tdrStyle_->setStyleRatio(rGraph);
+      tdrStyle_->setColor(rGraph, i);
       rGraph->Draw(i == 0 ? "APz" : "Pz SAME");
     }
   }

@@ -1,5 +1,10 @@
 #include "NanoTree.h"
 
+NanoTree::NanoTree(GlobalFlag& globalFlags): 
+    globalFlags_(globalFlags),
+    fCurrent(-1){
+}
+
 void NanoTree::setInput(string oName){
   outName  = oName;
   cout<<"+ setInput() = "<<outName<<endl;
@@ -27,9 +32,9 @@ void NanoTree::loadInput(){
 } 
 void NanoTree::setInputJsonPath(string inDir){
     string year = "2016Pre";
-    if(is2016Post) year = "2016Post";
-    if(is2017) year = "2017";
-    if(is2018) year = "2018";
+    if(globalFlags_.is2016Post) year = "2016Post";
+    if(globalFlags_.is2017) year = "2017";
+    if(globalFlags_.is2018) year = "2018";
     string channel = splitString(loadedSampKey, "_").at(2);
     inputJsonPath = inDir+"/FilesNano_"+year+"_"+channel+".json";
     cout<<"+ setInputJsonPath() = "<<inputJsonPath<<endl;
@@ -150,7 +155,7 @@ void NanoTree::loadTree(){
   fChain->SetBranchStatus("RawPuppiMET_phi",1);
   fChain->SetBranchStatus("fixedGridRhoFastjetAll");
   
-  if(is2016Pre || is2016Post){
+  if(globalFlags_.is2016Pre || globalFlags_.is2016Post){
     fChain->SetBranchStatus("Flag_goodVertices", 1);
     fChain->SetBranchStatus("Flag_globalSuperTightHalo2016Filter", 1);
     fChain->SetBranchStatus("Flag_HBHENoiseFilter", 1);
@@ -160,7 +165,7 @@ void NanoTree::loadTree(){
     fChain->SetBranchStatus("Flag_BadPFMuonDzFilter", 1);
     fChain->SetBranchStatus("Flag_eeBadScFilter", 1);
   }
-  if(is2017 || is2018){
+  if(globalFlags_.is2017 || globalFlags_.is2018){
     fChain->SetBranchStatus("Flag_goodVertices", 1);
     fChain->SetBranchStatus("Flag_globalSuperTightHalo2016Filter", 1);
     fChain->SetBranchStatus("Flag_HBHENoiseFilter", 1);
@@ -172,7 +177,7 @@ void NanoTree::loadTree(){
     fChain->SetBranchStatus("Flag_ecalBadCalibFilter", 1);
   }
   
-  if(isMC){
+  if(globalFlags_.isMC){
     fChain->SetBranchStatus("Jet_genJetIdx",1);
     fChain->SetBranchStatus("genWeight");
     fChain->SetBranchStatus("nPSWeight");
@@ -186,7 +191,7 @@ void NanoTree::loadTree(){
   //--------------------------------------- 
   // Channels 
   //--------------------------------------- 
-  if(isZeeJet){
+  if(globalFlags_.isZeeJet){
     fChain->SetBranchStatus("nElectron", 1);
     fChain->SetBranchStatus("Electron_charge", 1);
     fChain->SetBranchStatus("Electron_pt", 1);
@@ -201,7 +206,7 @@ void NanoTree::loadTree(){
     fChain->SetBranchStatus("Electron_photonIdx", 1);
     fChain->SetBranchStatus("Electron_mvaFall17V2Iso_WP*", 1);
     fChain->SetBranchStatus("nElectron",1);
-  	if(isMC){
+  	if(globalFlags_.isMC){
       fChain->SetBranchStatus("GenDressedLepton_*",1);
       fChain->SetBranchStatus("nGenDressedLepton",1);
     }
@@ -210,7 +215,7 @@ void NanoTree::loadTree(){
     fChain->SetBranchAddress("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ", &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ, & b_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ);
     }
   
-  if(isZmmJet){
+  if(globalFlags_.isZmmJet){
     fChain->SetBranchStatus("Muon_charge", 1);
     fChain->SetBranchStatus("Muon_pt", 1);
     fChain->SetBranchStatus("Muon_eta", 1);
@@ -224,7 +229,7 @@ void NanoTree::loadTree(){
     fChain->SetBranchStatus("Muon_dxy", 1); 
     fChain->SetBranchStatus("Muon_dz", 1); 
     fChain->SetBranchStatus("nMuon",1);
-  	if (isMC){
+  	if (globalFlags_.isMC){
       fChain->SetBranchStatus("GenDressedLepton_*",1);
       fChain->SetBranchStatus("nGenDressedLepton",1);
     }

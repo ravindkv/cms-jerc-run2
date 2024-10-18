@@ -17,11 +17,9 @@
 using namespace std;
 const Int_t maxP = 600;
 
-class NanoTree: public GlobalFlag{
+class NanoTree{ 
   public:
-  NanoTree(string oName): GlobalFlag(oName){
-    fCurrent = -1;
-  };
+  explicit NanoTree(GlobalFlag& globalFlags);
   ~NanoTree();
   Long64_t GetEntries();
   Int_t GetEntry(Long64_t entry);
@@ -215,6 +213,8 @@ class NanoTree: public GlobalFlag{
   std::vector<std::vector<std::string>> splitVector(const std::vector<std::string>& strings, int n);
   std::vector<std::string> splitString(const std::string& s, const std::string& delimiter);
 
+private:
+    GlobalFlag& globalFlags_;
 };
 
 #endif

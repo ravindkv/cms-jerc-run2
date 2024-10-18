@@ -13,19 +13,15 @@ class GlobalFlag{
     
     bool isDebug;
 
-    bool justLatex;
-    bool isPlotTH1D;
-    bool isPlotTProfile;
-    bool isPlotTH2D;
-    bool isPlotTProfile2D;
-    bool isPlotFlavXTaggedY;
-    bool isPlotProjectXorY;
+    bool isPlot1D;
+    bool isPlot2D;
+    bool isPlotXY;
 
-        //Channels
+    //Channels
     bool isGamJet;
     bool isZeeJet;
     bool isZmmJet;
-    bool isMCTruth;
+    bool isMcTruth;
     bool isFlavour;
     bool isVetoMap;
     bool isDiJet;
