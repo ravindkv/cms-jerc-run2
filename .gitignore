@@ -23,7 +23,9 @@ Hist/rootfiles
 Plot/obj/
 Plot/output/
 Plot/runMain
+Plot/runMain.d
 Plot/input/json
+Plot/config/json/
 
 Hist/Logger.h
 Hist/Logger.cpp

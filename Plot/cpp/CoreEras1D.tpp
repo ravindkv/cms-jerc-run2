@@ -1,17 +1,14 @@
-#include "TDRStyle.h"
-#include "LoadErasXY.h"
+#include "CoreEras1D.h"
+#include "Helper.h"
+
 
 template<typename T>
-LoadErasXY<T>::LoadErasXY() : 
+CoreEras1D<T>::CoreEras1D() : 
   channel_(""), 
   year_(""), 
-  varMin_(0.0),
-  varMax_(5.0),
-  varName_(""),
   histDir_(""), 
   histName_(""),
-  varIsOnXaxis_(true),
-  tdrStyle_(std::make_shared<TDRStyle>())
+  tdrStyle_(std::make_shared<TdrStyle>())
  {
   mcHtBins_.clear();
   dataEras_.clear();
@@ -21,7 +18,7 @@ LoadErasXY<T>::LoadErasXY() :
 
 // Clean up each cloned histogram
 template<typename T>
-LoadErasXY<T>::~LoadErasXY() {
+CoreEras1D<T>::~CoreEras1D() {
   for (auto hist : dataHists_) {
       delete hist; 
   }
@@ -31,95 +28,73 @@ LoadErasXY<T>::~LoadErasXY() {
 }
 
 template<typename T>
-void LoadErasXY<T>::setInputJson(const nlohmann::json &inputJson) {
+void CoreEras1D<T>::setInputJson(const nlohmann::json &inputJson) {
   inputJson_ = inputJson;
 }
 
 template<typename T>
-void LoadErasXY<T>::setChannel(const std::string & channel) {
+void CoreEras1D<T>::setChannel(const std::string & channel) {
   channel_ = channel;
 }
 
 template<typename T>
-void LoadErasXY<T>::setYear(const std::string & year) {
+void CoreEras1D<T>::setYear(const std::string & year) {
   year_ = year;
 }
 
 template<typename T>
-void LoadErasXY<T>::setMcHtBins(const std::vector<std::string>& htBins) {
+void CoreEras1D<T>::setMcHtBins(const std::vector<std::string>& htBins) {
   mcHtBins_ = htBins;
 }
 
 template<typename T>
-void LoadErasXY<T>::setDataEras(const std::vector<std::string>& dataEras) {
+void CoreEras1D<T>::setDataEras(const std::vector<std::string>& dataEras) {
   dataEras_ = dataEras;
 }
 
 template<typename T>
-void LoadErasXY<T>::setHistDir(const std::string & histDir) {
-  histDir_ = histDir;
-}
-
-template<typename T>
-void LoadErasXY<T>::setHistName(const std::string & histName) {
-  histName_ = histName;
-}
-
-template<typename T>
-void LoadErasXY<T>::setFigConfig(const FigConfig & params) {
+void CoreEras1D<T>::setFigConfigEras1D(const FigConfigEras1D & params) {
   tdrStyle_->setFigConfig(params);
-  varMin_ = params.varMin;
-  varMax_ = params.varMax;
-  varName_ = params.varName;
-  varIsOnXaxis_ = params.isVarOnX;
+  histDir_  = params.histDir;
+  histName_ = params.histName;
 }
 
 // Load Data Histograms
 template<typename T>
-void LoadErasXY<T>::loadDataHists() {
-  for(const auto era: dataEras_){
+void CoreEras1D<T>::loadDataHists() {
+  for (const auto& era : dataEras_) {
     std::string fileName = inputJson_[channel_][year_]["Data"][era];
     std::string path = histDir_ + "/" + histName_;
-    
+    if(histDir_=="") path = histDir_ + histName_;
+
     TFile file(fileName.c_str());
     if (file.IsZombie()) {
       std::cerr << "Error: Could not open file " << fileName << std::endl;
       return;
     }
-    
     T* hist = (T*)file.Get(path.c_str());
     if (hist) {
       gROOT->cd();  // Change the directory to ROOT's global directory
-      TH1D* clonedHist;
-      string nameBin = Form("%0.1f %s %0.1f", varMin_, varName_.c_str(), varMax_);
-			if (varIsOnXaxis_){
-        int startBin = hist->GetXaxis()->FindBin(varMin_);
-        int endBin   = hist->GetXaxis()->FindBin(varMax_);
-				clonedHist = (TH1D*)hist->ProjectionX(nameBin.c_str(), startBin, endBin)->Clone(era.c_str()); 
-			}
-			else{
-        int startBin = hist->GetYaxis()->FindBin(varMin_);
-        int endBin   = hist->GetYaxis()->FindBin(varMax_);
-				clonedHist = (TH1D*)hist->ProjectionY(nameBin.c_str(), startBin, endBin)->Clone(era.c_str()); 
-			}
+      T* clonedHist = (T*)hist->Clone(era.c_str());  // Clone the histogram
       if(tdrStyle_->getIsNorm() && clonedHist->Integral()>0.0)
         clonedHist->Scale(1/clonedHist->Integral());
       tdrStyle_->setStyle(clonedHist);
       dataHists_.push_back(clonedHist);
-		}
-    else {
+    } else {
       std::cerr << "Error: Could not retrieve histogram " << path << " from " << fileName << std::endl;
     }
     file.Close();  // Now it's safe to close the file since the histogram has been cloned
-  }//dataEras_
+  }
 }
 
 // Load Mc Histograms
 template<typename T>
-void LoadErasXY<T>::loadMcHists(){
+void CoreEras1D<T>::loadMcHists() {
   for (const auto& htBin : mcHtBins_) {
-    std::string fileName = inputJson_[channel_][year_]["Mc"][htBin];
+    std::string fileName = inputJson_[channel_][year_]["MC"][htBin];
     std::string path = histDir_ + "/" + histName_;
+    if(histDir_=="") path = histDir_ + histName_;
+
     TFile file(fileName.c_str());
     if (file.IsZombie()) {
       std::cerr << "Error: Could not open file " << fileName << std::endl;
@@ -128,33 +103,21 @@ void LoadErasXY<T>::loadMcHists(){
     T* hist = (T*)file.Get(path.c_str());
     if (hist) {
       gROOT->cd();  // Change the directory to ROOT's global directory
-      TH1D* clonedHist;
-      string nameBin = Form("%0.1f %s %0.1f", varMin_, varName_.c_str(), varMax_);
-    	if (varIsOnXaxis_){
-        int startBin = hist->GetXaxis()->FindBin(varMin_);
-        int endBin   = hist->GetXaxis()->FindBin(varMax_);
-    		clonedHist = (TH1D*)hist->ProjectionX(nameBin.c_str(), startBin, endBin)->Clone(htBin.c_str()); 
-    	}
-    	else{
-        int startBin = hist->GetYaxis()->FindBin(varMin_);
-        int endBin   = hist->GetYaxis()->FindBin(varMax_);
-    		clonedHist = (TH1D*)hist->ProjectionY(nameBin.c_str(), startBin, endBin)->Clone(htBin.c_str()); 
-    	}
+      T* clonedHist = (T*)hist->Clone(htBin.c_str());  // Clone the histogram
       if(tdrStyle_->getIsNorm() && clonedHist->Integral()>0.0)
         clonedHist->Scale(1/clonedHist->Integral());
       tdrStyle_->setStyle(clonedHist);
       mcHists_.push_back(clonedHist);
-    }//hist
-    else {
+    } else {
       std::cerr << "Error: Could not retrieve histogram " << path << " from " << fileName << std::endl;
     }
     file.Close();  // Now it's safe to close the file since the histogram has been cloned
-  }//mcHtBins
+  }
 }
 
 // Helper function to draw histograms (Data/Mc), set styles, and handle the legend
 template<typename T>
-void LoadErasXY<T>::drawHists(const std::vector<TH1D*>& hists) {
+void CoreEras1D<T>::drawHists(const std::vector<T*>& hists) {
   if (hists.empty()) {
     std::cerr << "Error: Histograms vector is empty." << std::endl;
     return;
@@ -165,7 +128,6 @@ void LoadErasXY<T>::drawHists(const std::vector<TH1D*>& hists) {
   tdrStyle_->setStyle(leg);
   if(tdrStyle_->getXLog())gPad->SetLogx(true);
   if(tdrStyle_->getYLog())gPad->SetLogy(true);
-
   for (size_t i = 0; i < hists.size(); i++) {
     auto hist = hists.at(i);
     if (hist != nullptr) {
@@ -183,18 +145,17 @@ void LoadErasXY<T>::drawHists(const std::vector<TH1D*>& hists) {
 
 // Overlay Data with Mc and Plot Ratio
 template<typename T>
-void LoadErasXY<T>::overlayDataWithMcInRatio(TFile* outRootFile, const std::string &outputFile) {
-  outRootFile->cd();
+void CoreEras1D<T>::overlayDataWithMcInRatio(const std::string &outPdfName) {
   TCanvas canvas("c", "Data and Mc Ratio", 600, 600);
   canvas.cd();
-  tdrStyle_->setTDRStyle();
+  tdrStyle_->setTdrStyle();
 
   if (dataHists_.size() > 0 && mcHists_.size() == 0) {
     drawHists(dataHists_);
   }
   
   if (mcHists_.size() > 0 && dataHists_.size() == 0) {
-    drawHists(mcHists_);
+    drawHists( mcHists_);
   }
   
   if (mcHists_.size() > 0 && dataHists_.size() > 0) {
@@ -212,17 +173,20 @@ void LoadErasXY<T>::overlayDataWithMcInRatio(TFile* outRootFile, const std::stri
     pad2->Draw();
     pad2->cd();
     if(tdrStyle_->getXLog())gPad->SetLogx(true);
-    TH1D* mergedMcHist = combineHists(mcHists_);
+
+    T* mergedMcHist = Helper::combineHists(mcHists_);
     if (!mergedMcHist) {
       std::cerr << "Error: Could not create merged Mc histogram." << std::endl;
       return;
     }
+
     std::vector<TGraphErrors*> ratioGraphs;
     for (auto dataHist : dataHists_) {
       TGraphErrors* ratioGraph = new TGraphErrors(dataHist->GetNbinsX());
-      calculateHistRatio(dataHist, mergedMcHist, ratioGraph);
+      Helper::calculateHistRatio(dataHist, mergedMcHist, ratioGraph);
       ratioGraphs.push_back(ratioGraph);
     }
+
     for (int i = 0; i < dataHists_.size(); i++) {
       auto rGraph = ratioGraphs.at(i);
       tdrStyle_->setStyleRatio(rGraph);
@@ -232,43 +196,6 @@ void LoadErasXY<T>::overlayDataWithMcInRatio(TFile* outRootFile, const std::stri
   }
 
   canvas.Update();
-  canvas.SaveAs(outputFile.c_str());
-  outRootFile->Write();
+  canvas.SaveAs(outPdfName.c_str());
 }
 
-// Combine multiple histograms
-template<typename T>
-TH1D* LoadErasXY<T>::combineHists(const std::vector<TH1D*>& hists) {
-  TH1D* combinedHist = nullptr;
-  for (const auto &entry : hists) {
-    if (entry->GetEntries() == 0) {
-      std::cerr << "Warning: A histogram in the combine function has no entries." << std::endl;
-      continue;
-    }
-    if (!combinedHist) {
-      combinedHist = (TH1D*)entry->Clone();
-    } else {
-      combinedHist->Add(entry);
-    }
-  }
-  return combinedHist;
-}
-
-// Function to calculate ratio and fill a TGraphErrors
-template<typename T>
-void LoadErasXY<T>::calculateHistRatio(TH1D* dataHist, TH1D* mcHist, TGraphErrors* ratioGraph) {
-  int nBins = dataHist->GetNbinsX();
-  for (int i = 1; i <= nBins; ++i) {
-    double dataVal = dataHist->GetBinContent(i);
-    double mcVal = mcHist->GetBinContent(i);
-    double ratioVal = 0.0;
-    double ratioErr = 0.0;
-    if(mcVal>0 && dataVal >0){
-      ratioVal = dataVal / mcVal;
-      ratioErr = sqrt(pow(dataHist->GetBinError(i) / mcVal, 2) +
-                           pow(dataVal * mcHist->GetBinError(i) / pow(mcVal, 2), 2));
-    }
-    ratioGraph->SetPoint(i - 1, dataHist->GetXaxis()->GetBinCenter(i), ratioVal);
-    ratioGraph->SetPointError(i - 1, 0.0, ratioErr);
-  }
-}

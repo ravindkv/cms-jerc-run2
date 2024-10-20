@@ -1,27 +1,49 @@
-ROOT_I=-I`root-config --incdir` -I./header
-ROOT_L=`root-config --libs`
-#GCC=g++ -std=c++17
-GCC=g++ -g -std=c++17
+# Compiler and ROOT configurations
+ROOT_I = -I`root-config --incdir` -I./header
+ROOT_L = `root-config --libs`
+GCC = g++
 
-SRCDIR   = cpp
-OBJDIR   = obj
-SOURCES     := $(wildcard $(SRCDIR)/*.cpp)
-OBJECTS     := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
-BINS        := runMain
+# Compiler flags
+CXXFLAGS = -g -std=c++17 $(ROOT_I) -MMD -MP
+LDFLAGS = $(ROOT_L)
 
-# Define the all target to run clean before building
-#all: clean $(BINS)
+# Directories
+SRCDIR = cpp
+OBJDIR = obj
 
-$(BINS): $(OBJECTS) main.cpp
-	@echo "--> Creating executables $@"
-	@$(GCC) -o $@ main.cpp ${ROOT_L} ${ROOT_I} $(OBJECTS)
+# Source files and object files
+SOURCES := $(wildcard $(SRCDIR)/*.cpp)
+OTHER_SOURCES := main.cpp
+OBJECTS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES)) $(patsubst %.cpp,$(OBJDIR)/%.o,$(OTHER_SOURCES))
+DEPS    := $(OBJECTS:.o=.d)
+BINS    := runMain
 
-$(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp header/%.h
-	@echo "--> Creating object $@"
+# Default target
+all: $(BINS)
+
+# Linking the executable
+$(BINS): $(OBJECTS)
+	@echo "--> Creating executable $@"
+	@$(GCC) $(CXXFLAGS) -o $@ $(OBJECTS) $(LDFLAGS)
+
+# Ensure OBJDIR exists
+$(OBJDIR):
 	@mkdir -p $(OBJDIR)
-	@$(GCC) -c $< -o $@ ${ROOT_L} ${ROOT_I}
 
+# Compiling object files from SRCDIR
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR)
+	@echo "--> Creating object $@"
+	@$(GCC) $(CXXFLAGS) -c $< -o $@
+
+# Compiling object files from root directory (e.g., main.cpp)
+$(OBJDIR)/%.o: %.cpp | $(OBJDIR)
+	@echo "--> Creating object $@"
+	@$(GCC) $(CXXFLAGS) -c $< -o $@
+
+# Clean up generated files
 clean:
-	rm -f $(wildcard $(OBJDIR)/*.o) $(BINS)
+	rm -f $(OBJDIR)/*.o $(OBJDIR)/*.d $(BINS)
 
-#.PHONY: all clean
+# Include dependency files
+-include $(DEPS)
+

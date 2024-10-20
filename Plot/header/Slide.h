@@ -1,15 +1,17 @@
-#ifndef MAKEDPPNOTE_H
-#define MAKEDPPNOTE_H
+#pragma once
+
+#ifndef SLIDE_H
+#define SLIDE_H
 
 #include <vector>
 #include <map>
 #include <string>
 #include <fstream>
 
-class MakeDPNote {
+class Slide {
 public:
-    MakeDPNote(const std::string& latexFile);
-    ~MakeDPNote();
+    Slide(const std::string& latexFile);
+    ~Slide();
 
     void startDocument(const std::string& title);
     double calculateWidth(int totalPlots);
@@ -25,5 +27,5 @@ private:
     std::string formatString(const std::string &str);
 };
 
-#endif // DPNOTE_H
+#endif // SLIDE_H
 

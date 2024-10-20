@@ -1,8 +1,9 @@
+#pragma once
+
 #ifndef GlobalFlag_H
 #define GlobalFlag_H
         
 #include <iostream>
-#include <TString.h>
 
 using namespace std;
 
@@ -13,9 +14,12 @@ class GlobalFlag{
     
     bool isDebug;
 
-    bool isPlot1D;
-    bool isPlot2D;
-    bool isPlotXY;
+    bool isPlotEras1D;
+    bool isPlotEra2D;
+    bool isPlotErasXY;
+    bool isPlotEraXY;
+
+    bool isPrintFigConfig;
 
     //Channels
     bool isGamJet;

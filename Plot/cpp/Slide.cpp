@@ -1,21 +1,21 @@
-#include "MakeDPNote.h"
+#include "Slide.h"
 #include <iostream>
 #include <cmath>
 
-MakeDPNote::MakeDPNote(const std::string& latexFile) {
+Slide::Slide(const std::string& latexFile) {
     file_.open(latexFile);
     if (!file_.is_open()) {
         std::cerr << "Error: Could not open LaTeX file: " << latexFile << std::endl;
     }
 }
 
-MakeDPNote::~MakeDPNote() {
+Slide::~Slide() {
     if (file_.is_open()) {
         file_.close();
     }
 }
 
-double MakeDPNote::calculateWidth(int totalPlots) {
+double Slide::calculateWidth(int totalPlots) {
     double plotWidth = 0.2; // Default width
     int rows = 1;
     int columns = 1;
@@ -91,7 +91,7 @@ double MakeDPNote::calculateWidth(int totalPlots) {
     return plotWidth;
 }
 
-void MakeDPNote::startDocument(const std::string& title) {
+void Slide::startDocument(const std::string& title) {
     file_ << "\\documentclass{beamer}\n";
     file_ << "\\usepackage{graphicx}\n";  // Needed for including graphics
     file_ << "\\begin{document}\n";
@@ -102,7 +102,7 @@ void MakeDPNote::startDocument(const std::string& title) {
 }
 
 // Function to escape special characters in a string for LaTeX
-std::string MakeDPNote::formatString(const std::string &str) {
+std::string Slide::formatString(const std::string &str) {
     std::string escapedStr;
     for (char c : str) {
         if (c == '_') {
@@ -124,7 +124,7 @@ std::string MakeDPNote::formatString(const std::string &str) {
 
 
 
-void MakeDPNote::addTextSlide(const std::vector<std::pair<std::string, std::vector<std::string>>>& textsForSlide, const std::string& slideTitle) {
+void Slide::addTextSlide(const std::vector<std::pair<std::string, std::vector<std::string>>>& textsForSlide, const std::string& slideTitle) {
     file_ << "\n\\begin{frame}{" << slideTitle << "}\n";
 
     // Determine the total number of items for font size adjustment
@@ -161,7 +161,7 @@ void MakeDPNote::addTextSlide(const std::vector<std::pair<std::string, std::vect
 }
 
 
-void MakeDPNote::addPlotSlide(const std::vector<std::string>& plotsForSlide, const std::string& slideTitle) {
+void Slide::addPlotSlide(const std::vector<std::string>& plotsForSlide, const std::string& slideTitle) {
     file_ << "\n\\begin{frame}{" << slideTitle << "}\n";
 
     int numPlots = plotsForSlide.size();
@@ -178,7 +178,7 @@ void MakeDPNote::addPlotSlide(const std::vector<std::string>& plotsForSlide, con
     file_ << "\\end{frame}\n\n";
 }
 
-void MakeDPNote::addCenteredTextSlide(const std::string& centeredText) {
+void Slide::addCenteredTextSlide(const std::string& centeredText) {
     // Start writing the slide structure
     file_ << "\\begin{frame}\n";
     file_ << "    \\centering\n";
@@ -186,7 +186,7 @@ void MakeDPNote::addCenteredTextSlide(const std::string& centeredText) {
     file_ << "\\end{frame}\n\n";
 }
 
-void MakeDPNote::endDocument() {
+void Slide::endDocument() {
     file_ << "\\end{document}\n";
 }
 

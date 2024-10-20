@@ -1,5 +1,6 @@
 import json
 import glob
+import os
 
 # Function to reorganize the JSON data
 def reorganize_json_data(files):
@@ -45,8 +46,10 @@ json_files = glob.glob(json_files_path)
 merged_json_data = reorganize_json_data(json_files)
 
 # Output the merged and reorganized data into a single JSON file
-output_file = 'json/MergedHistFiles.json'
-with open(output_file, 'w') as outfile:
+dirName = "json/rootFile"
+os.system(f"mkdir -p {dirName}")
+fileName = 'MergedHistFiles.json'
+with open("{dirName}/{fileName}", 'w') as outfile:
     json.dump(merged_json_data, outfile, indent=4)
 
 print(f'Merged and reorganized data saved to {output_file}')

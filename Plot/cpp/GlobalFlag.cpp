@@ -3,9 +3,12 @@
 GlobalFlag::GlobalFlag(std::string oName){
   outName = oName;
   isDebug = false;
-  isPlot1D = false;
-  isPlot2D = false;
-  isPlotXY = true;
+  isPlotEras1D = false;
+  isPlotEra2D = false;
+  isPlotErasXY = false;
+  isPlotEraXY =  true;
+
+  isPrintFigConfig = true;
 
   if(outName.find("GamJet")!= string::npos)    isGamJet    = true;
   if(outName.find("ZeeJet")!= string::npos)    isZeeJet   = true;
@@ -21,9 +24,12 @@ GlobalFlag::GlobalFlag(std::string oName){
 
 void GlobalFlag::printFlag(){
   if(isDebug   )cout<<"isDebug    = true"<<endl;
-  if(isPlot1D  )cout<<"isPlot1D   = true"<<endl;
-  if(isPlot2D  )cout<<"isPlot2D   = true"<<endl;
-  if(isPlotXY  )cout<<"isPlotXY   = true"<<endl;
+  if(isPlotEras1D )cout<<"isPlotEras1D   = true"<<endl;
+  if(isPlotEra2D  )cout<<"isPlotEra2D   = true"<<endl;
+  if(isPlotErasXY )cout<<"isPlotErasXY   = true"<<endl;
+  if(isPlotEraXY  )cout<<"isPlotEraXY   = true"<<endl;
+
+  if(isPrintFigConfig  )cout<<"isPrintFigConfig   = true"<<endl;
 
   if(isGamJet  )cout<<"isGamJet  = true"<<endl;
   if(isZeeJet  )cout<<"isZeeJet  = true"<<endl;

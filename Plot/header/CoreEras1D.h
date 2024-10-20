@@ -1,5 +1,7 @@
-#ifndef LoadEraXY_H
-#define LoadEraXY_H
+#pragma once
+
+#ifndef CoreEras1D_H
+#define CoreEras1D_H
 
 #include <map>
 #include <vector>
@@ -15,55 +17,48 @@
 #include <TStyle.h>
 #include <TPad.h>
 #include <TROOT.h>
-#include <THStack.h>
 #include <TProfile.h>
 #include <nlohmann/json.hpp>
 
 #include "FigConfig.h"
-#include "TDRStyle.h"
+#include "TdrStyle.h"
 
 template <typename T>
-class LoadEraXY {
+class CoreEras1D {
 public:
-    LoadEraXY();
-    ~LoadEraXY();
+    CoreEras1D();
+    ~CoreEras1D();
     
     // Setters remain the same...
     void setInputJson(const nlohmann::json &inputJson);
     void setChannel(const std::string & channel);
     void setYear(const std::string & year);
     void setMcHtBins(const std::vector<std::string>& htBins);
-    void setDataEra(const std::string& dataEra);
-    void setHistDir(const std::string &histDir);
-    void setHistName(const std::string &histName);
-    void setFigConfig(const FigConfig &params);
+    void setDataEras(const std::vector<std::string>& dataEras);
+
+    void setFigConfigEras1D(const FigConfigEras1D &params);
 
     // Loaders (use templates for histogram type)
     void loadDataHists();
     void loadMcHists();
-    void drawHists(const std::vector<TH1D*>& hists);
+    void drawHists(const std::vector<T*>& hists);
 
-    void overlayDataWithMcInRatio(TFile* outRootFile, const std::string& outPdfName);
-    void calculateHistRatio(TH1D* dataHist, TH1D* mcHist, TGraphErrors* ratioGraph);
+    void overlayDataWithMcInRatio(const std::string& outPdfName);
 
 private:
     nlohmann::json inputJson_;
     std::string channel_;
     std::string year_;
+    std::vector<std::string> dataEras_;
     std::vector<std::string> mcHtBins_;
-    std::string dataEra_;
-    std::vector<double> varBins_;
-    std::string varName_;
-    bool varIsOnXaxis_;
     std::string histDir_;
     std::string histName_;
     
-    std::vector<TH1D*> dataHists_;  
-    std::vector<TH1D*> mcHists_;  
+    std::vector<T*> dataHists_;  
+    std::vector<T*> mcHists_;  
 
-    TH1D* combineHists(const std::vector<TH1D*>& hists);
-    std::shared_ptr<TDRStyle> tdrStyle_;
+    std::shared_ptr<TdrStyle> tdrStyle_;
 };
-#include "../cpp/LoadEraXY.tpp"
+#include "../cpp/CoreEras1D.tpp"
 #endif
 

@@ -18,4 +18,4 @@ then run the commands displayed on the screen
 ### Step-3: compile latex
 
 * cd output
-* pdflatex Channel_Plot.tex
+* pdflatex -output-directory=aux ZeeJet_Plot.tex

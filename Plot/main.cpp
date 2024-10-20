@@ -9,19 +9,15 @@
 //#include "PlotMultiJet.h"
 //#include "PlotWqq.h"
 #include "GlobalFlag.h"
+#include "Slide.h"
 
-#include <sys/stat.h>
-#include <sys/types.h>
 #include <filesystem>
 #include <nlohmann/json.hpp>
-#include <boost/algorithm/string.hpp>
 #include <fstream>
 #include <iostream>
 
-#include "MakeDPNote.h"
 
 using namespace std;
-namespace fs = std::filesystem;
 
 int main(int argc, char* argv[]){
 	// Check if no arguments are provided
@@ -30,7 +26,7 @@ int main(int argc, char* argv[]){
     return 1;
   }
 
-	std::string jsonFile = "input/json/MergedHistFiles.json";
+  std::string jsonFile = "input/json/rootFile/MergedHistFiles.json";
   nlohmann::json js;
   std::string outName;
 
@@ -60,7 +56,7 @@ int main(int argc, char* argv[]){
       case 'h':
         std::cout << "\nFor file: " << jsonFile << std::endl;
         for (auto& element : js.items()) {
-          std::cout <<" ./runMain -o "<<element.key()+"_Plot.root" << std::endl;
+          std::cout <<" ./runMain -o "<<element.key()+"_Plot.tex" << std::endl;
         }
         file.close();  // Close the file after usage
         return 0;
@@ -70,21 +66,17 @@ int main(int argc, char* argv[]){
     }
   }
 
-  TString oName = outName;
+  string eosPlotDir="/eos/user/r/rverma/www/public/cms-jerc-run2/Plot";
+  string localTexDir = "./output";
+  std::filesystem::create_directories(localTexDir);
 
-  string outDir = "output";
-  mkdir(outDir.c_str(), S_IRWXU);
-  string outPath = outDir+"/"+outName;
-  TFile *outRoot  = new TFile(outPath.c_str(), "RECREATE");
-  string chLatex = outPath;
-  size_t pos = chLatex.find(".root");
-  chLatex.replace(pos, 5, ".tex");
-  MakeDPNote chNote(chLatex);
+  std::string chLatex = localTexDir+"/"+outName;
+  Slide channelSlide(chLatex);
 
-  bool isAll = true;
-  string allLatex = "all.tex";
-  MakeDPNote allNote(allLatex);
-  allNote.startDocument("JME-21-001: All channel");
+  bool isAllChannel = true;
+  std::string allLatex = localTexDir+"/AllChannel_Plot.tex";
+  Slide allChannelSlide(allLatex);
+  allChannelSlide.startDocument("JME-21-001: All channel");
 
   cout<<"\n--------------------------------------"<<endl;
   cout<<" Set GlobalFlag.cpp"<<endl;
@@ -96,10 +88,10 @@ int main(int argc, char* argv[]){
   cout<<" Create plots and slides"<<endl;
   cout<<"--------------------------------------"<<endl;
 
-  if(globF->isZeeJet or isAll){
+  if(globF->isZeeJet or isAllChannel){
     cout<<"==> Running ZeeJet"<<endl;
-    PlotZeeJet *zeeJet = new PlotZeeJet("ZeeJet");
-    zeeJet->Run(js, outRoot, chNote, allNote);
+    PlotZeeJet *zeeJet = new PlotZeeJet(outName);
+    zeeJet->Run(js, eosPlotDir, channelSlide, allChannelSlide);
   }
   /*
   if(globF->isZmmJet){
@@ -149,8 +141,8 @@ int main(int argc, char* argv[]){
     diJet->Run(js, outRoot, chLatex);  
   }
   */
-  allNote.addCenteredTextSlide("Thank you!");
-  allNote.endDocument();
+  allChannelSlide.addCenteredTextSlide("Thank you!");
+  allChannelSlide.endDocument();
   std::cout<<chLatex<<std::endl;
   std::cout<<allLatex<<std::endl;
 

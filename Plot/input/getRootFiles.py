@@ -8,7 +8,9 @@ from Inputs import *
 
 if __name__=="__main__":
     histDir = "../../Hist/input/json/"
-    os.system("mkdir -p json")
+    
+    dirName = "json/rootFile"
+    os.system(f"mkdir -p {dirName}")
     allJobs = 0
     for year, ch in itertools.product(Years, Channels.keys()):
         chHist = Channels[ch]
@@ -27,6 +29,8 @@ if __name__=="__main__":
             hAddOut = f"{dirPath}/{sKey}_Hist_Merged.root"
             os.system(f"hadd -f -k {hAddOut} {hAddIn}")
             dPlot[sKey] = hAddOut
-        fHistMerged = open(f"json/FilesHistMerged_{year}_{ch}.json", "w")
+        fileName = "FilesHistMerged_{year}_{ch}.json"
+        fHistMerged = open(f"{dirName}/{fileName}", "w")
         json.dump(dPlot, fHistMerged, indent=4) 
+        print(f"{dirName}/{fileName}")
     

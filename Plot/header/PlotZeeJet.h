@@ -1,9 +1,11 @@
+#pragma once
+
 #ifndef PlotZeeJet_h
 #define PlotZeeJet_h
 #include <nlohmann/json.hpp>
 #include <TFile.h>
 #include <iostream>
-#include "MakeDPNote.h"
+#include "Slide.h"
 #include "GlobalFlag.h"
 
 class PlotZeeJet : public GlobalFlag {
@@ -11,10 +13,10 @@ class PlotZeeJet : public GlobalFlag {
     PlotZeeJet(std::string oName): GlobalFlag(oName){}
     ~PlotZeeJet();
     
-    int Run(nlohmann::json inputJson, TFile *outRoot, MakeDPNote &chNote, MakeDPNote &allNote);
+    int Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &channelSlide, Slide &allChannelSlide);
 
  private :
-    void addZeeJetSlides(MakeDPNote &chNote);
+    void addZeeJetSlides(Slide &channelSlide);
 
 };
 #endif
