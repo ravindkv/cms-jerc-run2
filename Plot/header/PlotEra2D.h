@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef CoreEra2D_H
-#define CoreEra2D_H
+#ifndef PlotEra2D_H
+#define PlotEra2D_H
 
 #include <map>
 #include <vector>
@@ -26,15 +26,13 @@
 #include "TdrStyle.h"
 
 template <typename T>
-class CoreEra2D {
+class PlotEra2D {
 public:
-    CoreEra2D();
-    ~CoreEra2D();
+    PlotEra2D();
+    ~PlotEra2D();
     
     // Setters remain the same...
-    void setInputJson(const nlohmann::json &inputJson);
-    void setChannel(const std::string & channel);
-    void setYear(const std::string & year);
+    void setInput(const nlohmann::json &inputJson, const std::string & channel, const std::string & year);
     void setDataEraOrMcBin(const std::string & dataEraOrMcBin);
     void setFigConfigEra2D(const FigConfigEra2D &params);
     void drawHist2D(const std::string& outPdfName);
@@ -48,6 +46,6 @@ private:
     std::string histName_;
     std::shared_ptr<TdrStyle> tdrStyle_;
 };
-#include "../cpp/CoreEra2D.tpp"
+#include "../cpp/PlotEra2D.tpp"
 #endif
 

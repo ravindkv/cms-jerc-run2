@@ -1,7 +1,5 @@
 #include "GlobalFlag.h"
 
-#include <utility>
-
 GlobalFlag::GlobalFlag(std::string  outName)
     : outName_(std::move(outName)), 
      

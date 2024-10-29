@@ -1,5 +1,5 @@
 #-----------------------------------------------------------------
-eosSkimDir="/eos/user/r/rverma/www/public/cms-jerc-run2/Skim"
+eosSkimDir="/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Skim"
 #-----------------------------------------------------------------
 Years = []
 Years.append('2016Pre')

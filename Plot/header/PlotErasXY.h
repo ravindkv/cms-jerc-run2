@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef CoreEras1D_H
-#define CoreEras1D_H
+#ifndef PlotErasXY_H
+#define PlotErasXY_H
 
 #include <map>
 #include <vector>
@@ -17,6 +17,7 @@
 #include <TStyle.h>
 #include <TPad.h>
 #include <TROOT.h>
+#include <THStack.h>
 #include <TProfile.h>
 #include <nlohmann/json.hpp>
 
@@ -24,24 +25,18 @@
 #include "TdrStyle.h"
 
 template <typename T>
-class CoreEras1D {
+class PlotErasXY {
 public:
-    CoreEras1D();
-    ~CoreEras1D();
+    PlotErasXY();
+    ~PlotErasXY();
     
     // Setters remain the same...
-    void setInputJson(const nlohmann::json &inputJson);
-    void setChannel(const std::string & channel);
-    void setYear(const std::string & year);
-    void setMcHtBins(const std::vector<std::string>& htBins);
-    void setDataEras(const std::vector<std::string>& dataEras);
-
-    void setFigConfigEras1D(const FigConfigEras1D &params);
+    void setInput(const nlohmann::json &inputJson, const std::string & channel, const std::string & year);
+    void setFigConfigErasXY(const FigConfigErasXY &params);
 
     // Loaders (use templates for histogram type)
-    void loadDataHists();
-    void loadMcHists();
-    void drawHists(const std::vector<T*>& hists);
+    void loadHists(const std::vector<std::string>& bins, const std::string& sourceType);
+    void drawHists(const std::vector<TProfile*>& hists);
 
     void overlayDataWithMcInRatio(const std::string& outPdfName);
 
@@ -49,16 +44,18 @@ private:
     nlohmann::json inputJson_;
     std::string channel_;
     std::string year_;
-    std::vector<std::string> dataEras_;
-    std::vector<std::string> mcHtBins_;
+    double varMin_;
+    double varMax_;
+    std::string varName_;
+    bool varIsOnXaxis_;
     std::string histDir_;
     std::string histName_;
     
-    std::vector<T*> dataHists_;  
-    std::vector<T*> mcHists_;  
-
+    std::vector<TProfile*> dataHists_;  
+    std::vector<TProfile*> mcHists_;  
     std::shared_ptr<TdrStyle> tdrStyle_;
+    TProfile* projectAndClone(T* hist, const std::string& bin);
 };
-#include "../cpp/CoreEras1D.tpp"
+#include "../cpp/PlotErasXY.tpp"
 #endif
 

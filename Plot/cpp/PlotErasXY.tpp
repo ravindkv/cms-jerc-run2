@@ -1,8 +1,8 @@
 #include "TdrStyle.h"
-#include "CoreErasXY.h"
+#include "PlotErasXY.h"
 
 template<typename T>
-CoreErasXY<T>::CoreErasXY() : 
+PlotErasXY<T>::PlotErasXY() : 
   channel_(""), 
   year_(""), 
   varMin_(0.0),
@@ -19,7 +19,7 @@ CoreErasXY<T>::CoreErasXY() :
 
 // Clean up each cloned histogram
 template<typename T>
-CoreErasXY<T>::~CoreErasXY() {
+PlotErasXY<T>::~PlotErasXY() {
   for (auto hist : dataHists_) {
       delete hist; 
   }
@@ -29,14 +29,14 @@ CoreErasXY<T>::~CoreErasXY() {
 }
 
 template<typename T>
-void CoreErasXY<T>::setInput(const nlohmann::json &inputJson, const std::string & channel, const std::string & year){
+void PlotErasXY<T>::setInput(const nlohmann::json &inputJson, const std::string & channel, const std::string & year){
   inputJson_ = inputJson;
   channel_ = channel;
   year_ = year;
 }
 
 template<typename T>
-void CoreErasXY<T>::setFigConfigErasXY(const FigConfigErasXY & params) {
+void PlotErasXY<T>::setFigConfigErasXY(const FigConfigErasXY & params) {
   tdrStyle_->setFigConfig(params);
   histDir_  = params.histDir;
   histName_ = params.histName;
@@ -47,7 +47,7 @@ void CoreErasXY<T>::setFigConfigErasXY(const FigConfigErasXY & params) {
 }
 
 template<typename T>
-void CoreErasXY<T>::loadHists(const std::vector<std::string>& bins, const std::string& sourceType) {
+void PlotErasXY<T>::loadHists(const std::vector<std::string>& bins, const std::string& sourceType) {
   for (const auto& bin : bins) {
     // Select the file name based on whether we're loading Data or MC
     std::string fileName = (sourceType == "Data") ? inputJson_[channel_][year_]["Data"][bin] 
@@ -91,7 +91,7 @@ void CoreErasXY<T>::loadHists(const std::vector<std::string>& bins, const std::s
 
 // Helper function for projection and cloning
 template<typename T>
-TProfile* CoreErasXY<T>::projectAndClone(T* hist, const std::string& bin) {
+TProfile* PlotErasXY<T>::projectAndClone(T* hist, const std::string& bin) {
   std::string nameBin;
   TProfile* clonedHist = nullptr;
 
@@ -99,14 +99,14 @@ TProfile* CoreErasXY<T>::projectAndClone(T* hist, const std::string& bin) {
     auto binIdx = hist->GetYaxis()->FindBin(varMin_);
     auto binLow = hist->GetYaxis()->GetBinLowEdge(binIdx);
     auto binHigh = hist->GetYaxis()->GetBinUpEdge(binIdx);
-    nameBin = Form("%0.1f %s %0.1f", binLow, varName_.c_str(), binHigh);
-    clonedHist = (TProfile*)hist->ProjectionX(nameBin.c_str(), binIdx, binIdx)->Clone((nameBin + ": " + bin).c_str());
+    nameBin = Form("%s = [%0.1f %0.1f], ", binLow, varName_.c_str(), binHigh);
+    clonedHist = (TProfile*)hist->ProjectionX(nameBin.c_str(), binIdx, binIdx)->Clone((nameBin + bin).c_str());
   } else {
     auto binIdx = hist->GetXaxis()->FindBin(varMin_);
     auto binLow = hist->GetXaxis()->GetBinLowEdge(binIdx);
     auto binHigh = hist->GetXaxis()->GetBinUpEdge(binIdx);
-    nameBin = Form("%0.1f %s %0.1f", binLow, varName_.c_str(), binHigh);
-    clonedHist = (TProfile*)hist->ProjectionY(nameBin.c_str(), binIdx, binIdx)->Clone((nameBin + ": " + bin).c_str());
+    nameBin = Form("%s = [%0.1f %0.1f], ", binLow, varName_.c_str(), binHigh);
+    clonedHist = (TProfile*)hist->ProjectionY(nameBin.c_str(), binIdx, binIdx)->Clone((nameBin + bin).c_str());
   }
 
   return clonedHist;
@@ -115,7 +115,7 @@ TProfile* CoreErasXY<T>::projectAndClone(T* hist, const std::string& bin) {
 
 // Helper function to draw histograms (Data/Mc), set styles, and handle the legend
 template<typename T>
-void CoreErasXY<T>::drawHists(const std::vector<TProfile*>& hists) {
+void PlotErasXY<T>::drawHists(const std::vector<TProfile*>& hists) {
   if (hists.empty()) {
     std::cerr << "Error: Histograms vector is empty." << std::endl;
     return;
@@ -144,7 +144,7 @@ void CoreErasXY<T>::drawHists(const std::vector<TProfile*>& hists) {
 
 // Overlay Data with Mc and Plot Ratio
 template<typename T>
-void CoreErasXY<T>::overlayDataWithMcInRatio(const std::string &outputFile) {
+void PlotErasXY<T>::overlayDataWithMcInRatio(const std::string &outputFile) {
   TCanvas canvas("c", "Data and Mc Ratio", 600, 600);
   canvas.cd();
   tdrStyle_->setTdrStyle();

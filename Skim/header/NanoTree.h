@@ -179,18 +179,6 @@ class NanoTree{
   TBranch *b_HLT_DiPFJetAve220_HFJEC;
   TBranch *b_HLT_DiPFJetAve300_HFJEC;
   
-  Bool_t HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL = false;
-  TBranch * b_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL;
-  
-  Bool_t HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ = false;
-  TBranch * b_HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ;
-  
-  Bool_t HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ = false; 
-  TBranch *b_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ; 
-  
-  Bool_t HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8 = false; 
-  TBranch *b_HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8; 
-  
   //Inputs
   string outName;
   void setInput(string oName);
@@ -210,8 +198,6 @@ class NanoTree{
   void loadJobFileNames();
   TChain *fChain = new TChain("Events");   
   void loadTree();
-  std::vector<std::vector<std::string>> splitVector(const std::vector<std::string>& strings, int n);
-  std::vector<std::string> splitString(const std::string& s, const std::string& delimiter);
 
 private:
     GlobalFlag& globalFlags_;

@@ -1,3 +1,6 @@
+./scanTFile
+./diffTFiles
+
 Skim/runMain
 Skim/obj
 Skim/output

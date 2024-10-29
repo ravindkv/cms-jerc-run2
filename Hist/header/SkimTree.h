@@ -4,11 +4,9 @@
 #include <TFile.h>
 #include <TTree.h>
 #include <TChain.h>
-#include <TH1D.h>
 #include <fstream>
 #include <string>
 #include <vector>
-#include <memory>
 #include <nlohmann/json.hpp>
 
 #include "GlobalFlag.h"
@@ -35,10 +33,6 @@ public:
     void loadJobFileNames();
     void loadTree();
 
-    // Utility functions
-    std::vector<std::vector<std::string>> splitVector(const std::vector<std::string>& strings, int n) const;
-    std::vector<std::string> splitString(const std::string& s, const std::string& delimiter) const;
-
     // Accessors for tree variables (public for direct access)
     // {} in the end is to initialise
     // Event information
@@ -63,9 +57,12 @@ public:
     Float_t Jet_area[nJetMax]{};
     UChar_t Jet_jetId[nJetMax]{}; // NanoV12
 
-    Float_t         Jet_btagDeepB[nJetMax]{}; // Run2
-    Float_t         Jet_btagDeepC[nJetMax]{}; // Run2
-    Float_t         Jet_qgl[nJetMax]{};       // Run2
+    Float_t Jet_btagDeepFlavB[nJetMax]{}; 
+    Float_t Jet_btagDeepFlavCvL[nJetMax]{};
+    Float_t Jet_btagDeepFlavCvB[nJetMax]{};
+    Float_t Jet_btagDeepFlavG[nJetMax]{};
+    Float_t Jet_btagDeepFlavQG[nJetMax]{};
+    Float_t Jet_btagDeepFlavUDS[nJetMax]{};
 
     Float_t Jet_chHEF[nJetMax]{};
     Float_t Jet_neHEF[nJetMax]{};
@@ -190,6 +187,7 @@ public:
     Float_t Electron_deltaEtaSC[nElectronMax]{};
     Int_t Electron_charge[nElectronMax]{};
     Float_t Electron_mass[nElectronMax]{};
+    Float_t Electron_eCorr[nElectronMax]{};
     Int_t Electron_cutBased[nElectronMax]{};
     Bool_t HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL{};
     Bool_t HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ{};
@@ -205,6 +203,7 @@ public:
     // Muon variables
     static const int nMuonMax = 100;
     UInt_t nMuon{};
+    Int_t Muon_nTrackerLayers[nMuonMax]{};
     Float_t Muon_phi[nMuonMax]{};
     Float_t Muon_pt[nMuonMax]{};
     Float_t Muon_eta[nMuonMax]{};

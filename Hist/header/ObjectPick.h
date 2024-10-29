@@ -14,6 +14,7 @@
 #include <TLorentzVector.h>
 
 #include "SkimTree.h"
+#include "ObjectScale.h"
 #include "GlobalFlag.h"
 
 class ObjectPick{
@@ -23,7 +24,7 @@ public:
     ~ObjectPick();
 
     // Set the SkimTree pointer
-    void setTree(const std::shared_ptr<SkimTree>& skimTree);
+    void setInput(const std::shared_ptr<SkimTree>& skimTree, const std::shared_ptr<ObjectScale>& objectScale);
 
     // Clear picked objects
     void clearObjects();
@@ -51,15 +52,10 @@ public:
     const std::vector<int>& getPickedGenPhotons() const;
     const std::vector<TLorentzVector>& getPickedGenRefs() const;
 
-    const double getBtagThresh()const;
-    const double getCtagThresh()const;
-    const double getQtagThresh()const;
-    const double getGtagThresh()const;
-
-
 private:
     // Pointer to SkimTree
     std::shared_ptr<SkimTree> skimTree_;
+    std::shared_ptr<ObjectScale> objectScale_;
 
     // Reco objects
     std::vector<int> pickedElectrons_;
@@ -81,10 +77,6 @@ private:
 
     // Helper function for debug printing
     void printDebug(const std::string& message) const;
-    double bTagThresh_;
-    double cTagThresh_;
-    double qTagThresh_;
-    double gTagThresh_;
 };
 
 #endif  // OBJECTPICK_H

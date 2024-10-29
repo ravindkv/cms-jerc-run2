@@ -5,11 +5,8 @@ ObjectPick::ObjectPick(GlobalFlag& globalFlags) :
     globalFlags_(globalFlags),
     year_(globalFlags_.getYear()),
     channel_(globalFlags_.getChannel()),
-    isDebug_(globalFlags_.isDebug()),
-    bTagThresh_(0.4184),
-    cTagThresh_(0.137 + 0.5 * (0.66 - 0.137)),
-    qTagThresh_(0.0),
-    gTagThresh_(0.0){
+    isDebug_(globalFlags_.isDebug())
+{
 }
 // Destructor
 ObjectPick::~ObjectPick() {
@@ -17,8 +14,9 @@ ObjectPick::~ObjectPick() {
 }
 
 // Set the SkimTree pointer
-void ObjectPick::setTree(const std::shared_ptr<SkimTree>& skimTree) {
+void ObjectPick::setInput(const std::shared_ptr<SkimTree>& skimTree, const std::shared_ptr<ObjectScale>& objectScale) {
     skimTree_ = skimTree;
+    objectScale_ = objectScale;
 }
 
 // Clear picked objects
@@ -72,22 +70,6 @@ auto ObjectPick::getPickedGenPhotons() const -> const std::vector<int>& {
 
 auto ObjectPick::getPickedGenRefs() const -> const std::vector<TLorentzVector>& {
     return pickedGenRefs_;
-}
-
-auto ObjectPick:: getBtagThresh() const-> const double{
-    return bTagThresh_;
-}
-
-auto ObjectPick:: getCtagThresh() const -> const double{
-    return cTagThresh_;
-}
-
-auto ObjectPick:: getQtagThresh() const-> const double{
-    return qTagThresh_;
-}
-
-auto ObjectPick:: getGtagThresh() const-> const double{
-    return gTagThresh_;
 }
 
 // Reco objects
@@ -175,8 +157,10 @@ void ObjectPick::pickRefs() {
         int k = pickedElectrons_.at(1);
 
         TLorentzVector p4Lep1, p4Lep2;
-        p4Lep1.SetPtEtaPhiM(skimTree_->Electron_pt[j], skimTree_->Electron_eta[j], skimTree_->Electron_phi[j], skimTree_->Electron_mass[j]);
-        p4Lep2.SetPtEtaPhiM(skimTree_->Electron_pt[k], skimTree_->Electron_eta[k], skimTree_->Electron_phi[k], skimTree_->Electron_mass[k]);
+        double ptj = objectScale_->getEleSsCorrection(j, "nom") * skimTree_->Electron_pt[j];
+        double ptk = objectScale_->getEleSsCorrection(k, "nom") * skimTree_->Electron_pt[k];
+        p4Lep1.SetPtEtaPhiM(ptj, skimTree_->Electron_eta[j], skimTree_->Electron_phi[j], skimTree_->Electron_mass[j]);
+        p4Lep2.SetPtEtaPhiM(ptk, skimTree_->Electron_eta[k], skimTree_->Electron_phi[k], skimTree_->Electron_mass[k]);
         TLorentzVector p4Ref = p4Lep1 + p4Lep2;
 
         if ((skimTree_->Electron_charge[j] * skimTree_->Electron_charge[k]) == -1 &&
@@ -193,8 +177,10 @@ void ObjectPick::pickRefs() {
         int k = pickedMuons_.at(1);
 
         TLorentzVector p4Lep1, p4Lep2;
-        p4Lep1.SetPtEtaPhiM(skimTree_->Muon_pt[j], skimTree_->Muon_eta[j], skimTree_->Muon_phi[j], skimTree_->Muon_mass[j]);
-        p4Lep2.SetPtEtaPhiM(skimTree_->Muon_pt[k], skimTree_->Muon_eta[k], skimTree_->Muon_phi[k], skimTree_->Muon_mass[k]);
+        double ptj = objectScale_->getMuRochCorrection(j, "nom") * skimTree_->Muon_pt[j];
+        double ptk = objectScale_->getMuRochCorrection(k, "nom") * skimTree_->Muon_pt[k];
+        p4Lep1.SetPtEtaPhiM(ptj, skimTree_->Muon_eta[j], skimTree_->Muon_phi[j], skimTree_->Muon_mass[j]);
+        p4Lep2.SetPtEtaPhiM(ptk, skimTree_->Muon_eta[k], skimTree_->Muon_phi[k], skimTree_->Muon_mass[k]);
         TLorentzVector p4Ref = p4Lep1 + p4Lep2;
 
         if ((skimTree_->Muon_charge[j] * skimTree_->Muon_charge[k]) == -1 &&

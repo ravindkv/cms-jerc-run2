@@ -1,4 +1,5 @@
 #include"ObjectScale.h"
+#include"Helper.h"
 #include<iostream>
 #include<stdexcept>  // For std::runtime_error
 
@@ -9,7 +10,7 @@ ObjectScale::ObjectScale(GlobalFlag& globalFlags) :
     era_(globalFlags_.getEra()),
     channel_(globalFlags_.getChannel()),
     isDebug_(globalFlags_.isDebug()),
-    isData_(isData_),
+    isData_(globalFlags_.isData()),
     isMC_(globalFlags_.isMC()){
 }
 
@@ -51,6 +52,8 @@ void ObjectScale::setInputs() {
     // Photon SS
     phoSsJsonPath_   = "POG/EGM/S+SJSON/2022Re-recoBCD/photonSS.json";
     phoSsName_       = "2022Re-recoBCD_SmearingJSON";
+    //Muon Rochester
+    muRochJsonPath_  = "POG/MUO/roccor/RoccoR2016aUL.txt";
     // Electron SS
     eleSsJsonPath_   = "POG/EGM/electronSS.json";
     eleSsName_       = "2022Re-recoBCD_ScaleJSON";
@@ -87,6 +90,8 @@ void ObjectScale::setInputs() {
     // Photon SS
     phoSsJsonPath_   = "POG/EGM/S+SJSON/2022Re-recoBCD/photonSS.json";
     phoSsName_       = "2022Re-recoBCD_SmearingJSON";
+    //Muon Rochester
+    muRochJsonPath_  = "POG/MUO/roccor/RoccoR2016bUL.txt";
     // Electron SS
     eleSsJsonPath_   = "POG/EGM/electronSS.json";
     eleSsName_       = "2022Re-recoBCD_ScaleJSON";
@@ -143,6 +148,8 @@ void ObjectScale::setInputs() {
     // Photon SS
     phoSsJsonPath_   = "POG/EGM/S+SJSON/2022Re-recoBCD/photonSS.json";
     phoSsName_       = "2022Re-recoBCD_SmearingJSON";
+    //Muon Rochester
+    muRochJsonPath_  = "POG/MUO/roccor/RoccoR2017UL.txt";
     // Electron SS
     eleSsJsonPath_   = "POG/EGM/electronSS.json";
     eleSsName_       = "2022Re-recoBCD_ScaleJSON";
@@ -194,6 +201,8 @@ void ObjectScale::setInputs() {
     // Photon SS
     phoSsJsonPath_   = "POG/EGM/S+SJSON/2022Re-recoBCD/photonSS.json";
     phoSsName_       = "2022Re-recoBCD_SmearingJSON";
+    //Muon Rochester
+    muRochJsonPath_  = "POG/MUO/roccor/RoccoR2018UL.txt";
     // Electron SS
     eleSsJsonPath_   = "POG/EGM/electronSS.json";
     eleSsName_       = "2022Re-recoBCD_ScaleJSON";
@@ -217,6 +226,7 @@ void ObjectScale::setInputs() {
   std::cout<<"JERSFName              = " << JERSFName_            <<'\n'<<'\n';
   std::cout<<"phoSsJsonPath          = " << phoSsJsonPath_        <<'\n';
   std::cout<<"phoSsName              = " << phoSsName_            <<'\n'<<'\n';
+  std::cout<<"muRochJsonPath         = " << muRochJsonPath_       <<'\n'<<'\n';
   std::cout<<"eleSsJsonPath          = " << eleSsJsonPath_        <<'\n';
   std::cout<<"eleSsName              = " << eleSsName_            <<'\n'<<'\n';
   std::cout<<"lumiJsonPath           = " << lumiJsonPath_         <<'\n';
@@ -249,10 +259,12 @@ auto ObjectScale::checkJetVetoMap() const -> bool {
 
       auto jvNumber = loadedJetVetoRef_->evaluate({jetVetoKey_, skimTree_->Jet_eta[i], skimTree_->Jet_phi[i]});
       if (isDebug_) {
-        std::cout << jetVetoKey_
+        std::cout << 
+            jetVetoKey_
             << ", jetEta= " << skimTree_->Jet_eta[i]
             << ", jetPhi= " << skimTree_->Jet_phi[i]
-            << ", jetVetoNumber = " << jvNumber << '\n';
+            << ", jetVetoNumber = " << jvNumber 
+            << '\n';
       }
       if (jvNumber > 0) {
         isVeto = true;
@@ -282,12 +294,13 @@ auto ObjectScale::getL1FastJetCorrection(double jetArea, double jetEta, double j
   double corrL1FastJet = 1.0;
   try {
     corrL1FastJet = loadedJetL1FastJetRef_->evaluate({jetArea, jetEta, jetPt, rho});
-    if (isDebug_) {
-      std::cout << "jetArea = " << jetArea
+    if (isDebug_) {std::cout 
+            << "jetArea = " << jetArea
             << ", jetEta= " << jetEta
             << ", jetPt= " << jetPt
             << ", rho = " << rho
-            << ", corrL1FastJet = " << corrL1FastJet << '\n';
+            << ", corrL1FastJet = " << corrL1FastJet 
+            << '\n';
     }
   } catch (const std::exception &e) {
     std::cerr << "\nEXCEPTION: in getL1FastJetCorrection(): " << e.what() << '\n';
@@ -312,10 +325,11 @@ auto ObjectScale::getL2RelativeCorrection(double jetEta, double jetPt) const -> 
   double corrL2Relative = 1.0;
   try {
     corrL2Relative = loadedJetL2RelativeRef_->evaluate({jetEta, jetPt});
-    if (isDebug_) {
-      std::cout << "jetEta= " << jetEta
+    if (isDebug_) {std::cout 
+            << "jetEta= " << jetEta
             << ", jetPt= " << jetPt
-            << ", corrL2Relative = " << corrL2Relative << '\n';
+            << ", corrL2Relative = " 
+            << corrL2Relative << '\n';
     }
   } catch (const std::exception &e) {
     std::cerr << "\nEXCEPTION: in getL2RelativeCorrection(): " << e.what() << '\n';
@@ -340,10 +354,11 @@ auto ObjectScale::getL2L3ResidualCorrection(double jetEta, double jetPt) const -
   double corrL2L3Residual = 1.0;
   try {
     corrL2L3Residual = loadedJetL2L3ResidualRef_->evaluate({jetEta, jetPt});
-    if (isDebug_) {
-      std::cout << ", jetEta= " << jetEta
+    if (isDebug_) {std::cout 
+            << ", jetEta= " << jetEta
             << ", jetPt= " << jetPt
-            << ", corrL2L3Residual = " << corrL2L3Residual << '\n';
+            << ", corrL2L3Residual = " << corrL2L3Residual 
+            << '\n';
     }
   } catch (const std::exception &e) {
     std::cerr << "\nEXCEPTION: in getL2L3ResidualCorrection(): " << e.what() << '\n';
@@ -369,10 +384,12 @@ auto ObjectScale::getJERResolution(int index) const -> double {
   double JERReso = 1.0;
   try {
     JERReso = loadedJERResoRef_->evaluate({skimTree_->Jet_eta[index], skimTree_->Jet_pt[index], skimTree_->Rho});
-    if (isDebug_) std::cout << ", jetEta= " << skimTree_->Jet_eta[index]
-              << ", jetPt= " << skimTree_->Jet_pt[index]
-              << ", rho = " << skimTree_->Rho
-              << ", JERReso = " << JERReso << '\n';
+    if (isDebug_) std::cout 
+                << ", jetEta= " << skimTree_->Jet_eta[index]
+                << ", jetPt= " << skimTree_->Jet_pt[index]
+                << ", rho = " << skimTree_->Rho
+                << ", JERReso = " << JERReso 
+                << '\n';
   } catch (const std::exception &e) {
     std::cout << "\nEXCEPTION: in getJERResolution(): " << e.what() << '\n';
     throw std::runtime_error("Error calculating JER Resolution.");
@@ -396,9 +413,11 @@ auto ObjectScale::getJERScaleFactor(int index, const std::string &syst) const ->
   double JERSF = 1.0;
   try {
     JERSF = loadedJERSFRef_->evaluate({skimTree_->Jet_eta[index], skimTree_->Jet_pt[index], syst});
-    if (isDebug_) std::cout << ", jeteta= " << skimTree_->Jet_eta[index]
-              << ", syst  = " << syst
-              << ", JERSF = " << JERSF << '\n';
+    if (isDebug_) std::cout 
+                << ", jeteta= " << skimTree_->Jet_eta[index]
+                << ", syst  = " << syst
+                << ", JERSF = " << JERSF 
+                << '\n';
   } catch (const std::exception &e) {
     std::cout << "\nEXCEPTION: in getJERScaleFactor(): " << e.what() << '\n';
     throw std::runtime_error("Error calculating JER Scale Factor.");
@@ -417,10 +436,10 @@ auto ObjectScale::getJERCorrection(int index, const std::string &syst) const -> 
   double pt = skimTree_->Jet_pt[index];
   double phi = skimTree_->Jet_phi[index];
   int genIdx = skimTree_->Jet_genJetIdx[index];
-  generator->SetSeed(skimTree_->event + skimTree_->run + skimTree_->luminosityBlock);
+  randomNumGen->SetSeed(skimTree_->event + skimTree_->run + skimTree_->luminosityBlock);
   bool isMatch = false;
   if ((genIdx > -1) && (genIdx < skimTree_->nGenJet)) {
-    double delR = DELTAR(phi, skimTree_->GenJet_phi[genIdx], eta, skimTree_->GenJet_eta[genIdx]);
+    double delR = Helper::DELTAR(phi, skimTree_->GenJet_phi[genIdx], eta, skimTree_->GenJet_eta[genIdx]);
     if (delR < 0.2 && std::abs(pt - skimTree_->GenJet_pt[genIdx]) < 3 * resoJER * pt) {
       isMatch = true;
     }
@@ -428,9 +447,13 @@ auto ObjectScale::getJERCorrection(int index, const std::string &syst) const -> 
   if (isMatch) { // scaling method
     corrJER = std::max(0.0, 1. + (sfJER - 1.) * (pt - skimTree_->GenJet_pt[genIdx]) / pt);
   } else { // stochastic smearing
-    corrJER = std::max(0.0, 1 + generator->Gaus(0, resoJER) * sqrt(std::max(sfJER * sfJER - 1, 0.)));
-    if (isDebug_) {
-      std::cout << "Resolution = " << resoJER << ", sfJER = " << sfJER << ", cJER_Twiki = " << corrJER << '\n';
+    corrJER = std::max(0.0, 1 + randomNumGen->Gaus(0, resoJER) * sqrt(std::max(sfJER * sfJER - 1, 0.)));
+    if (isDebug_) {std::cout 
+                << "Resolution = " 
+                << resoJER << ", sfJER = " 
+                << sfJER << ", cJER_Twiki = " 
+                << corrJER 
+                << '\n';
     }
   }
   return corrJER;
@@ -462,13 +485,15 @@ auto ObjectScale::getPhoScaleCorrection(const std::string &nomOrSyst, int indexP
       skimTree_->Photon_r9[indexPho],
       skimTree_->Photon_pt[indexPho]
     });
-    if (isDebug_) std::cout << "nomOrSyst = " << nomOrSyst
-              << ", Photon_seedGain = " << skimTree_->Rho
-              << ", run = " << skimTree_->run
-              << ", Photon_eta= " << skimTree_->Photon_eta[indexPho]
-              << ", Photon_r9 = " << skimTree_->Photon_r9[indexPho]
-              << ", Photon_pt = " << skimTree_->Photon_pt[indexPho]
-              << ", phoScaleSF= " << phoScaleSF << '\n';
+    if (isDebug_) std::cout 
+                << "nomOrSyst = " << nomOrSyst
+                << ", Photon_seedGain = " << skimTree_->Rho
+                << ", run = " << skimTree_->run
+                << ", Photon_eta= " << skimTree_->Photon_eta[indexPho]
+                << ", Photon_r9 = " << skimTree_->Photon_r9[indexPho]
+                << ", Photon_pt = " << skimTree_->Photon_pt[indexPho]
+                << ", phoScaleSF= " << phoScaleSF  
+                << '\n';
   } catch (const std::exception &e) {
     std::cout << "\nEXCEPTION: in ObjectScale::getPhoScaleCorrection(): " << e.what() << '\n';
     throw std::runtime_error("Error calculating Photon Scale Correction.");
@@ -484,15 +509,85 @@ auto ObjectScale::getPhoSmearCorrection(const std::string &nomOrSyst, int indexP
       skimTree_->Photon_eta[indexPho],
       skimTree_->Photon_r9[indexPho]
     });
-    if (isDebug_) std::cout << "nomOrSyst = " << nomOrSyst
-              << ", Photon_eta= " << skimTree_->Photon_eta[indexPho]
-              << ", Photon_r9 = " << skimTree_->Photon_r9[indexPho]
-              << ", phoSmearSF= " << phoSmearSF << '\n';
+    if (isDebug_) std::cout 
+                << "nomOrSyst = " << nomOrSyst
+                << ", Photon_eta= " << skimTree_->Photon_eta[indexPho]
+                << ", Photon_r9 = " << skimTree_->Photon_r9[indexPho]
+                << ", phoSmearSF= " << phoSmearSF 
+                << '\n';
   } catch (const std::exception &e) {
     std::cout << "\nEXCEPTION: in ObjectSmear::getPhoSmearCorrection(): " << e.what() << '\n';
     throw std::runtime_error("Error calculating Photon Smear Correction.");
   }
   return phoSmearSF;
+}
+
+//-------------------------------------
+// Muon Roch Correction
+//-------------------------------------
+void ObjectScale::loadMuRochRef() {
+  std::cout << "==> loadMuRochRef()" << '\n';
+  try {
+    loadedRochRef_.init(muRochJsonPath_);
+  } catch (const std::exception &e) {
+    std::cout << "\nEXCEPTION: ObjectScale::loadMuRochRef()" << '\n';
+    std::cout << "Check " << muRochJsonPath_ << '\n';
+    std::cout << e.what() << '\n';
+    throw std::runtime_error("Error loading muon rochester corr file.");
+  }
+}
+//
+auto ObjectScale::getMuRochCorrection(int index, const std::string &syst) const -> double {
+    double corrMuRoch = 1.0;
+    double Q   = skimTree_->Muon_charge[index];
+    double pt  = skimTree_->Muon_pt[index];
+    double eta = skimTree_->Muon_eta[index];
+    double phi = skimTree_->Muon_phi[index];
+    double s = 0.0;
+    double m = 0.0;
+    double genPt = -9999.;
+    double u = -9999.;
+    int nl = -9999;
+    bool isMatched = false;
+    
+    if(isData_){
+        corrMuRoch = loadedRochRef_.kScaleDT(Q, pt, eta, phi, s, m); 
+    }
+    if(isMC_){
+        for (int i = 0; i < skimTree_->nGenDressedLepton; ++i) {
+            if (std::abs(skimTree_->GenDressedLepton_pdgId[i]) == 13) {
+                double delR = Helper::DELTAR(phi, skimTree_->GenDressedLepton_phi[i], eta, skimTree_->GenDressedLepton_eta[i]);
+                if(delR < 0.2){
+                    genPt = skimTree_->GenDressedLepton_pt[i];
+                    isMatched = true;
+                    break;
+                }
+            }//PDG
+        }//for nGen
+        if(isMatched){
+            corrMuRoch = loadedRochRef_.kSpreadMC(Q, pt, eta, phi, genPt, s, m);
+        }
+        else{
+            randomNumGen->SetSeed(skimTree_->event + skimTree_->run + skimTree_->luminosityBlock);
+            u = randomNumGen->Uniform(0.0, 1.0);
+            nl = skimTree_->Muon_nTrackerLayers[index];
+            corrMuRoch = loadedRochRef_.kSmearMC(Q, pt, eta, phi, nl, u, s, m);
+        }
+    }//isMC
+    if (isDebug_) std::cout 
+                << ", Q = " << Q
+                << ", pt = " << pt
+                << ", eta = " << eta
+                << ", phi = " << phi
+                << ", genPt = " << genPt
+                << ", nl = " << nl
+                << ", u = " << u
+                << ", s = " << s
+                << ", m = " << m
+                << ", isMatched = " << isMatched
+                << ", corrMuRoch = " << corrMuRoch
+                << '\n';
+   return corrMuRoch; 
 }
 
 //-------------------------------------
@@ -508,6 +603,30 @@ void ObjectScale::loadEleSsRef() {
     std::cout << e.what() << '\n';
     throw std::runtime_error("Error loading Electron Scale and Smearing Reference.");
   }
+}
+auto ObjectScale::getEleSsCorrection(int index, const std::string &syst) const -> double {
+    double corrEleSs = 1.0;
+    double pt   = skimTree_->Electron_pt[index];
+    double eta  = skimTree_->Electron_eta[index];
+    double mass = skimTree_->Electron_mass[index];
+
+    // Calculate energy from pt, eta, and mass
+    double energy = std::sqrt(std::pow(pt * std::cosh(eta), 2) + std::pow(mass, 2));
+    double corrE = skimTree_->Electron_eCorr[index] * energy;
+
+    // Convert corrected energy back to new pT
+    double newPt = std::sqrt((std::pow(corrE, 2) - std::pow(mass, 2)) / std::pow(std::cosh(eta), 2));
+    corrEleSs = newPt/pt;
+
+    if (isDebug_) std::cout 
+                << ", pt = " << pt
+                << ", eta = " << eta
+                << ", energy = " << energy
+                << ", eCorr = " << skimTree_->Electron_eCorr[index]
+                << ", newPt = " << newPt
+                << ", corrEleSs = " << corrEleSs
+                << '\n';
+   return corrEleSs; 
 }
 
 //-------------------------------------
@@ -569,13 +688,4 @@ auto ObjectScale::getPuCorrection(Float_t nTrueInt, const std::string &nomOrSyst
   return puSF;
 }
 
-auto ObjectScale::DELTAPHI(double phi1, double phi2) const -> double {
-  double dphi = fabs(phi1 - phi2);
-  return (dphi <= TMath::Pi() ? dphi : TMath::TwoPi() - dphi);
-}
-
-auto ObjectScale::DELTAR(double phi1, double phi2, double eta1, double eta2) const -> double {
-  return sqrt(pow(DELTAPHI(phi1, phi2), 2) + pow(eta1 - eta2, 2));
-}
- 
 

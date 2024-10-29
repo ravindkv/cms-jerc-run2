@@ -1,7 +1,7 @@
 
 ROOT_L=`root-config --libs`
 ROOT_I=-I`root-config --incdir` -I./header
-GCC=g++ -std=c++17
+GCC=g++ -g -std=c++17
 
 SRCDIR   = cpp
 OBJDIR   = obj

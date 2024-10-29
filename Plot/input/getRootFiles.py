@@ -29,7 +29,7 @@ if __name__=="__main__":
             hAddOut = f"{dirPath}/{sKey}_Hist_Merged.root"
             os.system(f"hadd -f -k {hAddOut} {hAddIn}")
             dPlot[sKey] = hAddOut
-        fileName = "FilesHistMerged_{year}_{ch}.json"
+        fileName = f"FilesHistMerged_{year}_{ch}.json"
         fHistMerged = open(f"{dirName}/{fileName}", "w")
         json.dump(dPlot, fHistMerged, indent=4) 
         print(f"{dirName}/{fileName}")

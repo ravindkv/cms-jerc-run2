@@ -1,0 +1,1186 @@
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_1of45.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_2of45.root
+hadd Source file 3: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_3of45.root
+hadd Source file 4: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_4of45.root
+hadd Source file 5: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_5of45.root
+hadd Source file 6: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_6of45.root
+hadd Source file 7: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_7of45.root
+hadd Source file 8: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_8of45.root
+hadd Source file 9: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_9of45.root
+hadd Source file 10: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_10of45.root
+hadd Source file 11: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_11of45.root
+hadd Source file 12: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_12of45.root
+hadd Source file 13: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_13of45.root
+hadd Source file 14: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_14of45.root
+hadd Source file 15: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_15of45.root
+hadd Source file 16: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_16of45.root
+hadd Source file 17: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_17of45.root
+hadd Source file 18: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_18of45.root
+hadd Source file 19: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_19of45.root
+hadd Source file 20: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_20of45.root
+hadd Source file 21: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_21of45.root
+hadd Source file 22: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_22of45.root
+hadd Source file 23: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_23of45.root
+hadd Source file 24: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_24of45.root
+hadd Source file 25: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_25of45.root
+hadd Source file 26: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_26of45.root
+hadd Source file 27: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_27of45.root
+hadd Source file 28: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_28of45.root
+hadd Source file 29: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_29of45.root
+hadd Source file 30: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_30of45.root
+hadd Source file 31: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_31of45.root
+hadd Source file 32: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_32of45.root
+hadd Source file 33: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_33of45.root
+hadd Source file 34: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_34of45.root
+hadd Source file 35: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_35of45.root
+hadd Source file 36: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_36of45.root
+hadd Source file 37: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_37of45.root
+hadd Source file 38: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_38of45.root
+hadd Source file 39: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_39of45.root
+hadd Source file 40: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_40of45.root
+hadd Source file 41: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_41of45.root
+hadd Source file 42: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_42of45.root
+hadd Source file 43: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_43of45.root
+hadd Source file 44: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_44of45.root
+hadd Source file 45: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_45of45.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/MC_2016Pre_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreBv1_ZeeJet_DoubleEG_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreBv1_ZeeJet_DoubleEG_Hist_1of1.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreBv1_ZeeJet_DoubleEG_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreBv1_ZeeJet_DoubleEG_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreBv1_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreBv1_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreBv1_ZeeJet_DoubleEG_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreBv1_ZeeJet_DoubleEG_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreBv2_ZeeJet_DoubleEG_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreBv2_ZeeJet_DoubleEG_Hist_1of5.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreBv2_ZeeJet_DoubleEG_Hist_2of5.root
+hadd Source file 3: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreBv2_ZeeJet_DoubleEG_Hist_3of5.root
+hadd Source file 4: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreBv2_ZeeJet_DoubleEG_Hist_4of5.root
+hadd Source file 5: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreBv2_ZeeJet_DoubleEG_Hist_5of5.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreBv2_ZeeJet_DoubleEG_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreBv2_ZeeJet_DoubleEG_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreBv2_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreBv2_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreBv2_ZeeJet_DoubleEG_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreBv2_ZeeJet_DoubleEG_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreC_ZeeJet_DoubleEG_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreC_ZeeJet_DoubleEG_Hist_1of2.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreC_ZeeJet_DoubleEG_Hist_2of2.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreC_ZeeJet_DoubleEG_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreC_ZeeJet_DoubleEG_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreC_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreC_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreC_ZeeJet_DoubleEG_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreC_ZeeJet_DoubleEG_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreD_ZeeJet_DoubleEG_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreD_ZeeJet_DoubleEG_Hist_1of2.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreD_ZeeJet_DoubleEG_Hist_2of2.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreD_ZeeJet_DoubleEG_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreD_ZeeJet_DoubleEG_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreD_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreD_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreD_ZeeJet_DoubleEG_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreD_ZeeJet_DoubleEG_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreE_ZeeJet_DoubleEG_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreE_ZeeJet_DoubleEG_Hist_1of2.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreE_ZeeJet_DoubleEG_Hist_2of2.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreE_ZeeJet_DoubleEG_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreE_ZeeJet_DoubleEG_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreE_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreE_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreE_ZeeJet_DoubleEG_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreE_ZeeJet_DoubleEG_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreF_ZeeJet_DoubleEG_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreF_ZeeJet_DoubleEG_Hist_1of1.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreF_ZeeJet_DoubleEG_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreF_ZeeJet_DoubleEG_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreF_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreF_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreF_ZeeJet_DoubleEG_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZeeJet/Data_2016PreF_ZeeJet_DoubleEG_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_1of45.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_2of45.root
+hadd Source file 3: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_3of45.root
+hadd Source file 4: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_4of45.root
+hadd Source file 5: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_5of45.root
+hadd Source file 6: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_6of45.root
+hadd Source file 7: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_7of45.root
+hadd Source file 8: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_8of45.root
+hadd Source file 9: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_9of45.root
+hadd Source file 10: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_10of45.root
+hadd Source file 11: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_11of45.root
+hadd Source file 12: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_12of45.root
+hadd Source file 13: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_13of45.root
+hadd Source file 14: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_14of45.root
+hadd Source file 15: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_15of45.root
+hadd Source file 16: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_16of45.root
+hadd Source file 17: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_17of45.root
+hadd Source file 18: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_18of45.root
+hadd Source file 19: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_19of45.root
+hadd Source file 20: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_20of45.root
+hadd Source file 21: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_21of45.root
+hadd Source file 22: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_22of45.root
+hadd Source file 23: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_23of45.root
+hadd Source file 24: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_24of45.root
+hadd Source file 25: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_25of45.root
+hadd Source file 26: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_26of45.root
+hadd Source file 27: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_27of45.root
+hadd Source file 28: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_28of45.root
+hadd Source file 29: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_29of45.root
+hadd Source file 30: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_30of45.root
+hadd Source file 31: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_31of45.root
+hadd Source file 32: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_32of45.root
+hadd Source file 33: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_33of45.root
+hadd Source file 34: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_34of45.root
+hadd Source file 35: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_35of45.root
+hadd Source file 36: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_36of45.root
+hadd Source file 37: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_37of45.root
+hadd Source file 38: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_38of45.root
+hadd Source file 39: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_39of45.root
+hadd Source file 40: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_40of45.root
+hadd Source file 41: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_41of45.root
+hadd Source file 42: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_42of45.root
+hadd Source file 43: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_43of45.root
+hadd Source file 44: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_44of45.root
+hadd Source file 45: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_45of45.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/MC_2016Pre_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreBv1_ZmmJet_DoubleMuon_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreBv1_ZmmJet_DoubleMuon_Hist_1of1.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreBv1_ZmmJet_DoubleMuon_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreBv1_ZmmJet_DoubleMuon_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreBv1_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreBv1_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreBv1_ZmmJet_DoubleMuon_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreBv1_ZmmJet_DoubleMuon_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreBv2_ZmmJet_DoubleMuon_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreBv2_ZmmJet_DoubleMuon_Hist_1of3.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreBv2_ZmmJet_DoubleMuon_Hist_2of3.root
+hadd Source file 3: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreBv2_ZmmJet_DoubleMuon_Hist_3of3.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreBv2_ZmmJet_DoubleMuon_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreBv2_ZmmJet_DoubleMuon_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreBv2_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreBv2_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreBv2_ZmmJet_DoubleMuon_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreBv2_ZmmJet_DoubleMuon_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreC_ZmmJet_DoubleMuon_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreC_ZmmJet_DoubleMuon_Hist_1of1.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreC_ZmmJet_DoubleMuon_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreC_ZmmJet_DoubleMuon_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreC_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreC_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreC_ZmmJet_DoubleMuon_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreC_ZmmJet_DoubleMuon_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreD_ZmmJet_DoubleMuon_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreD_ZmmJet_DoubleMuon_Hist_1of1.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreD_ZmmJet_DoubleMuon_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreD_ZmmJet_DoubleMuon_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreD_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreD_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreD_ZmmJet_DoubleMuon_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreD_ZmmJet_DoubleMuon_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreE_ZmmJet_DoubleMuon_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreE_ZmmJet_DoubleMuon_Hist_1of1.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreE_ZmmJet_DoubleMuon_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreE_ZmmJet_DoubleMuon_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreE_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreE_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreE_ZmmJet_DoubleMuon_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreE_ZmmJet_DoubleMuon_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreF_ZmmJet_DoubleMuon_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreF_ZmmJet_DoubleMuon_Hist_1of1.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreF_ZmmJet_DoubleMuon_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreF_ZmmJet_DoubleMuon_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreF_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreF_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreF_ZmmJet_DoubleMuon_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Pre/ZmmJet/Data_2016PreF_ZmmJet_DoubleMuon_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_1of37.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_2of37.root
+hadd Source file 3: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_3of37.root
+hadd Source file 4: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_4of37.root
+hadd Source file 5: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_5of37.root
+hadd Source file 6: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_6of37.root
+hadd Source file 7: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_7of37.root
+hadd Source file 8: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_8of37.root
+hadd Source file 9: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_9of37.root
+hadd Source file 10: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_10of37.root
+hadd Source file 11: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_11of37.root
+hadd Source file 12: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_12of37.root
+hadd Source file 13: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_13of37.root
+hadd Source file 14: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_14of37.root
+hadd Source file 15: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_15of37.root
+hadd Source file 16: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_16of37.root
+hadd Source file 17: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_17of37.root
+hadd Source file 18: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_18of37.root
+hadd Source file 19: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_19of37.root
+hadd Source file 20: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_20of37.root
+hadd Source file 21: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_21of37.root
+hadd Source file 22: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_22of37.root
+hadd Source file 23: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_23of37.root
+hadd Source file 24: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_24of37.root
+hadd Source file 25: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_25of37.root
+hadd Source file 26: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_26of37.root
+hadd Source file 27: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_27of37.root
+hadd Source file 28: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_28of37.root
+hadd Source file 29: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_29of37.root
+hadd Source file 30: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_30of37.root
+hadd Source file 31: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_31of37.root
+hadd Source file 32: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_32of37.root
+hadd Source file 33: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_33of37.root
+hadd Source file 34: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_34of37.root
+hadd Source file 35: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_35of37.root
+hadd Source file 36: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_36of37.root
+hadd Source file 37: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_37of37.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/MC_2016Post_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostF_ZeeJet_DoubleEG_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostF_ZeeJet_DoubleEG_Hist_1of1.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostF_ZeeJet_DoubleEG_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostF_ZeeJet_DoubleEG_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostF_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostF_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostF_ZeeJet_DoubleEG_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostF_ZeeJet_DoubleEG_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostG_ZeeJet_DoubleEG_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostG_ZeeJet_DoubleEG_Hist_1of3.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostG_ZeeJet_DoubleEG_Hist_2of3.root
+hadd Source file 3: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostG_ZeeJet_DoubleEG_Hist_3of3.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostG_ZeeJet_DoubleEG_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostG_ZeeJet_DoubleEG_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostG_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostG_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostG_ZeeJet_DoubleEG_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostG_ZeeJet_DoubleEG_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostH_ZeeJet_DoubleEG_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostH_ZeeJet_DoubleEG_Hist_1of3.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostH_ZeeJet_DoubleEG_Hist_2of3.root
+hadd Source file 3: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostH_ZeeJet_DoubleEG_Hist_3of3.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostH_ZeeJet_DoubleEG_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostH_ZeeJet_DoubleEG_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostH_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostH_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostH_ZeeJet_DoubleEG_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZeeJet/Data_2016PostH_ZeeJet_DoubleEG_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_1of37.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_2of37.root
+hadd Source file 3: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_3of37.root
+hadd Source file 4: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_4of37.root
+hadd Source file 5: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_5of37.root
+hadd Source file 6: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_6of37.root
+hadd Source file 7: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_7of37.root
+hadd Source file 8: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_8of37.root
+hadd Source file 9: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_9of37.root
+hadd Source file 10: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_10of37.root
+hadd Source file 11: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_11of37.root
+hadd Source file 12: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_12of37.root
+hadd Source file 13: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_13of37.root
+hadd Source file 14: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_14of37.root
+hadd Source file 15: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_15of37.root
+hadd Source file 16: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_16of37.root
+hadd Source file 17: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_17of37.root
+hadd Source file 18: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_18of37.root
+hadd Source file 19: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_19of37.root
+hadd Source file 20: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_20of37.root
+hadd Source file 21: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_21of37.root
+hadd Source file 22: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_22of37.root
+hadd Source file 23: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_23of37.root
+hadd Source file 24: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_24of37.root
+hadd Source file 25: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_25of37.root
+hadd Source file 26: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_26of37.root
+hadd Source file 27: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_27of37.root
+hadd Source file 28: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_28of37.root
+hadd Source file 29: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_29of37.root
+hadd Source file 30: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_30of37.root
+hadd Source file 31: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_31of37.root
+hadd Source file 32: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_32of37.root
+hadd Source file 33: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_33of37.root
+hadd Source file 34: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_34of37.root
+hadd Source file 35: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_35of37.root
+hadd Source file 36: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_36of37.root
+hadd Source file 37: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_37of37.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/MC_2016Post_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostF_ZmmJet_DoubleMuon_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostF_ZmmJet_DoubleMuon_Hist_1of1.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostF_ZmmJet_DoubleMuon_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostF_ZmmJet_DoubleMuon_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostF_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostF_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostF_ZmmJet_DoubleMuon_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostF_ZmmJet_DoubleMuon_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostG_ZmmJet_DoubleMuon_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostG_ZmmJet_DoubleMuon_Hist_1of2.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostG_ZmmJet_DoubleMuon_Hist_2of2.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostG_ZmmJet_DoubleMuon_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostG_ZmmJet_DoubleMuon_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostG_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostG_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostG_ZmmJet_DoubleMuon_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostG_ZmmJet_DoubleMuon_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostH_ZmmJet_DoubleMuon_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostH_ZmmJet_DoubleMuon_Hist_1of2.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostH_ZmmJet_DoubleMuon_Hist_2of2.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostH_ZmmJet_DoubleMuon_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostH_ZmmJet_DoubleMuon_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostH_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostH_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostH_ZmmJet_DoubleMuon_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2016Post/ZmmJet/Data_2016PostH_ZmmJet_DoubleMuon_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_1of98.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_2of98.root
+hadd Source file 3: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_3of98.root
+hadd Source file 4: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_4of98.root
+hadd Source file 5: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_5of98.root
+hadd Source file 6: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_6of98.root
+hadd Source file 7: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_7of98.root
+hadd Source file 8: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_8of98.root
+hadd Source file 9: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_9of98.root
+hadd Source file 10: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_10of98.root
+hadd Source file 11: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_11of98.root
+hadd Source file 12: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_12of98.root
+hadd Source file 13: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_13of98.root
+hadd Source file 14: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_14of98.root
+hadd Source file 15: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_15of98.root
+hadd Source file 16: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_16of98.root
+hadd Source file 17: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_17of98.root
+hadd Source file 18: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_18of98.root
+hadd Source file 19: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_19of98.root
+hadd Source file 20: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_20of98.root
+hadd Source file 21: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_21of98.root
+hadd Source file 22: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_22of98.root
+hadd Source file 23: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_23of98.root
+hadd Source file 24: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_24of98.root
+hadd Source file 25: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_25of98.root
+hadd Source file 26: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_26of98.root
+hadd Source file 27: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_27of98.root
+hadd Source file 28: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_28of98.root
+hadd Source file 29: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_29of98.root
+hadd Source file 30: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_30of98.root
+hadd Source file 31: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_31of98.root
+hadd Source file 32: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_32of98.root
+hadd Source file 33: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_33of98.root
+hadd Source file 34: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_34of98.root
+hadd Source file 35: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_35of98.root
+hadd Source file 36: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_36of98.root
+hadd Source file 37: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_37of98.root
+hadd Source file 38: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_38of98.root
+hadd Source file 39: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_39of98.root
+hadd Source file 40: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_40of98.root
+hadd Source file 41: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_41of98.root
+hadd Source file 42: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_42of98.root
+hadd Source file 43: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_43of98.root
+hadd Source file 44: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_44of98.root
+hadd Source file 45: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_45of98.root
+hadd Source file 46: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_46of98.root
+hadd Source file 47: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_47of98.root
+hadd Source file 48: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_48of98.root
+hadd Source file 49: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_49of98.root
+hadd Source file 50: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_50of98.root
+hadd Source file 51: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_51of98.root
+hadd Source file 52: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_52of98.root
+hadd Source file 53: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_53of98.root
+hadd Source file 54: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_54of98.root
+hadd Source file 55: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_55of98.root
+hadd Source file 56: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_56of98.root
+hadd Source file 57: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_57of98.root
+hadd Source file 58: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_58of98.root
+hadd Source file 59: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_59of98.root
+hadd Source file 60: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_60of98.root
+hadd Source file 61: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_61of98.root
+hadd Source file 62: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_62of98.root
+hadd Source file 63: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_63of98.root
+hadd Source file 64: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_64of98.root
+hadd Source file 65: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_65of98.root
+hadd Source file 66: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_66of98.root
+hadd Source file 67: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_67of98.root
+hadd Source file 68: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_68of98.root
+hadd Source file 69: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_69of98.root
+hadd Source file 70: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_70of98.root
+hadd Source file 71: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_71of98.root
+hadd Source file 72: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_72of98.root
+hadd Source file 73: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_73of98.root
+hadd Source file 74: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_74of98.root
+hadd Source file 75: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_75of98.root
+hadd Source file 76: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_76of98.root
+hadd Source file 77: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_77of98.root
+hadd Source file 78: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_78of98.root
+hadd Source file 79: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_79of98.root
+hadd Source file 80: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_80of98.root
+hadd Source file 81: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_81of98.root
+hadd Source file 82: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_82of98.root
+hadd Source file 83: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_83of98.root
+hadd Source file 84: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_84of98.root
+hadd Source file 85: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_85of98.root
+hadd Source file 86: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_86of98.root
+hadd Source file 87: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_87of98.root
+hadd Source file 88: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_88of98.root
+hadd Source file 89: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_89of98.root
+hadd Source file 90: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_90of98.root
+hadd Source file 91: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_91of98.root
+hadd Source file 92: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_92of98.root
+hadd Source file 93: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_93of98.root
+hadd Source file 94: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_94of98.root
+hadd Source file 95: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_95of98.root
+hadd Source file 96: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_96of98.root
+hadd Source file 97: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_97of98.root
+hadd Source file 98: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_98of98.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/MC_2017_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017B_ZeeJet_DoubleEG_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017B_ZeeJet_DoubleEG_Hist_1of2.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017B_ZeeJet_DoubleEG_Hist_2of2.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017B_ZeeJet_DoubleEG_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017B_ZeeJet_DoubleEG_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017B_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017B_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017B_ZeeJet_DoubleEG_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017B_ZeeJet_DoubleEG_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017C_ZeeJet_DoubleEG_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017C_ZeeJet_DoubleEG_Hist_1of2.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017C_ZeeJet_DoubleEG_Hist_2of2.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017C_ZeeJet_DoubleEG_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017C_ZeeJet_DoubleEG_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017C_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017C_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017C_ZeeJet_DoubleEG_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017C_ZeeJet_DoubleEG_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017D_ZeeJet_DoubleEG_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017D_ZeeJet_DoubleEG_Hist_1of1.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017D_ZeeJet_DoubleEG_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017D_ZeeJet_DoubleEG_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017D_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017D_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017D_ZeeJet_DoubleEG_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017D_ZeeJet_DoubleEG_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017E_ZeeJet_DoubleEG_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017E_ZeeJet_DoubleEG_Hist_1of2.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017E_ZeeJet_DoubleEG_Hist_2of2.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017E_ZeeJet_DoubleEG_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017E_ZeeJet_DoubleEG_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017E_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017E_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017E_ZeeJet_DoubleEG_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017E_ZeeJet_DoubleEG_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017F_ZeeJet_DoubleEG_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017F_ZeeJet_DoubleEG_Hist_1of3.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017F_ZeeJet_DoubleEG_Hist_2of3.root
+hadd Source file 3: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017F_ZeeJet_DoubleEG_Hist_3of3.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017F_ZeeJet_DoubleEG_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017F_ZeeJet_DoubleEG_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017F_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017F_ZeeJet_DoubleEG_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017F_ZeeJet_DoubleEG_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZeeJet/Data_2017F_ZeeJet_DoubleEG_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_1of98.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_2of98.root
+hadd Source file 3: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_3of98.root
+hadd Source file 4: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_4of98.root
+hadd Source file 5: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_5of98.root
+hadd Source file 6: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_6of98.root
+hadd Source file 7: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_7of98.root
+hadd Source file 8: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_8of98.root
+hadd Source file 9: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_9of98.root
+hadd Source file 10: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_10of98.root
+hadd Source file 11: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_11of98.root
+hadd Source file 12: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_12of98.root
+hadd Source file 13: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_13of98.root
+hadd Source file 14: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_14of98.root
+hadd Source file 15: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_15of98.root
+hadd Source file 16: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_16of98.root
+hadd Source file 17: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_17of98.root
+hadd Source file 18: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_18of98.root
+hadd Source file 19: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_19of98.root
+hadd Source file 20: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_20of98.root
+hadd Source file 21: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_21of98.root
+hadd Source file 22: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_22of98.root
+hadd Source file 23: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_23of98.root
+hadd Source file 24: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_24of98.root
+hadd Source file 25: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_25of98.root
+hadd Source file 26: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_26of98.root
+hadd Source file 27: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_27of98.root
+hadd Source file 28: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_28of98.root
+hadd Source file 29: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_29of98.root
+hadd Source file 30: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_30of98.root
+hadd Source file 31: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_31of98.root
+hadd Source file 32: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_32of98.root
+hadd Source file 33: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_33of98.root
+hadd Source file 34: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_34of98.root
+hadd Source file 35: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_35of98.root
+hadd Source file 36: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_36of98.root
+hadd Source file 37: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_37of98.root
+hadd Source file 38: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_38of98.root
+hadd Source file 39: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_39of98.root
+hadd Source file 40: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_40of98.root
+hadd Source file 41: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_41of98.root
+hadd Source file 42: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_42of98.root
+hadd Source file 43: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_43of98.root
+hadd Source file 44: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_44of98.root
+hadd Source file 45: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_45of98.root
+hadd Source file 46: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_46of98.root
+hadd Source file 47: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_47of98.root
+hadd Source file 48: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_48of98.root
+hadd Source file 49: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_49of98.root
+hadd Source file 50: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_50of98.root
+hadd Source file 51: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_51of98.root
+hadd Source file 52: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_52of98.root
+hadd Source file 53: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_53of98.root
+hadd Source file 54: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_54of98.root
+hadd Source file 55: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_55of98.root
+hadd Source file 56: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_56of98.root
+hadd Source file 57: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_57of98.root
+hadd Source file 58: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_58of98.root
+hadd Source file 59: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_59of98.root
+hadd Source file 60: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_60of98.root
+hadd Source file 61: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_61of98.root
+hadd Source file 62: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_62of98.root
+hadd Source file 63: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_63of98.root
+hadd Source file 64: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_64of98.root
+hadd Source file 65: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_65of98.root
+hadd Source file 66: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_66of98.root
+hadd Source file 67: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_67of98.root
+hadd Source file 68: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_68of98.root
+hadd Source file 69: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_69of98.root
+hadd Source file 70: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_70of98.root
+hadd Source file 71: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_71of98.root
+hadd Source file 72: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_72of98.root
+hadd Source file 73: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_73of98.root
+hadd Source file 74: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_74of98.root
+hadd Source file 75: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_75of98.root
+hadd Source file 76: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_76of98.root
+hadd Source file 77: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_77of98.root
+hadd Source file 78: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_78of98.root
+hadd Source file 79: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_79of98.root
+hadd Source file 80: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_80of98.root
+hadd Source file 81: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_81of98.root
+hadd Source file 82: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_82of98.root
+hadd Source file 83: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_83of98.root
+hadd Source file 84: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_84of98.root
+hadd Source file 85: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_85of98.root
+hadd Source file 86: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_86of98.root
+hadd Source file 87: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_87of98.root
+hadd Source file 88: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_88of98.root
+hadd Source file 89: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_89of98.root
+hadd Source file 90: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_90of98.root
+hadd Source file 91: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_91of98.root
+hadd Source file 92: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_92of98.root
+hadd Source file 93: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_93of98.root
+hadd Source file 94: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_94of98.root
+hadd Source file 95: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_95of98.root
+hadd Source file 96: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_96of98.root
+hadd Source file 97: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_97of98.root
+hadd Source file 98: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_98of98.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/MC_2017_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017B_ZmmJet_DoubleMuon_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017B_ZmmJet_DoubleMuon_Hist_1of1.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017B_ZmmJet_DoubleMuon_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017B_ZmmJet_DoubleMuon_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017B_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017B_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017B_ZmmJet_DoubleMuon_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017B_ZmmJet_DoubleMuon_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017C_ZmmJet_DoubleMuon_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017C_ZmmJet_DoubleMuon_Hist_1of2.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017C_ZmmJet_DoubleMuon_Hist_2of2.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017C_ZmmJet_DoubleMuon_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017C_ZmmJet_DoubleMuon_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017C_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017C_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017C_ZmmJet_DoubleMuon_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017C_ZmmJet_DoubleMuon_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017D_ZmmJet_DoubleMuon_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017D_ZmmJet_DoubleMuon_Hist_1of1.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017D_ZmmJet_DoubleMuon_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017D_ZmmJet_DoubleMuon_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017D_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017D_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017D_ZmmJet_DoubleMuon_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017D_ZmmJet_DoubleMuon_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017E_ZmmJet_DoubleMuon_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017E_ZmmJet_DoubleMuon_Hist_1of2.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017E_ZmmJet_DoubleMuon_Hist_2of2.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017E_ZmmJet_DoubleMuon_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017E_ZmmJet_DoubleMuon_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017E_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017E_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017E_ZmmJet_DoubleMuon_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017E_ZmmJet_DoubleMuon_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017F_ZmmJet_DoubleMuon_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017F_ZmmJet_DoubleMuon_Hist_1of3.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017F_ZmmJet_DoubleMuon_Hist_2of3.root
+hadd Source file 3: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017F_ZmmJet_DoubleMuon_Hist_3of3.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017F_ZmmJet_DoubleMuon_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017F_ZmmJet_DoubleMuon_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017F_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017F_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017F_ZmmJet_DoubleMuon_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2017/ZmmJet/Data_2017F_ZmmJet_DoubleMuon_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_1of96.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_2of96.root
+hadd Source file 3: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_3of96.root
+hadd Source file 4: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_4of96.root
+hadd Source file 5: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_5of96.root
+hadd Source file 6: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_6of96.root
+hadd Source file 7: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_7of96.root
+hadd Source file 8: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_8of96.root
+hadd Source file 9: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_9of96.root
+hadd Source file 10: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_10of96.root
+hadd Source file 11: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_11of96.root
+hadd Source file 12: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_12of96.root
+hadd Source file 13: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_13of96.root
+hadd Source file 14: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_14of96.root
+hadd Source file 15: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_15of96.root
+hadd Source file 16: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_16of96.root
+hadd Source file 17: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_17of96.root
+hadd Source file 18: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_18of96.root
+hadd Source file 19: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_19of96.root
+hadd Source file 20: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_20of96.root
+hadd Source file 21: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_21of96.root
+hadd Source file 22: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_22of96.root
+hadd Source file 23: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_23of96.root
+hadd Source file 24: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_24of96.root
+hadd Source file 25: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_25of96.root
+hadd Source file 26: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_26of96.root
+hadd Source file 27: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_27of96.root
+hadd Source file 28: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_28of96.root
+hadd Source file 29: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_29of96.root
+hadd Source file 30: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_30of96.root
+hadd Source file 31: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_31of96.root
+hadd Source file 32: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_32of96.root
+hadd Source file 33: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_33of96.root
+hadd Source file 34: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_34of96.root
+hadd Source file 35: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_35of96.root
+hadd Source file 36: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_36of96.root
+hadd Source file 37: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_37of96.root
+hadd Source file 38: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_38of96.root
+hadd Source file 39: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_39of96.root
+hadd Source file 40: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_40of96.root
+hadd Source file 41: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_41of96.root
+hadd Source file 42: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_42of96.root
+hadd Source file 43: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_43of96.root
+hadd Source file 44: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_44of96.root
+hadd Source file 45: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_45of96.root
+hadd Source file 46: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_46of96.root
+hadd Source file 47: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_47of96.root
+hadd Source file 48: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_48of96.root
+hadd Source file 49: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_49of96.root
+hadd Source file 50: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_50of96.root
+hadd Source file 51: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_51of96.root
+hadd Source file 52: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_52of96.root
+hadd Source file 53: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_53of96.root
+hadd Source file 54: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_54of96.root
+hadd Source file 55: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_55of96.root
+hadd Source file 56: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_56of96.root
+hadd Source file 57: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_57of96.root
+hadd Source file 58: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_58of96.root
+hadd Source file 59: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_59of96.root
+hadd Source file 60: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_60of96.root
+hadd Source file 61: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_61of96.root
+hadd Source file 62: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_62of96.root
+hadd Source file 63: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_63of96.root
+hadd Source file 64: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_64of96.root
+hadd Source file 65: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_65of96.root
+hadd Source file 66: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_66of96.root
+hadd Source file 67: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_67of96.root
+hadd Source file 68: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_68of96.root
+hadd Source file 69: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_69of96.root
+hadd Source file 70: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_70of96.root
+hadd Source file 71: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_71of96.root
+hadd Source file 72: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_72of96.root
+hadd Source file 73: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_73of96.root
+hadd Source file 74: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_74of96.root
+hadd Source file 75: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_75of96.root
+hadd Source file 76: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_76of96.root
+hadd Source file 77: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_77of96.root
+hadd Source file 78: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_78of96.root
+hadd Source file 79: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_79of96.root
+hadd Source file 80: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_80of96.root
+hadd Source file 81: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_81of96.root
+hadd Source file 82: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_82of96.root
+hadd Source file 83: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_83of96.root
+hadd Source file 84: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_84of96.root
+hadd Source file 85: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_85of96.root
+hadd Source file 86: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_86of96.root
+hadd Source file 87: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_87of96.root
+hadd Source file 88: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_88of96.root
+hadd Source file 89: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_89of96.root
+hadd Source file 90: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_90of96.root
+hadd Source file 91: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_91of96.root
+hadd Source file 92: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_92of96.root
+hadd Source file 93: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_93of96.root
+hadd Source file 94: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_94of96.root
+hadd Source file 95: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_95of96.root
+hadd Source file 96: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_96of96.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/MC_2018_ZeeJet_DYJetsToLLM50_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018A_ZeeJet_EGamma_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018A_ZeeJet_EGamma_Hist_1of13.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018A_ZeeJet_EGamma_Hist_2of13.root
+hadd Source file 3: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018A_ZeeJet_EGamma_Hist_3of13.root
+hadd Source file 4: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018A_ZeeJet_EGamma_Hist_4of13.root
+hadd Source file 5: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018A_ZeeJet_EGamma_Hist_5of13.root
+hadd Source file 6: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018A_ZeeJet_EGamma_Hist_6of13.root
+hadd Source file 7: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018A_ZeeJet_EGamma_Hist_7of13.root
+hadd Source file 8: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018A_ZeeJet_EGamma_Hist_8of13.root
+hadd Source file 9: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018A_ZeeJet_EGamma_Hist_9of13.root
+hadd Source file 10: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018A_ZeeJet_EGamma_Hist_10of13.root
+hadd Source file 11: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018A_ZeeJet_EGamma_Hist_11of13.root
+hadd Source file 12: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018A_ZeeJet_EGamma_Hist_12of13.root
+hadd Source file 13: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018A_ZeeJet_EGamma_Hist_13of13.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018A_ZeeJet_EGamma_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018A_ZeeJet_EGamma_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018A_ZeeJet_EGamma_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018A_ZeeJet_EGamma_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018A_ZeeJet_EGamma_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018A_ZeeJet_EGamma_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018B_ZeeJet_EGamma_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018B_ZeeJet_EGamma_Hist_1of6.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018B_ZeeJet_EGamma_Hist_2of6.root
+hadd Source file 3: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018B_ZeeJet_EGamma_Hist_3of6.root
+hadd Source file 4: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018B_ZeeJet_EGamma_Hist_4of6.root
+hadd Source file 5: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018B_ZeeJet_EGamma_Hist_5of6.root
+hadd Source file 6: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018B_ZeeJet_EGamma_Hist_6of6.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018B_ZeeJet_EGamma_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018B_ZeeJet_EGamma_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018B_ZeeJet_EGamma_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018B_ZeeJet_EGamma_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018B_ZeeJet_EGamma_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018B_ZeeJet_EGamma_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018C_ZeeJet_EGamma_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018C_ZeeJet_EGamma_Hist_1of6.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018C_ZeeJet_EGamma_Hist_2of6.root
+hadd Source file 3: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018C_ZeeJet_EGamma_Hist_3of6.root
+hadd Source file 4: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018C_ZeeJet_EGamma_Hist_4of6.root
+hadd Source file 5: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018C_ZeeJet_EGamma_Hist_5of6.root
+hadd Source file 6: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018C_ZeeJet_EGamma_Hist_6of6.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018C_ZeeJet_EGamma_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018C_ZeeJet_EGamma_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018C_ZeeJet_EGamma_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018C_ZeeJet_EGamma_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018C_ZeeJet_EGamma_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018C_ZeeJet_EGamma_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_1of30.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_2of30.root
+hadd Source file 3: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_3of30.root
+hadd Source file 4: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_4of30.root
+hadd Source file 5: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_5of30.root
+hadd Source file 6: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_6of30.root
+hadd Source file 7: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_7of30.root
+hadd Source file 8: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_8of30.root
+hadd Source file 9: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_9of30.root
+hadd Source file 10: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_10of30.root
+hadd Source file 11: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_11of30.root
+hadd Source file 12: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_12of30.root
+hadd Source file 13: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_13of30.root
+hadd Source file 14: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_14of30.root
+hadd Source file 15: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_15of30.root
+hadd Source file 16: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_16of30.root
+hadd Source file 17: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_17of30.root
+hadd Source file 18: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_18of30.root
+hadd Source file 19: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_19of30.root
+hadd Source file 20: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_20of30.root
+hadd Source file 21: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_21of30.root
+hadd Source file 22: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_22of30.root
+hadd Source file 23: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_23of30.root
+hadd Source file 24: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_24of30.root
+hadd Source file 25: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_25of30.root
+hadd Source file 26: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_26of30.root
+hadd Source file 27: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_27of30.root
+hadd Source file 28: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_28of30.root
+hadd Source file 29: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_29of30.root
+hadd Source file 30: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_30of30.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZeeJet/Data_2018D_ZeeJet_EGamma_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_1of96.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_2of96.root
+hadd Source file 3: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_3of96.root
+hadd Source file 4: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_4of96.root
+hadd Source file 5: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_5of96.root
+hadd Source file 6: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_6of96.root
+hadd Source file 7: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_7of96.root
+hadd Source file 8: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_8of96.root
+hadd Source file 9: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_9of96.root
+hadd Source file 10: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_10of96.root
+hadd Source file 11: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_11of96.root
+hadd Source file 12: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_12of96.root
+hadd Source file 13: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_13of96.root
+hadd Source file 14: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_14of96.root
+hadd Source file 15: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_15of96.root
+hadd Source file 16: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_16of96.root
+hadd Source file 17: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_17of96.root
+hadd Source file 18: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_18of96.root
+hadd Source file 19: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_19of96.root
+hadd Source file 20: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_20of96.root
+hadd Source file 21: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_21of96.root
+hadd Source file 22: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_22of96.root
+hadd Source file 23: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_23of96.root
+hadd Source file 24: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_24of96.root
+hadd Source file 25: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_25of96.root
+hadd Source file 26: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_26of96.root
+hadd Source file 27: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_27of96.root
+hadd Source file 28: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_28of96.root
+hadd Source file 29: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_29of96.root
+hadd Source file 30: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_30of96.root
+hadd Source file 31: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_31of96.root
+hadd Source file 32: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_32of96.root
+hadd Source file 33: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_33of96.root
+hadd Source file 34: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_34of96.root
+hadd Source file 35: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_35of96.root
+hadd Source file 36: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_36of96.root
+hadd Source file 37: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_37of96.root
+hadd Source file 38: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_38of96.root
+hadd Source file 39: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_39of96.root
+hadd Source file 40: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_40of96.root
+hadd Source file 41: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_41of96.root
+hadd Source file 42: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_42of96.root
+hadd Source file 43: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_43of96.root
+hadd Source file 44: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_44of96.root
+hadd Source file 45: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_45of96.root
+hadd Source file 46: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_46of96.root
+hadd Source file 47: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_47of96.root
+hadd Source file 48: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_48of96.root
+hadd Source file 49: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_49of96.root
+hadd Source file 50: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_50of96.root
+hadd Source file 51: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_51of96.root
+hadd Source file 52: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_52of96.root
+hadd Source file 53: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_53of96.root
+hadd Source file 54: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_54of96.root
+hadd Source file 55: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_55of96.root
+hadd Source file 56: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_56of96.root
+hadd Source file 57: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_57of96.root
+hadd Source file 58: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_58of96.root
+hadd Source file 59: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_59of96.root
+hadd Source file 60: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_60of96.root
+hadd Source file 61: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_61of96.root
+hadd Source file 62: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_62of96.root
+hadd Source file 63: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_63of96.root
+hadd Source file 64: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_64of96.root
+hadd Source file 65: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_65of96.root
+hadd Source file 66: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_66of96.root
+hadd Source file 67: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_67of96.root
+hadd Source file 68: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_68of96.root
+hadd Source file 69: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_69of96.root
+hadd Source file 70: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_70of96.root
+hadd Source file 71: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_71of96.root
+hadd Source file 72: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_72of96.root
+hadd Source file 73: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_73of96.root
+hadd Source file 74: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_74of96.root
+hadd Source file 75: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_75of96.root
+hadd Source file 76: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_76of96.root
+hadd Source file 77: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_77of96.root
+hadd Source file 78: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_78of96.root
+hadd Source file 79: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_79of96.root
+hadd Source file 80: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_80of96.root
+hadd Source file 81: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_81of96.root
+hadd Source file 82: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_82of96.root
+hadd Source file 83: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_83of96.root
+hadd Source file 84: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_84of96.root
+hadd Source file 85: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_85of96.root
+hadd Source file 86: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_86of96.root
+hadd Source file 87: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_87of96.root
+hadd Source file 88: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_88of96.root
+hadd Source file 89: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_89of96.root
+hadd Source file 90: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_90of96.root
+hadd Source file 91: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_91of96.root
+hadd Source file 92: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_92of96.root
+hadd Source file 93: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_93of96.root
+hadd Source file 94: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_94of96.root
+hadd Source file 95: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_95of96.root
+hadd Source file 96: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_96of96.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/MC_2018_ZmmJet_DYJetsToLLM50_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018A_ZmmJet_DoubleMuon_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018A_ZmmJet_DoubleMuon_Hist_1of3.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018A_ZmmJet_DoubleMuon_Hist_2of3.root
+hadd Source file 3: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018A_ZmmJet_DoubleMuon_Hist_3of3.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018A_ZmmJet_DoubleMuon_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018A_ZmmJet_DoubleMuon_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018A_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018A_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018A_ZmmJet_DoubleMuon_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018A_ZmmJet_DoubleMuon_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018B_ZmmJet_DoubleMuon_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018B_ZmmJet_DoubleMuon_Hist_1of1.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018B_ZmmJet_DoubleMuon_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018B_ZmmJet_DoubleMuon_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018B_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018B_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018B_ZmmJet_DoubleMuon_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018B_ZmmJet_DoubleMuon_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018C_ZmmJet_DoubleMuon_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018C_ZmmJet_DoubleMuon_Hist_1of1.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018C_ZmmJet_DoubleMuon_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018C_ZmmJet_DoubleMuon_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018C_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018C_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018C_ZmmJet_DoubleMuon_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018C_ZmmJet_DoubleMuon_Hist_Merged.root:/passResponse
+hadd Target file: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018D_ZmmJet_DoubleMuon_Hist_Merged.root
+hadd compression setting for all output: 101
+hadd Source file 1: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018D_ZmmJet_DoubleMuon_Hist_1of6.root
+hadd Source file 2: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018D_ZmmJet_DoubleMuon_Hist_2of6.root
+hadd Source file 3: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018D_ZmmJet_DoubleMuon_Hist_3of6.root
+hadd Source file 4: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018D_ZmmJet_DoubleMuon_Hist_4of6.root
+hadd Source file 5: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018D_ZmmJet_DoubleMuon_Hist_5of6.root
+hadd Source file 6: /eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018D_ZmmJet_DoubleMuon_Hist_6of6.root
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018D_ZmmJet_DoubleMuon_Hist_Merged.root:/
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018D_ZmmJet_DoubleMuon_Hist_Merged.root:/passAtleast1Ref
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018D_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018D_ZmmJet_DoubleMuon_Hist_Merged.root:/passRefBarrel/flavourXTagY
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018D_ZmmJet_DoubleMuon_Hist_Merged.root:/passJet1EtaJet2Pt
+hadd Target path: root://eoscms.cern.ch//eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/2018/ZmmJet/Data_2018D_ZmmJet_DoubleMuon_Hist_Merged.root:/passResponse
+
+2016Pre : ZeeJet
+
+
+===========> MC_2016Pre_ZeeJet_DYJetsToLLM50 <============
+
+
+===========> Data_2016PreBv1_ZeeJet_DoubleEG <============
+
+
+===========> Data_2016PreBv2_ZeeJet_DoubleEG <============
+
+
+===========> Data_2016PreC_ZeeJet_DoubleEG <============
+
+
+===========> Data_2016PreD_ZeeJet_DoubleEG <============
+
+
+===========> Data_2016PreE_ZeeJet_DoubleEG <============
+
+
+===========> Data_2016PreF_ZeeJet_DoubleEG <============
+
+json/rootFile/FilesHistMerged_2016Pre_ZeeJet.json
+
+2016Pre : ZmmJet
+
+
+===========> MC_2016Pre_ZmmJet_DYJetsToLLM50 <============
+
+
+===========> Data_2016PreBv1_ZmmJet_DoubleMuon <============
+
+
+===========> Data_2016PreBv2_ZmmJet_DoubleMuon <============
+
+
+===========> Data_2016PreC_ZmmJet_DoubleMuon <============
+
+
+===========> Data_2016PreD_ZmmJet_DoubleMuon <============
+
+
+===========> Data_2016PreE_ZmmJet_DoubleMuon <============
+
+
+===========> Data_2016PreF_ZmmJet_DoubleMuon <============
+
+json/rootFile/FilesHistMerged_2016Pre_ZmmJet.json
+
+2016Post : ZeeJet
+
+
+===========> MC_2016Post_ZeeJet_DYJetsToLLM50 <============
+
+
+===========> Data_2016PostF_ZeeJet_DoubleEG <============
+
+
+===========> Data_2016PostG_ZeeJet_DoubleEG <============
+
+
+===========> Data_2016PostH_ZeeJet_DoubleEG <============
+
+json/rootFile/FilesHistMerged_2016Post_ZeeJet.json
+
+2016Post : ZmmJet
+
+
+===========> MC_2016Post_ZmmJet_DYJetsToLLM50 <============
+
+
+===========> Data_2016PostF_ZmmJet_DoubleMuon <============
+
+
+===========> Data_2016PostG_ZmmJet_DoubleMuon <============
+
+
+===========> Data_2016PostH_ZmmJet_DoubleMuon <============
+
+json/rootFile/FilesHistMerged_2016Post_ZmmJet.json
+
+2017 : ZeeJet
+
+
+===========> MC_2017_ZeeJet_DYJetsToLLM50 <============
+
+
+===========> Data_2017B_ZeeJet_DoubleEG <============
+
+
+===========> Data_2017C_ZeeJet_DoubleEG <============
+
+
+===========> Data_2017D_ZeeJet_DoubleEG <============
+
+
+===========> Data_2017E_ZeeJet_DoubleEG <============
+
+
+===========> Data_2017F_ZeeJet_DoubleEG <============
+
+json/rootFile/FilesHistMerged_2017_ZeeJet.json
+
+2017 : ZmmJet
+
+
+===========> MC_2017_ZmmJet_DYJetsToLLM50 <============
+
+
+===========> Data_2017B_ZmmJet_DoubleMuon <============
+
+
+===========> Data_2017C_ZmmJet_DoubleMuon <============
+
+
+===========> Data_2017D_ZmmJet_DoubleMuon <============
+
+
+===========> Data_2017E_ZmmJet_DoubleMuon <============
+
+
+===========> Data_2017F_ZmmJet_DoubleMuon <============
+
+json/rootFile/FilesHistMerged_2017_ZmmJet.json
+
+2018 : ZeeJet
+
+
+===========> MC_2018_ZeeJet_DYJetsToLLM50 <============
+
+
+===========> Data_2018A_ZeeJet_EGamma <============
+
+
+===========> Data_2018B_ZeeJet_EGamma <============
+
+
+===========> Data_2018C_ZeeJet_EGamma <============
+
+
+===========> Data_2018D_ZeeJet_EGamma <============
+
+json/rootFile/FilesHistMerged_2018_ZeeJet.json
+
+2018 : ZmmJet
+
+
+===========> MC_2018_ZmmJet_DYJetsToLLM50 <============
+
+
+===========> Data_2018A_ZmmJet_DoubleMuon <============
+
+
+===========> Data_2018B_ZmmJet_DoubleMuon <============
+
+
+===========> Data_2018C_ZmmJet_DoubleMuon <============
+
+
+===========> Data_2018D_ZmmJet_DoubleMuon <============
+
+json/rootFile/FilesHistMerged_2018_ZmmJet.json

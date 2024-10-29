@@ -1,16 +1,16 @@
-#include "PlotZeeJet.h"
+#include "RunZeeJet.h"
 #include "FigConfig.h"
 #include "ReadConfig.h"
 #include "Helper.h"
-#include "CoreEras1D.h"
-#include "CoreEra2D.h"
-#include "CoreEraXY.h"
-#include "CoreErasXY.h"
+#include "PlotEras1D.h"
+#include "PlotEra2D.h"
+#include "PlotEraXY.h"
+#include "PlotErasXY.h"
 
 #include <filesystem>
 using json = nlohmann::json;
    
-int PlotZeeJet::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &channelSlide, Slide &allChannelSlide){
+int RunZeeJet::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &channelSlide, Slide &allChannelSlide){
     channelSlide.startDocument("JME-21-001: L3Residual from ZeeJet channel");
     addZeeJetSlides(channelSlide);
 
@@ -43,16 +43,13 @@ int PlotZeeJet::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &cha
             for (auto &year: years){
                 auto dataEras = Helper::getEras(inputJson, channel, year, "Data");
                 auto mcBins = Helper::getEras(inputJson, channel, year, "MC");
-                auto eras1D = std::make_unique<CoreEras1D<TProfile>>();
-                eras1D->setInputJson(inputJson);
-                eras1D->setChannel(channel);
-                eras1D->setYear(year);
-                eras1D->setMcHtBins(mcBins);
-                eras1D->setDataEras(dataEras);
+                auto eras1D = std::make_unique<PlotEras1D<TProfile>>();
+                eras1D->setInput(inputJson, channel, year);
                 eras1D->setFigConfigEras1D(config);
-                eras1D->loadDataHists();
-                eras1D->loadMcHists();
-                auto outPdfName = outPlotDirEras1D+"/"+year+"_"+dir+"_"+name+".pdf";
+                eras1D->loadHists("Data", dataEras);
+                eras1D->loadHists("MC", mcBins);
+                string outName = Helper::dirToName(dir);
+                auto outPdfName = outPlotDirEras1D+"/"+year+"_"+outName+"_"+name+".pdf";
                 eras1D->overlayDataWithMcInRatio(outPdfName);
                 plotsForSlide.push_back(outPdfName);
             }//year
@@ -80,10 +77,8 @@ int PlotZeeJet::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &cha
                 dataErasOrMcBins.insert(dataErasOrMcBins.end(), mcBins.begin(), mcBins.end());
                 std::vector<std::string> plotsForSlide;
                 for (auto dataEraOrMcBin: dataErasOrMcBins){
-                    auto era2D = std::make_unique<CoreEra2D<TProfile2D>>();
-                    era2D->setInputJson(inputJson);
-                    era2D->setChannel(channel);
-                    era2D->setYear(year);
+                    auto era2D = std::make_unique<PlotEra2D<TProfile2D>>();
+                    era2D->setInput(inputJson, channel, year);
                     era2D->setDataEraOrMcBin(dataEraOrMcBin);
                     era2D->setFigConfigEra2D(config);
                     auto outPdfName = outPlotDirEra2D+"/"+dataEraOrMcBin+"_"+dir+"_"+name+".pdf";
@@ -99,7 +94,7 @@ int PlotZeeJet::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &cha
 	// PlotXY: multiple eras in one plot
 	//-------------------------------------
     if(isPlotErasXY){
-        channelSlide.addCenteredTextSlide("Next we show XY plots");
+        channelSlide.addCenteredTextSlide("Next we show Projection of X in ONE Y bin");
         auto outPlotDirErasXY = eosPlotDir+"/"+channel+"/"+"ErasXY"; 
         std::filesystem::create_directories(outPlotDirErasXY);
         for (const auto & config: figConfigVecErasXY){
@@ -110,7 +105,7 @@ int PlotZeeJet::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &cha
             for (auto &year: years){
                 auto dataEras = Helper::getEras(inputJson, channel, year, "Data");
                 auto mcBins = Helper::getEras(inputJson, channel, year, "MC");
-                auto erasXY = std::make_unique<CoreErasXY<TProfile2D>>();
+                auto erasXY = std::make_unique<PlotErasXY<TProfile2D>>();
                 erasXY->setInput(inputJson, channel, year);
                 erasXY->setFigConfigErasXY(config);
                 erasXY->loadHists(dataEras, "Data");
@@ -129,7 +124,7 @@ int PlotZeeJet::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &cha
     if(isPlotEraXY){
         auto outPlotDirEraXY = eosPlotDir+"/"+channel+"/"+"EraXY"; 
         std::filesystem::create_directories(outPlotDirEraXY);
-        channelSlide.addCenteredTextSlide("Next we show XY plots");
+        channelSlide.addCenteredTextSlide("Next we show Projection of X in MANY Y bins");
         for (const auto & config: figConfigVecEraXY){
             auto name = config.histName;
             auto dir  = config.histDir;
@@ -139,7 +134,7 @@ int PlotZeeJet::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &cha
                 auto mcBins = Helper::getEras(inputJson, channel, year, "MC");
                 std::vector<std::string> plotsForSlide;
                 for (const auto& dataEra: dataEras){
-                    auto eraXY = std::make_unique<CoreEraXY<TProfile2D>>();
+                    auto eraXY = std::make_unique<PlotEraXY<TProfile2D>>();
                     eraXY->setInput(inputJson, channel, year);
                     eraXY->setFigConfigEraXY(config);
                     eraXY->loadHists("Data", dataEra, std::vector<std::string>{});
@@ -161,7 +156,7 @@ int PlotZeeJet::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &cha
 }
 
 
-void PlotZeeJet::addZeeJetSlides(Slide & channelSlide){
+void RunZeeJet::addZeeJetSlides(Slide & channelSlide){
   //----------------------------
   // Samples
   //----------------------------
@@ -262,6 +257,29 @@ void PlotZeeJet::addZeeJetSlides(Slide & channelSlide){
   channelSlide.addTextSlide(jetVetoInfo, "The jet veto map"); 
 
   //----------------------------
+  // JetVetoMap 
+  //----------------------------
+	std::vector<std::pair<std::string, std::vector<std::string>>> jecJer = {
+    {"2016Pre", {
+        "JEC: Summer19UL16APV_V7_MC, Summer19UL16APV_RunEra_V7_DATA",
+        "JER: Summer20UL16APV_JRV3_MC"
+    }},
+    {"2016Post", {
+        "JEC: Summer19UL16_V7_MC, Summer19UL16_RunEra_V7_DATA",
+        "JER: Summer20UL16_JRV3_MC"
+    }},
+    {"2017", {
+        "JEC: Summer19UL17_V5_MC, Summer19UL17_RunEra_V5_DATA",
+        "JER: Summer19UL17_JRV2_MC"
+    }},
+    {"2018", {
+        "JEC: Summer19UL18_V5_MC, Summer19UL18_RunEra_V5_DATA",
+        "JER: Summer19UL18_JRV2_MC"
+    }}
+	};
+  channelSlide.addTextSlide(jecJer, "JEC and JER"); 
+
+  //----------------------------
   // Object selection
   //----------------------------
 	std::vector<std::pair<std::string, std::vector<std::string>>> objSel = {
@@ -283,24 +301,47 @@ void PlotZeeJet::addZeeJetSlides(Slide & channelSlide){
   //----------------------------
   // Event selection
   //----------------------------
+    std::vector<std::string> cuts = {
+    		"", "", "", "", "",
+    		"", "", "", "",
+    		"passJet1EtaJet2Pt", "passResponse"
+    };
 	std::vector<std::pair<std::string, std::vector<std::string>>> evtSel = {
-    {"HLT", {
-        "Events passing the HLT",
+    {"passSkim", {
+        "We produce skim files from NanoAOD with HLT selections",
     }},
-    {"Golden Lumi", {
+    {"passHLT", {
+        "Then apply channel specific HLT",
+    }},
+    {"passGoodLumi", {
         "Events with good lumi sections",
     }},
-    {"MET filters", {
+    {"passMetFilter", {
         "Events passing the MET filters"
     }},
-    {"Object", {
-        "nZ >= 1, nJet > =1",
+    {"passAtleast1Ref", {
+        "nZ > =1",
+    }},
+    {"passAtleast1Jet", {
+        "nJet > =1",
+    }},
+    {"passJetVetoMap", {
+        "If any jet falls in the veto region",
+    }},
+    {"passDPhiRefJet1", {
         "|DeltaPhi(Z, leading jet) - pi| < 0.44",
-        "leading jet eta < 1.3 ",
-        "sub-leading jet pT < 30 or < pT of Z "
-    }}
+    }},
+    {"passRefBarrel", {
+        "|eta| of Z < 1.3 ",
+    }},
+    {"passJet1EtaJet2Pt", {
+        "leading jet eta < 1.3 ", "sub-leading jet pT < 30 or < pT of Z "
+    }},
+    {"passResponse", {
+        "|1 - DB| < 0.7, |1 - MPF| < 0.7|",
+    }},
 	};
-  channelSlide.addTextSlide(evtSel, "Event selection"); 
+  channelSlide.addTextSlide(evtSel, "Event selection: Cutflow"); 
 
 
   //----------------------------

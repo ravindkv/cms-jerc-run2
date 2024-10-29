@@ -1,5 +1,5 @@
-#include "HistZeeJet.h"
-#include "HistZmmJet.h"
+#include "RunZeeJet.h"
+#include "RunZmmJet.h"
 //#include "HistGamJet.h"
 //#include "HistMCTruth.h"
 //#include "HistFlavour.h"
@@ -111,7 +111,7 @@ int main(int argc, char* argv[]) {
     // Initialize GlobalFlag instance
     GlobalFlag globalFlag(outName);
     globalFlag.setDebug(false);
-    globalFlag.setNDebug(100);
+    globalFlag.setNDebug(1000);
     globalFlag.printFlags();  
 
     std::cout << "\n--------------------------------------" << std::endl;
@@ -127,6 +127,40 @@ int main(int argc, char* argv[]) {
     skimT->loadTree();
 
     std::cout << "\n--------------------------------------" << std::endl;
+    std::cout << " Set and load ObjectScale.cpp" << std::endl;
+    std::cout << "--------------------------------------" << std::endl;
+    
+    // Pass GlobalFlag reference to ObjectScale
+    std::shared_ptr<ObjectScale> objS = std::make_shared<ObjectScale>(globalFlag);
+    
+    try {
+        objS->setTree(skimT);
+        objS->setInputs();
+        objS->loadJetVetoRef();
+        objS->loadJetL1FastJetRef();
+        objS->loadJetL2RelativeRef();
+        objS->loadJetL2L3ResidualRef();
+        objS->loadJERResoRef();
+        objS->loadJERSFRef();
+        objS->loadPuRef();
+
+        // Use the GlobalFlag instance for conditional checks
+        if (globalFlag.getChannel() == GlobalFlag::Channel::GamJet) {  // Scale and Smearing
+            objS->loadPhoSsRef();
+            objS->loadEleSsRef();
+        }
+        if (globalFlag.getChannel() == GlobalFlag::Channel::ZmmJet) { 
+            objS->loadMuRochRef();
+        }
+        if (globalFlag.isData()) {
+            objS->loadLumiJson();
+        }
+    } catch (const std::runtime_error& e) {
+        std::cerr << "Critical error: " << e.what() << std::endl;
+        return EXIT_FAILURE;  // Exit with failure code
+    }
+
+    std::cout << "\n--------------------------------------" << std::endl;
     std::cout << " Set and load EventPick.cpp" << std::endl;
     std::cout << "--------------------------------------" << std::endl;
     
@@ -139,38 +173,8 @@ int main(int argc, char* argv[]) {
     
     // Pass GlobalFlag reference to ObjectPick
     auto objP = std::make_unique<ObjectPick>(globalFlag);
-    objP->setTree(skimT);
+    objP->setInput(skimT, objS);
 
-    std::cout << "\n--------------------------------------" << std::endl;
-    std::cout << " Set and load ObjectScale.cpp" << std::endl;
-    std::cout << "--------------------------------------" << std::endl;
-    
-    // Pass GlobalFlag reference to ObjectScale
-    auto objS = std::make_unique<ObjectScale>(globalFlag);
-    
-    try {
-        objS->setTree(skimT);
-        objS->setInputs();
-        objS->loadJetVetoRef();
-        objS->loadJetL1FastJetRef();
-        objS->loadJetL2RelativeRef();
-        objS->loadJetL2L3ResidualRef();
-        objS->loadJERResoRef();
-        objS->loadJERSFRef();
-        objS->loadPuRef();
-        
-        // Use the GlobalFlag instance for conditional checks
-        if (globalFlag.getChannel() == GlobalFlag::Channel::GamJet) {  // Scale and Smearing
-            objS->loadPhoSsRef();
-            objS->loadEleSsRef();
-        }
-        if (globalFlag.isData()) {
-            objS->loadLumiJson();
-        }
-    } catch (const std::runtime_error& e) {
-        std::cerr << "Critical error: " << e.what() << std::endl;
-        return EXIT_FAILURE;  // Exit with failure code
-    }
 
     // Output directory setup
     std::string outDir = "output";
@@ -183,12 +187,12 @@ int main(int argc, char* argv[]) {
     
     if (globalFlag.getChannel() == GlobalFlag::Channel::ZeeJet) {
         std::cout << "==> Running ZeeJet" << std::endl;
-        auto zeeJet = std::make_unique<HistZeeJet>(globalFlag);
+        auto zeeJet = std::make_unique<RunZeeJet>(globalFlag);
         zeeJet->Run(skimT, eventP.get(), objP.get(), objS.get(), fout.get());
     }
     if (globalFlag.getChannel() == GlobalFlag::Channel::ZmmJet) {
         std::cout << "==> Running ZmmJet" << std::endl;
-        auto zmmJet = std::make_unique<HistZmmJet>(globalFlag);
+        auto zmmJet = std::make_unique<RunZmmJet>(globalFlag);
         zmmJet->Run(skimT, eventP.get(), objP.get(), objS.get(), fout.get());
     }
 

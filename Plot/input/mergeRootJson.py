@@ -37,7 +37,7 @@ def reorganize_json_data(files):
     return merged_data
 
 # Define the path where JSON files are stored (change this to your actual path)
-json_files_path = 'json/FilesHist*.json'
+json_files_path = 'json/rootFile/FilesHist*.json'
 
 # List all JSON files that match the pattern
 json_files = glob.glob(json_files_path)
@@ -49,8 +49,10 @@ merged_json_data = reorganize_json_data(json_files)
 dirName = "json/rootFile"
 os.system(f"mkdir -p {dirName}")
 fileName = 'MergedHistFiles.json'
-with open("{dirName}/{fileName}", 'w') as outfile:
+output_file = f"{dirName}/{fileName}"
+with open(output_file, 'w') as outfile:
     json.dump(merged_json_data, outfile, indent=4)
 
+print(merged_json_data)
 print(f'Merged and reorganized data saved to {output_file}')
 

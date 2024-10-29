@@ -18,6 +18,8 @@ public:
     template<typename T>
     static void calculateHistRatio(T* dataHist, T* mcHist, TGraphErrors* ratioGraph);
 
+    static std::string dirToName(const std::string& dir);
+
     // General function to combine multiple histograms
     template<typename T>
     static T* combineHists(const std::vector<T*>& hists);

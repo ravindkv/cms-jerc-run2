@@ -9,8 +9,8 @@
 #include "NanoTree.h"
 #include "GlobalFlag.h"
 
-#include "SkimZeeJet.h"
-#include "SkimZmmJet.h"
+#include "RunZeeJet.h"
+#include "RunZmmJet.h"
 
 namespace fs = std::filesystem;
 
@@ -102,13 +102,13 @@ int main(int argc, char* argv[]){
 
     if (globalFlag.isZeeJet) {
         std::cout << "==> Running ZeeJet" << std::endl;
-        auto zeeJet = std::make_unique<SkimZeeJet>(globalFlag);
+        auto zeeJet = std::make_unique<RunZeeJet>(globalFlag);
         zeeJet->Run(nanoT, fout.get());
     }
 
     if (globalFlag.isZmmJet) {
         std::cout << "==> Running ZmmJet" << std::endl;
-        auto zmmJet = std::make_unique<SkimZmmJet>(globalFlag);
+        auto zmmJet = std::make_unique<RunZmmJet>(globalFlag);
         zmmJet->Run(nanoT, fout.get());
     }
 	return 0;

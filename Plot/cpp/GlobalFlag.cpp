@@ -3,9 +3,9 @@
 GlobalFlag::GlobalFlag(std::string oName){
   outName = oName;
   isDebug = false;
-  isPlotEras1D = false;
-  isPlotEra2D = false;
-  isPlotErasXY = false;
+  isPlotEras1D = true;
+  isPlotEra2D = true;
+  isPlotErasXY = true;
   isPlotEraXY =  true;
 
   isPrintFigConfig = true;

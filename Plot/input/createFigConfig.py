@@ -101,10 +101,12 @@ configs["ConfigEras1D"].append(
         "ConfigEras1D",
         "h1EventInCutflow",
         histDir="", 
-        xTitle="Cutflow",
+        xTitle="Cutflow bins",
         yTitle="Events (normalized to 1)",
         yMin=0.0001,
-        yMax=10,
+        yMax=100,
+        rMin = 0.0,
+        rMax = 2.0,
         yLog=True,
         isNorm=True
     )
@@ -112,8 +114,38 @@ configs["ConfigEras1D"].append(
 configs["ConfigEras1D"].append(
     createConfig(
         "ConfigEras1D",
+        "h1EventInRefMass",
+        histDir="passAtleast1Ref",
+        yTitle="Events (normalized to 1)",
+        xTitle="Reference Z mass (GeV)",
+        xMin=60,
+        xMax=120,
+        yMin=0.001,
+        yMax=1.1,
+        isNorm=True
+    )
+)
+configs["ConfigEras1D"].append(
+    createConfig(
+        "ConfigEras1D",
+        "p1RefMassInRefPt",
+        histDir="passAtleast1Ref",
+        yTitle="Mean of Z mass (GeV)",
+        xTitle="Reference Z p_{T} (GeV)",
+        yMin=70,
+        yMax=120,
+        xLog=True
+    )
+)
+
+configs["ConfigEras1D"].append(
+    createConfig(
+        "ConfigEras1D",
         "p1DbRespInRefPt",
         yTitle="DB Response",
+        xTitle="Reference Z p_{T} (GeV)",
+        yMin=0.01,
+        yMax=2.5,
         xLog=True
     )
 )
@@ -122,23 +154,79 @@ configs["ConfigEras1D"].append(
         "ConfigEras1D",
         "p1MpfRespInRefPt",
         yTitle="MPF Response",
+        xTitle="Reference Z p_{T} (GeV)",
+        yMin=0.01,
+        yMax=2.5,
         xLog=True
     )
 )
 configs["ConfigEras1D"].append(
     createConfig(
         "ConfigEras1D",
-        "h1EventInRefPt",
-        histDir="passAtleast1Ref",
-        yTitle="Events (normalized to 1)",
-        yMin=0.0001,
-        yMax=10,
-        xLog=True,
-        yLog=True,
-        isNorm=True
+        "p1JetChhefInRefPt",
+        yTitle="Mean of Charged Hadron Energy Fraction",
+        xTitle="Reference Z p_{T} (GeV)",
+        yMin=0.1,
+        yMax=1.2,
+        xLog=True
     )
 )
-
+configs["ConfigEras1D"].append(
+    createConfig(
+        "ConfigEras1D",
+        "p1JetNeemefInRefPt",
+        yTitle="Mean of Neutral EM Energy Fraction",
+        xTitle="Reference Z p_{T} (GeV)",
+        yMin=0.01,
+        yMax=0.6,
+        xLog=True
+    )
+)
+configs["ConfigEras1D"].append(
+    createConfig(
+        "ConfigEras1D",
+        "p1JetChemefInRefPt",
+        yTitle="Mean of Charged EM Energy Fraction",
+        xTitle="Reference Z p_{T} (GeV)",
+        yMin=0.001,
+        yMax=0.2,
+        xLog=True
+    )
+)
+configs["ConfigEras1D"].append(
+    createConfig(
+        "ConfigEras1D",
+        "p1JetNehefInRefPt",
+        yTitle="Mean of Neutral Hadron Energy Fraction",
+        xTitle="Reference Z p_{T} (GeV)",
+        yMin=0.01,
+        yMax=0.4,
+        xLog=True
+    )
+)
+configs["ConfigEras1D"].append(
+    createConfig(
+        "ConfigEras1D",
+        "p1JetMuefInRefPt",
+        yTitle="Mean of Muon Energy Fraction",
+        xTitle="Reference Z p_{T} (GeV)",
+        yMin=0.001,
+        yMax=0.025,
+        xLog=True
+    )
+)
+configs["ConfigEras1D"].append(
+    createConfig(
+        "ConfigEras1D",
+        "p1MpfRespInRefPt_bi",
+        histDir="passRefBarrel/flavourXTagY",
+        yTitle="MPF Response for b-tagged jet",
+        xTitle="Reference Z p_{T} (GeV)",
+        yMin=0.01,
+        yMax=3.0,
+        xLog=True
+    )
+)
 #-------------------------------------
 # Adding elements to ConfigEra2D
 #-------------------------------------
@@ -165,8 +253,8 @@ configs["ConfigEra2D"].append(
         yMin=20,
         yMax=1000,
         yLog=True,
-        xTitle="Reference #eta",
-        yTitle="Reference #phi",
+        xTitle="Leading jet #eta",
+        yTitle="Reference p_{T} (GeV)",
         zTitle="DB Response",
         zLog=False
     )
@@ -180,18 +268,36 @@ configs["ConfigErasXY"].append(
         "ConfigErasXY",
         "p2DbRespInJet1EtaRefPt",
         histDir="passJet1EtaJet2Pt",
-        varName="Jet pT",
+        varName="Z p_{T}",
         varMin=100,
         varMax=120,
         isVarOnX=True,
-        xMin=-3.5,
-        xMax=+3.5,
+        xMin=-2.5,
+        xMax=+2.5,
         yMin=0.5,
-        yMax=1.5,
-        xTitle="Reference pT (GeV)"
+        yMax=1.7,
+        xTitle="Leading jet #eta",
+        yTitle="DB Response"
     )
 )
 
+configs["ConfigErasXY"].append(
+    createConfig(
+        "ConfigErasXY",
+        "p2MpfRespInJet1EtaRefPt",
+        histDir="passJet1EtaJet2Pt",
+        varName="Z p_{T}",
+        varMin=100,
+        varMax=120,
+        isVarOnX=True,
+        xMin=-2.5,
+        xMax=+2.5,
+        yMin=0.5,
+        yMax=1.7,
+        xTitle="Leading jet #eta",
+        yTitle="MPF Response"
+    )
+)
 #-------------------------------------
 # Adding elements to ConfigEraXY
 #-------------------------------------
@@ -200,21 +306,46 @@ configs["ConfigEraXY"].append(
         "ConfigEraXY",
         "p2DbRespInJet1EtaRefPt",
         histDir="passJet1EtaJet2Pt",
-        varName="Jet Eta",
+        varName="J_{1} #eta",
         varBins=[0.0, 1.3, 2.5, 3.0, 3.5],
         isVarOnX=False,
-        yMin=0.5,
-        yMax=1.5,
-        xTitle="Reference pT (GeV)"
+        yMin=0.0,
+        yMax=2.5,
+        rMin=0.0,
+        rMax=2.0,
+        xMin=20.0,
+        xMax=1000.0,
+        xLog=True,
+        xTitle="Reference pT (GeV)",
+        yTitle="DB Response"
     )
 )
 
+configs["ConfigEraXY"].append(
+    createConfig(
+        "ConfigEraXY",
+        "p2MpfRespInJet1EtaRefPt",
+        histDir="passJet1EtaJet2Pt",
+        varName="J_{1} #eta",
+        varBins=[0.0, 1.3, 2.5, 3.0, 3.5],
+        isVarOnX=False,
+        yMin=0.0,
+        yMax=2.5,
+        rMin=0.0,
+        rMax=2.0,
+        xMin=20.0,
+        xMax=1000.0,
+        xLog=True,
+        xTitle="Reference pT (GeV)",
+        yTitle="MPF Response"
+    )
+)
 # Convert to JSON string with indentation for better readability
 json_output = json.dumps(configs, indent=4)
 
 # Write to a JSON file
 dir_ = "json/figConfig"
-fileName = "FigConfigZeeJet.json"
+fileName = "FigConfigZmmJet.json"
 os.makedirs(dir_, exist_ok=True)
 with open(os.path.join(dir_, fileName), "w") as f:
     f.write(json_output)

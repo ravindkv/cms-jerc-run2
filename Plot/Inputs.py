@@ -1,5 +1,6 @@
 #-----------------------------------------------------------------
-eosHistDir="/eos/user/r/rverma/www/public/cms-jerc-run2/Hist"
+#eosHistDir="/eos/user/r/rverma/www/public/cms-jerc-run2/Hist"
+eosHistDir="/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist"
 #-----------------------------------------------------------------
 Years = []
 Years.append('2016Pre')

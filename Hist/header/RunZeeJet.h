@@ -1,5 +1,5 @@
-#ifndef HISTZMMJET_H
-#define HISTZMMJET_H
+#ifndef HISTZEEJET_H
+#define HISTZEEJET_H
 
 #include <memory>
 #include <iostream>
@@ -27,11 +27,11 @@
 #include "ObjectScale.h"
 #include "GlobalFlag.h"
 
-class HistZmmJet{
+class RunZeeJet{
 public:
     // Constructor accepting a reference to GlobalFlag
-    explicit HistZmmJet(GlobalFlag& globalFlags);
-    ~HistZmmJet() = default;
+    explicit RunZeeJet(GlobalFlag& globalFlags);
+    ~RunZeeJet() = default;
 
     int Run(std::shared_ptr<SkimTree>& skimT, EventPick* eventP, ObjectPick* objP, ObjectScale* objS, TFile* fout);
 
@@ -43,5 +43,5 @@ private:
     // Add any private member variables or methods here if needed
 };
 
-#endif // HISTZMMJET_H
+#endif // HISTZEEJET_H
 

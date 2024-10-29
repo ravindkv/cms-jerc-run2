@@ -38,9 +38,9 @@ def checkJobs(jsonFile):
                 print("Empty file: %s"%skim)
                 corruptedList.append(skim)
                 continue
-            h = f.Get("hEvents")
+            h = f.Get("h1EventInCutflow")
             if not h:
-                print("hEvents does not exist: %s"%skim)
+                print("h1EventInCutflow does not exist: %s"%skim)
                 corruptedList.append(skim)
                 continue
             nEvents = nEvents + h.GetBinContent(2)

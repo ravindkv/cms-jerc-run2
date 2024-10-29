@@ -51,3 +51,11 @@ T* Helper::combineHists(const std::vector<T*>& hists) {
     return combinedHist;
 }
 
+std::string Helper::dirToName(const std::string& dir) {
+    std::string filename = dir;
+    // Replace all '/' with '_'
+    std::replace(filename.begin(), filename.end(), '/', '_');
+    // Append .pdf extension
+    filename += ".pdf";
+    return filename;
+}

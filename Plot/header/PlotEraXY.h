@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef CoreEraXY_H
-#define CoreEraXY_H
+#ifndef PlotEraXY_H
+#define PlotEraXY_H
 
 #include <map>
 #include <vector>
@@ -25,10 +25,10 @@
 #include "TdrStyle.h"
 
 template <typename T>
-class CoreEraXY {
+class PlotEraXY {
 public:
-    CoreEraXY();
-    ~CoreEraXY();
+    PlotEraXY();
+    ~PlotEraXY();
     
     // Setters remain the same...
     void setInput(const nlohmann::json &inputJson, const std::string & channel, const std::string & year);
@@ -58,6 +58,6 @@ private:
     std::shared_ptr<TdrStyle> tdrStyle_;
     TProfile* projectAndClone(T* hist, const std::string& bin, int i);
 };
-#include "../cpp/CoreEraXY.tpp"
+#include "../cpp/PlotEraXY.tpp"
 #endif
 

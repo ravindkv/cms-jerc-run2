@@ -4,6 +4,7 @@
 #include <stdexcept>
 #include <algorithm>
 #include "SkimTree.h"
+#include "Helper.h"
 
 SkimTree::SkimTree(GlobalFlag& globalFlags): 
     globalFlags_(globalFlags),
@@ -11,7 +12,7 @@ SkimTree::SkimTree(GlobalFlag& globalFlags):
     era_(globalFlags_.getEra()),
     channel_(globalFlags_.getChannel()),
     isDebug_(globalFlags_.isDebug()),
-    isData_(isData_),
+    isData_(globalFlags_.isData()),
     isMC_(globalFlags_.isMC()),
 	fCurrent_(-1), 
 	outName_(""), 
@@ -31,7 +32,7 @@ void SkimTree::setInput(const std::string& outName) {
 void SkimTree::loadInput() {
     std::cout << "==> loadInput()" << '\n';
     try {
-        std::vector<std::string> v_outName = splitString(outName_, "_Hist_");
+        std::vector<std::string> v_outName = Helper::splitString(outName_, "_Hist_");
         if (v_outName.size() < 2) {
             throw std::runtime_error("Invalid outName format: Expected at least two parts separated by '_Hist_'");
         }
@@ -39,7 +40,7 @@ void SkimTree::loadInput() {
         std::cout << "loadedSampKey_: " << loadedSampKey_ << '\n';
 
         std::string nofN_root = v_outName.at(1);
-        std::vector<std::string> v_nofN_root = splitString(nofN_root, ".root");
+        std::vector<std::string> v_nofN_root = Helper::splitString(nofN_root, ".root");
         if (v_nofN_root.empty()) {
             throw std::runtime_error("Invalid outName format: Missing '.root' extension");
         }
@@ -47,7 +48,7 @@ void SkimTree::loadInput() {
         std::string nofN = v_nofN_root.at(0);
         std::cout << "nofN: " << nofN << '\n';
 
-        std::vector<std::string> v_nofN = splitString(nofN, "of");
+        std::vector<std::string> v_nofN = Helper::splitString(nofN, "of");
         if (v_nofN.size() != 2) {
             throw std::runtime_error("Invalid job numbering format in outName: Expected format 'NofM'");
         }
@@ -78,7 +79,7 @@ void SkimTree::setInputJsonPath(const std::string& inDir) {
         throw std::runtime_error("Error: Provide correct year in SkimTree::setInputJsonPath()");
     }
 
-    std::vector<std::string> tokens = splitString(loadedSampKey_, "_");
+    std::vector<std::string> tokens = Helper::splitString(loadedSampKey_, "_");
     if (tokens.size() < 3) {
         throw std::runtime_error("Invalid loadedSampKey_ format: Expected at least three parts separated by '_'");
     }
@@ -139,7 +140,7 @@ void SkimTree::loadJobFileNames() {
         throw std::runtime_error("Error: Make sure loadedNthJob_ > 0 and loadedTotJob_ > 0 in loadJobFileNames()");
     }
 
-    std::vector<std::vector<std::string>> smallVectors = splitVector(loadedAllFileNames_, loadedTotJob_);
+    std::vector<std::vector<std::string>> smallVectors = Helper::splitVector(loadedAllFileNames_, loadedTotJob_);
     if (loadedNthJob_ - 1 >= static_cast<int>(smallVectors.size())) {
         throw std::runtime_error("Error: loadedNthJob_ is out of range after splitting file names in loadJobFileNames()");
     }
@@ -175,9 +176,14 @@ void SkimTree::loadTree() {
 	//--------------------------------------- 
 	fChain_->SetBranchAddress("nJet", &nJet);
 	fChain_->SetBranchAddress("Jet_area", &Jet_area);
-	fChain_->SetBranchAddress("Jet_btagDeepB", &Jet_btagDeepB);
-	fChain_->SetBranchAddress("Jet_btagDeepC", &Jet_btagDeepC);
-	fChain_->SetBranchAddress("Jet_btagDeepFlavQG"  , &Jet_qgl);//tmp
+
+	fChain_->SetBranchAddress("Jet_btagDeepFlavB", &Jet_btagDeepFlavB);
+	fChain_->SetBranchAddress("Jet_btagDeepFlavCvL", &Jet_btagDeepFlavCvL);
+	fChain_->SetBranchAddress("Jet_btagDeepFlavCvB", &Jet_btagDeepFlavCvB);
+	fChain_->SetBranchAddress("Jet_btagDeepFlavG", &Jet_btagDeepFlavG);
+	fChain_->SetBranchAddress("Jet_btagDeepFlavQG", &Jet_btagDeepFlavQG);
+	fChain_->SetBranchAddress("Jet_btagDeepFlavUDS", &Jet_btagDeepFlavUDS);
+
 	fChain_->SetBranchAddress("Jet_chEmEF"  , &Jet_chEmEF);
 	fChain_->SetBranchAddress("Jet_chHEF"   , &Jet_chHEF);
 	fChain_->SetBranchAddress("Jet_eta"     , &Jet_eta);
@@ -278,6 +284,7 @@ void SkimTree::loadTree() {
 		fChain_->SetBranchAddress("Electron_eta", &Electron_eta);
 		fChain_->SetBranchAddress("Electron_phi", &Electron_phi);
 		fChain_->SetBranchAddress("Electron_mass", &Electron_mass);
+		fChain_->SetBranchAddress("Electron_eCorr", &Electron_eCorr);
 		fChain_->SetBranchAddress("Electron_cutBased", &Electron_cutBased);
 		//address trigger
 		if(year_ == GlobalFlag::Year::Year2016Pre || year_ == GlobalFlag::Year::Year2016Post)
@@ -295,6 +302,7 @@ void SkimTree::loadTree() {
 	  	fChain_->SetBranchStatus("Muon_*",true);
 	  	//address
 	  	fChain_->SetBranchAddress("nMuon", &nMuon);
+	  	fChain_->SetBranchAddress("Muon_nTrackerLayers", &Muon_nTrackerLayers);
 	  	fChain_->SetBranchAddress("Muon_charge", &Muon_charge);
 	  	fChain_->SetBranchAddress("Muon_pt", &Muon_pt);
 	  	fChain_->SetBranchAddress("Muon_eta", &Muon_eta);
@@ -402,35 +410,5 @@ auto SkimTree::loadEntry(Long64_t entry) -> Long64_t {
     // Uncomment for debugging
     // std::cout << entry << ", " << centry << ", " << fCurrent_ << std::endl;
     return centry;
-}
-
-auto SkimTree::splitVector(const std::vector<std::string>& strings, int n) const -> std::vector<std::vector<std::string>> {
-    if (n <= 0) {
-        throw std::invalid_argument("n must be greater than 0 in splitVector");
-    }
-    size_t totalSize = strings.size();
-    size_t baseSize = totalSize / n;
-    size_t remainder = totalSize % n;
-    std::vector<std::vector<std::string>> smallVectors;
-    size_t index = 0;
-
-    for (int i = 0; i < n; ++i) {
-        size_t currentSize = baseSize + (i < remainder ? 1 : 0);
-        smallVectors.emplace_back(strings.begin() + index, strings.begin() + index + currentSize);
-        index += currentSize;
-    }
-    return smallVectors;
-}
-
-auto SkimTree::splitString(const std::string& s, const std::string& delimiter) const -> std::vector<std::string> {
-    std::vector<std::string> tokens;
-    size_t start = 0, end = 0;
-
-    while ((end = s.find(delimiter, start)) != std::string::npos) {
-        tokens.emplace_back(s.substr(start, end - start));
-        start = end + delimiter.length();
-    }
-    tokens.emplace_back(s.substr(start)); // Last token
-    return tokens;
 }
 

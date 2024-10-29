@@ -1,8 +1,8 @@
 #include "TdrStyle.h"
-#include "CoreEra2D.h"
+#include "PlotEra2D.h"
 
 template<typename T>
-CoreEra2D<T>::CoreEra2D() : 
+PlotEra2D<T>::PlotEra2D() : 
   channel_(""), 
   year_(""), 
   histDir_(""), 
@@ -13,32 +13,24 @@ CoreEra2D<T>::CoreEra2D() :
 }
 // Clean up each cloned histogram
 template<typename T>
-CoreEra2D<T>::~CoreEra2D() {
+PlotEra2D<T>::~PlotEra2D() {
 }
 
 template<typename T>
-void CoreEra2D<T>::setInputJson(const nlohmann::json &inputJson) {
+void PlotEra2D<T>::setInput(const nlohmann::json &inputJson, const std::string & channel, const std::string & year){
   inputJson_ = inputJson;
-}
-
-template<typename T>
-void CoreEra2D<T>::setChannel(const std::string & channel) {
   channel_ = channel;
-}
-
-template<typename T>
-void CoreEra2D<T>::setYear(const std::string & year) {
   year_ = year;
 }
 
 template<typename T>
-void CoreEra2D<T>::setDataEraOrMcBin(const std::string & dataEraOrMcBin) {
+void PlotEra2D<T>::setDataEraOrMcBin(const std::string & dataEraOrMcBin) {
   dataEraOrMcBin_ = dataEraOrMcBin;
 }
 
 
 template<typename T>
-void CoreEra2D<T>::setFigConfigEra2D(const FigConfigEra2D & params) {
+void PlotEra2D<T>::setFigConfigEra2D(const FigConfigEra2D & params) {
   tdrStyle_->setFigConfig(params);
   histDir_  = params.histDir;
   histName_ = params.histName;
@@ -46,7 +38,7 @@ void CoreEra2D<T>::setFigConfigEra2D(const FigConfigEra2D & params) {
 
 // Load Data Histograms
 template<typename T>
-void CoreEra2D<T>::drawHist2D(const std::string &outPdfName) {
+void PlotEra2D<T>::drawHist2D(const std::string &outPdfName) {
 
   std::string fileName;
   if (dataEraOrMcBin_.find("Data_")!= std::string::npos){

@@ -1,24 +1,22 @@
-#include "TdrStyle.h"
-#include "CoreEraXY.h"
+#include "PlotEras1D.h"
+#include "Helper.h"
+
 
 template<typename T>
-CoreEraXY<T>::CoreEraXY() : 
+PlotEras1D<T>::PlotEras1D() : 
   channel_(""), 
   year_(""), 
-  varName_(""),
   histDir_(""), 
   histName_(""),
-  varIsOnXaxis_(true),
   tdrStyle_(std::make_shared<TdrStyle>())
  {
-  varBins_.clear();
   dataHists_.clear();
   mcHists_.clear();
 }
 
 // Clean up each cloned histogram
 template<typename T>
-CoreEraXY<T>::~CoreEraXY() {
+PlotEras1D<T>::~PlotEras1D() {
   for (auto hist : dataHists_) {
       delete hist; 
   }
@@ -28,44 +26,38 @@ CoreEraXY<T>::~CoreEraXY() {
 }
 
 template<typename T>
-void CoreEraXY<T>::setInput(const nlohmann::json &inputJson, const std::string & channel, const std::string & year){
+void PlotEras1D<T>::setInput(const nlohmann::json &inputJson, const std::string & channel, const std::string & year){
   inputJson_ = inputJson;
   channel_ = channel;
   year_ = year;
 }
 
 template<typename T>
-void CoreEraXY<T>::setFigConfigEraXY(const FigConfigEraXY & params) {
+void PlotEras1D<T>::setFigConfigEras1D(const FigConfigEras1D & params) {
   tdrStyle_->setFigConfig(params);
   histDir_  = params.histDir;
   histName_ = params.histName;
-  varBins_ = params.varBins;
-  varName_ = params.varName;
-  varIsOnXaxis_ = params.isVarOnX;
 }
 
+// Generic load function for both Data and MC
 template<typename T>
-void CoreEraXY<T>::loadHists(const std::string& sourceType, const std::string& dataEra, const std::vector<std::string>& mcHtBins) {
-    // Determine which bins to use based on sourceType (Data or MC)
-    std::vector<std::string> bins;
-
-    if (sourceType == "Data") {
-        bins.push_back(dataEra);  // For Data, use the single dataEra
-    } else if (sourceType == "MC") {
-        bins = mcHtBins;  // For MC, use the list of mcHtBins
-    }
-
+void PlotEras1D<T>::loadHists(const std::string& sourceType, const std::vector<std::string>& bins) {
     for (const auto& bin : bins) {
+        // Select the file name based on sourceType
         std::string fileName = (sourceType == "Data") ? inputJson_[channel_][year_]["Data"][bin]
                                                       : inputJson_[channel_][year_]["MC"][bin];
 
+        // Construct the histogram path
         std::string path = (histDir_.empty()) ? histName_ : histDir_ + "/" + histName_;
+
+        // Open the ROOT file
         TFile file(fileName.c_str());
         if (file.IsZombie()) {
             std::cerr << "Error: Could not open file " << fileName << std::endl;
             continue;
         }
 
+        // Retrieve the histogram
         T* hist = (T*)file.Get(path.c_str());
         if (!hist) {
             std::cerr << "Error: Could not retrieve histogram " << path << " from " << fileName << std::endl;
@@ -74,59 +66,30 @@ void CoreEraXY<T>::loadHists(const std::string& sourceType, const std::string& d
         }
 
         gROOT->cd();  // Change to ROOT's global directory
+        T* clonedHist = (T*)hist->Clone(bin.c_str());  // Clone the histogram
 
-        std::vector<TProfile*> histsPerBin;
+        // Normalize if needed
+        if (tdrStyle_->getIsNorm() && clonedHist->Integral() > 0.0)
+            clonedHist->Scale(1 / clonedHist->Integral());
 
-        for (int i = 0; i < varBins_.size() - 1; ++i) {
-            TProfile* clonedHist = projectAndClone(hist, bin, i);
-            if (clonedHist) {
-                if (tdrStyle_->getIsNorm() && clonedHist->Integral() > 0.0)
-                    clonedHist->Scale(1 / clonedHist->Integral());
+        // Apply style settings
+        tdrStyle_->setStyle(clonedHist);
 
-                tdrStyle_->setStyle(clonedHist);
-                histsPerBin.push_back(clonedHist);
-            }
+        // Store the histograms in the appropriate vector
+        if (sourceType == "Data") {
+            dataHists_.push_back(clonedHist);
+        } else if (sourceType == "MC") {
+            mcHists_.push_back(clonedHist);
         }
 
-        // Store histograms for MC differently than for Data
-        if (sourceType == "MC") {
-            mcHists_.push_back(Helper::combineHists(histsPerBin));
-        } else if (sourceType == "Data") {
-            dataHists_.insert(dataHists_.end(), histsPerBin.begin(), histsPerBin.end());
-        }
-
+        // Close the file after cloning the histogram
         file.Close();
     }
 }
 
-
-// Helper function for projecting and cloning histograms
-template<typename T>
-TProfile* CoreEraXY<T>::projectAndClone(T* hist, const std::string& bin, int i) {
-    std::string nameBin;
-    TProfile* clonedHist = nullptr;
-
-    if (varIsOnXaxis_) {
-        auto binIdx = hist->GetYaxis()->FindBin(varBins_.at(i));
-        auto binLow = hist->GetYaxis()->GetBinLowEdge(binIdx);
-        auto binHigh = hist->GetYaxis()->GetBinUpEdge(binIdx);
-        nameBin = Form("%0.1f %s %0.1f", binLow, varName_.c_str(), binHigh);
-        clonedHist = (TProfile*)hist->ProjectionX(nameBin.c_str(), binIdx, binIdx)->Clone((nameBin + ": " + bin).c_str());
-    } else {
-        auto binIdx = hist->GetXaxis()->FindBin(varBins_.at(i));
-        auto binLow = hist->GetXaxis()->GetBinLowEdge(binIdx);
-        auto binHigh = hist->GetXaxis()->GetBinUpEdge(binIdx);
-        nameBin = Form("%0.1f %s %0.1f", binLow, varName_.c_str(), binHigh);
-        clonedHist = (TProfile*)hist->ProjectionY(nameBin.c_str(), binIdx, binIdx)->Clone((nameBin + ": " + bin).c_str());
-    }
-
-    return clonedHist;
-}
-
-
 // Helper function to draw histograms (Data/Mc), set styles, and handle the legend
 template<typename T>
-void CoreEraXY<T>::drawHists(const std::vector<TProfile*>& hists) {
+void PlotEras1D<T>::drawHists(const std::vector<T*>& hists) {
   if (hists.empty()) {
     std::cerr << "Error: Histograms vector is empty." << std::endl;
     return;
@@ -137,7 +100,6 @@ void CoreEraXY<T>::drawHists(const std::vector<TProfile*>& hists) {
   tdrStyle_->setStyle(leg);
   if(tdrStyle_->getXLog())gPad->SetLogx(true);
   if(tdrStyle_->getYLog())gPad->SetLogy(true);
-
   for (size_t i = 0; i < hists.size(); i++) {
     auto hist = hists.at(i);
     if (hist != nullptr) {
@@ -155,7 +117,7 @@ void CoreEraXY<T>::drawHists(const std::vector<TProfile*>& hists) {
 
 // Overlay Data with Mc and Plot Ratio
 template<typename T>
-void CoreEraXY<T>::overlayDataWithMcInRatio(const std::string &outputFile) {
+void PlotEras1D<T>::overlayDataWithMcInRatio(const std::string &outPdfName) {
   TCanvas canvas("c", "Data and Mc Ratio", 600, 600);
   canvas.cd();
   tdrStyle_->setTdrStyle();
@@ -165,7 +127,7 @@ void CoreEraXY<T>::overlayDataWithMcInRatio(const std::string &outputFile) {
   }
   
   if (mcHists_.size() > 0 && dataHists_.size() == 0) {
-    drawHists(mcHists_);
+    drawHists( mcHists_);
   }
   
   if (mcHists_.size() > 0 && dataHists_.size() > 0) {
@@ -182,9 +144,9 @@ void CoreEraXY<T>::overlayDataWithMcInRatio(const std::string &outputFile) {
     pad2->SetBottomMargin(0.4);
     pad2->Draw();
     pad2->cd();
-
     if(tdrStyle_->getXLog())gPad->SetLogx(true);
-    TProfile* mergedMcHist = Helper::combineHists(mcHists_);
+
+    T* mergedMcHist = Helper::combineHists(mcHists_);
     if (!mergedMcHist) {
       std::cerr << "Error: Could not create merged Mc histogram." << std::endl;
       return;
@@ -206,6 +168,6 @@ void CoreEraXY<T>::overlayDataWithMcInRatio(const std::string &outputFile) {
   }
 
   canvas.Update();
-  canvas.SaveAs(outputFile.c_str());
+  canvas.SaveAs(outPdfName.c_str());
 }
 

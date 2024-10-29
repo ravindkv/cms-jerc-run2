@@ -8,10 +8,10 @@
 
 #include "SkimTree.h"
 #include "correction.h"
+#include "RoccoR.h"
 #include "GlobalFlag.h"
 
 #include "TH2D.h"
-#include "TMath.h"
 #include "TRandom3.h"
 #include "TCanvas.h"
 #include <nlohmann/json.hpp>
@@ -58,9 +58,14 @@ public:
     void loadPhoSsRef();
     double getPhoScaleCorrection(const std::string& nomOrSyst,  int indexPho) const;
     double getPhoSmearCorrection(const std::string& nomOrSyst,  int indexPho) const;
+
+    // Muon Rochester correction 
+    void loadMuRochRef();
+    double getMuRochCorrection( int index, const std::string& syst) const;
     
     // Electron Scale and Smearing (Ss)
     void loadEleSsRef();
+    double getEleSsCorrection( int index, const std::string& syst) const;
     
     // Lumi
     void loadLumiJson();
@@ -105,7 +110,7 @@ private:
     // sfJER 
     std::string JERSFName_;
     correction::Correction::Ref loadedJERSFRef_;
-	std::unique_ptr<TRandom> generator = std::make_unique<TRandom3>(0);
+	std::unique_ptr<TRandom> randomNumGen = std::make_unique<TRandom3>(0);
     
     // Photon Scale and Smearing (Ss)
     std::string phoSsJsonPath_;
@@ -117,6 +122,10 @@ private:
     std::string eleSsName_;
     correction::Correction::Ref loadedEleSsRef_;
     
+    // Muon rochester corrections 
+    std::string muRochJsonPath_;
+    RoccoR loadedRochRef_; 
+
     // Lumi
     std::string lumiJsonPath_;
     nlohmann::json loadedLumiJson_;
@@ -127,8 +136,6 @@ private:
     correction::Correction::Ref loadedPuRef_;
     
     double minbXsec_{};
-    double DELTAPHI(double phi1, double phi2) const;
-    double DELTAR(double phi1, double phi2, double eta1, double eta2) const;
 
     // Reference to GlobalFlag instance
     GlobalFlag& globalFlags_;

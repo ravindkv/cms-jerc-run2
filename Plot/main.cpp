@@ -1,5 +1,5 @@
-#include "PlotZeeJet.h"
-//#include "PlotZmmJet.h"
+//#include "RunZeeJet.h"
+#include "RunZmmJet.h"
 //#include "PlotGamJet.h"
 //#include "PlotMCTruth.h"
 //#include "PlotFlavour.h"
@@ -66,7 +66,8 @@ int main(int argc, char* argv[]){
     }
   }
 
-  string eosPlotDir="/eos/user/r/rverma/www/public/cms-jerc-run2/Plot";
+  //string eosPlotDir="/eos/user/r/rverma/www/public/cms-jerc-run2/Plot";
+  string eosPlotDir="/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Plot";
   string localTexDir = "./output";
   std::filesystem::create_directories(localTexDir);
 
@@ -88,18 +89,19 @@ int main(int argc, char* argv[]){
   cout<<" Create plots and slides"<<endl;
   cout<<"--------------------------------------"<<endl;
 
+  /*
   if(globF->isZeeJet or isAllChannel){
     cout<<"==> Running ZeeJet"<<endl;
-    PlotZeeJet *zeeJet = new PlotZeeJet(outName);
+    RunZeeJet *zeeJet = new RunZeeJet(outName);
+    zeeJet->Run(js, eosPlotDir, channelSlide, allChannelSlide);
+  }
+  */
+  if(globF->isZmmJet or isAllChannel){
+    cout<<"==> Running ZmmJet"<<endl;
+    RunZmmJet *zeeJet = new RunZmmJet(outName);
     zeeJet->Run(js, eosPlotDir, channelSlide, allChannelSlide);
   }
   /*
-  if(globF->isZmmJet){
-    cout<<"==> Running ZmmJet"<<endl;
-    PlotZmmJet *zmmJet = new PlotZmmJet(outName);
-    zmmJet->Run(js, outRoot, chLatex);
-  }
-
   if(globF->isGamJet){
     cout<<"==> Running GamJet"<<endl;
     PlotGamJet *gamJet = new PlotGamJet(oName);

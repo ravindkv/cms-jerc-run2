@@ -230,7 +230,7 @@ void TdrStyle::setStyle(T* obj) {
         obj->GetYaxis()->CenterTitle();
         obj->GetZaxis()->CenterTitle();
         obj->GetXaxis()->SetTitleOffset(1.0);
-        obj->GetYaxis()->SetTitleOffset(1.5);
+        obj->GetYaxis()->SetTitleOffset(1.6);
         obj->GetZaxis()->SetTitleOffset(1.5);
         obj->GetXaxis()->SetTitleSize(0.05);
         obj->GetYaxis()->SetTitleSize(0.05);
@@ -238,6 +238,7 @@ void TdrStyle::setStyle(T* obj) {
         obj->GetXaxis()->SetLabelSize(0.05);
         obj->GetYaxis()->SetLabelSize(0.05);
         obj->GetZaxis()->SetLabelSize(0.05);
+        obj->GetYaxis()->SetNoExponent();
         obj->GetXaxis()->SetMoreLogLabels();
         obj->GetYaxis()->SetMoreLogLabels();
         obj->GetZaxis()->SetMoreLogLabels();

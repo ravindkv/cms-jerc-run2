@@ -1,17 +1,17 @@
 #pragma once
 
-#ifndef PlotZeeJet_h
-#define PlotZeeJet_h
+#ifndef RunZeeJet_h
+#define RunZeeJet_h
 #include <nlohmann/json.hpp>
 #include <TFile.h>
 #include <iostream>
 #include "Slide.h"
 #include "GlobalFlag.h"
 
-class PlotZeeJet : public GlobalFlag {
+class RunZeeJet : public GlobalFlag {
  public :
-    PlotZeeJet(std::string oName): GlobalFlag(oName){}
-    ~PlotZeeJet();
+    RunZeeJet(std::string oName): GlobalFlag(oName){}
+    ~RunZeeJet();
     
     int Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &channelSlide, Slide &allChannelSlide);
 
