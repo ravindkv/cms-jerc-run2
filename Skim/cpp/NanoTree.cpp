@@ -1,218 +1,270 @@
 #include "NanoTree.h"
 #include "Helper.h"
 
-NanoTree::NanoTree(GlobalFlag& globalFlags): 
-    globalFlags_(globalFlags),
-    fCurrent(-1){
-}
+#include <iostream>
+#include <stdexcept>
 
-void NanoTree::setInput(string oName){
-  outName  = oName;
-  cout<<"+ setInput() = "<<outName<<endl;
-} 
-void NanoTree::loadInput(){
-    cout<<"==> loadInput()"<<endl;
-    try{
-        std::vector<std::string> v_iName      = Helper::splitString(outName, "_Skim_");
-        loadedSampKey = v_iName.at(0); 
-        std::cout << "loadedSampKey: " << loadedSampKey << std::endl;
-        std::string nofN_root   = v_iName.at(1); 
-        std::vector<std::string> v_nofN_root    = Helper::splitString(nofN_root, ".root"); 
-        std::string nofN        = v_nofN_root.at(0); 
-        std::cout << "nofN: " << nofN << std::endl;
-        std::vector<std::string> v_nofN         = Helper::splitString(nofN, "of"); 
-        loadedNthJob = std::stoi(v_nofN.at(0));
-        loadedTotJob = std::stoi(v_nofN.at(1));
-    }catch(const std::exception &e){
-        cout<<"\nEXCEPTION: Check the outName: "<<outName<<endl;
-        cout<<"outName format should be: DataOrMC_Year_Channel_Sample_Skim_nofN.rooot"<<endl;
-        cout<<"Run ./runMain -h for more details"<<endl;
-        cout<<e.what()<<endl;
-        std::abort();
-    }
-} 
-void NanoTree::setInputJsonPath(string inDir){
-    string year = "2016Pre";
-    if(globalFlags_.is2016Post) year = "2016Post";
-    if(globalFlags_.is2017) year = "2017";
-    if(globalFlags_.is2018) year = "2018";
-    string channel = Helper::splitString(loadedSampKey, "_").at(2);
-    inputJsonPath = inDir+"/FilesNano_"+year+"_"+channel+".json";
-    cout<<"+ setInputJsonPath() = "<<inputJsonPath<<endl;
-}
+NanoTree::NanoTree(GlobalFlag& globalFlags) : globalFlags_(globalFlags) {}
 
-void NanoTree:: loadInputJson(){
-    cout<<"==> loadInputJson()"<<endl;
-    ifstream fileName_(inputJsonPath.c_str());
-    nlohmann::json js;
-    try{
-        js = nlohmann::json::parse(fileName_);
-    } catch (const exception& e) {
-        cout<<"\nEXCEPTION: Check the input json inputJsonPath: "<<inputJsonPath<<endl;
-        cout<<e.what()<<endl;
-        abort();
-    }
-    try{
-        js.at(loadedSampKey).get_to(loadedAllFileNames);
-    }catch (const exception & e){
-        cout<<"\nEXCEPTION: Check the loadedSampKey: "<<loadedSampKey<<endl;
-        cout<<e.what()<<endl;
-        cout<<"Choose loadedSampKey from the following:"<<endl;
-        for (auto& element : js.items()) {
-            cout << element.key() << endl;
-        }
-        abort();
-    }//
-}
-
-void NanoTree::loadJobFileNames(){
-    cout<<"==> loadJobFileNames()"<<endl;
-    int nFiles  = loadedAllFileNames.size();
-    cout<<"Total files = "<<nFiles<<endl;
-    if (loadedTotJob > nFiles){
-        cout<<"Since loadedTotJob > nFiles, setting it to the nFiles, loadedTotJob = "<<nFiles<<endl;
-        loadedTotJob = nFiles;
-    }
-    if (loadedNthJob > loadedTotJob){
-        cout<<"Error: Make sure loadedNthJob < loadedTotJob"<<endl;
-        std::abort();
-    }
-	if (loadedNthJob>0 && loadedTotJob>0){
-	    cout <<"jobs: " <<loadedNthJob << " of " << loadedTotJob << endl;
-		cout << (1.*nFiles)/loadedTotJob << " files per job on average" << endl;
-	}
-    else{
-        cout<<"\n Error: Make sure loadedNthJob > 0 and loadedTotJob > 0\n ";
-        std::abort();
-    }
-    std::vector<std::vector<std::string>> smallVectors = Helper::splitVector(loadedAllFileNames, loadedTotJob);
-    loadedJobFileNames = smallVectors[loadedNthJob-1];
-}
-
-void NanoTree::loadTree(){
-  cout<<"==> loadTree()"<<endl;
-  std::cout << "Start NanoTree" << std::endl;
-  fChain->SetCacheSize(100*1024*1024);
-  bool isCopy = false;
-  int nFiles = loadedJobFileNames.size();
-  string dir = "root://cms-xrd-global.cern.ch/";
-  //string dir = "root://cmsxrootd.fnal.gov/";
-  //string dir = "./"; 
-  for(int fileI=0; fileI<nFiles; fileI++){
-      string fName = loadedJobFileNames[fileI];
-      if(isCopy){
-          string singleFile = fName.substr(fName.find_last_of("/")+1,fName.size());
-          string xrdcp_command = "xrdcp " + dir + fName + " " + singleFile ;
-          cout << xrdcp_command.c_str() << endl;
-          system(xrdcp_command.c_str());
-          fChain->Add( singleFile.c_str());
-          cout << singleFile << "  " << fChain->GetEntries() << endl;
-      }
-      else{
-          std::filesystem::path filePath = "/eos/cms/" + fName;
-          if (std::filesystem::exists(filePath)) {
-  			dir = "/eos/cms/"; 
-  	}
-          fChain->Add( (dir + fName).c_str());
-          cout << dir+fName << "  " << fChain->GetEntries() << endl;
-      }
-  }
-  std::cout << "Begin" << std::endl;
-  fChain->SetBranchStatus("*",0);
-  // event
-  fChain->SetBranchStatus("run",1);
-  fChain->SetBranchStatus("event",1);
-  fChain->SetBranchStatus("luminosityBlock",1);
-  
-  //--------------------------------------- 
-  //Jet for all channels 
-  //--------------------------------------- 
-  fChain->SetBranchStatus("Jet_btagDeep*",1);
-  fChain->SetBranchStatus("Jet_qgl",1);
-  fChain->SetBranchStatus("Jet_chEmEF",1);
-  fChain->SetBranchStatus("Jet_chHEF" ,1);
-  fChain->SetBranchStatus("Jet_eta"   ,1);
-  fChain->SetBranchStatus("Jet_mass"  ,1);
-  fChain->SetBranchStatus("Jet_muEF"  ,1);
-  fChain->SetBranchStatus("Jet_neEmEF",1);
-  fChain->SetBranchStatus("Jet_neHEF" ,1);
-  fChain->SetBranchStatus("Jet_phi"   ,1);
-  fChain->SetBranchStatus("Jet_pt"    ,1);
-  fChain->SetBranchStatus("Jet_rawFactor",1);
-  fChain->SetBranchStatus("Jet_jetId",1);
-  fChain->SetBranchStatus("Jet_area",1);
-  fChain->SetBranchStatus("nJet",1);
-  
-  //common branches
-  fChain->SetBranchStatus("PV_z");
-  //fChain->SetBranchStatus("GenVtx_z");
-  fChain->SetBranchStatus("PV_npvs",1);
-  fChain->SetBranchStatus("PV_npvsGood",1);
-  fChain->SetBranchStatus("MET_pt",1);
-  fChain->SetBranchStatus("MET_phi",1);
-  fChain->SetBranchStatus("ChsMET_pt",1);
-  fChain->SetBranchStatus("ChsMET_phi",1);
-  fChain->SetBranchStatus("RawPuppiMET_pt",1);
-  fChain->SetBranchStatus("RawPuppiMET_phi",1);
-  fChain->SetBranchStatus("fixedGridRhoFastjetAll");
-  
-  if(globalFlags_.is2016Pre || globalFlags_.is2016Post){
-    fChain->SetBranchStatus("Flag_goodVertices", 1);
-    fChain->SetBranchStatus("Flag_globalSuperTightHalo2016Filter", 1);
-    fChain->SetBranchStatus("Flag_HBHENoiseFilter", 1);
-    fChain->SetBranchStatus("Flag_HBHENoiseIsoFilter", 1);
-    fChain->SetBranchStatus("Flag_EcalDeadCellTriggerPrimitiveFilter", 1);
-    fChain->SetBranchStatus("Flag_BadPFMuonFilter", 1);
-    fChain->SetBranchStatus("Flag_BadPFMuonDzFilter", 1);
-    fChain->SetBranchStatus("Flag_eeBadScFilter", 1);
-  }
-  if(globalFlags_.is2017 || globalFlags_.is2018){
-    fChain->SetBranchStatus("Flag_goodVertices", 1);
-    fChain->SetBranchStatus("Flag_globalSuperTightHalo2016Filter", 1);
-    fChain->SetBranchStatus("Flag_HBHENoiseFilter", 1);
-    fChain->SetBranchStatus("Flag_HBHENoiseIsoFilter", 1);
-    fChain->SetBranchStatus("Flag_EcalDeadCellTriggerPrimitiveFilter", 1);
-    fChain->SetBranchStatus("Flag_BadPFMuonFilter", 1);
-    fChain->SetBranchStatus("Flag_BadPFMuonDzFilter", 1);
-    fChain->SetBranchStatus("Flag_eeBadScFilter", 1);
-    fChain->SetBranchStatus("Flag_ecalBadCalibFilter", 1);
-  }
-  
-  if(globalFlags_.isMC){
-    fChain->SetBranchStatus("Jet_genJetIdx",1);
-    fChain->SetBranchStatus("genWeight");
-    fChain->SetBranchStatus("nPSWeight");
-    fChain->SetBranchStatus("PSWeight");
-    fChain->SetBranchStatus("LHE_HT");
-    fChain->SetBranchStatus("Pileup_nTrueInt");
-    fChain->SetBranchStatus("GenJet_*",1);
-    fChain->SetBranchStatus("nGenJet",1);
-  }//MC
-  
-}//loadTree
-
-NanoTree::~NanoTree(){
+NanoTree::~NanoTree() {
     delete fChain;
 }
 
-Long64_t NanoTree::GetEntries(){
+void NanoTree::setInput(const std::string& outputName) {
+    outputName_ = outputName;
+    std::cout << "+ setInput() = " << outputName_ << '\n';
+}
+
+void NanoTree::loadInput() {
+    std::cout << "==> loadInput()" << '\n';
+    try {
+        std::vector<std::string> nameParts = Helper::splitString(outputName_, "_Skim_");
+        loadedSampleKey_ = nameParts.at(0);
+        std::cout << "Loaded sample key: " << loadedSampleKey_ << '\n';
+
+        std::vector<std::string> jobParts = Helper::splitString(nameParts.at(1), ".root");
+        std::string jobInfo = jobParts.at(0);
+        std::vector<std::string> jobSplit = Helper::splitString(jobInfo, "of");
+
+        loadedNthJob_ = std::stoul(jobSplit.at(0));
+        loadedTotalJobs_ = std::stoul(jobSplit.at(1));
+    } catch (const std::exception& e) {
+        std::cerr << "\nEXCEPTION: Invalid output name format: " << outputName_ << '\n';
+        std::cerr << "Expected format: DataOrMC_Year_Channel_Sample_Skim_nofN.root\n";
+        std::cerr << "Run ./runMain -h for more details\n";
+        std::cerr << e.what() << '\n';
+        std::abort();
+    }
+}
+
+void NanoTree::setInputJsonPath(const std::string& inputDir) {
+    std::string year = globalFlags_.is2016Post ? "2016Post" : globalFlags_.is2017 ? "2017" : globalFlags_.is2018 ? "2018" : "2016Pre";
+    std::string channel = Helper::splitString(loadedSampleKey_, "_").at(1);
+    inputJsonPath_ = inputDir + "/FilesNano_" + channel + "_" + year + ".json";
+    std::cout << "+ setInputJsonPath() = " << inputJsonPath_ << '\n';
+}
+
+void NanoTree::loadInputJson() {
+    std::cout << "==> loadInputJson()" << '\n';
+    std::ifstream inputFile(inputJsonPath_);
+    nlohmann::json jsonContent;
+    
+    try {
+        jsonContent = nlohmann::json::parse(inputFile);
+    } catch (const std::exception& e) {
+        std::cerr << "\nEXCEPTION: Error parsing JSON at " << inputJsonPath_ << '\n';
+        std::cerr << e.what() << '\n';
+        std::abort();
+    }
+    
+    try {
+        jsonContent.at(loadedSampleKey_).get_to(loadedAllFileNames_);
+    } catch (const std::exception& e) {
+        std::cerr << "\nEXCEPTION: Invalid sample key: " << loadedSampleKey_ << '\n';
+        std::cerr << "Available keys:\n";
+        for (const auto& element : jsonContent.items()) {
+            std::cerr << element.key() << '\n';
+        }
+        std::abort();
+    }
+}
+
+void NanoTree::loadJobFileNames() {
+    std::cout << "==> loadJobFileNames()" << '\n';
+    std::size_t totalFiles = loadedAllFileNames_.size();
+    std::cout << "Total files: " << totalFiles << '\n';
+
+    if (loadedTotalJobs_ > totalFiles) {
+        std::cerr << "Warning: loadedTotalJobs exceeds total files; adjusting to " << totalFiles << '\n';
+        loadedTotalJobs_ = totalFiles;
+    }
+
+    if (loadedNthJob_ > loadedTotalJobs_) {
+        std::cerr << "Error: loadedNthJob exceeds loadedTotalJobs\n";
+        std::abort();
+    }
+
+    if (loadedNthJob_ > 0 && loadedTotalJobs_ > 0) {
+        std::cout << "Processing job " << loadedNthJob_ << " of " << loadedTotalJobs_ << '\n';
+        std::cout << "Approximately " << totalFiles / loadedTotalJobs_ << " files per job" << '\n';
+    } else {
+        std::cerr << "Error: loadedNthJob and loadedTotalJobs must be greater than zero\n";
+        std::abort();
+    }
+
+    loadedJobFileNames_ = Helper::splitVector(loadedAllFileNames_, loadedTotalJobs_).at(loadedNthJob_ - 1);
+}
+
+void NanoTree::loadTree() {
+    std::cout << "==> loadTree()" << '\n';
+    fChain->SetCacheSize(Helper::tTreeCatchSize);
+    bool isCopy = false;  // Set to true if you want to copy files locally
+    std::string dir = "root://cms-xrd-global.cern.ch/";  // Default remote directory
+    // std::string dir = "./";  // Uncomment if using local directory
+
+    int totalFiles = 0;
+    int addedFiles = 0;
+    int failedFiles = 0;
+
+    for (const auto& fileName : loadedJobFileNames_) {
+        totalFiles++;
+        std::string fullPath;
+
+        if (isCopy) {
+            // Extract the local file name from the remote path
+            std::string localFile = fileName.substr(fileName.find_last_of('/') + 1);
+            std::string cmd = "xrdcp ";
+            cmd.append(dir).append(fileName).append(" ").append(localFile);
+            std::cout << "Executing command: " << cmd << '\n';
+            int ret = system(cmd.c_str());
+
+            if (ret != 0) {
+                std::cerr << "Error: Failed to copy " << fileName << " to local file " << localFile << '\n';
+                failedFiles++;
+                continue;  // Skip adding this file
+            }
+
+            // Check if the file was successfully copied
+            if (!std::filesystem::exists(localFile)) {
+                std::cerr << "Error: Local file " << localFile << " does not exist after copying.\n";
+                failedFiles++;
+                continue;  // Skip adding this file
+            }
+
+            fullPath = localFile;  // Use the local file path
+        } else {
+            // Remote file handling
+            std::filesystem::path filePath = "/eos/cms/" + fileName;
+            if (std::filesystem::exists(filePath)) {
+                dir = "/eos/cms/";  // Use local EOS path
+                fullPath = dir + fileName;
+            } else {
+                dir = "root://cms-xrd-global.cern.ch/";  // Fallback to remote xrootd path
+                fullPath = dir + fileName;
+            }
+        }
+
+        // Attempt to open the file to verify its validity
+        TFile* f = TFile::Open(fullPath.c_str(), "READ");
+        if (!f || f->IsZombie()) {
+            std::cerr << "Error: Failed to open or corrupted file " << fullPath << '\n';
+            if (f) f->Close();
+            failedFiles++;
+            continue;  // Skip adding this file
+        }
+
+        // Optionally, check for the presence of essential branches or histograms
+        // For example, check if "Events" exists
+        if (!f->GetListOfKeys()->Contains("Events")) {
+            std::cerr << "Error: 'Events' not found in " << fullPath << '\n';
+            f->Close();
+            failedFiles++;
+            continue;  // Skip adding this file
+        }
+
+        // File is valid, add it to the TChain
+        int added = fChain->Add(fullPath.c_str());
+        if (added == 0) {
+            std::cerr << "Warning: TChain::Add failed for " << fullPath << '\n';
+            f->Close();
+            failedFiles++;
+            continue;  // Skip adding this file
+        }
+
+        std::cout << fullPath << "  Entries: " << fChain->GetEntries() << '\n';
+        addedFiles++;
+        f->Close();
+    }
+
+    // Final summary
+    std::cout << "==> Finished loading files.\n";
+    std::cout << "Total files processed: " << totalFiles << '\n';
+    std::cout << "Successfully added files: " << addedFiles << '\n';
+    std::cout << "Failed to add files: " << failedFiles << '\n';
+
+    // Check if the chain has any trees
+    if (fChain->GetNtrees() == 0) {
+        std::cerr << "Error: No valid ROOT files were added to the TChain. Exiting.\n";
+        return;
+    }
+
+
+    fChain->SetBranchStatus("*", false);
+    fChain->SetBranchStatus("run", true);
+    fChain->SetBranchStatus("event", true);
+    fChain->SetBranchStatus("luminosityBlock", true);
+
+	//--------------------------------------- 
+    // Jet branches for all channels 
+    //--------------------------------------- 
+    fChain->SetBranchStatus("Jet_btagDeepFlav*", true);
+    fChain->SetBranchStatus("Jet_qgl", true);
+    fChain->SetBranchStatus("Jet_chEmEF", true);
+    fChain->SetBranchStatus("Jet_chHEF", true);
+    fChain->SetBranchStatus("Jet_eta", true);
+    fChain->SetBranchStatus("Jet_mass", true);
+    fChain->SetBranchStatus("Jet_muEF", true);
+    fChain->SetBranchStatus("Jet_neEmEF", true);
+    fChain->SetBranchStatus("Jet_neHEF", true);
+    fChain->SetBranchStatus("Jet_phi", true);
+    fChain->SetBranchStatus("Jet_pt", true);
+    fChain->SetBranchStatus("Jet_rawFactor", true);
+    fChain->SetBranchStatus("Jet_jetId", true);
+    fChain->SetBranchStatus("Jet_puId", true);
+    fChain->SetBranchStatus("Jet_area", true);
+    fChain->SetBranchStatus("nJet", true); 
+
+
+    fChain->SetBranchStatus("PV_z", true);
+    fChain->SetBranchStatus("PV_npvs", true);
+    fChain->SetBranchStatus("PV_npvsGood", true);
+    fChain->SetBranchStatus("MET_pt", true);
+    fChain->SetBranchStatus("MET_phi", true);
+    fChain->SetBranchStatus("ChsMET_pt", true);
+    fChain->SetBranchStatus("ChsMET_phi", true);
+    fChain->SetBranchStatus("RawPuppiMET_pt", true);
+    fChain->SetBranchStatus("RawPuppiMET_phi", true);
+    fChain->SetBranchStatus("fixedGridRhoFastjetAll", true);
+
+    fChain->SetBranchStatus("Flag_goodVertices", true);
+    fChain->SetBranchStatus("Flag_globalSuperTightHalo2016Filter", true);
+    fChain->SetBranchStatus("Flag_HBHENoiseFilter", true);
+    fChain->SetBranchStatus("Flag_HBHENoiseIsoFilter", true);
+    fChain->SetBranchStatus("Flag_EcalDeadCellTriggerPrimitiveFilter", true);
+    fChain->SetBranchStatus("Flag_BadPFMuonFilter", true);
+    fChain->SetBranchStatus("Flag_eeBadScFilter", true);
+    if(globalFlags_.is2017 || globalFlags_.is2018){
+        fChain->SetBranchStatus("Flag_ecalBadCalibFilter", true);
+    }
+
+    if (globalFlags_.isMC) {
+        fChain->SetBranchStatus("Jet_hadronFlavour", true);
+        fChain->SetBranchStatus("Jet_genJetIdx", true);
+        fChain->SetBranchStatus("genWeight", true);
+        fChain->SetBranchStatus("nPSWeight", true);
+        fChain->SetBranchStatus("PSWeight", true);
+        fChain->SetBranchStatus("LHE_HT", true);
+        fChain->SetBranchStatus("Pileup_nTrueInt", true);
+        fChain->SetBranchStatus("GenJet_*", true);
+        fChain->SetBranchStatus("nGenJet", true);
+    }
+}
+
+auto NanoTree::getEntries() const -> Long64_t {
     return fChain->GetEntries();
 }
 
-Int_t NanoTree::GetEntry(Long64_t entry){
+auto NanoTree::getEntry(Long64_t entry) -> Int_t {
     return fChain->GetEntry(entry);
 }
 
-Long64_t NanoTree::loadEntry(Long64_t entry)                                  
-{                                                                              
-// Set the environment to read one entry                                                  
-   if (!fChain) return -5;                                                     
-   Long64_t centry = fChain->LoadTree(entry);                                  
-   if (centry < 0) return centry;                                              
-   if (fChain->GetTreeNumber() != fCurrent) {                                  
-      fCurrent = fChain->GetTreeNumber();                                      
-   }                                                                           
-   //cout<<entry<<", "<<centry<<", "<<fCurrent<<endl;
-   return centry;                                                              
+auto NanoTree::loadEntry(Long64_t entry) -> Long64_t {
+    if (!fChain) return EXIT_FAILURE;
+    Long64_t centry = fChain->LoadTree(entry);
+    if (centry < 0) return centry;
+    if (fChain->GetTreeNumber() != fCurrent_) {
+        fCurrent_ = fChain->GetTreeNumber();
+    }
+    return centry;
 }
 

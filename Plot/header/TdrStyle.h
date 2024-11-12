@@ -140,6 +140,6 @@ private:
 };
 
 // Include the template implementations
-#include "../cpp/TdrStyle.tpp"
+#include "../tpp/TdrStyle.tpp"
 
 

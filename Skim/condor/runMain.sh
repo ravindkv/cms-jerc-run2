@@ -12,7 +12,8 @@ if [ -z ${_CONDOR_SCRATCH_DIR} ] ; then
 else
     echo "Running In Batch"
     echo ${_CONDOR_SCRATCH_DIR}
-	tar --strip-components=1 -zxf Skim.tar.gz
+	tar -zxf Skim.tar.gz
+    cd Skim
 fi
 
 #Run for Base, Signal region
@@ -32,6 +33,7 @@ if [ -z ${_CONDOR_SCRATCH_DIR} ] ; then
 else
     xrdcp -f output/${oName} ${outDir}
     echo "Cleanup"
-    rm * 
+    cd ..
+    rm -rf Skim 
 fi
 printf "Done ";/bin/date

@@ -1,14 +1,17 @@
 ./scanTFile
 ./diffTFiles
 
+Skim/.clang-tidy
 Skim/runMain
 Skim/obj
 Skim/output
 Skim/input/json
 Skim/condor/tmpSub
+Skim/__pycache__
 Skim/input/__pycache__
 Skim/condor/__pycache__
 
+Hist/.clang-tidy
 Hist/runMain
 Hist/corrlib
 Hist/obj

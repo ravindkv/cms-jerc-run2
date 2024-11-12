@@ -12,15 +12,15 @@ Channels = {}
 #Channels["GamJet"]    = "GamJet"
 Channels["ZeeJet"]    = "ZeeJet"
 Channels["ZmmJet"]    = "ZmmJet"
-#Channels["MCTruth"]   = "DiJet"
-#Channels["Flavour"]   = "DiJet"
-#Channels["VetoMap"]   = "DiJet"
-#Channels["DiJet"]     = "DiJet"
-#Channels["MultiJet"]  = "DiJet"
-#Channels["IncJet"]    = "DiJet"
+#Channels["MultiJet"]  = "MultiJet"
+#Channels["MCTruth"]   = "MultiJet"
+#Channels["Flavour"]   = "MultiJet"
+#Channels["VetoMap"]   = "MultiJet"
+#Channels["DiJet"]     = "MultiJet"
+#Channels["MultiJet"]  = "MultiJet"
+#Channels["IncJet"]    = "MultiJet"
 
-vomsProxy = "/afs/cern.ch/user/r/rverma/x509up_u93032"
-#vomsProxy = "/tmp/x509up_u93032" # Does NOT work on condor node
-reduceJobsMCBy     = 2
-reduceJobsDataBy   = 5
+vomsProxy = "x509up_u93032" # Does NOT work on condor node
+reduceJobsMCBy     = 5
+reduceJobsDataBy   = 10
 

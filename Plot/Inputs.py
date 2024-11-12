@@ -12,11 +12,11 @@ Channels = {}
 #Channels["GamJet"]    = "GamJet"
 Channels["ZeeJet"]    = "ZeeJet"
 Channels["ZmmJet"]    = "ZmmJet"
+#Channels["MultiJet"]  = "MultiJet"
 #Channels["MCTruth"]   = "DiJet"
 #Channels["Flavour"]   = "DiJet"
 #Channels["VetoMap"]   = "DiJet"
 #Channels["DiJet"]     = "DiJet"
-#Channels["MultiJet"]  = "DiJet"
 #Channels["IncJet"]    = "DiJet"
 
 vomsProxy = "/afs/cern.ch/user/r/rverma/x509up_u93032"

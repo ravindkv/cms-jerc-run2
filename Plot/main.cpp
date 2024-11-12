@@ -1,13 +1,14 @@
-//#include "RunZeeJet.h"
+#include "RunZeeJet.h"
 #include "RunZmmJet.h"
-//#include "PlotGamJet.h"
-//#include "PlotMCTruth.h"
-//#include "PlotFlavour.h"
-//#include "PlotVetoMap.h"
-//#include "PlotIncJet.h"
-//#include "PlotDiJet.h"
-//#include "PlotMultiJet.h"
-//#include "PlotWqq.h"
+#include "RunGamJet.h"
+#include "RunMultiJet.h"
+
+//#include "RunMCTruth.h"
+//#include "RunFlavour.h"
+//#include "RunVetoMap.h"
+//#include "RunIncJet.h"
+//#include "RunDiJet.h"
+//#include "RunWqq.h"
 #include "GlobalFlag.h"
 #include "Slide.h"
 
@@ -26,7 +27,7 @@ int main(int argc, char* argv[]){
     return 1;
   }
 
-  std::string jsonFile = "input/json/rootFile/MergedHistFiles.json";
+  std::string jsonFile = "input/root/json/MergedHistFiles.json";
   nlohmann::json js;
   std::string outName;
 
@@ -74,7 +75,7 @@ int main(int argc, char* argv[]){
   std::string chLatex = localTexDir+"/"+outName;
   Slide channelSlide(chLatex);
 
-  bool isAllChannel = true;
+  bool isAllChannel = false;
   std::string allLatex = localTexDir+"/AllChannel_Plot.tex";
   Slide allChannelSlide(allLatex);
   allChannelSlide.startDocument("JME-21-001: All channel");
@@ -89,24 +90,30 @@ int main(int argc, char* argv[]){
   cout<<" Create plots and slides"<<endl;
   cout<<"--------------------------------------"<<endl;
 
-  /*
   if(globF->isZeeJet or isAllChannel){
     cout<<"==> Running ZeeJet"<<endl;
     RunZeeJet *zeeJet = new RunZeeJet(outName);
     zeeJet->Run(js, eosPlotDir, channelSlide, allChannelSlide);
   }
-  */
+
   if(globF->isZmmJet or isAllChannel){
     cout<<"==> Running ZmmJet"<<endl;
-    RunZmmJet *zeeJet = new RunZmmJet(outName);
-    zeeJet->Run(js, eosPlotDir, channelSlide, allChannelSlide);
+    RunZmmJet *zmmJet = new RunZmmJet(outName);
+    zmmJet->Run(js, eosPlotDir, channelSlide, allChannelSlide);
+  }
+
+  if(globF->isGamJet or isAllChannel){
+    cout<<"==> Running GamJet"<<endl;
+    RunGamJet *gamJet = new RunGamJet(outName);
+    gamJet->Run(js, eosPlotDir, channelSlide, allChannelSlide);
+  }
+
+  if(globF->isMultiJet or isAllChannel){
+    cout<<"==> Running MultiJet"<<endl;
+    RunMultiJet *multiJet = new RunMultiJet(outName);
+    multiJet->Run(js, eosPlotDir, channelSlide, allChannelSlide);
   }
   /*
-  if(globF->isGamJet){
-    cout<<"==> Running GamJet"<<endl;
-    PlotGamJet *gamJet = new PlotGamJet(oName);
-    gamJet->Run(js, outRoot, chLatex);  
-  }
   if(globF->isMCTruth){
     cout<<"==> Running MCTruth"<<endl;
     PlotMCTruth *mcTruth = new PlotMCTruth(oName);
@@ -131,11 +138,6 @@ int main(int argc, char* argv[]){
     cout<<"==> Running DiJet"<<endl;
     PlotDiJet *diJet = new PlotDiJet(oName);
     diJet->Run(js, outRoot, chLatex);  
-  }
-  if(globF->isMultiJet){
-    cout<<"==> Running MultiJet"<<endl;
-    PlotMultiJet *multiJet = new PlotMultiJet(oName);
-    multiJet->Run(js, outRoot, chLatex);  
   }
   if(globF->isWqq){
     cout<<"==> Running Wqq"<<endl;

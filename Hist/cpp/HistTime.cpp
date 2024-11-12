@@ -1,7 +1,7 @@
 #include "HistTime.h"
 
-HistTime::HistTime(TFile* fout, const std::string& directoryName, const std::vector<int>& pTRefs, int runN, double runMin, double runMax)
-    : pTRefs_(pTRefs), runN_(runN), runMin_(runMin), runMax_(runMax)
+HistTime::HistTime(TFile* fout, const std::string& directoryName, const std::vector<int>& pTRefs, GlobalFlag &globalFlags)
+    : pTRefs_(pTRefs), globalFlags_(globalFlags), runN_(200), runMin_(271030), runMax_(325200)
 {
     InitializeHistograms(fout, directoryName);
 }
@@ -10,6 +10,23 @@ void HistTime::InitializeHistograms(TFile* fout, const std::string& directoryNam
     // Create the directory within the ROOT file
     fout->mkdir(directoryName.c_str());
     fout->cd(directoryName.c_str());
+    if (globalFlags_.getYear()== GlobalFlag::Year::Year2016Pre){
+        runMin_ = 271036;
+        runMax_ = 284044;
+    }
+    if (globalFlags_.getYear()== GlobalFlag::Year::Year2016Post){
+        runMin_ = 271036;
+        runMax_ = 284044;
+    }
+    if (globalFlags_.getYear()== GlobalFlag::Year::Year2017){
+        runMin_ = 294927;
+        runMax_ = 306462;
+    }
+    if (globalFlags_.getYear()== GlobalFlag::Year::Year2018){
+        runMin_ = 314472;
+        runMax_ = 325175;
+    }
+    std::cout<<"HistTime: Run range = "<<runMin_<<", "<<runMax_<<'\n';
     
     // Initialize histograms for each pTRef threshold
     for (const auto& pTRef : pTRefs_) {

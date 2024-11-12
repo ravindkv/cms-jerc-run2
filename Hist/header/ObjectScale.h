@@ -63,7 +63,8 @@ public:
     void loadMuRochRef();
     double getMuRochCorrection( int index, const std::string& syst) const;
     
-    // Electron Scale and Smearing (Ss)
+    // Electron Scale and Smearing (Ss):  ONLY Syst. Nominal corrections are already applied in Nano
+    // https://cms-talk.web.cern.ch/t/electron-scale-and-smearing-uncertainties-in-nanoaod/9311
     void loadEleSsRef();
     double getEleSsCorrection( int index, const std::string& syst) const;
     

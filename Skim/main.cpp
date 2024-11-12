@@ -1,4 +1,9 @@
 
+#include "RunZeeJet.h"
+#include "RunZmmJet.h"
+#include "RunGamJet.h"
+#include "RunMultiJet.h"
+
 #include <iostream>
 #include <filesystem>
 #include <sys/stat.h>
@@ -9,8 +14,6 @@
 #include "NanoTree.h"
 #include "GlobalFlag.h"
 
-#include "RunZeeJet.h"
-#include "RunZmmJet.h"
 
 namespace fs = std::filesystem;
 
@@ -105,11 +108,20 @@ int main(int argc, char* argv[]){
         auto zeeJet = std::make_unique<RunZeeJet>(globalFlag);
         zeeJet->Run(nanoT, fout.get());
     }
-
     if (globalFlag.isZmmJet) {
         std::cout << "==> Running ZmmJet" << std::endl;
         auto zmmJet = std::make_unique<RunZmmJet>(globalFlag);
         zmmJet->Run(nanoT, fout.get());
+    }
+    if (globalFlag.isGamJet) {
+        std::cout << "==> Running GamJet" << std::endl;
+        auto gamJet = std::make_unique<RunGamJet>(globalFlag);
+        gamJet->Run(nanoT, fout.get());
+    }
+    if (globalFlag.isMultiJet) {
+        std::cout << "==> Running MultiJet" << std::endl;
+        auto multiJet = std::make_unique<RunMultiJet>(globalFlag);
+        multiJet->Run(nanoT, fout.get());
     }
 	return 0;
 }

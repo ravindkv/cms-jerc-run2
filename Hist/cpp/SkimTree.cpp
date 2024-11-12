@@ -83,8 +83,8 @@ void SkimTree::setInputJsonPath(const std::string& inDir) {
     if (tokens.size() < 3) {
         throw std::runtime_error("Invalid loadedSampKey_ format: Expected at least three parts separated by '_'");
     }
-    std::string channel = tokens.at(2);
-    inputJsonPath_ = inDir + "/FilesSkim_" + year + "_" + channel + ".json";
+    std::string channel = tokens.at(1);
+    inputJsonPath_ = inDir + "/FilesSkim_" + channel + "_" + year + ".json";
     std::cout << "+ setInputJsonPath() = " << inputJsonPath_ << '\n';
 }
 
@@ -244,30 +244,46 @@ void SkimTree::loadTree() {
 	  	fChain_->SetBranchAddress("Photon_cutBased", &Photon_cutBased);
 	  	fChain_->SetBranchAddress("Photon_jetIdx", &Photon_jetIdx);
 	  	fChain_->SetBranchAddress("Photon_seedGain", &Photon_seedGain);
-	  	///if (is22 || is23) {
-	    	fChain_->SetBranchAddress("HLT_Photon300_NoHE", &HLT_Photon300_NoHE);
-	    	fChain_->SetBranchAddress("HLT_Photon33", &HLT_Photon33);
-	    	fChain_->SetBranchAddress("HLT_Photon50", &HLT_Photon50);
-	    	fChain_->SetBranchAddress("HLT_Photon75", &HLT_Photon75);
-	    	fChain_->SetBranchAddress("HLT_Photon90", &HLT_Photon90);
-	    	fChain_->SetBranchAddress("HLT_Photon120", &HLT_Photon120);
-	    	fChain_->SetBranchAddress("HLT_Photon150", &HLT_Photon150);
-	    	fChain_->SetBranchAddress("HLT_Photon175", &HLT_Photon175);
-	    	fChain_->SetBranchAddress("HLT_Photon200", &HLT_Photon200);
-	    	
-	    	fChain_->SetBranchAddress("HLT_Photon50_R9Id90_HE10_IsoM", &HLT_Photon50_R9Id90_HE10_IsoM);
-	    	fChain_->SetBranchAddress("HLT_Photon75_R9Id90_HE10_IsoM", &HLT_Photon75_R9Id90_HE10_IsoM);
-	    	fChain_->SetBranchAddress("HLT_Photon90_R9Id90_HE10_IsoM", &HLT_Photon90_R9Id90_HE10_IsoM);
-	    	fChain_->SetBranchAddress("HLT_Photon120_R9Id90_HE10_IsoM", &HLT_Photon120_R9Id90_HE10_IsoM);
-	    	fChain_->SetBranchAddress("HLT_Photon165_R9Id90_HE10_IsoM", &HLT_Photon165_R9Id90_HE10_IsoM);
-	    	
-	    	fChain_->SetBranchAddress("HLT_Photon20_HoverELoose", &HLT_Photon20_HoverELoose);
-	    	fChain_->SetBranchAddress("HLT_Photon30_HoverELoose", &HLT_Photon30_HoverELoose);
-	    	fChain_->SetBranchAddress("HLT_Photon30EB_TightID_TightIso", &HLT_Photon30EB_TightID_TightIso);
-	    	fChain_->SetBranchAddress("HLT_Photon100EBHE10", &HLT_Photon100EBHE10);
-	    	fChain_->SetBranchAddress("HLT_Photon110EB_TightID_TightIso", &HLT_Photon110EB_TightID_TightIso);
-	  	//} // is22 || is23
-	}
+
+	    fChain_->SetBranchAddress("HLT_Photon20", &HLT_Photon20);
+	    fChain_->SetBranchAddress("HLT_Photon33", &HLT_Photon33);
+	    fChain_->SetBranchAddress("HLT_Photon50", &HLT_Photon50);
+	    fChain_->SetBranchAddress("HLT_Photon75", &HLT_Photon75);
+	    fChain_->SetBranchAddress("HLT_Photon90", &HLT_Photon90);
+	    fChain_->SetBranchAddress("HLT_Photon120", &HLT_Photon120);
+	    fChain_->SetBranchAddress("HLT_Photon150", &HLT_Photon150);
+	    fChain_->SetBranchAddress("HLT_Photon175", &HLT_Photon175);
+	    fChain_->SetBranchAddress("HLT_Photon200", &HLT_Photon200);
+	    fChain_->SetBranchAddress("HLT_Photon50_R9Id90_HE10_IsoM", &HLT_Photon50_R9Id90_HE10_IsoM);
+	    fChain_->SetBranchAddress("HLT_Photon75_R9Id90_HE10_IsoM", &HLT_Photon75_R9Id90_HE10_IsoM);
+	    fChain_->SetBranchAddress("HLT_Photon90_R9Id90_HE10_IsoM", &HLT_Photon90_R9Id90_HE10_IsoM);
+        if (year_ == GlobalFlag::Year::Year2016Pre || year_ == GlobalFlag::Year::Year2016Post) {
+            fChain_->SetBranchAddress("HLT_Photon36",                      &HLT_Photon36);
+            fChain_->SetBranchAddress("HLT_Photon30",                      &HLT_Photon30);
+            fChain_->SetBranchAddress("HLT_Photon22",                      &HLT_Photon22);
+            fChain_->SetBranchAddress("HLT_Photon165_R9Id90_HE10_IsoM",    &HLT_Photon165_R9Id90_HE10_IsoM);
+            fChain_->SetBranchAddress("HLT_Photon120_R9Id90_HE10_IsoM",    &HLT_Photon120_R9Id90_HE10_IsoM);
+            fChain_->SetBranchAddress("HLT_Photon36_R9Id90_HE10_IsoM",     &HLT_Photon36_R9Id90_HE10_IsoM);
+            fChain_->SetBranchAddress("HLT_Photon30_R9Id90_HE10_IsoM",     &HLT_Photon30_R9Id90_HE10_IsoM);
+            fChain_->SetBranchAddress("HLT_Photon22_R9Id90_HE10_IsoM",     &HLT_Photon22_R9Id90_HE10_IsoM); 
+        }
+        else if (year_ == GlobalFlag::Year::Year2017){
+            fChain_->SetBranchAddress("HLT_Photon165_R9Id90_HE10_IsoM",    &HLT_Photon165_R9Id90_HE10_IsoM);
+            fChain_->SetBranchAddress("HLT_Photon120_R9Id90_HE10_IsoM",    &HLT_Photon120_R9Id90_HE10_IsoM);
+            fChain_->SetBranchAddress("HLT_Photon60_HoverELoose",          &HLT_Photon60_HoverELoose);
+            fChain_->SetBranchAddress("HLT_Photon50_HoverELoose",          &HLT_Photon50_HoverELoose);
+            fChain_->SetBranchAddress("HLT_Photon40_HoverELoose",          &HLT_Photon40_HoverELoose);
+            fChain_->SetBranchAddress("HLT_Photon30_HoverELoose",          &HLT_Photon30_HoverELoose);
+            fChain_->SetBranchAddress("HLT_Photon20_HoverELoose",          &HLT_Photon20_HoverELoose); 
+        }
+        else if (year_ == GlobalFlag::Year::Year2018){
+            fChain_->SetBranchAddress("HLT_Photon120EB_TightID_TightIso",  &HLT_Photon120EB_TightID_TightIso);
+            fChain_->SetBranchAddress("HLT_Photon110EB_TightID_TightIso",  &HLT_Photon110EB_TightID_TightIso);
+            fChain_->SetBranchAddress("HLT_Photon100EB_TightID_TightIso",  &HLT_Photon100EB_TightID_TightIso);
+            fChain_->SetBranchAddress("HLT_Photon30_HoverELoose",          &HLT_Photon30_HoverELoose);
+            fChain_->SetBranchAddress("HLT_Photon20_HoverELoose",          &HLT_Photon20_HoverELoose); 
+        }
+	}//GamJet
 	
 	//--------------------------------------- 
 	// Electron (for DiEleJet)
@@ -370,7 +386,6 @@ void SkimTree::loadTree() {
 	   		fChain_->SetBranchAddress("GenIsolatedPhoton_mass", &GenIsolatedPhoton_mass);
 	   		fChain_->SetBranchAddress("GenIsolatedPhoton_phi", &GenIsolatedPhoton_phi);
 	   		fChain_->SetBranchAddress("GenIsolatedPhoton_pt", &GenIsolatedPhoton_pt);
-	   		fChain_->SetBranchAddress("GenIsolatedPhoton_pdgId", &GenIsolatedPhoton_pdgId);
 	  	}
 	  	if (channel_ == GlobalFlag::Channel::ZeeJet || channel_ == GlobalFlag::Channel::ZmmJet){
 	   		fChain_->SetBranchAddress("nGenDressedLepton", &nGenDressedLepton);

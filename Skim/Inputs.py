@@ -1,21 +1,27 @@
-#-----------------------------------------------------------------
-eosSkimDir="/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Skim"
-#-----------------------------------------------------------------
-Years = []
-Years.append('2016Pre')
-Years.append('2016Post')
-Years.append('2017')
-Years.append('2018')
+# Skim/Inputs.py
 
-Channels = []
-#Channels.append("GamJet")
-Channels.append("ZeeJet")
-Channels.append("ZmmJet")
-#Channels.append("DiJet")
+# Directory where skimmed files will be stored
+eosSkimDir = "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Skim"
 
-#vomsProxy = "/afs/cern.ch/user/r/rverma/x509up_u93032"
+# Years and Channels to process
+Years = [
+    '2016Pre',
+    '2016Post',
+    '2017',
+    '2018'
+]
+
+Channels = [
+    'ZeeJet',
+    'ZmmJet',
+    'GamJet',
+    'MultiJet',
+]
+
+# VOMS Proxy path (adjust as needed)
 vomsProxy = "x509up_u93032"
-#vomsProxy = "/tmp/x509up_u93032" # Does NOT work on condor node
-evtPerJobMC   = 1e6 # n million events per job
-evtPerJobData = 5e6 
+
+# Events per job
+eventsPerJobMC = 1e6  # Number of events per job for MC
+eventsPerJobData = 5e6  # Number of events per job for Data
 

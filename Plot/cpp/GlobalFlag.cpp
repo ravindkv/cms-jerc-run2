@@ -8,7 +8,7 @@ GlobalFlag::GlobalFlag(std::string oName){
   isPlotErasXY = true;
   isPlotEraXY =  true;
 
-  isPrintFigConfig = true;
+  isPrintFigConfig = false;
 
   if(outName.find("GamJet")!= string::npos)    isGamJet    = true;
   if(outName.find("ZeeJet")!= string::npos)    isZeeJet   = true;

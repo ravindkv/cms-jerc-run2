@@ -14,9 +14,13 @@ OBJDIR = obj
 # Source files and object files
 SOURCES := $(wildcard $(SRCDIR)/*.cpp)
 OTHER_SOURCES := main.cpp
-OBJECTS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES)) $(patsubst %.cpp,$(OBJDIR)/%.o,$(OTHER_SOURCES))
+OBJECTS := $(patsubst $(SRCDIR)/%.cpp,$(OBJDIR)/%.o,$(SOURCES)) \
+           $(patsubst %.cpp,$(OBJDIR)/%.o,$(OTHER_SOURCES))
 DEPS    := $(OBJECTS:.o=.d)
 BINS    := runMain
+
+# Include the tpp files
+TPPFILES := $(wildcard tpp/*.tpp)
 
 # Default target
 all: $(BINS)
@@ -31,13 +35,13 @@ $(OBJDIR):
 	@mkdir -p $(OBJDIR)
 
 # Compiling object files from SRCDIR
-$(OBJDIR)/%.o: $(SRCDIR)/%.cpp | $(OBJDIR)
-	@echo "--> Creating object $@"
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp $(TPPFILES) | $(OBJDIR)
+	@echo "--> Compiling $<"
 	@$(GCC) $(CXXFLAGS) -c $< -o $@
 
 # Compiling object files from root directory (e.g., main.cpp)
-$(OBJDIR)/%.o: %.cpp | $(OBJDIR)
-	@echo "--> Creating object $@"
+$(OBJDIR)/%.o: %.cpp $(TPPFILES) | $(OBJDIR)
+	@echo "--> Compiling $<"
 	@$(GCC) $(CXXFLAGS) -c $< -o $@
 
 # Clean up generated files
@@ -46,4 +50,7 @@ clean:
 
 # Include dependency files
 -include $(DEPS)
+
+# Phony targets
+.PHONY: all clean
 

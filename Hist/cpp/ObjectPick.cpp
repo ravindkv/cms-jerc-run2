@@ -135,17 +135,17 @@ void ObjectPick::pickPhotons() {
         double et = skimTree_->Photon_pt[phoInd];
         double eta = skimTree_->Photon_eta[phoInd];
         double absEta = std::abs(eta);
-        bool passPhoId = skimTree_->Photon_cutBased[phoInd];  // Tight ID
-        bool phoPresel = (et >= 20.0 && absEta <= 1.4442);
-
-        if (phoPresel && passPhoId) {
+        Int_t phoId = skimTree_->Photon_cutBased[phoInd];  // Tight ID
+        if(et >= 20.0 && absEta <= 1.4442 && phoId==3){
             pickedPhotons_.push_back(phoInd);
-            printDebug("Photon " + std::to_string(phoInd) + " selected: et=" + std::to_string(et) + ", eta=" + std::to_string(eta));
-        } else {
-            printDebug("Photon " + std::to_string(phoInd) + " rejected: et=" + std::to_string(et) + ", eta=" + std::to_string(eta));
         }
+        printDebug(
+            "Photon " + std::to_string(phoInd) + 
+            ", Id =" + std::to_string(phoId) + 
+            ", et =" + std::to_string(et) + 
+            ", eta =" + std::to_string(eta)
+       );
     }
-
     printDebug("Total Photons Selected: " + std::to_string(pickedPhotons_.size()));
 }
 
@@ -157,8 +157,11 @@ void ObjectPick::pickRefs() {
         int k = pickedElectrons_.at(1);
 
         TLorentzVector p4Lep1, p4Lep2;
-        double ptj = objectScale_->getEleSsCorrection(j, "nom") * skimTree_->Electron_pt[j];
-        double ptk = objectScale_->getEleSsCorrection(k, "nom") * skimTree_->Electron_pt[k];
+        //double ptj = objectScale_->getEleSsCorrection(j, "nom") * skimTree_->Electron_pt[j];
+        //double ptk = objectScale_->getEleSsCorrection(k, "nom") * skimTree_->Electron_pt[k];
+        // ONLY syst
+        double ptj = skimTree_->Electron_pt[j];
+        double ptk = skimTree_->Electron_pt[k];
         p4Lep1.SetPtEtaPhiM(ptj, skimTree_->Electron_eta[j], skimTree_->Electron_phi[j], skimTree_->Electron_mass[j]);
         p4Lep2.SetPtEtaPhiM(ptk, skimTree_->Electron_eta[k], skimTree_->Electron_phi[k], skimTree_->Electron_mass[k]);
         TLorentzVector p4Ref = p4Lep1 + p4Lep2;
@@ -172,7 +175,7 @@ void ObjectPick::pickRefs() {
     }
 
     // Z->mumu + jets channel
-    if (channel_ == GlobalFlag::Channel::ZmmJet && pickedMuons_.size() > 1) {
+    else if (channel_ == GlobalFlag::Channel::ZmmJet && pickedMuons_.size() > 1) {
         int j = pickedMuons_.at(0);
         int k = pickedMuons_.at(1);
 
@@ -192,12 +195,12 @@ void ObjectPick::pickRefs() {
     }
 
     // Gamma + jets channel
-    if (channel_ == GlobalFlag::Channel::GamJet && !pickedPhotons_.empty()) {
+    else if (channel_ == GlobalFlag::Channel::GamJet && !pickedPhotons_.empty()) {
         for (int idx : pickedPhotons_) {
             TLorentzVector p4Pho;
             p4Pho.SetPtEtaPhiM(skimTree_->Photon_pt[idx], skimTree_->Photon_eta[idx], skimTree_->Photon_phi[idx], skimTree_->Photon_mass[idx]);
             pickedRefs_.push_back(p4Pho);
-            printDebug("Photon added to references: et=" + std::to_string(skimTree_->Photon_pt[idx]));
+            printDebug("Photon index added to references =" + std::to_string(idx));
         }
     }
 

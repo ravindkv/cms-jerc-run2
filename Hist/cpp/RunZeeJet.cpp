@@ -1,9 +1,11 @@
 #include "RunZeeJet.h"
+#include "HistCutflow.h"
 #include "HistTag.h"
 #include "HistTime.h"
 #include "HistRef.h"
 #include "HistMain.h"
 #include "Helper.h"
+#include "VarBin.h"
    
 // Constructor implementation
 RunZeeJet::RunZeeJet(GlobalFlag& globalFlags)
@@ -15,50 +17,32 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
     TDirectory *curdir = gDirectory;
     assert(fout && !fout->IsZombie());
     
-    // pT binning
-    std::vector<double> binsPt = {15, 20, 25, 30, 35, 40, 50, 60, 75, 90, 110, 130, 175, 230,
-    								300, 400, 500, 600, 700, 850, 1000, 1200, 1500};
-    const int nPt = binsPt.size() - 1;
-    
-    // Eta binning
-    std::vector<double> binsEta = {-5.191, -3.839, -3.489, -3.139, -2.964, -2.853, -2.650,
-    								 -2.500, -2.322, -2.172, -1.930, -1.653, -1.479, -1.305,
-    								 -1.044, -0.783, -0.522, -0.261, 0.000, 0.261, 0.522, 0.783,
-    								 1.044, 1.305, 1.479, 1.653, 1.930, 2.172, 2.322, 2.500,
-    								 2.650, 2.853, 2.964, 3.139, 3.489, 3.839, 5.191};
-    const int nEta = binsEta.size() - 1;
-    
     //------------------------------------
+    // Initialise hists and directories 
+    //------------------------------------
+    
     // Cutflow histograms
-    //------------------------------------
     std::vector<std::string> cuts = {
     		"passSkim", "passHLT", "passGoodLumi", "passMetFilter", "passAtleast1Ref",
     		"passAtleast1Jet", "passJetVetoMap", "passDPhiRefJet1", "passRefBarrel",
     		"passJet1EtaJet2Pt", "passResponse"
     };
+    auto h1EventInCutflow = std::make_unique<HistCutflow>("h1EventInCutflow", cuts, fout->mkdir("Cutflow"));
     
-    // Create the histogram with the number of bins equal to the number of cuts
-    auto h1EventInCutflow = std::make_unique<TH1D>(
-         "h1EventInCutflow", "", cuts.size(), 0.5, cuts.size() + 0.5);
+    // Variable binning
+    std::vector<double> binsPt  = VarBin::getBinsPt(); 
+    std::vector<double> binsEta = VarBin::getBinsEta(); 
+    std::vector<double> binsPhi = VarBin::getBinsPhi(); 
     
-    // Map each cut name to a bin number (1-based bin number for ROOT)
-    std::map<std::string, int> cutToBinMap;
-    for (size_t i = 0; i < cuts.size(); ++i) {
-    		cutToBinMap[cuts[i]] = i + 1;  // Bin numbers are 1-based in ROOT
-    		h1EventInCutflow->GetXaxis()->SetBinLabel(i + 1, cuts[i].c_str());  // Set bin labels
-    }
-    
-    //------------------------------------
-    // Variables after at least 1 Ref
-    //------------------------------------
+    const int nPt  = binsPt.size()  - 1;
+    const int nEta = binsEta.size() - 1;
+    const int nPhi = binsPhi.size() - 1;
+
     // Initialize HistRef instance
-    HistRef coreRefHists(fout, "passAtleast1Ref", nPt, binsPt.data());
+    HistRef refHists(fout, "passAtleast1Ref", nPt, binsPt.data());
     curdir->cd();
     
-    
-    //------------------------------------
     // Variables after leading Ref in barrel (eta < 1.33)
-    //------------------------------------
     fout->mkdir("passRefBarrel");
     fout->cd("passRefBarrel");
     
@@ -79,32 +63,14 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
     auto p1J1PtOverGenJ1PtInGenJ1Pt = std::make_unique<TProfile>(
          "p1J1PtOverGenJ1PtInGenJ1Pt", "", nPt, binsPt.data());
     
-    //------------------------------------
     // Variables in 'flavourXTagY' directory
-    //------------------------------------
-    // Initialize HistTag instance
-    HistTag coreTagHists(fout, "passRefBarrel/flavourXTagY", nPt, binsPt, globalFlags_);
+    HistTag tagHists(fout, "passRefBarrel/flavourXTagY", nPt, binsPt, globalFlags_);
     
-    //------------------------------------
     // Variables after Jet1Eta, Jet2Pt cut
-    //------------------------------------
-    const int nPhi = 72;
-    const double binsPhi[nPhi + 1] = {
-    		-3.142, -3.054, -2.967, -2.880, -2.793, -2.705, -2.618, -2.531, -2.443,
-    		-2.356, -2.269, -2.182, -2.094, -2.007, -1.920, -1.833, -1.745, -1.658,
-    		-1.571, -1.484, -1.396, -1.309, -1.222, -1.134, -1.047, -0.960, -0.873,
-    		-0.785, -0.698, -0.611, -0.524, -0.436, -0.349, -0.262, -0.175, -0.087,
-    		0.000, 0.087, 0.175, 0.262, 0.349, 0.436, 0.524, 0.611, 0.698, 0.785,
-    		0.873, 0.960, 1.047, 1.134, 1.222, 1.309, 1.396, 1.484, 1.571, 1.658,
-    		1.745, 1.833, 1.920, 2.007, 2.094, 2.182, 2.269, 2.356, 2.443, 2.531,
-    		2.618, 2.705, 2.793, 2.880, 2.967, 3.054, 3.142
-    };
-    
-    // Initialize HistMain instance
-    HistMain coreMainHists(fout, "passJet1EtaJet2Pt", nPt, binsPt.data(), nEta, binsEta.data(), nPhi, binsPhi);
+    HistMain mainHists(fout, "passJet1EtaJet2Pt", nPt, binsPt.data(), nEta, binsEta.data(), nPhi, binsPhi.data());
     curdir->cd();
     fout->cd("passJet1EtaJet2Pt");
-    
+    // Add a few additional variables 
     auto p1GenJ2PtOverProbePtInRefPt = std::make_unique<TProfile>(
          "p1GenJ2PtOverProbePtInRefPt", "", nPt, binsPt.data());
     auto p1J2PtOverProbePtInRefPt = std::make_unique<TProfile>(
@@ -121,15 +87,9 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
     auto h2EventInRefPtMpfRespPassBoth = std::make_unique<TH2D>(
          "h2EventInRefPtMpfRespPassBoth", "", nPt, binsPt.data(), 300, -2, 4);
     
-    //------------------------------------
     // Response in data-taking Runs
-    //------------------------------------
-    Int_t runN = 20000;
-    Double_t runMin = 370000.5;
-    Double_t runMax = 390000.5;
     std::vector<int> pTRefs = {30, 110, 230};
-    // Initialize HistTime instance
-    HistTime coreRun(fout, "passResponse", pTRefs, runN, runMin, runMax);
+    HistTime timeHists(fout, "passResponse", pTRefs, globalFlags_);
     curdir->cd();
 
 
@@ -142,39 +102,35 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
     TLorentzVector p4GenJeti, p4GenJet1, p4GenJet2;
     TLorentzVector p4Refx; // for MPFX
 
-    Long64_t nentries = skimT->getEntries(); 
-    std::cout << "\nStarting loop over " << nentries << " entries" << '\n';
-
-    std::cout << "---------------------------" << '\n';
-    std::cout << std::setw(10) << "Progress" << std::setw(10) << "Time" << '\n';
-    std::cout << "---------------------------" << '\n';
-    double totTime = 0.0;
+    double totalTime = 0.0;
     auto startClock = std::chrono::high_resolution_clock::now();
+    Long64_t nentries = skimT->getEntries();
+    Helper::initProgress(nentries);
 
     for (Long64_t jentry = 0; jentry < nentries; ++jentry) {
         if (globalFlags_.isDebug() && jentry > globalFlags_.getNDebug()) break;
-        Helper::printProgress(jentry, nentries, startClock, totTime);
+        Helper::printProgress(jentry, nentries, startClock, totalTime);
        
         Long64_t ientry = skimT->loadEntry(jentry);
         if (ientry < 0) break; 
         skimT->getChain()->GetTree()->GetEntry(ientry);
-        h1EventInCutflow->Fill(cutToBinMap["passSkim"]);
+        h1EventInCutflow->fill("passSkim");
 
         //------------------------------------
         // Trigger and golden lumi, MET filter selection 
         //------------------------------------
         if (!eventP->passHLT(skimT)) continue; 
-        h1EventInCutflow->Fill(cutToBinMap["passHLT"]);
+        h1EventInCutflow->fill("passHLT");
 
         bool passGoodLumi = true; 
         if (globalFlags_.isData()){
             passGoodLumi = objS->checkGoodLumi(skimT->run, skimT->luminosityBlock);
         }
         if (!passGoodLumi) continue; 
-        h1EventInCutflow->Fill(cutToBinMap["passGoodLumi"]);
+        h1EventInCutflow->fill("passGoodLumi");
 
         if (!eventP->passFilter(skimT)) continue; 
-        h1EventInCutflow->Fill(cutToBinMap["passMetFilter"]);
+        h1EventInCutflow->fill("passMetFilter");
 
         //------------------------------------------
         // Select objects
@@ -188,7 +144,7 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
         std::vector<TLorentzVector> p4Refs = objP->getPickedRefs();
 
         if (p4Refs.empty()) continue; 
-        h1EventInCutflow->Fill(cutToBinMap["passAtleast1Ref"]);
+        h1EventInCutflow->fill("passAtleast1Ref");
 
         // Weight
         double weight = (globalFlags_.isMC() ? skimT->genWeight : 1.0);
@@ -208,7 +164,7 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
             p4GenRef = p4GenRefs.at(0);
         }
         // Fill HistRef histograms
-        coreRefHists.Fill(p4Refs.size(), p4Ref, p4GenRef, weight); 
+        refHists.Fill(p4Refs.size(), p4Ref, p4GenRef, weight); 
         
 
         //------------------------------------------------
@@ -279,10 +235,10 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
         }//nJet
 
         if (nJets < 1) continue; 
-        h1EventInCutflow->Fill(cutToBinMap["passAtleast1Jet"]);
+        h1EventInCutflow->fill("passAtleast1Jet");
 
         if (objS->checkJetVetoMap()) continue; // expensive function
-        h1EventInCutflow->Fill(cutToBinMap["passJetVetoMap"]);
+        h1EventInCutflow->fill("passJetVetoMap");
         
         //------------------------------------------------
         // Set MET vectors
@@ -333,13 +289,14 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
             continue;
         }
        
-        if (fabs(p4Ref.DeltaPhi(p4Jet1) - TMath::Pi()) >= 0.44) continue; 
-        h1EventInCutflow->Fill(cutToBinMap["passDPhiRefJet1"]);
+        double deltaPhi = Helper::DELTAPHI(p4Ref.Phi(), p4Jet1.Phi());
+        if (fabs(deltaPhi - TMath::Pi()) >= 0.44) continue; 
+        h1EventInCutflow->fill("passDPhiRefJet1");
 
         if (fabs(p4Ref.Eta()) > 1.3) continue; 
-        h1EventInCutflow->Fill(cutToBinMap["passRefBarrel"]);
+        h1EventInCutflow->fill("passRefBarrel");
 
-        h1EventInDphiJetRef->Fill(p4Ref.DeltaPhi(p4Jet1), weight);
+        h1EventInDphiJetRef->Fill(deltaPhi, weight);
         h1EventInDrJetRef->Fill(p4Ref.DeltaR(p4Jet1), weight);
 
         //------------------------------------------------
@@ -372,24 +329,23 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
             p1J1PtOverGenJ1PtInGenJ1Pt->Fill(p4GenJet1.Pt(), p4Jet1.Pt() / p4GenJet1.Pt(), weight);
         }
       
-        coreTagHists.mvar["h1EventInRefPt"] = 1.0;
-        coreTagHists.mvar["p1MpfRespInRefPt"] = mpf;
-        coreTagHists.mvar["p1DbRespInRefPt"] = bal;
-        coreTagHists.mvar["p1MpfResp1InRefPt"] = mpf1;
-        coreTagHists.mvar["p1MpfRespNInRefPt"] = mpfn;
-        coreTagHists.mvar["p1MpfRespUInRefPt"] = mpfu;
-        coreTagHists.mvar["p1RhoInRefPt"] = skimT->Rho;
-        coreTagHists.mvar["p1Jet1PtORefPtInRefPt"] = (p4Jet1.Pt() / ptRef);
-        coreTagHists.mvar["p1GenJet1PtORefPtInRefPt"] = (p4GenJet1.Pt() / ptRef);
-        coreTagHists.mvar["p1Jet1PtOGenJet1PtInGenJet1Pt"] = (p4GenJet1.Pt() != 0 ? p4Jet1.Pt() / p4GenJet1.Pt() : 0.0);
-        coreTagHists.FillHistograms(skimT.get(), ptRef, iJet1, iGenJet, weight);
-
+        tagHists.mvar["h1EventInRefPt"] = 1.0;
+        tagHists.mvar["p1MpfRespInRefPt"] = mpf;
+        tagHists.mvar["p1DbRespInRefPt"] = bal;
+        tagHists.mvar["p1MpfResp1InRefPt"] = mpf1;
+        tagHists.mvar["p1MpfRespNInRefPt"] = mpfn;
+        tagHists.mvar["p1MpfRespUInRefPt"] = mpfu;
+        tagHists.mvar["p1RhoInRefPt"] = skimT->Rho;
+        tagHists.mvar["p1Jet1PtORefPtInRefPt"] = (p4Jet1.Pt() / ptRef);
+        tagHists.mvar["p1GenJet1PtORefPtInRefPt"] = (p4GenJet1.Pt() / ptRef);
+        tagHists.mvar["p1Jet1PtOGenJet1PtInGenJet1Pt"] = (p4GenJet1.Pt() != 0 ? p4Jet1.Pt() / p4GenJet1.Pt() : 0.0);
+        tagHists.FillHistograms(skimT.get(), ptRef, iJet1, iGenJet, weight);
 
         if (!((fabs(p4Jet1.Eta()) < 1.3) && (p4Jet2.Pt() < ptRef || p4Jet2.Pt() < 30))) continue; 
-        h1EventInCutflow->Fill(cutToBinMap["passJet1EtaJet2Pt"]);
+        h1EventInCutflow->fill("passJet1EtaJet2Pt");
 
         // Fill HistMain histograms
-        coreMainHists.Fill(skimT.get(), iJet1, bal, mpf, ptRef, weight);
+        mainHists.Fill(skimT.get(), iJet1, bal, mpf, ptRef, weight);
         
         h2EventInRefPtDbResp->Fill(ptRef, bal, weight);
         h2EventInRefPtMpfResp->Fill(ptRef, mpf, weight);
@@ -414,16 +370,15 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
         }
 
         if (!(pass_DbResp && pass_MpfResp)) continue;
-        h1EventInCutflow->Fill(cutToBinMap["passResponse"]);
-        coreRun.Fill(skimT.get(), iJet1, bal, mpf, ptRef, weight);
+        h1EventInCutflow->fill("passResponse");
+        if(globalFlags_.isData()) timeHists.Fill(skimT.get(), iJet1, bal, mpf, ptRef, weight);
 
     }  // end of event loop
 
-fout->Write();
-Helper::printCutflow(h1EventInCutflow.get());
-//Helper::scanTFile(fout);
-std::cout << "Output file: " << fout->GetName() << '\n';
-return 0;
-
+    Helper::printCutflow(h1EventInCutflow->getHistogram());
+    fout->Write();
+    //Helper::scanTFile(fout);
+    std::cout << "Output file: " << fout->GetName() << '\n';
+    return 0;
 }
    

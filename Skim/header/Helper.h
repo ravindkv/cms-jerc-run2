@@ -17,12 +17,14 @@
 
 class Helper {
 public:
-     //Function to split a vector into smallare vectors
-     static std::vector<std::vector<std::string>> splitVector(const std::vector<std::string>& strings, int n);
+    //Function to split a vector into smallare vectors
+    static std::vector<std::vector<std::string>> splitVector(const std::vector<std::string>& strings, std::size_t n);
     
     // Function to split a string into smaller vectors of string 
     static std::vector<std::string> splitString(const std::string& s, const std::string& delimiter);
 
+
+    static void initProgress(); 
     static void printProgress(Long64_t jentry, Long64_t nentries, 
                        std::chrono::time_point<std::chrono::high_resolution_clock>& startClock, 
                        double& totTime);
@@ -51,7 +53,16 @@ public:
      */
     static std::vector<std::string> GetMatchingBranchNames(TTree* tree, const std::vector<std::string>& patterns);
 
+    //All magic numbers
+    static const int tTreeCatchSize = 52428800;//50*1024*1024
+    static constexpr unsigned long cutFlowBinMargin = 0.5;
+    static const int coutTabWidth5 = 5; 
+    static const int coutTabWidth10 = 10; 
+    static const int coutTabWidth15 = 15; 
+    static const int coutTabWidth20 = 20; 
 
+    static const int hundred = 100; 
+    static const int sixty = 60; 
 };
 
 #endif // HELPER_H

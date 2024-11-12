@@ -1,18 +1,9 @@
-#ifndef SKIMZEEJET_H
-#define SKIMZEEJET_H
+#ifndef RUNZEEJET_H
+#define RUNZEEJET_H
 
 #include <iostream>
-#include <ctime>
-#include <iomanip>
-
-// ROOT includes
-#include <TROOT.h>
 #include <TFile.h>
-#include <TH1D.h>
-#include <TProfile.h>
-#include <TStopwatch.h>
 
-// User-defined includes
 #include "NanoTree.h"
 #include "GlobalFlag.h"
 
@@ -32,8 +23,7 @@ private:
     std::map<std::string, Bool_t> trigVals_;
     std::map<std::string, TBranch*> trigTBranches_;
 
-
 };
 
-#endif // SKIMZEEJET_H
+#endif // RUNZEEJET_H
 

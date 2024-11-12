@@ -1,11 +1,7 @@
 #ifndef HISTZMMJET_H
 #define HISTZMMJET_H
 
-#include <memory>
 #include <iostream>
-#include <algorithm>
-#include <ctime>
-#include <iomanip>
 #include <cmath>
 
 // ROOT includes
@@ -17,8 +13,6 @@
 #include <TProfile.h>
 #include <TProfile2D.h>
 #include <TLorentzVector.h>
-#include <TStopwatch.h>
-#include <TRandom3.h>
 
 // User-defined includes
 #include "SkimTree.h"

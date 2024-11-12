@@ -27,79 +27,66 @@ auto EventPick::passHLT(const std::shared_ptr<SkimTree>& tree) const -> bool {
     if (channel_ == GlobalFlag::Channel::ZeeJet) {
         if (year_ == GlobalFlag::Year::Year2016Pre || year_ == GlobalFlag::Year::Year2016Post) {
             pass_HLT = tree->HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ;
-            printDebug("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ: " +
-                       std::to_string(tree->HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ));
         } else if (year_ == GlobalFlag::Year::Year2017 || year_ == GlobalFlag::Year::Year2018) {
             pass_HLT = tree->HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL;
-            printDebug("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL: " +
-                       std::to_string(tree->HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL));
         }
-    }
+    }//ZeeJet
 
-    if (channel_ == GlobalFlag::Channel::ZmmJet) {
+    else if (channel_ == GlobalFlag::Channel::ZmmJet) {
         if (year_ == GlobalFlag::Year::Year2016Pre || year_ == GlobalFlag::Year::Year2016Post) {
             pass_HLT = tree->HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ;
-            printDebug("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ: " +
-                       std::to_string(tree->HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ));
         } else if (year_ == GlobalFlag::Year::Year2017 || year_ == GlobalFlag::Year::Year2018) {
             pass_HLT = tree->HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8;
-            printDebug("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8: " +
-                       std::to_string(tree->HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8));
         }
-    }
+    }//ZmmJet
 
-    if (channel_ == GlobalFlag::Channel::GamJet) {
+    else if (channel_ == GlobalFlag::Channel::GamJet) {
         // Combine all HLT conditions into a vector for easier management
-        std::vector<bool> hlt_conditions = {
-            tree->HLT_Photon200,
-            tree->HLT_Photon175,
-            tree->HLT_Photon150,
-            tree->HLT_Photon120,
-            tree->HLT_Photon90,
-            tree->HLT_Photon75,
-            tree->HLT_Photon50,
-            tree->HLT_Photon33,
-            tree->HLT_Photon110EB_TightID_TightIso,
-            tree->HLT_Photon100EBHE10,
-            tree->HLT_Photon30EB_TightID_TightIso,
-            tree->HLT_Photon90_R9Id90_HE10_IsoM,
-            tree->HLT_Photon75_R9Id90_HE10_IsoM,
-            tree->HLT_Photon50_R9Id90_HE10_IsoM,
-            tree->HLT_Photon30_HoverELoose,
-            tree->HLT_Photon20_HoverELoose
+        std::vector<bool> hlts = {
+                    tree->HLT_Photon200,
+                    tree->HLT_Photon175,
+                    tree->HLT_Photon150,
+                    tree->HLT_Photon120,
+                    tree->HLT_Photon90, 
+                    tree->HLT_Photon75, 
+                    tree->HLT_Photon50, 
+                    tree->HLT_Photon33, 
+                    tree->HLT_Photon20, 
+                    tree->HLT_Photon90_R9Id90_HE10_IsoM,
+                    tree->HLT_Photon75_R9Id90_HE10_IsoM,
+                    tree->HLT_Photon50_R9Id90_HE10_IsoM
         };
-
-        // Check if any of the HLT conditions are true
-        pass_HLT = std::any_of(hlt_conditions.begin(), hlt_conditions.end(), [](bool hlt) { return hlt; });
-
-        // Debugging output
-        if (isDebug_) {
-            printDebug("HLT Photon Triggers:");
-            printDebug("HLT_Photon200: " + std::to_string(tree->HLT_Photon200));
-            printDebug("HLT_Photon175: " + std::to_string(tree->HLT_Photon175));
-            printDebug("HLT_Photon150: " + std::to_string(tree->HLT_Photon150));
-            printDebug("HLT_Photon120: " + std::to_string(tree->HLT_Photon120));
-            printDebug("HLT_Photon90: " + std::to_string(tree->HLT_Photon90));
-            printDebug("HLT_Photon75: " + std::to_string(tree->HLT_Photon75));
-            printDebug("HLT_Photon50: " + std::to_string(tree->HLT_Photon50));
-            printDebug("HLT_Photon33: " + std::to_string(tree->HLT_Photon33));
-            printDebug("HLT_Photon110EB_TightID_TightIso: " + std::to_string(tree->HLT_Photon110EB_TightID_TightIso));
-            printDebug("HLT_Photon100EBHE10: " + std::to_string(tree->HLT_Photon100EBHE10));
-            printDebug("HLT_Photon30EB_TightID_TightIso: " + std::to_string(tree->HLT_Photon30EB_TightID_TightIso));
-            printDebug("HLT_Photon90_R9Id90_HE10_IsoM: " + std::to_string(tree->HLT_Photon90_R9Id90_HE10_IsoM));
-            printDebug("HLT_Photon75_R9Id90_HE10_IsoM: " + std::to_string(tree->HLT_Photon75_R9Id90_HE10_IsoM));
-            printDebug("HLT_Photon50_R9Id90_HE10_IsoM: " + std::to_string(tree->HLT_Photon50_R9Id90_HE10_IsoM));
-            printDebug("HLT_Photon30_HoverELoose: " + std::to_string(tree->HLT_Photon30_HoverELoose));
-            printDebug("HLT_Photon20_HoverELoose: " + std::to_string(tree->HLT_Photon20_HoverELoose));
+        if (year_ == GlobalFlag::Year::Year2016Pre || year_ == GlobalFlag::Year::Year2016Post) {
+            hlts.push_back(tree->HLT_Photon36);
+            hlts.push_back(tree->HLT_Photon30);
+            hlts.push_back(tree->HLT_Photon22);
+            hlts.push_back(tree->HLT_Photon165_R9Id90_HE10_IsoM);
+            hlts.push_back(tree->HLT_Photon120_R9Id90_HE10_IsoM);
+            hlts.push_back(tree->HLT_Photon36_R9Id90_HE10_IsoM);
+            hlts.push_back(tree->HLT_Photon30_R9Id90_HE10_IsoM);
+            hlts.push_back(tree->HLT_Photon22_R9Id90_HE10_IsoM); 
         }
-    }//channel_ == GlobalFlag::Channel::GamJet
+        else if (year_ == GlobalFlag::Year::Year2017){
+            hlts.push_back(tree->HLT_Photon165_R9Id90_HE10_IsoM);
+            hlts.push_back(tree->HLT_Photon120_R9Id90_HE10_IsoM);
+            hlts.push_back(tree->HLT_Photon60_HoverELoose);
+            hlts.push_back(tree->HLT_Photon50_HoverELoose);
+            hlts.push_back(tree->HLT_Photon40_HoverELoose);
+            hlts.push_back(tree->HLT_Photon30_HoverELoose);
+            hlts.push_back(tree->HLT_Photon20_HoverELoose); 
+        } 
+        else if (year_ == GlobalFlag::Year::Year2018){
+            hlts.push_back(tree->HLT_Photon120EB_TightID_TightIso);
+            hlts.push_back(tree->HLT_Photon110EB_TightID_TightIso);
+            hlts.push_back(tree->HLT_Photon100EB_TightID_TightIso);
+            hlts.push_back(tree->HLT_Photon30_HoverELoose);
+            hlts.push_back(tree->HLT_Photon20_HoverELoose); 
+        }
+        // Check if any of the HLT conditions are true
+        pass_HLT = std::any_of(hlts.begin(), hlts.end(), [](bool hlt) { return hlt; });
+    }//GamJet
 
-    if (channel_ == GlobalFlag::Channel::MCTruth || channel_ == GlobalFlag::Channel::VetoMap) {
-        pass_HLT = tree->HLT_MC;
-        if(isDebug_)
-            printDebug("HLT_MC: " + std::to_string(tree->HLT_MC));
-    }
-
+    printDebug("pass_HLT = " + std::to_string(pass_HLT));
     return pass_HLT;
 }
 

@@ -1,0 +1,7 @@
+{
+    "MC_ZeeJet_2018_DYJetsToLLM50": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2018/MC_ZeeJet_2018_DYJetsToLLM50_Hist_Merged.root",
+    "Data_ZeeJet_2018A_EGamma": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2018/Data_ZeeJet_2018A_EGamma_Hist_Merged.root",
+    "Data_ZeeJet_2018B_EGamma": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2018/Data_ZeeJet_2018B_EGamma_Hist_Merged.root",
+    "Data_ZeeJet_2018C_EGamma": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2018/Data_ZeeJet_2018C_EGamma_Hist_Merged.root",
+    "Data_ZeeJet_2018D_EGamma": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2018/Data_ZeeJet_2018D_EGamma_Hist_Merged.root"
+}

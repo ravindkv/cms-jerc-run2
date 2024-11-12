@@ -49,11 +49,11 @@ if __name__=="__main__":
     print("Created dir: tmpSub")
     submitAll = open("tmpSub/submitAll.sh", "w") 
     for year, ch in itertools.product(Years, Channels):
-        outPath = f"{eosSkimDir}/{year}/{ch}"
+        outPath = f"{eosSkimDir}/{ch}/{year}"
         os.system(f"mkdir -p {outPath}")
         print(f"Created dir: {outPath}")
-        jsonFile = open(f"../input/json/FilesSkim_{year}_{ch}.json", "r")
-        jdlName  = f'submitJobs_{year}_{ch}.jdl'
+        jsonFile = open(f"../input/json/FilesSkim_{ch}_{year}.json", "r")
+        jdlName  = f'submitJobs_{ch}_{year}.jdl'
         jdlFile  = open(f'tmpSub/{jdlName}','w')
         logDir   = "log"
         createJobs(jsonFile, jdlFile, logDir)

@@ -13,7 +13,9 @@ if [ -z ${_CONDOR_SCRATCH_DIR} ] ; then
 else
     echo "Running In Batch"
     echo ${_CONDOR_SCRATCH_DIR}
-	tar --strip-components=1 -zxf Hist.tar.gz
+	tar -zxf Hist.tar.gz
+    cp libcorrectionlib.so Hist/
+    cd Hist
 fi
 
 #Run for Base, Signal region
@@ -37,6 +39,7 @@ if [ -z ${_CONDOR_SCRATCH_DIR} ] ; then
 else
     xrdcp -f output/${oName} ${outDir}
     echo "Cleanup"
-    rm * 
+    cd ..
+    rm -rf Hist
 fi
 printf "Done ";/bin/date

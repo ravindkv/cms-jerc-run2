@@ -46,6 +46,6 @@ private:
     std::string histName_;
     std::shared_ptr<TdrStyle> tdrStyle_;
 };
-#include "../cpp/PlotEra2D.tpp"
+#include "../tpp/PlotEra2D.tpp"
 #endif
 

@@ -1,13 +1,15 @@
 #include "RunZeeJet.h"
 #include "RunZmmJet.h"
-//#include "HistGamJet.h"
+#include "RunGamJet.h"
+#include "RunMultiJet.h"
+
 //#include "HistMCTruth.h"
 //#include "HistFlavour.h"
 //#include "HistVetoMap.h"
 //#include "HistIncJet.h"
 //#include "HistDiJet.h"
-//#include "HistMultiJet.h"
 //#include "HistWqq.h"
+
 #include "SkimTree.h"
 #include "EventPick.h"
 #include "ObjectScale.h"
@@ -146,8 +148,8 @@ int main(int argc, char* argv[]) {
 
         // Use the GlobalFlag instance for conditional checks
         if (globalFlag.getChannel() == GlobalFlag::Channel::GamJet) {  // Scale and Smearing
-            objS->loadPhoSsRef();
-            objS->loadEleSsRef();
+            //objS->loadPhoSsRef();
+            //objS->loadEleSsRef();
         }
         if (globalFlag.getChannel() == GlobalFlag::Channel::ZmmJet) { 
             objS->loadMuRochRef();
@@ -190,51 +192,53 @@ int main(int argc, char* argv[]) {
         auto zeeJet = std::make_unique<RunZeeJet>(globalFlag);
         zeeJet->Run(skimT, eventP.get(), objP.get(), objS.get(), fout.get());
     }
+
     if (globalFlag.getChannel() == GlobalFlag::Channel::ZmmJet) {
         std::cout << "==> Running ZmmJet" << std::endl;
         auto zmmJet = std::make_unique<RunZmmJet>(globalFlag);
         zmmJet->Run(skimT, eventP.get(), objP.get(), objS.get(), fout.get());
     }
 
+    if (globalFlag.getChannel() == GlobalFlag::Channel::GamJet) {
+        std::cout << "==> Running GamJet" << std::endl;
+        auto gamJet = std::make_unique<RunGamJet>(globalFlag);
+        gamJet->Run(skimT, eventP.get(), objP.get(), objS.get(), fout.get());
+    }
+
+    if (globalFlag.getChannel() == GlobalFlag::Channel::MultiJet) {
+        std::cout << "==> Running MultiJet" << std::endl;
+        auto multiJet = std::make_unique<RunMultiJet>(globalFlag);
+        multiJet->Run(skimT, eventP.get(), objP.get(), objS.get(), fout.get());
+    }
 /*
-  if (globF->isGamJet) {
-    std::cout << "==> Running GamJet" << std::endl;
-    auto gamJet = std::make_unique<HistGamJet>(outName);
-    gamJet->Run(skimT.get(), eventP.get(), objP.get(), objS.get(), fout.get());
-  }
-  if (globF->isMCTruth) {
+  if (globalFlag->isMCTruth) {
     std::cout << "==> Running MCTruth" << std::endl;
-    auto mcTruth = std::make_unique<HistMCTruth>(outName);
+    auto mcTruth = std::make_unique<RunMCTruth>(outName);
     mcTruth->Run(skimT.get(), eventP.get(), objP.get(), objS.get(), fout.get());
   }
-  if (globF->isFlavour) {
+  if (globalFlag->isFlavour) {
     std::cout << "==> Running Flavour" << std::endl;
-    auto mcFlavour = std::make_unique<HistFlavour>(outName);
+    auto mcFlavour = std::make_unique<RunFlavour>(outName);
     mcFlavour->Run(skimT.get(), eventP.get(), objP.get(), objS.get(), fout.get());
   }
-  if (globF->isVetoMap) {
+  if (globalFlag->isVetoMap) {
     std::cout << "==> Running VetoMap" << std::endl;
-    auto vetoMap = std::make_unique<HistVetoMap>(outName);
+    auto vetoMap = std::make_unique<RunVetoMap>(outName);
     vetoMap->Run(skimT.get(), eventP.get(), objP.get(), objS.get(), fout.get());
   }
-  if (globF->isIncJet) {
+  if (globalFlag->isIncJet) {
     std::cout << "==> Running IncJet" << std::endl;
-    auto incJet = std::make_unique<HistIncJet>(outName);
+    auto incJet = std::make_unique<RunIncJet>(outName);
     incJet->Run(skimT.get(), eventP.get(), objP.get(), objS.get(), fout.get());
   }
-  if (globF->isDiJet) {
+  if (globalFlag->isDiJet) {
     std::cout << "==> Running DiJet" << std::endl;
-    auto diJet = std::make_unique<HistDiJet>(outName);
+    auto diJet = std::make_unique<RunDiJet>(outName);
     diJet->Run(skimT.get(), eventP.get(), objP.get(), objS.get(), fout.get());
   }
-  if (globF->isMultiJet) {
-    std::cout << "==> Running MultiJet" << std::endl;
-    auto multiJet = std::make_unique<HistMultiJet>(outName);
-    multiJet->Run(skimT.get(), eventP.get(), objP.get(), objS.get(), fout.get());
-  }
-  if (globF->isWqq) {
+  if (globalFlag->isWqq) {
     std::cout << "==> Running Wqq" << std::endl;
-    auto wqq = std::make_unique<HistWqq>(outName);
+    auto wqq = std::make_unique<RunWqq>(outName);
     wqq->Run(skimT.get(), eventP.get(), objP.get(), objS.get(), fout.get());
   }
   */

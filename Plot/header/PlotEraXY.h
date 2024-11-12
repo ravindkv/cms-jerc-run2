@@ -58,6 +58,6 @@ private:
     std::shared_ptr<TdrStyle> tdrStyle_;
     TProfile* projectAndClone(T* hist, const std::string& bin, int i);
 };
-#include "../cpp/PlotEraXY.tpp"
+#include "../tpp/PlotEraXY.tpp"
 #endif
 

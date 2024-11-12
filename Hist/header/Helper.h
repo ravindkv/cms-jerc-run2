@@ -11,6 +11,7 @@
 #include "Rtypes.h"
 #include "TH1D.h"
 #include "TFile.h"
+#include <cmath>
 
 class Helper {
 public:
@@ -24,6 +25,7 @@ public:
     static std::vector<std::string> splitString(const std::string& s, const std::string& delimiter);
     
     //Function to print the progress time of an event loop
+    static void initProgress(Long64_t nentries); 
     static void printProgress(Long64_t jentry, Long64_t nentries, 
                        std::chrono::time_point<std::chrono::high_resolution_clock>& startClock, 
                        double& totTime);
@@ -35,8 +37,7 @@ public:
     static void printInfo(const TObject* obj);
     static void scanDirectory(TDirectory* dir, const std::string& path);
     static void scanTFile(TFile* file);
-
 };
-
+    
 #endif // HELPER_H
 

@@ -152,10 +152,6 @@ public:
     Bool_t          HLT_Photon90_R9Id90_HE10_IsoM{};
     Bool_t          HLT_Photon120_R9Id90_HE10_IsoM{};
     Bool_t          HLT_Photon165_R9Id90_HE10_IsoM{};
-    // Triggers and branches from 22-23
-    Bool_t          HLT_Photon100EBHE10{};
-    Bool_t          HLT_Photon30EB_TightID_TightIso{};
-    // Triggers and branches from 2018
     Bool_t          HLT_Photon100EB_TightID_TightIso{};
     Bool_t          HLT_Photon110EB_TightID_TightIso{};
     Bool_t          HLT_Photon120EB_TightID_TightIso{};
@@ -171,15 +167,14 @@ public:
     Bool_t          HLT_Photon60_HoverELoose{};
 
     // Gen photon variables
-    Int_t nGenIsolatedPhoton{};
+    UInt_t nGenIsolatedPhoton{};
     Float_t GenIsolatedPhoton_pt[nPhotonMax]{};
     Float_t GenIsolatedPhoton_eta[nPhotonMax]{};
     Float_t GenIsolatedPhoton_phi[nPhotonMax]{};
     Float_t GenIsolatedPhoton_mass[nPhotonMax]{};
-    Int_t GenIsolatedPhoton_pdgId[nPhotonMax]{};
 
     // Electron variables
-    static const int nElectronMax = 100;
+    static const int nElectronMax = 150;
     UInt_t nElectron{};
     Float_t Electron_phi[nElectronMax]{};
     Float_t Electron_pt[nElectronMax]{};

@@ -1,0 +1,185 @@
+{
+    "GamJet": {
+        "2017": {
+            "Data": {
+                "Data_GamJet_2017B_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2017/Data_GamJet_2017B_DoubleEG_Hist_Merged.root",
+                "Data_GamJet_2017C_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2017/Data_GamJet_2017C_DoubleEG_Hist_Merged.root",
+                "Data_GamJet_2017D_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2017/Data_GamJet_2017D_DoubleEG_Hist_Merged.root",
+                "Data_GamJet_2017E_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2017/Data_GamJet_2017E_DoubleEG_Hist_Merged.root",
+                "Data_GamJet_2017F_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2017/Data_GamJet_2017F_DoubleEG_Hist_Merged.root"
+            },
+            "MC": {
+                "MC_GamJet_2017_GJetsHT100To200": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2017/MC_GamJet_2017_GJetsHT100To200_Hist_Merged.root",
+                "MC_GamJet_2017_GJetsHT200To400": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2017/MC_GamJet_2017_GJetsHT200To400_Hist_Merged.root",
+                "MC_GamJet_2017_GJetsHT400To600": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2017/MC_GamJet_2017_GJetsHT400To600_Hist_Merged.root",
+                "MC_GamJet_2017_GJetsHT40To100": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2017/MC_GamJet_2017_GJetsHT40To100_Hist_Merged.root",
+                "MC_GamJet_2017_GJetsHT600ToInf": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2017/MC_GamJet_2017_GJetsHT600ToInf_Hist_Merged.root"
+            }
+        },
+        "2016Pre": {
+            "Data": {
+                "Data_GamJet_2016PreBv1_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Pre/Data_GamJet_2016PreBv1_DoubleEG_Hist_Merged.root",
+                "Data_GamJet_2016PreBv2_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Pre/Data_GamJet_2016PreBv2_DoubleEG_Hist_Merged.root",
+                "Data_GamJet_2016PreC_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Pre/Data_GamJet_2016PreC_DoubleEG_Hist_Merged.root",
+                "Data_GamJet_2016PreD_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Pre/Data_GamJet_2016PreD_DoubleEG_Hist_Merged.root",
+                "Data_GamJet_2016PreE_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Pre/Data_GamJet_2016PreE_DoubleEG_Hist_Merged.root",
+                "Data_GamJet_2016PreF_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Pre/Data_GamJet_2016PreF_DoubleEG_Hist_Merged.root"
+            },
+            "MC": {
+                "MC_GamJet_2016Pre_GJetsHT100To200": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Pre/MC_GamJet_2016Pre_GJetsHT100To200_Hist_Merged.root",
+                "MC_GamJet_2016Pre_GJetsHT200To400": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Pre/MC_GamJet_2016Pre_GJetsHT200To400_Hist_Merged.root",
+                "MC_GamJet_2016Pre_GJetsHT400To600": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Pre/MC_GamJet_2016Pre_GJetsHT400To600_Hist_Merged.root",
+                "MC_GamJet_2016Pre_GJetsHT40To100": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Pre/MC_GamJet_2016Pre_GJetsHT40To100_Hist_Merged.root",
+                "MC_GamJet_2016Pre_GJetsHT600ToInf": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Pre/MC_GamJet_2016Pre_GJetsHT600ToInf_Hist_Merged.root"
+            }
+        },
+        "2016Post": {
+            "Data": {
+                "Data_GamJet_2016PostF_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Post/Data_GamJet_2016PostF_DoubleEG_Hist_Merged.root",
+                "Data_GamJet_2016PostG_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Post/Data_GamJet_2016PostG_DoubleEG_Hist_Merged.root",
+                "Data_GamJet_2016PostH_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Post/Data_GamJet_2016PostH_DoubleEG_Hist_Merged.root"
+            },
+            "MC": {
+                "MC_GamJet_2016Post_GJetsHT100To200": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Post/MC_GamJet_2016Post_GJetsHT100To200_Hist_Merged.root",
+                "MC_GamJet_2016Post_GJetsHT200To400": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Post/MC_GamJet_2016Post_GJetsHT200To400_Hist_Merged.root",
+                "MC_GamJet_2016Post_GJetsHT400To600": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Post/MC_GamJet_2016Post_GJetsHT400To600_Hist_Merged.root",
+                "MC_GamJet_2016Post_GJetsHT40To100": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Post/MC_GamJet_2016Post_GJetsHT40To100_Hist_Merged.root",
+                "MC_GamJet_2016Post_GJetsHT600ToInf": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Post/MC_GamJet_2016Post_GJetsHT600ToInf_Hist_Merged.root"
+            }
+        },
+        "2018": {
+            "Data": {
+                "Data_GamJet_2018A_EGamma": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2018/Data_GamJet_2018A_EGamma_Hist_Merged.root",
+                "Data_GamJet_2018B_EGamma": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2018/Data_GamJet_2018B_EGamma_Hist_Merged.root",
+                "Data_GamJet_2018C_EGamma": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2018/Data_GamJet_2018C_EGamma_Hist_Merged.root",
+                "Data_GamJet_2018D_EGamma": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2018/Data_GamJet_2018D_EGamma_Hist_Merged.root"
+            },
+            "MC": {
+                "MC_GamJet_2018_GJetsHT100To200": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2018/MC_GamJet_2018_GJetsHT100To200_Hist_Merged.root",
+                "MC_GamJet_2018_GJetsHT200To400": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2018/MC_GamJet_2018_GJetsHT200To400_Hist_Merged.root",
+                "MC_GamJet_2018_GJetsHT400To600": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2018/MC_GamJet_2018_GJetsHT400To600_Hist_Merged.root",
+                "MC_GamJet_2018_GJetsHT40To100": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2018/MC_GamJet_2018_GJetsHT40To100_Hist_Merged.root",
+                "MC_GamJet_2018_GJetsHT600ToInf": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2018/MC_GamJet_2018_GJetsHT600ToInf_Hist_Merged.root"
+            }
+        }
+    },
+    "ZeeJet": {
+        "2017": {
+            "Data": {
+                "Data_ZeeJet_2017B_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2017/Data_ZeeJet_2017B_DoubleEG_Hist_Merged.root",
+                "Data_ZeeJet_2017C_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2017/Data_ZeeJet_2017C_DoubleEG_Hist_Merged.root",
+                "Data_ZeeJet_2017D_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2017/Data_ZeeJet_2017D_DoubleEG_Hist_Merged.root",
+                "Data_ZeeJet_2017E_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2017/Data_ZeeJet_2017E_DoubleEG_Hist_Merged.root",
+                "Data_ZeeJet_2017F_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2017/Data_ZeeJet_2017F_DoubleEG_Hist_Merged.root"
+            },
+            "MC": {
+                "MC_ZeeJet_2017_DYJetsToLLM50": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2017/MC_ZeeJet_2017_DYJetsToLLM50_Hist_Merged.root"
+            }
+        },
+        "2016Pre": {
+            "Data": {
+                "Data_ZeeJet_2016PreBv1_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2016Pre/Data_ZeeJet_2016PreBv1_DoubleEG_Hist_Merged.root",
+                "Data_ZeeJet_2016PreBv2_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2016Pre/Data_ZeeJet_2016PreBv2_DoubleEG_Hist_Merged.root",
+                "Data_ZeeJet_2016PreC_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2016Pre/Data_ZeeJet_2016PreC_DoubleEG_Hist_Merged.root",
+                "Data_ZeeJet_2016PreD_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2016Pre/Data_ZeeJet_2016PreD_DoubleEG_Hist_Merged.root",
+                "Data_ZeeJet_2016PreE_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2016Pre/Data_ZeeJet_2016PreE_DoubleEG_Hist_Merged.root",
+                "Data_ZeeJet_2016PreF_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2016Pre/Data_ZeeJet_2016PreF_DoubleEG_Hist_Merged.root"
+            },
+            "MC": {
+                "MC_ZeeJet_2016Pre_DYJetsToLLM50": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2016Pre/MC_ZeeJet_2016Pre_DYJetsToLLM50_Hist_Merged.root"
+            }
+        },
+        "2016Post": {
+            "Data": {
+                "Data_ZeeJet_2016PostF_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2016Post/Data_ZeeJet_2016PostF_DoubleEG_Hist_Merged.root",
+                "Data_ZeeJet_2016PostG_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2016Post/Data_ZeeJet_2016PostG_DoubleEG_Hist_Merged.root",
+                "Data_ZeeJet_2016PostH_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2016Post/Data_ZeeJet_2016PostH_DoubleEG_Hist_Merged.root"
+            },
+            "MC": {
+                "MC_ZeeJet_2016Post_DYJetsToLLM50": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2016Post/MC_ZeeJet_2016Post_DYJetsToLLM50_Hist_Merged.root"
+            }
+        },
+        "2018": {
+            "Data": {
+                "Data_ZeeJet_2018A_EGamma": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2018/Data_ZeeJet_2018A_EGamma_Hist_Merged.root",
+                "Data_ZeeJet_2018B_EGamma": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2018/Data_ZeeJet_2018B_EGamma_Hist_Merged.root",
+                "Data_ZeeJet_2018C_EGamma": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2018/Data_ZeeJet_2018C_EGamma_Hist_Merged.root",
+                "Data_ZeeJet_2018D_EGamma": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2018/Data_ZeeJet_2018D_EGamma_Hist_Merged.root"
+            },
+            "MC": {
+                "MC_ZeeJet_2018_DYJetsToLLM50": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZeeJet/2018/MC_ZeeJet_2018_DYJetsToLLM50_Hist_Merged.root"
+            }
+        }
+    },
+    "ZmmJet": {
+        "2017": {
+            "Data": {
+                "Data_ZmmJet_2017B_DoubleMuon": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2017/Data_ZmmJet_2017B_DoubleMuon_Hist_Merged.root",
+                "Data_ZmmJet_2017C_DoubleMuon": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2017/Data_ZmmJet_2017C_DoubleMuon_Hist_Merged.root",
+                "Data_ZmmJet_2017D_DoubleMuon": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2017/Data_ZmmJet_2017D_DoubleMuon_Hist_Merged.root",
+                "Data_ZmmJet_2017E_DoubleMuon": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2017/Data_ZmmJet_2017E_DoubleMuon_Hist_Merged.root",
+                "Data_ZmmJet_2017F_DoubleMuon": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2017/Data_ZmmJet_2017F_DoubleMuon_Hist_Merged.root"
+            },
+            "MC": {
+                "MC_ZmmJet_2017_DYJetsToLLM50": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2017/MC_ZmmJet_2017_DYJetsToLLM50_Hist_Merged.root"
+            }
+        },
+        "2016Pre": {
+            "Data": {
+                "Data_ZmmJet_2016PreBv1_DoubleMuon": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2016Pre/Data_ZmmJet_2016PreBv1_DoubleMuon_Hist_Merged.root",
+                "Data_ZmmJet_2016PreBv2_DoubleMuon": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2016Pre/Data_ZmmJet_2016PreBv2_DoubleMuon_Hist_Merged.root",
+                "Data_ZmmJet_2016PreC_DoubleMuon": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2016Pre/Data_ZmmJet_2016PreC_DoubleMuon_Hist_Merged.root",
+                "Data_ZmmJet_2016PreD_DoubleMuon": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2016Pre/Data_ZmmJet_2016PreD_DoubleMuon_Hist_Merged.root",
+                "Data_ZmmJet_2016PreE_DoubleMuon": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2016Pre/Data_ZmmJet_2016PreE_DoubleMuon_Hist_Merged.root",
+                "Data_ZmmJet_2016PreF_DoubleMuon": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2016Pre/Data_ZmmJet_2016PreF_DoubleMuon_Hist_Merged.root"
+            },
+            "MC": {
+                "MC_ZmmJet_2016Pre_DYJetsToLLM50": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2016Pre/MC_ZmmJet_2016Pre_DYJetsToLLM50_Hist_Merged.root"
+            }
+        },
+        "2016Post": {
+            "Data": {
+                "Data_ZmmJet_2016PostF_DoubleMuon": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2016Post/Data_ZmmJet_2016PostF_DoubleMuon_Hist_Merged.root",
+                "Data_ZmmJet_2016PostG_DoubleMuon": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2016Post/Data_ZmmJet_2016PostG_DoubleMuon_Hist_Merged.root",
+                "Data_ZmmJet_2016PostH_DoubleMuon": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2016Post/Data_ZmmJet_2016PostH_DoubleMuon_Hist_Merged.root"
+            },
+            "MC": {
+                "MC_ZmmJet_2016Post_DYJetsToLLM50": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2016Post/MC_ZmmJet_2016Post_DYJetsToLLM50_Hist_Merged.root"
+            }
+        },
+        "2018": {
+            "Data": {
+                "Data_ZmmJet_2018A_DoubleMuon": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2018/Data_ZmmJet_2018A_DoubleMuon_Hist_Merged.root",
+                "Data_ZmmJet_2018B_DoubleMuon": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2018/Data_ZmmJet_2018B_DoubleMuon_Hist_Merged.root",
+                "Data_ZmmJet_2018C_DoubleMuon": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2018/Data_ZmmJet_2018C_DoubleMuon_Hist_Merged.root",
+                "Data_ZmmJet_2018D_DoubleMuon": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2018/Data_ZmmJet_2018D_DoubleMuon_Hist_Merged.root"
+            },
+            "MC": {
+                "MC_ZmmJet_2018_DYJetsToLLM50": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2018/MC_ZmmJet_2018_DYJetsToLLM50_Hist_Merged.root"
+            }
+        }
+    },
+    "MultiJet": {
+        "2017": {
+            "Data": {
+                "Data_MultiJet_2017B_JetHT": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/MultiJet/2017/Data_MultiJet_2017B_JetHT_Hist_Merged.root",
+                "Data_MultiJet_2017C_JetHT": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/MultiJet/2017/Data_MultiJet_2017C_JetHT_Hist_Merged.root",
+                "Data_MultiJet_2017D_JetHT": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/MultiJet/2017/Data_MultiJet_2017D_JetHT_Hist_Merged.root",
+                "Data_MultiJet_2017E_JetHT": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/MultiJet/2017/Data_MultiJet_2017E_JetHT_Hist_Merged.root",
+                "Data_MultiJet_2017F_JetHT": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/MultiJet/2017/Data_MultiJet_2017F_JetHT_Hist_Merged.root"
+            },
+            "MC": {
+                "MC_MultiJet_2017_QCDHT1000to1500": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/MultiJet/2017/MC_MultiJet_2017_QCDHT1000to1500_Hist_Merged.root",
+                "MC_MultiJet_2017_QCDHT100to200": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/MultiJet/2017/MC_MultiJet_2017_QCDHT100to200_Hist_Merged.root",
+                "MC_MultiJet_2017_QCDHT1500to2000": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/MultiJet/2017/MC_MultiJet_2017_QCDHT1500to2000_Hist_Merged.root",
+                "MC_MultiJet_2017_QCDHT2000toInf": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/MultiJet/2017/MC_MultiJet_2017_QCDHT2000toInf_Hist_Merged.root",
+                "MC_MultiJet_2017_QCDHT200to300": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/MultiJet/2017/MC_MultiJet_2017_QCDHT200to300_Hist_Merged.root",
+                "MC_MultiJet_2017_QCDHT300to500": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/MultiJet/2017/MC_MultiJet_2017_QCDHT300to500_Hist_Merged.root",
+                "MC_MultiJet_2017_QCDHT500to700": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/MultiJet/2017/MC_MultiJet_2017_QCDHT500to700_Hist_Merged.root",
+                "MC_MultiJet_2017_QCDHT50to100": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/MultiJet/2017/MC_MultiJet_2017_QCDHT50to100_Hist_Merged.root",
+                "MC_MultiJet_2017_QCDHT700to1000": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/MultiJet/2017/MC_MultiJet_2017_QCDHT700to1000_Hist_Merged.root"
+            }
+        }
+    },
+    "L3Res": {}
+}

@@ -3,6 +3,12 @@ ROOT_L=`root-config --libs`
 ROOT_I=-I`root-config --incdir` -I./header
 GCC=g++ -g -std=c++17
 
+# Add clang-tidy check
+CLANG_TIDY = clang-tidy
+#@echo "--> Running clang-tidy on $<"
+#@$(CLANG_TIDY) $<  --  -std=c++17 $(ROOT_I)
+#@$(CLANG_TIDY) $< -fix --  -std=c++17 $(ROOT_I)
+
 SRCDIR   = cpp
 OBJDIR   = obj
 SOURCES     := $(wildcard $(SRCDIR)/*.cpp)

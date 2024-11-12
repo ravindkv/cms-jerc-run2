@@ -6,7 +6,6 @@
 #include "TProfile2D.h"
 #include "TMath.h"
 
-
 double Helper::DELTAPHI(double phi1, double phi2) {
   double dphi = fabs(phi1 - phi2);
   return (dphi <= TMath::Pi() ? dphi : TMath::TwoPi() - dphi);
@@ -50,6 +49,16 @@ std::vector<std::string> Helper::splitString(const std::string& s, const std::st
 }
 
 // Function to print progress during event processing
+void Helper::initProgress(Long64_t nentries){
+    std::cout << "\nStarting loop over " << nentries << " entries" << '\n';
+    std::cout<<"---------------------------"<<'\n';
+    std::cout<<std::setw(10)
+             <<"Progress"<<std::setw(10)
+             <<"Time"
+             <<'\n';
+    std::cout<<"---------------------------"<<'\n';
+}
+
 void Helper::printProgress(Long64_t jentry, Long64_t nentries,
                               std::chrono::time_point<std::chrono::high_resolution_clock>& startClock,
                               double& totTime){
@@ -72,24 +81,24 @@ void Helper::printProgress(Long64_t jentry, Long64_t nentries,
 void Helper::printCutflow(const TH1D* hist){
     // Print the header
     std::cout << "---------: Cutflow Summary :--------" << '\n';
-    std::cout << std::setw(20) << "CUT" << std::setw(10) << "ENTRIES" << std::setw(15) << "REDUCED (%)" << '\n';
+    std::cout << std::setw(20) << "CUT" << std::setw(15) << "ENTRIES" << std::setw(15) << "REMAINED" << '\n';
 
     int nBins = hist->GetNbinsX();
     double previous = hist->GetBinContent(1);
 
     // Print the first bin's content (no change for the first bin)
     std::cout << std::setw(20) << hist->GetXaxis()->GetBinLabel(1)
-              << std::setw(10) << previous
+              << std::setw(15) << previous
               << std::setw(15) << "N/A" << '\n';
 
     // Loop over the remaining bins
     for (int i = 2; i <= nBins; ++i) {
         double current = hist->GetBinContent(i);
-        double change = (previous != 0) ? ((previous - current) / previous) * 100.0 : 0.0;
+        double change = (previous != 0) ? (current / previous) * 100.0 : 0.0;
 
         // Print the cut name, entries, and percentage change
         std::cout << std::setw(20) << hist->GetXaxis()->GetBinLabel(i)
-                  << std::setw(10) << current
+                  << std::setw(15) << current
                   << std::setw(10) << " => "
                   << std::fixed << std::setprecision(1)
                   << change << " %" << '\n';
@@ -103,11 +112,6 @@ void Helper::printInfo(const TObject* obj){
     if (const auto* tree = dynamic_cast<const TTree*>(obj)) {
         std::cout << std::setw(15) << "TTree: " << std::setw(35) << tree->GetName()
                   << std::setw(15) << tree->GetEntries() << '\n';
-    } else if (const TH1* hist = dynamic_cast<const TH1*>(obj)) {
-        std::cout << std::setw(15) << hist->ClassName() << ": " << std::setw(35) << hist->GetName()
-                  << std::setw(15) << hist->GetEntries()
-                  << std::setw(15) << hist->GetMean()
-                  << std::setw(15) << hist->GetRMS() << '\n';
     } else if (const auto* prof = dynamic_cast<const TProfile*>(obj)) {
         std::cout << std::setw(15) << "TProfile: " << std::setw(35) << prof->GetName()
                   << std::setw(15) << prof->GetEntries()
@@ -118,6 +122,11 @@ void Helper::printInfo(const TObject* obj){
                   << std::setw(15) << prof2d->GetEntries()
                   << std::setw(15) << prof2d->GetMean()
                   << std::setw(15) << prof2d->GetRMS() << '\n';
+    } else if (const TH1* hist = dynamic_cast<const TH1*>(obj)) {
+        std::cout << std::setw(15) << hist->ClassName() << ": " << std::setw(35) << hist->GetName()
+                  << std::setw(15) << hist->GetEntries()
+                  << std::setw(15) << hist->GetMean()
+                  << std::setw(15) << hist->GetRMS() << '\n';
     } else {
         std::cout << std::setw(15) << obj->ClassName() << ": " << std::setw(35) << obj->GetName()
                   << '\n';
@@ -148,6 +157,5 @@ void Helper::scanTFile(TFile* file){
     std::cout << "\n-----------: Scanning All Directories and Printing Entries, Mean, RMS :------------\n" << '\n';
     scanDirectory(file, "");
 }
-
 
 

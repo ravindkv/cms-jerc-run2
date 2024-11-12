@@ -3,6 +3,7 @@
 #ifndef HELPER_H
 #define HELPER_H
 
+#include <iostream>
 #include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
@@ -26,7 +27,7 @@ public:
 };
 
 // Include the template implementation here
-#include "../cpp/Helper.tpp"
+#include "../tpp/Helper.tpp"
 
 #endif // HELPER_H
 

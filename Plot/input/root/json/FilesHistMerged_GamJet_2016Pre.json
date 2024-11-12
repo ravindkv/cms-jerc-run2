@@ -1,0 +1,13 @@
+{
+    "MC_GamJet_2016Pre_GJetsHT100To200": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Pre/MC_GamJet_2016Pre_GJetsHT100To200_Hist_Merged.root",
+    "MC_GamJet_2016Pre_GJetsHT200To400": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Pre/MC_GamJet_2016Pre_GJetsHT200To400_Hist_Merged.root",
+    "MC_GamJet_2016Pre_GJetsHT400To600": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Pre/MC_GamJet_2016Pre_GJetsHT400To600_Hist_Merged.root",
+    "MC_GamJet_2016Pre_GJetsHT40To100": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Pre/MC_GamJet_2016Pre_GJetsHT40To100_Hist_Merged.root",
+    "MC_GamJet_2016Pre_GJetsHT600ToInf": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Pre/MC_GamJet_2016Pre_GJetsHT600ToInf_Hist_Merged.root",
+    "Data_GamJet_2016PreBv1_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Pre/Data_GamJet_2016PreBv1_DoubleEG_Hist_Merged.root",
+    "Data_GamJet_2016PreBv2_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Pre/Data_GamJet_2016PreBv2_DoubleEG_Hist_Merged.root",
+    "Data_GamJet_2016PreC_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Pre/Data_GamJet_2016PreC_DoubleEG_Hist_Merged.root",
+    "Data_GamJet_2016PreD_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Pre/Data_GamJet_2016PreD_DoubleEG_Hist_Merged.root",
+    "Data_GamJet_2016PreE_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Pre/Data_GamJet_2016PreE_DoubleEG_Hist_Merged.root",
+    "Data_GamJet_2016PreF_DoubleEG": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2016Pre/Data_GamJet_2016PreF_DoubleEG_Hist_Merged.root"
+}

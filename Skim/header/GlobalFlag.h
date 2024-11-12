@@ -6,8 +6,8 @@ using namespace std;
 
 class GlobalFlag{
     public: 
-        GlobalFlag(string outName);
-        ~GlobalFlag();
+        GlobalFlag(const string& outName);
+        ~GlobalFlag() = default;
         
         bool isDebug;
 
@@ -23,14 +23,9 @@ class GlobalFlag{
         bool isMC;
         
         //Channels
-        bool isGamJet;
         bool isZeeJet;
         bool isZmmJet;
-        bool isMCTruth;
-        bool isFlavour;
-        bool isVetoMap;
-        bool isDiJet;
-        bool isIncJet;
+        bool isGamJet;
         bool isMultiJet;
         bool isWqq;
 

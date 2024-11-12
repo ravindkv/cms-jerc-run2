@@ -4,85 +4,112 @@ import sys
 import json
 import itertools
 from ROOT import TFile
-from createJobFiles import createJobs
+import multiprocessing
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.getcwd().replace("condor",""))
 from Inputs import *
+from createJobFiles import createJobs
+
+#-------------------------------------------------
+# Function to check a single ROOT file
+#-------------------------------------------------
+def check_file(args):
+    sKey, skim = args
+    f = None
+    try:
+        # Open the file in a way that ensures it's closed later
+        f = TFile.Open(skim, "READ")
+        
+        # Quick exit if file is inaccessible or corrupted
+        if not f or f.IsZombie() or f.GetSize() < 3000:
+            print(f"Corrupted or empty file: {skim}")
+            return (sKey, skim, True)
+        
+        # Check for the specific histogram and its validity
+        h = f.Get("Cutflow/h1EventInCutflow")
+        if not h:
+            print(f"'Cutflow/h1EventInCutflow' not found in: {skim}")
+            return (sKey, skim, True)
+
+        # All checks passed, file is considered good
+        return (sKey, skim, False)
+        
+    except Exception as e:
+        print(f"Exception while opening {skim}: {e}")
+        return (sKey, skim, True)
+    
+    finally:
+        if f:  # Ensure file is closed even if an error occurred
+            f.Close()
 
 #-------------------------------------------------
 # Open each finished file and see if they are OK
 #-------------------------------------------------
 def checkJobs(jsonFile):
-    unfinished =  {}
-    nEvents = 0
-    print("Checking corrupted files ...") 
+    unfinished = {}
+    print("Checking for corrupted files using multiprocessing...")
+
+    # Prepare a list of (sKey, skim) pairs
+    file_list = []
     for sKey, skims in jsonFile.items():
-        corruptedList = []
-        nEvents = 0
-        for skim in skims :
-            try:
-                f = TFile.Open(skim, "READ")
-            except Exception:
-                corruptedList.append(skim)
-                #print("Unable to open: %s"%skim)
-                continue
-            if not f:
-                print("Null pointer: %s"%skim)
-                corruptedList.append(skim)
-                continue
-            if f.IsZombie():
-                print("Zombie: %s"%skim)
-                corruptedList.append(skim)
-                continue
-            if f.GetSize() < 3000:
-                print("Empty file: %s"%skim)
-                corruptedList.append(skim)
-                continue
-            h = f.Get("h1EventInCutflow")
-            if not h:
-                print("h1EventInCutflow does not exist: %s"%skim)
-                corruptedList.append(skim)
-                continue
-            nEvents = nEvents + h.GetBinContent(2)
-            f.Close()
-        if len(corruptedList)>0:
-            print("\n------ %s job(s) to be resubmitted for %s ------\n"%(len(corruptedList),  sKey))
-            unfinished[sKey] = corruptedList
+        for skim in skims:
+            file_list.append((sKey, skim))
+
+    # Use multiprocessing to check files in parallel
+    with multiprocessing.Pool() as pool:
+        results = pool.map(check_file, file_list)
+
+    # Process the results
+    for sKey, skim, is_corrupted in results:
+        if is_corrupted:
+            if sKey not in unfinished:
+                unfinished[sKey] = []
+            unfinished[sKey].append(skim)
+
     return unfinished
 
 #-------------------------------------------------
-# Open the skim files, check each of them and
-# create new job file for the failed jobs 
+# Main execution block
 #-------------------------------------------------
-logDir = "resubLog"
-dResubs = {}
-fResub  = "tmpSub/resubFilesHist.json"
-jdlFile_ = open('tmpSub/resubJobs.jdl', 'w')
-if os.path.exists(fResub):
-    fResub_  = open(fResub, "r")
-    jsonFile = json.load(fResub_)
-    dResub = checkJobs(jsonFile)
-    fResub_.close()
-    dResubs.update(dResub)
-    fResub__  = open(fResub, "w")
-    json.dump(dResubs, fResub__, indent=4)
-    fResub__.close()
-    fResub___  = open(fResub, "r")
-    createJobs(fResub___, jdlFile_, logDir)
-else:
-    for year, ch in itertools.product(Years, Channels):
-        print(f"=======> {year}: {ch}")
-        fHist = open(f"../input/json/FilesHist_{year}_{ch}.json", "r")
-        jsonFile = json.load(fHist)
-        dResub = checkJobs(jsonFile)
-        dResubs.update(dResub)
-    fResub_  = open(fResub, "w")
-    json.dump(dResubs, fResub_, indent=4)
-    fResub_.close()
-    fResub__  = open(fResub, "r")
-    createJobs(fResub__, jdlFile_, logDir)
+if __name__ == "__main__":
+    logDir = "resubLog"
+    dResubs = {}
+    fResub = "tmpSub/resubFilesHist.json"
 
-totResub = 0
-for resub in list(dResubs.keys()):
-    totResub = totResub + len(dResubs[resub])
-print(f"\n=========> Total to be resubmitted = {totResub} <==========\n")
+    # Ensure the 'tmpSub' directory exists
+    os.makedirs("tmpSub", exist_ok=True)
+
+    with open('tmpSub/resubJobs.jdl', 'w') as jdlFile_:
+        if os.path.exists(fResub):
+            # If resubmission file exists, check those files
+            with open(fResub, "r") as fResub_:
+                jsonFile = json.load(fResub_)
+            dResub = checkJobs(jsonFile)
+            dResubs.update(dResub)
+            # Write updated list of files to resubmit
+            with open(fResub, "w") as fResub__:
+                json.dump(dResubs, fResub__, indent=4)
+            # Create jobs for resubmission
+            with open(fResub, "r") as fResub___:
+                createJobs(fResub___, jdlFile_, logDir)
+        else:
+            # First-time check: iterate over all years and channels
+            for year, ch in itertools.product(Years, Channels):
+                print(f"\nProcessing Year: {year}, Channel: {ch}")
+                json_file_path = f"../input/json/FilesHist_{ch}_{year}.json"
+                with open(json_file_path, "r") as fHist:
+                    jsonFile = json.load(fHist)
+                dResub = checkJobs(jsonFile)
+                dResubs.update(dResub)
+            # Write the list of files to resubmit
+            with open(fResub, "w") as fResub_:
+                json.dump(dResubs, fResub_, indent=4)
+            # Create jobs for resubmission
+            with open(fResub, "r") as fResub__:
+                createJobs(fResub__, jdlFile_, logDir)
+
+    # Calculate the total number of files to resubmit
+    totResub = sum(len(files) for files in dResubs.values())
+    print(f"\n=========> Total files to be resubmitted: {totResub} <==========\n")
+    print(f"{fResub}\n")
+    

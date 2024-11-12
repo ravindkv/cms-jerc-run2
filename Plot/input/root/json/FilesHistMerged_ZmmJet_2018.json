@@ -1,0 +1,7 @@
+{
+    "MC_ZmmJet_2018_DYJetsToLLM50": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2018/MC_ZmmJet_2018_DYJetsToLLM50_Hist_Merged.root",
+    "Data_ZmmJet_2018A_DoubleMuon": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2018/Data_ZmmJet_2018A_DoubleMuon_Hist_Merged.root",
+    "Data_ZmmJet_2018B_DoubleMuon": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2018/Data_ZmmJet_2018B_DoubleMuon_Hist_Merged.root",
+    "Data_ZmmJet_2018C_DoubleMuon": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2018/Data_ZmmJet_2018C_DoubleMuon_Hist_Merged.root",
+    "Data_ZmmJet_2018D_DoubleMuon": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/ZmmJet/2018/Data_ZmmJet_2018D_DoubleMuon_Hist_Merged.root"
+}

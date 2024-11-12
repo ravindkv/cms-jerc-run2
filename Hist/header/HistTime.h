@@ -50,7 +50,7 @@ public:
      * @param runMin Minimum run number.
      * @param runMax Maximum run number.
      */
-    HistTime(TFile* fout, const std::string& directoryName, const std::vector<int>& pTRefs, int runN, double runMin, double runMax);
+    HistTime(TFile* fout, const std::string& directoryName, const std::vector<int>& pTRefs, GlobalFlag & globalFlags);
     
     /**
      * @brief Default destructor.
@@ -86,6 +86,7 @@ private:
     double runMin_;
     double runMax_;
     
+    GlobalFlag& globalFlags_;
     /**
      * @brief Initializes histograms for each pTRef threshold.
      * 

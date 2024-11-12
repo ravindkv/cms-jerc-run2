@@ -1,0 +1,11 @@
+{
+    "MC_GamJet_2018_GJetsHT100To200": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2018/MC_GamJet_2018_GJetsHT100To200_Hist_Merged.root",
+    "MC_GamJet_2018_GJetsHT200To400": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2018/MC_GamJet_2018_GJetsHT200To400_Hist_Merged.root",
+    "MC_GamJet_2018_GJetsHT400To600": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2018/MC_GamJet_2018_GJetsHT400To600_Hist_Merged.root",
+    "MC_GamJet_2018_GJetsHT40To100": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2018/MC_GamJet_2018_GJetsHT40To100_Hist_Merged.root",
+    "MC_GamJet_2018_GJetsHT600ToInf": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2018/MC_GamJet_2018_GJetsHT600ToInf_Hist_Merged.root",
+    "Data_GamJet_2018A_EGamma": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2018/Data_GamJet_2018A_EGamma_Hist_Merged.root",
+    "Data_GamJet_2018B_EGamma": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2018/Data_GamJet_2018B_EGamma_Hist_Merged.root",
+    "Data_GamJet_2018C_EGamma": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2018/Data_GamJet_2018C_EGamma_Hist_Merged.root",
+    "Data_GamJet_2018D_EGamma": "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/GamJet/2018/Data_GamJet_2018D_EGamma_Hist_Merged.root"
+}

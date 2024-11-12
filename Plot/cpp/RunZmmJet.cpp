@@ -22,7 +22,7 @@ int RunZmmJet::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &chan
         years.push_back(element.key());
     }
 
-    ReadConfig readConfig("input/json/figConfig/FigConfigZmmJet.json");
+    ReadConfig readConfig("input/config/json/FigConfigZmmJet.json");
     const auto& figConfigVecEras1D = readConfig.getFigConfigVecEras1D();
     const auto& figConfigVecEra2D  = readConfig.getFigConfigVecEra2D();
     const auto& figConfigVecErasXY = readConfig.getFigConfigVecErasXY();
