@@ -97,7 +97,6 @@ public:
     void initializeHistograms(const std::vector<double>& binsPt, TDirectory* dirOut);
 
 private:
-    // Add any private member variables or methods if needed
 };
 
 #endif // HISTMULTIJET_H

@@ -12,6 +12,7 @@ RunMultiJet::RunMultiJet(GlobalFlag& globalFlags)
 
 int RunMultiJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick* eventP, ObjectPick* objP, ObjectScale* objS, TFile* fout) {
     TDirectory* currentDir = gDirectory;
+    TDirectory* origDir = gDirectory;
     assert(fout && !fout->IsZombie());
 
     //------------------------------------
@@ -23,16 +24,17 @@ int RunMultiJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick* eventP, Object
         "passAtleast2Recoil", "passJetVetoMap", "passDPhiLeadRecoil", "passVetoNearByJets",
         "passLeadRecoilEtaPt", "passResponse"
     };
-    auto h1EventInCutflow = std::make_unique<HistCutflow>("h1EventInCutflow", cuts, fout->mkdir("Cutflow"));
+    auto h1EventInCutflow = std::make_unique<HistCutflow>(origDir, "", cuts);
 
     fout->mkdir("Refs");
     fout->cd("Refs");
     TH1D* h1NumJetsInEvents = new TH1D("h1NumJetsInEvents", "Number of Jets", 500, 0, 500);
     fout->cd();
 
-    // Variable binning 
-    std::vector<double> binsPt  = VarBin::getBinsPt(); 
-    std::vector<double> binsEta = VarBin::getBinsEta();
+    // Variable binning
+    VarBin varBin(globalFlags_);
+    std::vector<double> binsPt  = varBin.getBinsPt(); 
+    std::vector<double> binsEta = varBin.getBinsEta(); 
 
     // Initialize TrigList with skimT
     TrigList trigList(skimT.get());

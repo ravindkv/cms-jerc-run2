@@ -3,7 +3,9 @@
 #include "HistTag.h"
 #include "HistTime.h"
 #include "HistRef.h"
+#include "HistBarrel.h"
 #include "HistMain.h"
+#include "HistFinal.h"
 #include "Helper.h"
 #include "VarBin.h"
    
@@ -14,9 +16,11 @@ RunZeeJet::RunZeeJet(GlobalFlag& globalFlags)
 
 auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectPick *objP, ObjectScale *objS, TFile *fout) -> int{
    
-    TDirectory *curdir = gDirectory;
     assert(fout && !fout->IsZombie());
-    
+    fout->mkdir("Base");
+    fout->cd("Base");
+ 
+    TDirectory *origDir = gDirectory;
     //------------------------------------
     // Initialise hists and directories 
     //------------------------------------
@@ -27,71 +31,25 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
     		"passAtleast1Jet", "passJetVetoMap", "passDPhiRefJet1", "passRefBarrel",
     		"passJet1EtaJet2Pt", "passResponse"
     };
-    auto h1EventInCutflow = std::make_unique<HistCutflow>("h1EventInCutflow", cuts, fout->mkdir("Cutflow"));
-    
+    auto h1EventInCutflow = std::make_unique<HistCutflow>(origDir, "", cuts);
+      
     // Variable binning
-    std::vector<double> binsPt  = VarBin::getBinsPt(); 
-    std::vector<double> binsEta = VarBin::getBinsEta(); 
-    std::vector<double> binsPhi = VarBin::getBinsPhi(); 
-    
-    const int nPt  = binsPt.size()  - 1;
-    const int nEta = binsEta.size() - 1;
-    const int nPhi = binsPhi.size() - 1;
-
-    // Initialize HistRef instance
-    HistRef refHists(fout, "passAtleast1Ref", nPt, binsPt.data());
-    curdir->cd();
-    
-    // Variables after leading Ref in barrel (eta < 1.33)
-    fout->mkdir("passRefBarrel");
-    fout->cd("passRefBarrel");
-    
-    // Follow up on problematic cuts
-    auto h1EventInDphiJetRef = std::make_unique<TH1D>(
-         "h1EventInDphiJetRef", "", 126, -TMath::TwoPi(), TMath::TwoPi());
-    auto h1EventInDrJetRef = std::make_unique<TH1D>("h1EventInDrJetRef", "", 100, 0, 10);
-    auto h2EventInRefPtDbResp = std::make_unique<TH2D>(
-         "h2EventInRefPtDbResp", "", nPt, binsPt.data(), 200, 0, 4);
-    auto h2EventInRefPtMpfResp = std::make_unique<TH2D>(
-         "h2EventInRefPtMpfResp", "", nPt, binsPt.data(), 300, -2, 4);
-    
-    // Plots for jet properties
-    auto p1GenJ1PtOverProbePtInRefPt = std::make_unique<TProfile>(
-         "p1GenJ1PtOverProbePtInRefPt", "", nPt, binsPt.data());
-    auto p1J1PtOverProbePtInRefPt = std::make_unique<TProfile>(
-         "p1J1PtOverProbePtInRefPt", "", nPt, binsPt.data());
-    auto p1J1PtOverGenJ1PtInGenJ1Pt = std::make_unique<TProfile>(
-         "p1J1PtOverGenJ1PtInGenJ1Pt", "", nPt, binsPt.data());
-    
-    // Variables in 'flavourXTagY' directory
-    HistTag tagHists(fout, "passRefBarrel/flavourXTagY", nPt, binsPt, globalFlags_);
-    
-    // Variables after Jet1Eta, Jet2Pt cut
-    HistMain mainHists(fout, "passJet1EtaJet2Pt", nPt, binsPt.data(), nEta, binsEta.data(), nPhi, binsPhi.data());
-    curdir->cd();
-    fout->cd("passJet1EtaJet2Pt");
-    // Add a few additional variables 
-    auto p1GenJ2PtOverProbePtInRefPt = std::make_unique<TProfile>(
-         "p1GenJ2PtOverProbePtInRefPt", "", nPt, binsPt.data());
-    auto p1J2PtOverProbePtInRefPt = std::make_unique<TProfile>(
-         "p1J2PtOverProbePtInRefPt", "", nPt, binsPt.data());
-    auto p1J2PtOverGenJ2PtInGenJ2Pt = std::make_unique<TProfile>(
-         "p1J2PtOverGenJ2PtInGenJ2Pt", "", nPt, binsPt.data());
-    
-    auto h2EventInRefPtDbRespPassMpf = std::make_unique<TH2D>(
-         "h2EventInRefPtDbRespPassMpf", "", nPt, binsPt.data(), 200, 0, 4);
-    auto h2EventInRefPtMpfRespPassDb = std::make_unique<TH2D>(
-         "h2EventInRefPtMpfRespPassDb", "", nPt, binsPt.data(), 300, -2, 4);
-    auto h2EventInRefPtDbRespPassBoth = std::make_unique<TH2D>(
-         "h2EventInRefPtDbRespPassBoth", "", nPt, binsPt.data(), 200, 0, 4);
-    auto h2EventInRefPtMpfRespPassBoth = std::make_unique<TH2D>(
-         "h2EventInRefPtMpfRespPassBoth", "", nPt, binsPt.data(), 300, -2, 4);
-    
-    // Response in data-taking Runs
+    VarBin varBin(globalFlags_);
     std::vector<int> pTRefs = {30, 110, 230};
-    HistTime timeHists(fout, "passResponse", pTRefs, globalFlags_);
-    curdir->cd();
 
+    HistRef refHists(origDir, "passAtleast1Ref", varBin);
+    
+    HistBarrel barrelHists(origDir, "passRefBarrel", varBin);
+
+    HistTag tagHists(origDir, "passRefBarrel", varBin, globalFlags_);
+    
+    HistRef refHists2(origDir,  "passJet1EtaJet2Pt", varBin);
+
+    HistMain mainHists(origDir, "passJet1EtaJet2Pt", varBin);
+
+    HistFinal finalHists(origDir, "passJet1EtaJet2Pt", varBin);
+
+    HistTime timeHists(origDir, "passResponse", varBin, pTRefs);
 
     //------------------------------------
     // Event loop
@@ -166,7 +124,6 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
         // Fill HistRef histograms
         refHists.Fill(p4Refs.size(), p4Ref, p4GenRef, weight); 
         
-
         //------------------------------------------------
         // Jet loop: Apply JEC
         //------------------------------------------------
@@ -296,9 +253,6 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
         if (fabs(p4Ref.Eta()) > 1.3) continue; 
         h1EventInCutflow->fill("passRefBarrel");
 
-        h1EventInDphiJetRef->Fill(deltaPhi, weight);
-        h1EventInDrJetRef->Fill(p4Ref.DeltaR(p4Jet1), weight);
-
         //------------------------------------------------
         // GenJet loop
         //------------------------------------------------
@@ -319,56 +273,22 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
                 }
             }
         }
-        bool pass_gen = (iGenJet != -1);
-       
-        if (pass_gen || globalFlags_.isData()) {
-            p1J1PtOverProbePtInRefPt->Fill(ptRef, p4Jet1.Pt() / ptRef, weight);
-        }
-        if (pass_gen) {
-            p1GenJ1PtOverProbePtInRefPt->Fill(ptRef, p4GenJet1.Pt() / ptRef, weight);
-            p1J1PtOverGenJ1PtInGenJ1Pt->Fill(p4GenJet1.Pt(), p4Jet1.Pt() / p4GenJet1.Pt(), weight);
-        }
-      
-        tagHists.mvar["h1EventInRefPt"] = 1.0;
-        tagHists.mvar["p1MpfRespInRefPt"] = mpf;
-        tagHists.mvar["p1DbRespInRefPt"] = bal;
-        tagHists.mvar["p1MpfResp1InRefPt"] = mpf1;
-        tagHists.mvar["p1MpfRespNInRefPt"] = mpfn;
-        tagHists.mvar["p1MpfRespUInRefPt"] = mpfu;
-        tagHists.mvar["p1RhoInRefPt"] = skimT->Rho;
-        tagHists.mvar["p1Jet1PtORefPtInRefPt"] = (p4Jet1.Pt() / ptRef);
-        tagHists.mvar["p1GenJet1PtORefPtInRefPt"] = (p4GenJet1.Pt() / ptRef);
-        tagHists.mvar["p1Jet1PtOGenJet1PtInGenJet1Pt"] = (p4GenJet1.Pt() != 0 ? p4Jet1.Pt() / p4GenJet1.Pt() : 0.0);
+        barrelHists.Fill(p4Ref, p4Jet1, p4GenJet1, weight);
+ 
+        //flavorXTaggedY
+        tagHists.SetResponse(bal, mpf, mpf1, mpfn, mpfu);
         tagHists.FillHistograms(skimT.get(), ptRef, iJet1, iGenJet, weight);
 
         if (!((fabs(p4Jet1.Eta()) < 1.3) && (p4Jet2.Pt() < ptRef || p4Jet2.Pt() < 30))) continue; 
         h1EventInCutflow->fill("passJet1EtaJet2Pt");
+        refHists2.Fill(p4Refs.size(), p4Ref, p4GenRef, weight); 
 
-        // Fill HistMain histograms
+        finalHists.Fill(ptRef, bal, mpf, p4Jet2, p4GenJet2, iGenJet2, globalFlags_.isMC(), weight);
+
         mainHists.Fill(skimT.get(), iJet1, bal, mpf, ptRef, weight);
-        
-        h2EventInRefPtDbResp->Fill(ptRef, bal, weight);
-        h2EventInRefPtMpfResp->Fill(ptRef, mpf, weight);
-        if (p4Jet2.Pt() > 0) {
-            if (iGenJet2 != -1 || !globalFlags_.isMC()) {
-                p1J2PtOverProbePtInRefPt->Fill(ptRef, p4Jet2.Pt() / ptRef, weight);
-            }
-            if (iGenJet2 != -1) {
-                p1GenJ2PtOverProbePtInRefPt->Fill(ptRef, p4GenJet2.Pt() / ptRef, weight);
-                p1J2PtOverGenJ2PtInGenJ2Pt->Fill(p4GenJet2.Pt(), p4Jet2.Pt() / p4GenJet2.Pt(), weight);
-            }
-        }
-
+       
         bool pass_DbResp = (fabs(1 - bal) < 0.7);
-        bool pass_MpfResp = (fabs(1 - mpf) < 0.7);
-
-        if (pass_MpfResp) h2EventInRefPtDbRespPassMpf->Fill(ptRef, bal, weight);
-        if (pass_DbResp) h2EventInRefPtMpfRespPassDb->Fill(ptRef, mpf, weight);
-        if (pass_MpfResp && pass_DbResp) {
-            h2EventInRefPtDbRespPassBoth->Fill(ptRef, bal, weight);
-            h2EventInRefPtMpfRespPassBoth->Fill(ptRef, mpf, weight);
-        }
-
+        bool pass_MpfResp = (fabs(1 - mpf) < 0.7); 
         if (!(pass_DbResp && pass_MpfResp)) continue;
         h1EventInCutflow->fill("passResponse");
         if(globalFlags_.isData()) timeHists.Fill(skimT.get(), iJet1, bal, mpf, ptRef, weight);

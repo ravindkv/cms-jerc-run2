@@ -98,7 +98,6 @@ void HistMultiJet::initializeHistograms(const std::vector<double>& binsPt, TDire
     p1Cef25InPtAvp = new TProfile("p1Cef25InPtAvp", "", nPt, binsPt.data());
     p1Muf25InPtAvp = new TProfile("p1Muf25InPtAvp", "", nPt, binsPt.data());
 
-    // Return to the main directory
     dirOut->cd(".."); // Go back to the parent directory
 }
 

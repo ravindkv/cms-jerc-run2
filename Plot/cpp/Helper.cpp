@@ -17,6 +17,5 @@ std::string Helper::dirToName(const std::string& dir) {
     // Replace all '/' with '_'
     std::replace(filename.begin(), filename.end(), '/', '_');
     // Append .pdf extension
-    filename += ".pdf";
     return filename;
 }

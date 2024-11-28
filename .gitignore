@@ -32,6 +32,9 @@ Plot/runMain
 Plot/runMain.d
 Plot/input/json
 Plot/config/json/
+Plot/input/config/__pycache__
+Plot/input/config/json/
+Plot/input/root/json
 
 Hist/Logger.h
 Hist/Logger.cpp

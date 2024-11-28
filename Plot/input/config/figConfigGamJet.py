@@ -5,7 +5,7 @@ configs["ConfigEras1D"].append(
     createConfig(
         "ConfigEras1D",
         "h1EventInRefMass",
-        histDir="passAtleast1Ref",
+        histDir="Base/passAtleast1Ref/HistBarrel",
         yTitle="Events (normalized to 1)",
         xTitle="Reference Gamma mass (GeV)",
         xMin=-1,
@@ -19,7 +19,7 @@ configs["ConfigEras1D"].append(
     createConfig(
         "ConfigEras1D",
         "p1RefMassInRefPt",
-        histDir="passAtleast1Ref",
+        histDir="Base/passAtleast1Ref/HistBarrel",
         yTitle="Mean of Gamma mass (GeV)",
         xTitle="Reference Gamma p_{T} (GeV)",
         yMin=-1,

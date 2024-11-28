@@ -157,9 +157,9 @@ void ObjectPick::pickRefs() {
         int k = pickedElectrons_.at(1);
 
         TLorentzVector p4Lep1, p4Lep2;
-        //double ptj = objectScale_->getEleSsCorrection(j, "nom") * skimTree_->Electron_pt[j];
-        //double ptk = objectScale_->getEleSsCorrection(k, "nom") * skimTree_->Electron_pt[k];
-        // ONLY syst
+        // ONLY for syst
+        //double ptj = objectScale_->getEleSsCorrection(j, "up/down") * skimTree_->Electron_pt[j];
+        //double ptk = objectScale_->getEleSsCorrection(k, "up/down") * skimTree_->Electron_pt[k];
         double ptj = skimTree_->Electron_pt[j];
         double ptk = skimTree_->Electron_pt[k];
         p4Lep1.SetPtEtaPhiM(ptj, skimTree_->Electron_eta[j], skimTree_->Electron_phi[j], skimTree_->Electron_mass[j]);

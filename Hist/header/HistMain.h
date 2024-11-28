@@ -14,70 +14,65 @@
 #include <TH2D.h>
 #include <TProfile.h>
 #include <TProfile2D.h>
-#include <TFile.h>
 #include <TLorentzVector.h>
 
 // User-defined includes
 #include "SkimTree.h"
+#include "VarBin.h"
 
 /**
  * @brief Struct to hold all final histograms for specific directories.
  */
 struct MainHistograms {
     // 1D Histograms
-    std::unique_ptr<TProfile> p1JetEtaInRefPt;
-    std::unique_ptr<TH2D> h2EventInJetEtaRefPt;
+    std::unique_ptr<TProfile> p1Jet1EtaInRefPt;
+    std::unique_ptr<TH2D> h2EventInRefPtJet1Eta;
     
     // 1D Composition and Response
     std::unique_ptr<TProfile> p1DbRespInRefPt;
     std::unique_ptr<TProfile> p1MpfRespInRefPt;
-    std::unique_ptr<TProfile> p1JetChhefInRefPt;
-    std::unique_ptr<TProfile> p1JetNehefInRefPt;
-    std::unique_ptr<TProfile> p1JetNeemefInRefPt;
-    std::unique_ptr<TProfile> p1JetChemefInRefPt;
-    std::unique_ptr<TProfile> p1JetMuefInRefPt;
-    std::unique_ptr<TProfile> p1JetChpv0efInRefPt;
+    std::unique_ptr<TProfile> p1Jet1ChhefInRefPt;
+    std::unique_ptr<TProfile> p1Jet1NehefInRefPt;
+    std::unique_ptr<TProfile> p1Jet1NeemefInRefPt;
+    std::unique_ptr<TProfile> p1Jet1ChemefInRefPt;
+    std::unique_ptr<TProfile> p1Jet1MuefInRefPt;
+    std::unique_ptr<TProfile> p1Jet1Chpv0efInRefPt;
     
     // 2D Composition and Response
-    std::unique_ptr<TProfile2D> p2DbRespInJet1EtaRefPt;
-    std::unique_ptr<TProfile2D> p2MpfRespInJet1EtaRefPt;
-    std::unique_ptr<TProfile2D> p2JetChhefInJet1EtaRefPt;
-    std::unique_ptr<TProfile2D> p2JetNehefInJet1EtaRefPt;
-    std::unique_ptr<TProfile2D> p2JetNeemefInJet1EtaRefPt;
-    std::unique_ptr<TProfile2D> p2JetChemefInJet1EtaRefPt;
-    std::unique_ptr<TProfile2D> p2JetMuefInJet1EtaRefPt;
-    std::unique_ptr<TProfile2D> p2JetChfpv0efInJet1EtaRefPt;
+    std::unique_ptr<TProfile2D> p2DbRespInRefPtJet1Eta;
+    std::unique_ptr<TProfile2D> p2MpfRespInRefPtJet1Eta;
+    std::unique_ptr<TProfile2D> p2JetChhefInRefPtJet1Eta;
+    std::unique_ptr<TProfile2D> p2JetNehefInRefPtJet1Eta;
+    std::unique_ptr<TProfile2D> p2JetNeemefInRefPtJet1Eta;
+    std::unique_ptr<TProfile2D> p2JetChemefInRefPtJet1Eta;
+    std::unique_ptr<TProfile2D> p2JetMuefInRefPtJet1Eta;
+    std::unique_ptr<TProfile2D> p2JetChfpv0efInRefPtJet1Eta;
     
     // 2D Composition and Response with Phi
-    std::unique_ptr<TProfile2D> p2DbRespInJet1EtaJet1Phi;
-    std::unique_ptr<TProfile2D> p2MpfRespInJet1EtaJet1Phi;
-    std::unique_ptr<TProfile2D> p2JetChhefInJet1EtaJet1Phi;
-    std::unique_ptr<TProfile2D> p2JetNehefInJet1EtaJet1Phi;
-    std::unique_ptr<TProfile2D> p2JetNeemefInJet1EtaJet1Phi;
-    std::unique_ptr<TProfile2D> p2JetChemefInJet1EtaJet1Phi;
-    std::unique_ptr<TProfile2D> p2JetMuefInJet1EtaJet1Phi;
-    std::unique_ptr<TProfile2D> p2JetChfpv0efInJet1EtaJet1Phi;
+    std::unique_ptr<TProfile2D> p2DbRespInJet1PhiJet1Eta;
+    std::unique_ptr<TProfile2D> p2MpfRespInJet1PhiJet1Eta;
+    std::unique_ptr<TProfile2D> p2JetChhefInJet1PhiJet1Eta;
+    std::unique_ptr<TProfile2D> p2JetNehefInJet1PhiJet1Eta;
+    std::unique_ptr<TProfile2D> p2JetNeemefInJet1PhiJet1Eta;
+    std::unique_ptr<TProfile2D> p2JetChemefInJet1PhiJet1Eta;
+    std::unique_ptr<TProfile2D> p2JetMuefInJet1PhiJet1Eta;
+    std::unique_ptr<TProfile2D> p2JetChfpv0efInJet1PhiJet1Eta;
     
     // 2D Composition and Response for RefPt230
-    std::unique_ptr<TProfile2D> p2DbRespInJet1EtaJet1PhiForRefPt230;
-    std::unique_ptr<TProfile2D> p2MpfRespInJet1EtaJet1PhiForRefPt230;
-    std::unique_ptr<TProfile2D> p2JetChhefInJet1EtaJet1PhiForRefPt230;
-    std::unique_ptr<TProfile2D> p2JetNehefInJet1EtaJet1PhiForRefPt230;
-    std::unique_ptr<TProfile2D> p2JetNeemefInJet1EtaJet1PhiForRefPt230;
-    std::unique_ptr<TProfile2D> p2JetChemefInJet1EtaJet1PhiForRefPt230;
-    std::unique_ptr<TProfile2D> p2JetMuefInJet1EtaJet1PhiForRefPt230;
-    std::unique_ptr<TProfile2D> p2JetChfpv0efInJet1EtaJet1PhiForRefPt230;
+    std::unique_ptr<TProfile2D> p2DbRespInJet1PhiJet1EtaForRefPt230;
+    std::unique_ptr<TProfile2D> p2MpfRespInJet1PhiJet1EtaForRefPt230;
+    std::unique_ptr<TProfile2D> p2JetChhefInJet1PhiJet1EtaForRefPt230;
+    std::unique_ptr<TProfile2D> p2JetNehefInJet1PhiJet1EtaForRefPt230;
+    std::unique_ptr<TProfile2D> p2JetNeemefInJet1PhiJet1EtaForRefPt230;
+    std::unique_ptr<TProfile2D> p2JetChemefInJet1PhiJet1EtaForRefPt230;
+    std::unique_ptr<TProfile2D> p2JetMuefInJet1PhiJet1EtaForRefPt230;
+    std::unique_ptr<TProfile2D> p2JetChfpv0efInJet1PhiJet1EtaForRefPt230;
     
     // Control Plots
     std::unique_ptr<TProfile> p1RhoInRefPt;
-    std::unique_ptr<TProfile> p1NpvgoodInRefPt;
+    std::unique_ptr<TProfile> p1NpvGoodInRefPt;
     std::unique_ptr<TProfile> p1NpvInRefPt;
     
-    // 2D Event Control Plots
-    std::unique_ptr<TH2D> h2EventInRefPtDbRespPassMpf;
-    std::unique_ptr<TH2D> h2EventInRefPtMpfRespPassDb;
-    std::unique_ptr<TH2D> h2EventInRefPtDbRespPassBoth;
-    std::unique_ptr<TH2D> h2EventInRefPtMpfRespPassBoth;
 };
 
 /**
@@ -94,17 +89,8 @@ public:
      * 
      * @param fout Pointer to the output ROOT file.
      * @param directoryName Name of the directory within the ROOT file to store histograms.
-     * @param nPtBins Number of pT bins.
-     * @param binsPt Array of pT bin edges.
-     * @param nEtaBins Number of eta bins.
-     * @param binsEta Array of eta bin edges.
-     * @param nPhiBins Number of phi bins.
-     * @param binsPhi Array of phi bin edges.
      */
-    HistMain(TFile* fout, const std::string& directoryName,
-              int nPtBins, const double* binsPt,
-              int nEtaBins, const double* binsEta,
-              int nPhiBins, const double* binsPhi);
+    HistMain(TDirectory *origDir, const std::string& directoryName, const VarBin& varBin);
     
     /**
      * @brief Default destructor.
@@ -132,7 +118,7 @@ private:
     
     // Struct holding all final histograms
     MainHistograms hist_;
-    
+
     // Run histogram parameters (if needed)
     // int runN_;
     // double runMin_;
@@ -143,17 +129,8 @@ private:
      * 
      * @param fout Pointer to the output ROOT file.
      * @param directoryName Name of the directory within the ROOT file to store histograms.
-     * @param nPtBins Number of pT bins.
-     * @param binsPt Array of pT bin edges.
-     * @param nEtaBins Number of eta bins.
-     * @param binsEta Array of eta bin edges.
-     * @param nPhiBins Number of phi bins.
-     * @param binsPhi Array of phi bin edges.
      */
-    void InitializeHistograms(TFile* fout, const std::string& directoryName,
-                              int nPtBins, const double* binsPt,
-                              int nEtaBins, const double* binsEta,
-                              int nPhiBins, const double* binsPhi);
+    void InitializeHistograms(TDirectory *origDir, const std::string& directoryName, const VarBin& varBin);
 };
 
 #endif // HISTMAIN_H

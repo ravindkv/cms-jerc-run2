@@ -12,12 +12,12 @@
 // ROOT includes
 #include <TH1D.h>
 #include <TProfile.h>
-#include <TFile.h>
 #include <TLorentzVector.h>
 
 // User-defined includes
 #include "SkimTree.h"
 #include "GlobalFlag.h"
+#include "VarBin.h"
 
 class HistTag {
 public:
@@ -26,10 +26,8 @@ public:
      * 
      * @param fout Pointer to the output ROOT file.
      * @param directoryName Name of the directory within the ROOT file to store histograms.
-     * @param nPtBins Number of bins in pT.
-     * @param binsPt Array of pT bin edges.
      */
-    HistTag(TFile* fout, const std::string& directoryName, int nPtBins, const std::vector<double>binsPt, GlobalFlag& globalFlags);
+    HistTag(TDirectory *origDir, const std::string& directoryName, const VarBin& varBin, GlobalFlag& globalFlags);
     
     /**
      * @brief Default destructor.
@@ -46,8 +44,6 @@ public:
      * @param iJet1 Index of the first jet in the event.
      * @param iGenJet Index of the generated jet (for MC simulations).
      */
-    // Map to hold variable values
-    std::map<std::string, double> mvar;
 
     void FillHistograms(
         SkimTree* skimT,
@@ -56,6 +52,7 @@ public:
         int iGenJet,
         double weight
     );
+    void SetResponse(const double &bal, const double &mpf, const double &mpf1, const double &mpfn, const double &mpfu);
 
 private:
     // Nested map to store histograms: var -> tag -> flavor -> histogram
@@ -73,19 +70,24 @@ private:
     double threshBtagDeepFlavQG_;
     double threshBtagDeepFlavUDS_;
 
+    // Map to hold variable values
+    std::map<std::string, double> mvar_;
+    double bal_;
+    double mpf_;
+    double mpf1_;
+    double mpfn_;
+    double mpfu_;
 
     /**
      * @brief Initializes all histograms and sets up the internal maps.
      * 
      * @param fout Pointer to the output ROOT file.
      * @param directoryName Name of the directory within the ROOT file to store histograms.
-     * @param nPtBins Number of bins in pT.
-     * @param binsPt Array of pT bin edges.
      */
     const GlobalFlag::Year year_;
     const bool isMC_;
     const bool isDebug_;
-    void InitializeHistograms(TFile* fout, const std::string& directoryName, int nPtBins, const std::vector<double> binsPt);
+    void InitializeHistograms(TDirectory *origDir, const std::string& directoryName, const VarBin& varBin);
 };
 
 #endif // TAGGED_H

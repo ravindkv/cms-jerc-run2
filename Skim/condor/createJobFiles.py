@@ -44,14 +44,13 @@ if __name__=="__main__":
         print("Deleted dir: tmpSub")
     os.system("mkdir -p tmpSub")
     tarFile = "tmpSub/Skim.tar.gz"
-    os.system("tar --exclude condor --exclude *.root -zcvf %s ../../Skim"%tarFile)
+    os.system("tar --exclude condor --exclude *.root --exclude output -zcvf %s ../../Skim"%tarFile)
     os.system("cp runMain.sh tmpSub/")
     print("Created dir: tmpSub")
     submitAll = open("tmpSub/submitAll.sh", "w") 
     for year, ch in itertools.product(Years, Channels):
         outPath = f"{eosSkimDir}/{ch}/{year}"
-        os.system(f"mkdir -p {outPath}")
-        print(f"Created dir: {outPath}")
+        print(f"Output dir: {outPath}")
         jsonFile = open(f"../input/json/FilesSkim_{ch}_{year}.json", "r")
         jdlName  = f'submitJobs_{ch}_{year}.jdl'
         jdlFile  = open(f'tmpSub/{jdlName}','w')

@@ -11,6 +11,7 @@
 #include "Rtypes.h"
 #include "TH1D.h"
 #include "TFile.h"
+#include "TDirectory.h"
 #include <cmath>
 
 class Helper {
@@ -37,6 +38,10 @@ public:
     static void printInfo(const TObject* obj);
     static void scanDirectory(TDirectory* dir, const std::string& path);
     static void scanTFile(TFile* file);
+
+    // Method to create or get nested directories
+    static TDirectory* createTDirectory(TDirectory* origDir, const std::string& directoryPath);
+
 };
     
 #endif // HELPER_H

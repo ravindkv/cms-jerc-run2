@@ -81,7 +81,8 @@ int RunZmmJet::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &chan
                     era2D->setInput(inputJson, channel, year);
                     era2D->setDataEraOrMcBin(dataEraOrMcBin);
                     era2D->setFigConfigEra2D(config);
-                    auto outPdfName = outPlotDirEra2D+"/"+dataEraOrMcBin+"_"+dir+"_"+name+".pdf";
+                    string outName = Helper::dirToName(dir);
+                    auto outPdfName = outPlotDirEra2D+"/"+dataEraOrMcBin+"_"+outName+"_"+name+".pdf";
                     era2D->drawHist2D(outPdfName);
                     plotsForSlide.push_back(outPdfName);
                 }//eras
@@ -110,7 +111,8 @@ int RunZmmJet::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &chan
                 erasXY->setFigConfigErasXY(config);
                 erasXY->loadHists(dataEras, "Data");
                 erasXY->loadHists(mcBins, "MC");
-                auto outPdfName = outPlotDirErasXY+"/"+year+"_"+dir+"_"+name+".pdf";
+                string outName = Helper::dirToName(dir);
+                auto outPdfName = outPlotDirErasXY+"/"+year+"_"+outName+"_"+name+".pdf";
                 erasXY->overlayDataWithMcInRatio(outPdfName);
                 plotsForSlide.push_back(outPdfName);
             }
@@ -139,7 +141,8 @@ int RunZmmJet::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &chan
                     eraXY->setFigConfigEraXY(config);
                     eraXY->loadHists("Data", dataEra, std::vector<std::string>{});
                     eraXY->loadHists("MC", "", mcBins);
-                    auto outPdfName = outPlotDirEraXY+"/"+dataEra+"_"+dir+"_"+name+".pdf";
+                    string outName = Helper::dirToName(dir);
+                    auto outPdfName = outPlotDirEraXY+"/"+dataEra+"_"+outName+"_"+name+".pdf";
                     eraXY->overlayDataWithMcInRatio(outPdfName);
                     plotsForSlide.push_back(outPdfName);
                 }//eras

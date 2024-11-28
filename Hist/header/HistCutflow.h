@@ -12,7 +12,7 @@
 class HistCutflow {
 public:
     // Constructor
-    HistCutflow(const std::string& name, const std::vector<std::string>& cuts, TDirectory* parentDir);
+    HistCutflow(TDirectory *origDir, const std::string& directoryName, const std::vector<std::string>& cuts);
 
     // Destructor
     ~HistCutflow();

@@ -1,7 +1,7 @@
 #include "RunZeeJet.h"
 #include "RunZmmJet.h"
 #include "RunGamJet.h"
-#include "RunMultiJet.h"
+//#include "RunMultiJet.h"
 
 //#include "HistMCTruth.h"
 //#include "HistFlavour.h"
@@ -204,13 +204,13 @@ int main(int argc, char* argv[]) {
         auto gamJet = std::make_unique<RunGamJet>(globalFlag);
         gamJet->Run(skimT, eventP.get(), objP.get(), objS.get(), fout.get());
     }
+/*
 
     if (globalFlag.getChannel() == GlobalFlag::Channel::MultiJet) {
         std::cout << "==> Running MultiJet" << std::endl;
         auto multiJet = std::make_unique<RunMultiJet>(globalFlag);
         multiJet->Run(skimT, eventP.get(), objP.get(), objS.get(), fout.get());
     }
-/*
   if (globalFlag->isMCTruth) {
     std::cout << "==> Running MCTruth" << std::endl;
     auto mcTruth = std::make_unique<RunMCTruth>(outName);

@@ -158,4 +158,30 @@ void Helper::scanTFile(TFile* file){
     scanDirectory(file, "");
 }
 
+TDirectory* Helper::createTDirectory(TDirectory* origDir, const std::string& directoryPath) {
+    if (!origDir) {
+        throw std::invalid_argument("Helper::GetOrCreateDirectory - Invalid directory pointer provided.");
+    }
 
+    // Start from the original directory
+    TDirectory* currentDir = origDir;
+
+    // Split the directoryPath into components using '/'
+    std::stringstream ss(directoryPath);
+    std::string dirName;
+    while (std::getline(ss, dirName, '/')) {
+        // Check if the subdirectory exists under the current directory
+        TDirectory* subDir = currentDir->GetDirectory(dirName.c_str());
+        if (!subDir) {
+            // Create the subdirectory if it doesn't exist
+            subDir = currentDir->mkdir(dirName.c_str());
+            if (!subDir) {
+                throw std::runtime_error("Helper::GetOrCreateDirectory - Failed to create directory: " + dirName + " in path " + currentDir->GetPath());
+            }
+        }
+        // Navigate into the subdirectory
+        currentDir = subDir;
+    }
+
+    return currentDir; // The final directory
+}

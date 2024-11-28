@@ -100,11 +100,14 @@ void NanoTree::loadTree() {
     fChain->SetCacheSize(Helper::tTreeCatchSize);
     bool isCopy = false;  // Set to true if you want to copy files locally
     std::string dir = "root://cms-xrd-global.cern.ch/";  // Default remote directory
-    // std::string dir = "./";  // Uncomment if using local directory
 
     int totalFiles = 0;
     int addedFiles = 0;
     int failedFiles = 0;
+
+    // Optimization parameters for xrdcp
+    const int streams = 15;              // Number of parallel data streams
+    const int tcpBufSize = 1048576;      // TCP buffer size (1MB)
 
     for (const auto& fileName : loadedJobFileNames_) {
         totalFiles++;
@@ -114,12 +117,21 @@ void NanoTree::loadTree() {
             // Extract the local file name from the remote path
             std::string localFile = fileName.substr(fileName.find_last_of('/') + 1);
             std::string cmd = "xrdcp ";
-            cmd.append(dir).append(fileName).append(" ").append(localFile);
+
+            // Append optimization options to the xrdcp command
+            cmd += "--streams " + std::to_string(streams) + " ";
+
+            // Construct the full remote path
+            std::string remoteFile = dir + fileName;
+
+            // Build the final command
+            cmd += remoteFile + " " + localFile;
+
             std::cout << "Executing command: " << cmd << '\n';
             int ret = system(cmd.c_str());
 
             if (ret != 0) {
-                std::cerr << "Error: Failed to copy " << fileName << " to local file " << localFile << '\n';
+                std::cerr << "Error: Failed to copy " << remoteFile << " to local file " << localFile << '\n';
                 failedFiles++;
                 continue;  // Skip adding this file
             }
@@ -139,7 +151,7 @@ void NanoTree::loadTree() {
                 dir = "/eos/cms/";  // Use local EOS path
                 fullPath = dir + fileName;
             } else {
-                dir = "root://cms-xrd-global.cern.ch/";  // Fallback to remote xrootd path
+                dir = "root://cms-xrd-global.cern.ch/";  // Fallback to remote
                 fullPath = dir + fileName;
             }
         }
@@ -153,13 +165,21 @@ void NanoTree::loadTree() {
             continue;  // Skip adding this file
         }
 
-        // Optionally, check for the presence of essential branches or histograms
-        // For example, check if "Events" exists
+        // Check if "Events" tree exists
         if (!f->GetListOfKeys()->Contains("Events")) {
             std::cerr << "Error: 'Events' not found in " << fullPath << '\n';
             f->Close();
             failedFiles++;
             continue;  // Skip adding this file
+        }
+
+        // Check the entries in the newly added TTree
+        Long64_t fileEntries = f->Get<TTree>("Events")->GetEntries();
+        if (fileEntries == 0) {
+            std::cerr << "\nWarning: 'Events' TTree in file " << fullPath << " has 0 entries. Skipping file.\n\n";
+            f->Close();
+            failedFiles++;
+            continue;  // Skip adding this file to the final count
         }
 
         // File is valid, add it to the TChain
@@ -187,7 +207,6 @@ void NanoTree::loadTree() {
         std::cerr << "Error: No valid ROOT files were added to the TChain. Exiting.\n";
         return;
     }
-
 
     fChain->SetBranchStatus("*", false);
     fChain->SetBranchStatus("run", true);

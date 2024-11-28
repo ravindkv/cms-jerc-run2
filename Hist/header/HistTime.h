@@ -12,24 +12,25 @@
 // ROOT includes
 #include <TH1D.h>
 #include <TProfile.h>
-#include <TFile.h>
 #include <TLorentzVector.h>
 
 // User-defined includes
 #include "SkimTree.h"
 #include "ObjectScale.h"
-#include "GlobalFlag.h"
+#include "VarBin.h"
 
 /**
  * @brief Struct to hold all histograms for a specific pTRef threshold.
  */
 struct RunHistograms {
-    std::unique_ptr<TH1D> h1EventInRun;             ///< Histogram for event counts per run
-    std::unique_ptr<TProfile> p1DbRespInRun;       ///< Profile histogram for balance factor per run
-    std::unique_ptr<TProfile> p1MpfRespInRun;      ///< Profile histogram for momentum fraction per run
-    std::unique_ptr<TProfile> p1JetChhefInRun;     ///< Profile histogram for jet chHEF per run
-    std::unique_ptr<TProfile> p1JetNehefInRun;     ///< Profile histogram for jet neHEF per run
-    std::unique_ptr<TProfile> p1JetNeemefInRun;    ///< Profile histogram for jet neEmEF per run
+    std::unique_ptr<TH1D> h1EventInRun;          
+    std::unique_ptr<TProfile> p1DbRespInRun;     
+    std::unique_ptr<TProfile> p1MpfRespInRun;    
+    std::unique_ptr<TProfile> p1JetChhefInRun;   
+    std::unique_ptr<TProfile> p1JetNehefInRun;   
+    std::unique_ptr<TProfile> p1JetNeemefInRun;  
+    std::unique_ptr<TProfile> p1JetChemefInRun;  
+    std::unique_ptr<TProfile> p1JetMuefInRun;  
 };
 
 /**
@@ -43,14 +44,13 @@ public:
     /**
      * @brief Constructs a HistTime object and initializes histograms.
      * 
-     * @param fout Pointer to the output ROOT file.
      * @param directoryName Name of the directory within the ROOT file to store histograms.
      * @param pTRefs Vector of pTRef thresholds to create histograms for.
      * @param runN Number of bins for the run histograms.
      * @param runMin Minimum run number.
      * @param runMax Maximum run number.
      */
-    HistTime(TFile* fout, const std::string& directoryName, const std::vector<int>& pTRefs, GlobalFlag & globalFlags);
+    HistTime(TDirectory *origDir, const std::string& directoryName, const VarBin& varBin, const std::vector<int>& pTRefs);
     
     /**
      * @brief Default destructor.
@@ -86,14 +86,12 @@ private:
     double runMin_;
     double runMax_;
     
-    GlobalFlag& globalFlags_;
     /**
      * @brief Initializes histograms for each pTRef threshold.
      * 
-     * @param fout Pointer to the output ROOT file.
      * @param directoryName Name of the directory within the ROOT file to store histograms.
      */
-    void InitializeHistograms(TFile* fout, const std::string& directoryName);
+    void InitializeHistograms(TDirectory *origDir, const std::string& directoryName, const VarBin& varBin);
 };
 
 #endif // HISTTIME_H

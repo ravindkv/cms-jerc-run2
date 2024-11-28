@@ -11,9 +11,9 @@
 #include <TH1D.h>
 #include <TH2D.h>
 #include <TProfile.h>
-#include <TFile.h>
 #include <TLorentzVector.h>
 
+#include "VarBin.h"
 /**
  * @brief Struct to hold all histograms related to "passAtleast1Ref".
  */
@@ -21,15 +21,15 @@ struct RefHistograms {
     // 1D Histograms
     std::unique_ptr<TH1D> h1EventInRefPt;
     std::unique_ptr<TH1D> h1EventInRefMass;
-    std::unique_ptr<TH1D> h1EventInRefPtBarrel;
-    std::unique_ptr<TH1D> h1EventInGenRefPt;
+    std::unique_ptr<TH1D> h1EventInRefPtForRefBarrel;
+    std::unique_ptr<TH1D> h1EventInGenRefPtForGenRefBarrel;
 
     // 2D Histograms
-    std::unique_ptr<TH2D> h2EventInRefEtaRefPhi;
-    std::unique_ptr<TH2D> h2EventInRefEtaRefPhiRebin;
-    std::unique_ptr<TH2D> h2EventInRefEtaRefPhiForRefPt110;
-    std::unique_ptr<TH2D> h2EventInRefEtaRefPhiForRefPt110Rebin;
-    std::unique_ptr<TH2D> h2EventInRefPtCountRef;
+    std::unique_ptr<TH2D> h2EventInRefPhiRefEta;
+    std::unique_ptr<TH2D> h2EventInRefPhiRebinRefEta;
+    std::unique_ptr<TH2D> h2EventInRefPhiRefEtaForRefPt110;
+    std::unique_ptr<TH2D> h2EventInRefPhiRebinRefEtaForRefPt110;
+    std::unique_ptr<TH2D> h2EventInCountRefRefPt;
 
     // TProfile Histograms
     std::unique_ptr<TProfile> p1RefMassInRefPt;
@@ -51,11 +51,8 @@ public:
      * 
      * @param fout Pointer to the output ROOT file.
      * @param directoryName Name of the directory within the ROOT file to store histograms.
-     * @param nPtBins Number of pT bins.
-     * @param binsPt Array of pT bin edges.
      */
-    HistRef(TFile* fout, const std::string& directoryName,
-            int nPtBins, const double* binsPt);
+    HistRef(TDirectory *origDir, const std::string& directoryName, const VarBin& varBin);
     
     /**
      * @brief Default destructor.
@@ -84,11 +81,8 @@ private:
      * 
      * @param fout Pointer to the output ROOT file.
      * @param directoryName Name of the directory within the ROOT file to store histograms.
-     * @param nPtBins Number of pT bins.
-     * @param binsPt Array of pT bin edges.
      */
-    void InitializeHistograms(TFile* fout, const std::string& directoryName,
-                              int nPtBins, const double* binsPt);
+    void InitializeHistograms(TDirectory *origDir, const std::string& directoryName, const VarBin& varBin);
 };
 
 #endif // HISTREF_H

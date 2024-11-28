@@ -1,31 +1,24 @@
 #include "HistTime.h"
+#include "Helper.h"
 
-HistTime::HistTime(TFile* fout, const std::string& directoryName, const std::vector<int>& pTRefs, GlobalFlag &globalFlags)
-    : pTRefs_(pTRefs), globalFlags_(globalFlags), runN_(200), runMin_(271030), runMax_(325200)
+HistTime::HistTime(TDirectory *origDir,  const std::string& directoryName, const VarBin& varBin, const std::vector<int>& pTRefs)
+    : pTRefs_(pTRefs), runN_(200), runMin_(271030), runMax_(325200)
 {
-    InitializeHistograms(fout, directoryName);
+    InitializeHistograms(origDir, directoryName, varBin);
 }
 
-void HistTime::InitializeHistograms(TFile* fout, const std::string& directoryName) {
-    // Create the directory within the ROOT file
-    fout->mkdir(directoryName.c_str());
-    fout->cd(directoryName.c_str());
-    if (globalFlags_.getYear()== GlobalFlag::Year::Year2016Pre){
-        runMin_ = 271036;
-        runMax_ = 284044;
-    }
-    if (globalFlags_.getYear()== GlobalFlag::Year::Year2016Post){
-        runMin_ = 271036;
-        runMax_ = 284044;
-    }
-    if (globalFlags_.getYear()== GlobalFlag::Year::Year2017){
-        runMin_ = 294927;
-        runMax_ = 306462;
-    }
-    if (globalFlags_.getYear()== GlobalFlag::Year::Year2018){
-        runMin_ = 314472;
-        runMax_ = 325175;
-    }
+void HistTime::InitializeHistograms(TDirectory *origDir, const std::string& directoryName, const VarBin& varBin) {
+
+    // Use the Helper method to get or create the directory
+    std::string dirName = directoryName + "/HistTime";
+    TDirectory* newDir = Helper::createTDirectory(origDir, dirName);
+    newDir->cd();
+
+    std::vector<double> rangeRun  = varBin.getRangeRun();
+    runN_ = rangeRun.at(0);
+    runMin_ = rangeRun.at(1);
+    runMax_ = rangeRun.at(2);
+
     std::cout<<"HistTime: Run range = "<<runMin_<<", "<<runMax_<<'\n';
     
     // Initialize histograms for each pTRef threshold
@@ -50,7 +43,7 @@ void HistTime::InitializeHistograms(TFile* fout, const std::string& directoryNam
         std::string p1DbRespName = "p1DbRespInRunFor" + suffix;
         rh.p1DbRespInRun = std::make_unique<TProfile>(
             p1DbRespName.c_str(),
-            ";Run Number;Balance Factor",
+            ";Run Number; DB Balance",
             runN_,
             runMin_,
             runMax_
@@ -59,7 +52,7 @@ void HistTime::InitializeHistograms(TFile* fout, const std::string& directoryNam
         std::string p1MpfRespName = "p1MpfRespInRunFor" + suffix;
         rh.p1MpfRespInRun = std::make_unique<TProfile>(
             p1MpfRespName.c_str(),
-            ";Run Number;Momentum Fraction",
+            ";Run Number; MPF Response",
             runN_,
             runMin_,
             runMax_
@@ -91,13 +84,32 @@ void HistTime::InitializeHistograms(TFile* fout, const std::string& directoryNam
             runMin_,
             runMax_
         );
+
+        std::string p1JetChemefName = "p1JetChemefInRunFor" + suffix;
+        rh.p1JetChemefInRun = std::make_unique<TProfile>(
+            p1JetChemefName.c_str(),
+            ";Run Number;Jet chEmEF",
+            runN_,
+            runMin_,
+            runMax_
+        );
+
+        std::string p1JetMuefName = "p1JetMuefInRunFor" + suffix;
+        rh.p1JetMuefInRun = std::make_unique<TProfile>(
+            p1JetMuefName.c_str(),
+            ";Run Number;Jet muEF",
+            runN_,
+            runMin_,
+            runMax_
+        );
         
         // Add to histMap_
         histMap_[pTRef] = std::move(rh);
         
         // Optionally, print initialization confirmation
-        std::cout << "Initialized histograms for pTRef " << pTRef << std::endl;
+        std::cout << "Initialized HistTime histograms for pTRef" << pTRef <<" in "<<dirName << std::endl;
     }
+    origDir->cd();
 }
 
 void HistTime::Fill(SkimTree* skimT, int iJet1, double bal, double mpf, double ptRef, double weight) {
@@ -129,6 +141,12 @@ void HistTime::Fill(SkimTree* skimT, int iJet1, double bal, double mpf, double p
             
             // Fill p1JetNeemefInRun
             rh.p1JetNeemefInRun->Fill(skimT->run, skimT->Jet_neEmEF[iJet1], weight);
+
+            // Fill p1JetChemefInRun
+            rh.p1JetChemefInRun->Fill(skimT->run, skimT->Jet_chEmEF[iJet1], weight);
+
+            // Fill p1JetMuefInRun
+            rh.p1JetMuefInRun->Fill(skimT->run, skimT->Jet_muEF[iJet1], weight);
         }
     }
 }

@@ -1,6 +1,7 @@
 #include "HistTag.h"
+#include "Helper.h"
 
-HistTag::HistTag(TFile* fout, const std::string& directoryName, int nPtBins, const std::vector<double> binsPt, GlobalFlag& globalFlags)
+HistTag::HistTag(TDirectory *origDir, const std::string& directoryName, const VarBin& varBin, GlobalFlag& globalFlags)
     : 
      threshBtagDeepFlavB_(1.0),
      threshBtagDeepFlavCvL_(1.0),
@@ -8,9 +9,14 @@ HistTag::HistTag(TFile* fout, const std::string& directoryName, int nPtBins, con
      threshBtagDeepFlavG_(1.0),
      threshBtagDeepFlavQG_(1.0),
      threshBtagDeepFlavUDS_(1.0),
-    year_(globalFlags.getYear()),
-    isMC_(globalFlags.isMC()),
-    isDebug_(globalFlags.isDebug())
+     bal_(1.0),
+     mpf_(1.0),
+     mpf1_(1.0), 
+     mpfn_(1.0), 
+     mpfu_(1.0), 
+     year_(globalFlags.getYear()),
+     isMC_(globalFlags.isMC()),
+     isDebug_(globalFlags.isDebug())
 {
     if (year_ == GlobalFlag::Year::Year2016Pre) {
         threshBtagDeepFlavB_    = 0.6502;
@@ -42,14 +48,26 @@ HistTag::HistTag(TFile* fout, const std::string& directoryName, int nPtBins, con
     }
 
     // Initialize histograms and the mvar_ map
-    InitializeHistograms(fout, directoryName, nPtBins, binsPt);
+    InitializeHistograms(origDir, directoryName, varBin);
 }
 
-void HistTag::InitializeHistograms(TFile* fout, const std::string& directoryName, int nPtBins, const std::vector<double> binsPt) {
-    // Create the directory within the ROOT file
-    fout->mkdir(directoryName.c_str());
-    fout->cd(directoryName.c_str());
+void HistTag::SetResponse(const double &bal, const double &mpf, const double &mpf1, const double &mpfn, const double &mpfu){
+    bal_ = bal;
+    mpf_ = mpf;
+    mpf1_ = mpf1;
+    mpfn_ = mpfn;
+    mpfu_ = mpfu;
+}
 
+void HistTag::InitializeHistograms(TDirectory *origDir, const std::string& directoryName, const VarBin& varBin) {
+
+    // Use the Helper method to get or create the directory
+    std::string dirName = directoryName + "/HistTag";
+    TDirectory* newDir = Helper::createTDirectory(origDir, dirName);
+    newDir->cd();
+
+    std::vector<double> binsPt  = varBin.getBinsPt();
+    const int nPt  = binsPt.size()  - 1;
     // Define the list of variables to initialize
     std::vector<std::string> variables = {
         "h1EventInRefPt",
@@ -60,18 +78,20 @@ void HistTag::InitializeHistograms(TFile* fout, const std::string& directoryName
         "p1MpfRespNInRefPt",
         "p1MpfRespUInRefPt",
         "p1RhoInRefPt",
-        "p1Jet1PtORefPtInRefPt",
-        "p1GenJet1PtORefPtInRefPt",
-        "p1Jet1PtOGenJet1PtInGenJet1Pt"
+        "p1Jet1PtOverRefPtInRefPt",
+        "p1GenJet1PtOverRefPtInRefPt",
+        "p1Jet1PtOverGenJet1PtInGenJet1Pt"
     };
 
     // Initialize tag and flavor identifiers
-    atag_ = {"i", "b", "c", "q", "g", "n"};
-    aflv_ = {"i", "b", "c", "q", "s", "ud", "g", "n"};
+    //atag_ = {"i", "b", "c", "q", "g", "n"};
+    //aflv_ = {"i", "b", "c", "q", "s", "ud", "g", "n"};
 
+    atag_ = {"i", "b"};
+    aflv_ = {"i"};
     // Loop over all combinations of variables, tags, and flavors to initialize histograms
     for (const auto& var : variables) {
-        mvar[var] = 1.0;//initialize
+        mvar_[var] = 1.0;//initialize
         for (const auto& tag : atag_) {
             for (const auto& flv : aflv_) {
                 // Construct the histogram name based on the naming convention
@@ -82,20 +102,21 @@ void HistTag::InitializeHistograms(TFile* fout, const std::string& directoryName
                     varTagFlvMap_[var][tag][flv] = std::make_unique<TH1D>(
                         histName.c_str(),
                         ";#it{p}_{T} (GeV);Events",
-                        nPtBins,
+                        nPt,
                         binsPt.data()
                     );
                 } else {
                     varTagFlvMap_[var][tag][flv] = std::make_unique<TProfile>(
                         histName.c_str(),
                         ";#it{p}_{T} (GeV);Value",
-                        nPtBins,
+                        nPt,
                         binsPt.data()
                     );
                 }
             }//aflv_
         }//atag_
     }//variables
+    origDir->cd();
 }
 
 void HistTag::FillHistograms(
@@ -105,6 +126,19 @@ void HistTag::FillHistograms(
     int iGenJet,
     double weight
 ) {
+   double genJetPt = skimT->GenJet_pt[iGenJet]; 
+   double jetPt = skimT->Jet_pt[iJet1]; 
+   mvar_["h1EventInRefPt"] = 1.0;
+   mvar_["p1DbRespInRefPt"] = bal_;
+   mvar_["p1MpfRespInRefPt"] = mpf_;
+   mvar_["p1MpfResp1InRefPt"] = mpf1_;
+   mvar_["p1MpfRespNInRefPt"] = mpfn_;
+   mvar_["p1MpfRespUInRefPt"] = mpfu_;
+   mvar_["p1RhoInRefPt"] = skimT->Rho;
+   mvar_["p1Jet1PtOverRefPtInRefPt"] = jetPt/ ptRef;
+   mvar_["p1GenJet1PtOverRefPtInRefPt"] = (genJetPt / ptRef);
+   mvar_["p1Jet1PtOverGenJet1PtInGenJet1Pt"] = (genJetPt != 0 ? jetPt / genJetPt : 0.0);
+
     // Determine the flavor of the jet
     int flv = (isMC_ ? skimT->GenJet_partonFlavour[iGenJet] : 99);
 
@@ -122,7 +156,7 @@ void HistTag::FillHistograms(
     bool isn = (!isb && !isc && !isq && !isg);
 
     // Loop over all variables to fill the corresponding histograms
-    for (const auto& var_pair : mvar) {
+    for (const auto& var_pair : mvar_) {
         const std::string& var = var_pair.first;
         double val = var_pair.second;
 
@@ -146,11 +180,8 @@ void HistTag::FillHistograms(
 
                     // Determine the x-axis value based on the variable
                     double x = ptRef;
-                    if (var == "p1Jet1PtOGenJet1PtInGenJet1Pt") {
-                        //x = p4GenJet1.Pt();
-                    }
-                    if ((var == "p1Jet1PtORefPtInRefPt" || var == "p1GenJet1PtORefPtInRefPt") && iGenJet == -1) {
-                        x = 0.0;
+                    if (var == "p1Jet1PtOverGenJet1PtInGenJet1Pt" && genJetPt != 0) {
+                        x = genJetPt;
                     }
 
                     // Retrieve the histogram from the map

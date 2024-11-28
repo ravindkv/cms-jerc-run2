@@ -26,9 +26,10 @@ def check_file(args):
             return (sKey, skim, True)
         
         # Check for the specific histogram and its validity
-        h = f.Get("Cutflow/h1EventInCutflow")
+        hName = "Base/HistCutflow/h1EventInCutflow"
+        h = f.Get(hName)
         if not h:
-            print(f"'Cutflow/h1EventInCutflow' not found in: {skim}")
+            print(f"{hName} not found in: {skim}")
             return (sKey, skim, True)
 
         # All checks passed, file is considered good
