@@ -20,6 +20,7 @@
 #include "ObjectPick.h"
 #include "ObjectScale.h"
 #include "GlobalFlag.h"
+#include "VarCut.h"
 
 class RunZeeJet{
 public:
@@ -30,7 +31,6 @@ public:
     int Run(std::shared_ptr<SkimTree>& skimT, EventPick* eventP, ObjectPick* objP, ObjectScale* objS, TFile* fout);
 
 private:
-    bool smearJets_ = false;
     // Reference to GlobalFlag instance
     GlobalFlag& globalFlags_;
 

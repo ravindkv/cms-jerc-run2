@@ -9,7 +9,7 @@ HistRef::HistRef(TDirectory *origDir, const std::string& directoryName, const Va
 void HistRef::InitializeHistograms(TDirectory *origDir, const std::string& directoryName, const VarBin& varBin)
 {
     // Use the Helper method to get or create the directory
-    std::string dirName = directoryName + "/HistBarrel";
+    std::string dirName = directoryName + "/HistRef";
     TDirectory* newDir = Helper::createTDirectory(origDir, dirName);
     newDir->cd();
 

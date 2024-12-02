@@ -43,16 +43,16 @@ public:
     void loadJetL2L3ResidualRef();
     double getL2L3ResidualCorrection(double jetEta, double jetPt) const;
     
-    // resoJER 
-    void loadJERResoRef();
-    double getJERResolution( int index) const;
+    // resoJer 
+    void loadJerResoRef();
+    double getJerResolution(SkimTree& skimT, int index) const;
     
-    // sfJER 
-    void loadJERSFRef();
-    double getJERScaleFactor( int index, const std::string& syst) const;
+    // sfJer 
+    void loadJerSfRef();
+    double getJerScaleFactor(SkimTree& skimT, int index, const std::string& syst) const;
 
-    // now corrJER using resoJER and sfJER
-    double getJERCorrection( int index, const std::string& syst) const;
+    // now corrJer using resoJer and sfJer
+    double getJerCorrection(SkimTree& skimT, int index, const std::string& syst) const;
     
     // Photon Scale and Smearing (Ss)
     void loadPhoSsRef();
@@ -104,13 +104,13 @@ private:
     std::string jetL2L3ResidualName_;
     correction::Correction::Ref loadedJetL2L3ResidualRef_;
     
-    // resoJER 
-    std::string JERResoName_;
-    correction::Correction::Ref loadedJERResoRef_;
+    // resoJer 
+    std::string JerResoName_;
+    correction::Correction::Ref loadedJerResoRef_;
     
-    // sfJER 
-    std::string JERSFName_;
-    correction::Correction::Ref loadedJERSFRef_;
+    // sfJer 
+    std::string JerSfName_;
+    correction::Correction::Ref loadedJerSfRef_;
 	std::unique_ptr<TRandom> randomNumGen = std::make_unique<TRandom3>(0);
     
     // Photon Scale and Smearing (Ss)

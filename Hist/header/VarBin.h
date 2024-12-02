@@ -21,6 +21,8 @@ public:
     const std::vector<double>& getRangePhi() const;
     const std::vector<double>& getRangePhiRebin() const;
     const std::vector<double>& getRangeMass() const;
+    const std::vector<double>& getRangeMassJet1() const;
+    const std::vector<double>& getRangeMassJetSum() const;
 
     const std::vector<double>& getRangeRun() const;
     const std::vector<double>& getRangeDeltaR() const;
@@ -50,6 +52,8 @@ private:
     std::vector<double> rangePhi_;
     std::vector<double> rangePhiRebin_;
     std::vector<double> rangeMass_;
+    std::vector<double> rangeMassJet1_;
+    std::vector<double> rangeMassJetSum_;
 
     std::vector<double> rangeRun_;
     std::vector<double> rangeDeltaR_;

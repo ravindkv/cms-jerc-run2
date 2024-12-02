@@ -59,6 +59,8 @@ void VarBin::InitializeBins(){
     rangePhi_ = {72,-TMath::Pi(),TMath::Pi()};
     rangePhiRebin_ = {300,-TMath::Pi(),TMath::Pi()};
     rangeMass_  = {100, 0, 200};
+    rangeMassJet1_  = {100, 0, 150};
+    rangeMassJetSum_  = {100, 0, 15000};
 
     rangeRun_ = { 200, 271030, 325200 };
     if (year_ == GlobalFlag::Year::Year2016Pre){
@@ -114,7 +116,6 @@ const std::vector<double>& VarBin::getBinsMass() const {
 }
 
 
-
 const std::vector<double>& VarBin::getRangePt() const {
     printBins("getRangePt()", rangePt_);
     return rangePt_;
@@ -134,6 +135,14 @@ const std::vector<double>& VarBin::getRangePhiRebin() const {
 const std::vector<double>& VarBin::getRangeMass() const {
     printBins("getRangeMass()", rangeMass_);
     return rangeMass_;
+}
+const std::vector<double>& VarBin::getRangeMassJet1() const {
+    printBins("getRangeMassJet1()", rangeMassJet1_);
+    return rangeMassJet1_;
+}
+const std::vector<double>& VarBin::getRangeMassJetSum() const {
+    printBins("getRangeMassJetSum()", rangeMassJetSum_);
+    return rangeMassJetSum_;
 }
 
 

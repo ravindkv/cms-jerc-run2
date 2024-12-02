@@ -37,19 +37,19 @@ auto RunGamJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
     VarBin varBin(globalFlags_);
     std::vector<int> pTRefs = {30, 110, 230};
 
-    HistRef refHists(origDir, "passAtleast1Ref", varBin);
+    HistRef histRef(origDir, "passAtleast1Ref", varBin);
     
-    HistBarrel barrelHists(origDir, "passRefBarrel", varBin);
+    HistBarrel histBarrel(origDir, "passRefBarrel", varBin);
 
-    HistTag tagHists(origDir, "passRefBarrel", varBin, globalFlags_);
+    HistTag histTag(origDir, "passRefBarrel", varBin, globalFlags_);
     
-    HistRef refHists2(origDir,  "passJet1EtaJet2Pt", varBin);
+    HistRef histRef2(origDir,  "passJet1EtaJet2Pt", varBin);
 
-    HistMain mainHists(origDir, "passJet1EtaJet2Pt", varBin);
+    HistMain histMain(origDir, "passJet1EtaJet2Pt", varBin);
 
-    HistFinal finalHists(origDir, "passJet1EtaJet2Pt", varBin);
+    HistFinal histFinal(origDir, "passJet1EtaJet2Pt", varBin);
 
-    HistTime timeHists(origDir, "passResponse", varBin, pTRefs);
+    HistTime histTime(origDir, "passResponse", varBin, pTRefs);
 
     //------------------------------------
     // Event loop
@@ -120,7 +120,7 @@ auto RunGamJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
             p4GenRef = p4GenRefs.at(0);
         }
         // Fill HistRef histograms
-        refHists.Fill(p4Refs.size(), p4Ref, p4GenRef, weight); 
+        histRef.Fill(p4Refs.size(), p4Ref, p4GenRef, weight); 
         
 
         //------------------------------------------------
@@ -272,25 +272,25 @@ auto RunGamJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
                 }
             }
         }
-        barrelHists.Fill(p4Ref, p4Jet1, p4GenJet1, weight);
+        histBarrel.Fill(p4Ref, p4Jet1, p4GenJet1, weight);
  
         //flavorXTaggedY
-        tagHists.SetResponse(bal, mpf, mpf1, mpfn, mpfu);
-        tagHists.FillHistograms(skimT.get(), ptRef, iJet1, iGenJet, weight);
+        histTag.SetResponse(bal, mpf, mpf1, mpfn, mpfu);
+        histTag.FillHistograms(skimT.get(), ptRef, iJet1, iGenJet, weight);
 
         if (!((fabs(p4Jet1.Eta()) < 1.3) && (p4Jet2.Pt() < ptRef || p4Jet2.Pt() < 30))) continue; 
         h1EventInCutflow->fill("passJet1EtaJet2Pt");
-        refHists2.Fill(p4Refs.size(), p4Ref, p4GenRef, weight); 
+        histRef2.Fill(p4Refs.size(), p4Ref, p4GenRef, weight); 
 
-        finalHists.Fill(ptRef, bal, mpf, p4Jet2, p4GenJet2, iGenJet2, globalFlags_.isMC(), weight);
+        histFinal.Fill(ptRef, bal, mpf, p4Jet2, p4GenJet2, iGenJet2, globalFlags_.isMC(), weight);
 
-        mainHists.Fill(skimT.get(), iJet1, bal, mpf, ptRef, weight);
+        histMain.Fill(skimT.get(), iJet1, bal, mpf, ptRef, weight);
        
         bool pass_DbResp = (fabs(1 - bal) < 0.7);
         bool pass_MpfResp = (fabs(1 - mpf) < 0.7); 
         if (!(pass_DbResp && pass_MpfResp)) continue;
         h1EventInCutflow->fill("passResponse");
-        if(globalFlags_.isData()) timeHists.Fill(skimT.get(), iJet1, bal, mpf, ptRef, weight);
+        if(globalFlags_.isData()) histTime.Fill(skimT.get(), iJet1, bal, mpf, ptRef, weight);
 
     }  // end of event loop
 

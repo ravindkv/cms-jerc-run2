@@ -112,7 +112,7 @@ int main(int argc, char* argv[]) {
     
     // Initialize GlobalFlag instance
     GlobalFlag globalFlag(outName);
-    globalFlag.setDebug(false);
+    globalFlag.setDebug(true);
     globalFlag.setNDebug(1000);
     globalFlag.printFlags();  
 
@@ -142,8 +142,8 @@ int main(int argc, char* argv[]) {
         objS->loadJetL1FastJetRef();
         objS->loadJetL2RelativeRef();
         objS->loadJetL2L3ResidualRef();
-        objS->loadJERResoRef();
-        objS->loadJERSFRef();
+        objS->loadJerResoRef();
+        objS->loadJerSfRef();
         objS->loadPuRef();
 
         // Use the GlobalFlag instance for conditional checks
