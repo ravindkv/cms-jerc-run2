@@ -4,12 +4,14 @@
 #include "HistTag.h"
 #include "HistTime.h"
 #include "HistRef.h"
-#include "HistJerc.h"
 #include "HistBarrel.h"
 #include "HistMain.h"
 #include "HistFinal.h"
 
-#include "ApplyJerc.h"
+#include "ScaleElectron.h"
+#include "ScaleJetMet.h"
+#include "HistScale.h"
+
 #include "Helper.h"
 #include "VarBin.h"
    
@@ -18,7 +20,7 @@ RunZeeJet::RunZeeJet(GlobalFlag& globalFlags)
     :globalFlags_(globalFlags) {
 }
 
-auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectPick *objP, ObjectScale *objS, TFile *fout) -> int{
+auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectPick *objP, ScaleObject *scaleObject, TFile *fout) -> int{
    
     assert(fout && !fout->IsZombie());
     fout->mkdir("Base");
@@ -31,9 +33,9 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
     
     // Cutflow histograms
     std::vector<std::string> cuts = {
-    		"passSkim", "passHLT", "passGoodLumi", "passMetFilter", "passAtleast1Ref",
+    		"passSkim", "passHLT", "passGoodLumi", "passMetFilter", "passExactly1Ref",
     		"passAtleast1Jet", "passJetVetoMap", "passDPhiRefJet1", "passRefBarrel",
-    		"passJet1EtaJet2Pt", "passResponse"
+    		"passAlpha", "passResponse"
     };
     auto h1EventInCutflow = std::make_unique<HistCutflow>(origDir, "", cuts);
       
@@ -41,33 +43,34 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
     VarBin varBin(globalFlags_);
     std::vector<int> pTRefs = {30, 110, 230};
 
-    HistRef histRef(origDir, "passAtleast1Ref", varBin);
+    HistRef histRef(origDir, "passExactly1Ref", varBin);
 
-    HistJerc histJerc(origDir, "passAtleast1Jet", varBin);
+    HistScale histScale(origDir, "passAtleast1Jet", varBin);
     
     HistBarrel histBarrel(origDir, "passRefBarrel", varBin);
 
     HistTag histTag(origDir, "passRefBarrel", varBin, globalFlags_);
     
-    HistRef histRef2(origDir,  "passJet1EtaJet2Pt", varBin);
+    HistRef histRef2(origDir,  "passAlpha", varBin);
 
-    HistMain histMain(origDir, "passJet1EtaJet2Pt", varBin);
+    HistMain histMain(origDir, "passAlpha", varBin);
 
-    HistFinal histFinal(origDir, "passJet1EtaJet2Pt", varBin);
+    HistFinal histFinal(origDir, "passAlpha", varBin);
 
     HistTime histTime(origDir, "passResponse", varBin, pTRefs);
+
+    // Scale constructor
+    auto scaleElectron = std::make_shared<ScaleElectron>(scaleObject, globalFlags_.isData());
+    auto scaleJetMet = std::make_shared<ScaleJetMet>(scaleObject, globalFlags_.isData(), VarCut::applyJer);
 
     //------------------------------------
     // Event loop
     //------------------------------------
-    TLorentzVector p4Ref, p4GenRef, p4Jet1, p4Jet2, p4Jetn;
-    TLorentzVector p4Met, p4Met1, p4Metn, p4Metu, p4Metnu, p4RawRef;
-    TLorentzVector p4Jeti;
+    TLorentzVector p4RawRef, p4Ref, p4GenRef;
+    TLorentzVector p4Met1, p4Metn, p4Metu, p4Metnu;
+    TLorentzVector p4Jeti, p4CorrMet;
     TLorentzVector p4GenJeti, p4GenJet1, p4GenJet2;
     TLorentzVector p4Refx; // for MPFX
-
-    // ApplyJerc constructor
-    auto appliedJerc = std::make_shared<ApplyJerc>(objS, globalFlags_.isData(), VarCut::applyJer);
 
     double totalTime = 0.0;
     auto startClock = std::chrono::high_resolution_clock::now();
@@ -91,7 +94,7 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
 
         bool passGoodLumi = true; 
         if (globalFlags_.isData()){
-            passGoodLumi = objS->checkGoodLumi(skimT->run, skimT->luminosityBlock);
+            passGoodLumi = scaleObject->checkGoodLumi(skimT->run, skimT->luminosityBlock);
         }
         if (!passGoodLumi) continue; 
         h1EventInCutflow->fill("passGoodLumi");
@@ -102,20 +105,23 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
         //------------------------------------------
         // Select objects
         //------------------------------------------
-        // Reco objects
+        // Apply Electron Corrections 
+        scaleElectron->applyCorrections(skimT);
+        if(globalFlags_.isDebug()) scaleElectron->print();
+
         objP->clearObjects();
-        objP->pickElectrons();
+        objP->pickElectrons(*skimT);
         if (objP->getPickedElectrons().size() < 2) continue;
         if (objP->getPickedElectrons().size() > 3) continue;
-        objP->pickRefs();
+        objP->pickRefs(*skimT);
         std::vector<TLorentzVector> p4Refs = objP->getPickedRefs();
 
-        if (p4Refs.empty()) continue; 
-        h1EventInCutflow->fill("passAtleast1Ref");
+        if (p4Refs.size()!=1) continue; 
+        h1EventInCutflow->fill("passExactly1Ref");
 
         // Weight
         double weight = (globalFlags_.isMC() ? skimT->genWeight : 1.0);
-        if (globalFlags_.isMC()) weight *= objS->getPuCorrection(skimT->Pileup_nTrueInt, "nominal");
+        if (globalFlags_.isMC()) weight *= scaleObject->getPuCorrection(skimT->Pileup_nTrueInt, "nominal");
 
         p4Ref = p4Refs.at(0);
         p4RawRef = p4Refs.at(0);
@@ -124,8 +130,8 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
         // Gen objects
         p4GenRef.SetPtEtaPhiM(0, 0, 0, 0);
         if (globalFlags_.isMC()) {
-            objP->pickGenElectrons();
-            objP->pickGenRefs();
+            objP->pickGenElectrons(*skimT);
+            objP->pickGenRefs(*skimT);
             std::vector<TLorentzVector> p4GenRefs = objP->getPickedGenRefs();
             if (p4GenRefs.empty()) continue;
             p4GenRef = p4GenRefs.at(0);
@@ -133,60 +139,54 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
         // Fill HistRef histograms
         histRef.Fill(p4Refs.size(), p4Ref, p4GenRef, weight); 
         
-        // Apply jet energy corrections
-        appliedJerc->applyCorrections(skimT, ApplyJerc::CorrectionLevel::L2L3Res);
-        if(globalFlags_.isDebug()) appliedJerc->print();
+        // Apply jet energy scaleions
+        scaleJetMet->applyCorrections(skimT, ScaleJetMet::CorrectionLevel::L2L3Res);
+        if(globalFlags_.isDebug()) scaleJetMet->print();
 
         //------------------------------------------------
-        // Jet loop: Apply JEC
+        // Select jets 
         //------------------------------------------------
-        // Select leading jets. Just exclude Ref, don't apply JetID yet
-        int iJet1(-1), iJet2(-1), nJets(0);
-        p4Jet1.SetPtEtaPhiM(0, 0, 0, 0);
-        p4Jet2.SetPtEtaPhiM(0, 0, 0, 0);
-        p4Jetn.SetPtEtaPhiM(0, 0, 0, 0);
-        for (int i = 0; i != skimT->nJet; ++i) {
-            if (!(skimT->Jet_jetId[i] & (1 << 2))) continue; // tightLepVeto
-            if (skimT->Jet_pt[i] < 12) continue;
-            if (p4Ref.DeltaR(p4Jeti) < 0.2) continue; // should not happen, but does?
-            ++nJets;
-            if (iJet1 == -1) { // Leading jet for balance
-                iJet1 = i;
-                p4Jet1 = p4Jeti;
-            } else { // Subleading jets 
-                p4Jetn += p4Jeti;
-                if (iJet2 == -1) { // First subleading jet for alpha
-                    iJet2 = i;
-                    p4Jet2 = p4Jeti;
-                }
-            }
-        }//nJet
+        objP->pickJets(*skimT, p4Ref);
 
-        if (nJets < 1) continue; 
+        //Pick index of jets
+        std::vector<int> jetsIndex = objP->getPickedJetsIndex();
+        if (jetsIndex.empty()) continue; 
+        int iJet1 = -1, iJet2 = -1;
+        iJet1 = jetsIndex.at(0);
+        if(jetsIndex.size() > 1) iJet2 = jetsIndex.at(1);
+
+        //Pick p4 of jets
+        TLorentzVector p4Jet1, p4Jet2, p4Jetn;
+        std::vector<TLorentzVector> jetsP4 = objP->getPickedJetsP4();
+        p4Jet1  = jetsP4.at(0);
+        p4Jet2  = jetsP4.at(1);
+        p4Jetn  = jetsP4.at(2);
+        p4Jetn+= p4Jet2; // except leading jet
+
+        if (fabs(p4Jet1.Eta()) >= 1.3) continue; 
         h1EventInCutflow->fill("passAtleast1Jet");
-        histJerc.Fill(*appliedJerc, weight);
+        histScale.FillElectron(*scaleElectron, weight);
+        histScale.FillJetMet(*scaleJetMet, weight);
 
-        if (objS->checkJetVetoMap()) continue; // expensive function
+        if (scaleObject->checkJetVetoMap(*skimT)) continue; // expensive function
         h1EventInCutflow->fill("passJetVetoMap");
         
-
         //------------------------------------------------
         // Set MET vectors
         //------------------------------------------------
-        TLorentzVector p4CorrJetSum = appliedJerc->getP4MapJetSum().at("Corr");
-        TLorentzVector p4CorrMet    = appliedJerc->getP4MapMet().at("Type1Corr");
-
-        p4CorrMet += p4RawRef - p4Ref; // replace PF Ref with Reco Ref
-        p4Met1 = -p4Jet1 - p4Ref;
-        p4Metn = -p4Jetn;
+        p4CorrMet.SetPtEtaPhiM(skimT->ChsMET_pt, 0, skimT->ChsMET_phi, 0);
+        // Replace PF Ref with Reco Ref
+        p4CorrMet += p4RawRef - p4Ref; 
         // Unclustered MET from corrMET
-        p4Metu = p4CorrMet + p4Ref + p4CorrJetSum;
-        p4Metnu = p4Metn + 1.1 * p4Metu;
-        p4Met = p4CorrMet;
+        // Eq.8 of hdm_2023082.pdf
+        p4Metu = p4CorrMet + p4Ref + p4Jet1 + p4Jetn;
+        p4Met1 = - p4Ref - p4Jet1 ;
+        p4Metn = - p4Jetn;
+        p4Metnu = p4Metn + 1.1*p4Metu;
         
         // Make MET transverse
         p4CorrMet.SetPz(0);
-        p4Met.SetPz(0);
+        p4CorrMet.SetPz(0);
         p4Metn.SetPz(0);
         p4Met1.SetPz(0);
         p4Metu.SetPz(0);
@@ -195,7 +195,7 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
         // Calculate basic variables
         //------------------------------------------------
         double bal = p4Jet1.Pt() / ptRef;
-        double mpf = 1 + p4Met.Vect().Dot(p4Ref.Vect()) / (ptRef * ptRef);
+        double mpf  = 1 + p4CorrMet.Vect().Dot(p4Ref.Vect()) / (ptRef * ptRef);
         double mpf1 = 1 + p4Met1.Vect().Dot(p4Ref.Vect()) / (ptRef * ptRef);
         double mpfn = p4Metn.Vect().Dot(p4Ref.Vect()) / (ptRef * ptRef);
         double mpfu = p4Metu.Vect().Dot(p4Ref.Vect()) / (ptRef * ptRef);
@@ -203,9 +203,9 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
 
         // For MPFX
         p4Refx.SetPtEtaPhiM(p4Ref.Pt(), p4Ref.Eta(), p4Ref.Phi() + 0.5 * TMath::Pi(), 0.0);
-        double mpfx = 1 + p4Met.Vect().Dot(p4Refx.Vect()) / (ptRef * ptRef);
+        double mpfx  = 1 + p4CorrMet.Vect().Dot(p4Refx.Vect()) / (ptRef * ptRef);
         double mpf1x = 1 + p4Met1.Vect().Dot(p4Refx.Vect()) / (ptRef * ptRef);
-        double mpfnPt = p4Metn.Vect().Dot(p4Refx.Vect()) / (ptRef * ptRef);
+        double mpfnPt= p4Metn.Vect().Dot(p4Refx.Vect()) / (ptRef * ptRef);
         double mpfux = p4Metu.Vect().Dot(p4Refx.Vect()) / (ptRef * ptRef);
         double mpfnux = p4Metnu.Vect().Dot(p4Refx.Vect()) / (ptRef * ptRef);
          
@@ -253,8 +253,9 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
         histTag.SetResponse(bal, mpf, mpf1, mpfn, mpfu);
         histTag.FillHistograms(skimT.get(), ptRef, iJet1, iGenJet, weight);
 
-        if (!((fabs(p4Jet1.Eta()) < 1.3) && (p4Jet2.Pt() < ptRef || p4Jet2.Pt() < 30))) continue; 
-        h1EventInCutflow->fill("passJet1EtaJet2Pt");
+        double alpha = p4Jet2.Pt()/ptRef;
+        if(alpha > 1.0) continue;
+        h1EventInCutflow->fill("passAlpha");
         histRef2.Fill(p4Refs.size(), p4Ref, p4GenRef, weight); 
 
         histFinal.Fill(ptRef, bal, mpf, p4Jet2, p4GenJet2, iGenJet2, globalFlags_.isMC(), weight);

@@ -1,5 +1,5 @@
-#ifndef OBJECTSCALE_H
-#define OBJECTSCALE_H
+#ifndef SCALEOBJECT_H
+#define SCALEOBJECT_H
 
 #include <set>
 #include <iostream>
@@ -16,20 +16,17 @@
 #include "TCanvas.h"
 #include <nlohmann/json.hpp>
 
-class ObjectScale{
+class ScaleObject{
 public: 
     // Constructor accepting a reference to GlobalFlag
-    explicit ObjectScale(GlobalFlag& globalFlags);
-    ~ObjectScale(){}
-    
-    // Set the SkimTree pointer
-    void setTree(const std::shared_ptr<SkimTree>& skimTree);
+    explicit ScaleObject(GlobalFlag& globalFlags);
+    ~ScaleObject(){}
     
     void setInputs();
 
     // Jet veto
     void loadJetVetoRef();
-    bool checkJetVetoMap() const;
+    bool checkJetVetoMap(const SkimTree& skimT) const;
     
     // L1 Offset (aka PU or L1RC) correction
     void loadJetL1FastJetRef();
@@ -45,28 +42,28 @@ public:
     
     // resoJer 
     void loadJerResoRef();
-    double getJerResolution(SkimTree& skimT, int index) const;
+    double getJerResolution(const SkimTree& skimT, int index) const;
     
     // sfJer 
     void loadJerSfRef();
-    double getJerScaleFactor(SkimTree& skimT, int index, const std::string& syst) const;
+    double getJerScaleFactor(const SkimTree& skimT, int index, const std::string& syst) const;
 
     // now corrJer using resoJer and sfJer
-    double getJerCorrection(SkimTree& skimT, int index, const std::string& syst) const;
+    double getJerCorrection(const SkimTree& skimT, int index, const std::string& syst) const;
     
     // Photon Scale and Smearing (Ss)
     void loadPhoSsRef();
-    double getPhoScaleCorrection(const std::string& nomOrSyst,  int indexPho) const;
-    double getPhoSmearCorrection(const std::string& nomOrSyst,  int indexPho) const;
+    double getPhoScaleCorrection(const SkimTree& skimT, const std::string& nomOrSyst,  int indexPho) const;
+    double getPhoSmearCorrection(const SkimTree& skimT, const std::string& nomOrSyst,  int indexPho) const;
 
     // Muon Rochester correction 
     void loadMuRochRef();
-    double getMuRochCorrection( int index, const std::string& syst) const;
+    double getMuRochCorrection(const SkimTree& skimT, int index, const std::string& syst) const;
     
     // Electron Scale and Smearing (Ss):  ONLY Syst. Nominal corrections are already applied in Nano
     // https://cms-talk.web.cern.ch/t/electron-scale-and-smearing-uncertainties-in-nanoaod/9311
     void loadEleSsRef();
-    double getEleSsCorrection( int index, const std::string& syst) const;
+    double getEleSsCorrection(const SkimTree& skimT, int index, const std::string& syst) const;
     
     // Lumi
     void loadLumiJson();
@@ -77,8 +74,6 @@ public:
     double getPuCorrection(Float_t nTrueInt, const std::string& nomOrSyst) const;
 
 private:
-    // Pointer to SkimTree
-    std::shared_ptr<SkimTree> skimTree_;
 
     // Jet veto
     std::string jetVetoJsonPath_;

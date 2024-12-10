@@ -337,8 +337,8 @@ void RunZeeJet::addZeeJetSlides(Slide & channelSlide){
     {"passRefBarrel", {
         "|eta| of Z < 1.3 ",
     }},
-    {"passJet1EtaJet2Pt", {
-        "leading jet eta < 1.3 ", "sub-leading jet pT < 30 or < pT of Z "
+    {"passAlpha", {
+        "subleading jet pT / Reference Z pT < 1.0",
     }},
     {"passResponse", {
         "|1 - DB| < 0.7, |1 - MPF| < 0.7|",

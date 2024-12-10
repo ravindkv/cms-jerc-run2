@@ -18,8 +18,9 @@
 #include "SkimTree.h"
 #include "EventPick.h"
 #include "ObjectPick.h"
-#include "ObjectScale.h"
+#include "ScaleObject.h"
 #include "GlobalFlag.h"
+#include "VarCut.h"
 
 class RunGamJet{
 public:
@@ -27,10 +28,9 @@ public:
     explicit RunGamJet(GlobalFlag& globalFlags);
     ~RunGamJet() = default;
 
-    int Run(std::shared_ptr<SkimTree>& skimT, EventPick* eventP, ObjectPick* objP, ObjectScale* objS, TFile* fout);
+    int Run(std::shared_ptr<SkimTree>& skimT, EventPick* eventP, ObjectPick* objP, ScaleObject* scaleObject, TFile* fout);
 
 private:
-    bool smearJets_ = false;
     // Reference to GlobalFlag instance
     GlobalFlag& globalFlags_;
 

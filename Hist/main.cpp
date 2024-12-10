@@ -12,7 +12,7 @@
 
 #include "SkimTree.h"
 #include "EventPick.h"
-#include "ObjectScale.h"
+#include "ScaleObject.h"
 #include "GlobalFlag.h"
 
 #include <sys/stat.h>
@@ -112,8 +112,8 @@ int main(int argc, char* argv[]) {
     
     // Initialize GlobalFlag instance
     GlobalFlag globalFlag(outName);
-    globalFlag.setDebug(true);
-    globalFlag.setNDebug(1000);
+    globalFlag.setDebug(false);
+    globalFlag.setNDebug(10000);
     globalFlag.printFlags();  
 
     std::cout << "\n--------------------------------------" << std::endl;
@@ -129,33 +129,32 @@ int main(int argc, char* argv[]) {
     skimT->loadTree();
 
     std::cout << "\n--------------------------------------" << std::endl;
-    std::cout << " Set and load ObjectScale.cpp" << std::endl;
+    std::cout << " Set and load ScaleObject.cpp" << std::endl;
     std::cout << "--------------------------------------" << std::endl;
     
-    // Pass GlobalFlag reference to ObjectScale
-    std::shared_ptr<ObjectScale> objS = std::make_shared<ObjectScale>(globalFlag);
+    // Pass GlobalFlag reference to ScaleObject
+    std::shared_ptr<ScaleObject> scaleObj = std::make_shared<ScaleObject>(globalFlag);
     
     try {
-        objS->setTree(skimT);
-        objS->setInputs();
-        objS->loadJetVetoRef();
-        objS->loadJetL1FastJetRef();
-        objS->loadJetL2RelativeRef();
-        objS->loadJetL2L3ResidualRef();
-        objS->loadJerResoRef();
-        objS->loadJerSfRef();
-        objS->loadPuRef();
+        scaleObj->setInputs();
+        scaleObj->loadJetVetoRef();
+        scaleObj->loadJetL1FastJetRef();
+        scaleObj->loadJetL2RelativeRef();
+        scaleObj->loadJetL2L3ResidualRef();
+        scaleObj->loadJerResoRef();
+        scaleObj->loadJerSfRef();
+        scaleObj->loadPuRef();
 
         // Use the GlobalFlag instance for conditional checks
         if (globalFlag.getChannel() == GlobalFlag::Channel::GamJet) {  // Scale and Smearing
-            //objS->loadPhoSsRef();
-            //objS->loadEleSsRef();
+            //scaleObj->loadPhoSsRef();
+            //scaleObj->loadEleSsRef();
         }
         if (globalFlag.getChannel() == GlobalFlag::Channel::ZmmJet) { 
-            objS->loadMuRochRef();
+            scaleObj->loadMuRochRef();
         }
         if (globalFlag.isData()) {
-            objS->loadLumiJson();
+            scaleObj->loadLumiJson();
         }
     } catch (const std::runtime_error& e) {
         std::cerr << "Critical error: " << e.what() << std::endl;
@@ -175,8 +174,6 @@ int main(int argc, char* argv[]) {
     
     // Pass GlobalFlag reference to ObjectPick
     auto objP = std::make_unique<ObjectPick>(globalFlag);
-    objP->setInput(skimT, objS);
-
 
     // Output directory setup
     std::string outDir = "output";
@@ -190,56 +187,56 @@ int main(int argc, char* argv[]) {
     if (globalFlag.getChannel() == GlobalFlag::Channel::ZeeJet) {
         std::cout << "==> Running ZeeJet" << std::endl;
         auto zeeJet = std::make_unique<RunZeeJet>(globalFlag);
-        zeeJet->Run(skimT, eventP.get(), objP.get(), objS.get(), fout.get());
+        zeeJet->Run(skimT, eventP.get(), objP.get(), scaleObj.get(), fout.get());
     }
-
     if (globalFlag.getChannel() == GlobalFlag::Channel::ZmmJet) {
         std::cout << "==> Running ZmmJet" << std::endl;
         auto zmmJet = std::make_unique<RunZmmJet>(globalFlag);
-        zmmJet->Run(skimT, eventP.get(), objP.get(), objS.get(), fout.get());
+        zmmJet->Run(skimT, eventP.get(), objP.get(), scaleObj.get(), fout.get());
     }
 
     if (globalFlag.getChannel() == GlobalFlag::Channel::GamJet) {
         std::cout << "==> Running GamJet" << std::endl;
         auto gamJet = std::make_unique<RunGamJet>(globalFlag);
-        gamJet->Run(skimT, eventP.get(), objP.get(), objS.get(), fout.get());
+        gamJet->Run(skimT, eventP.get(), objP.get(), scaleObj.get(), fout.get());
     }
+
 /*
 
     if (globalFlag.getChannel() == GlobalFlag::Channel::MultiJet) {
         std::cout << "==> Running MultiJet" << std::endl;
         auto multiJet = std::make_unique<RunMultiJet>(globalFlag);
-        multiJet->Run(skimT, eventP.get(), objP.get(), objS.get(), fout.get());
+        multiJet->Run(skimT, eventP.get(), objP.get(), scaleObj.get(), fout.get());
     }
   if (globalFlag->isMCTruth) {
     std::cout << "==> Running MCTruth" << std::endl;
     auto mcTruth = std::make_unique<RunMCTruth>(outName);
-    mcTruth->Run(skimT.get(), eventP.get(), objP.get(), objS.get(), fout.get());
+    mcTruth->Run(skimT.get(), eventP.get(), objP.get(), scaleObj.get(), fout.get());
   }
   if (globalFlag->isFlavour) {
     std::cout << "==> Running Flavour" << std::endl;
     auto mcFlavour = std::make_unique<RunFlavour>(outName);
-    mcFlavour->Run(skimT.get(), eventP.get(), objP.get(), objS.get(), fout.get());
+    mcFlavour->Run(skimT.get(), eventP.get(), objP.get(), scaleObj.get(), fout.get());
   }
   if (globalFlag->isVetoMap) {
     std::cout << "==> Running VetoMap" << std::endl;
     auto vetoMap = std::make_unique<RunVetoMap>(outName);
-    vetoMap->Run(skimT.get(), eventP.get(), objP.get(), objS.get(), fout.get());
+    vetoMap->Run(skimT.get(), eventP.get(), objP.get(), scaleObj.get(), fout.get());
   }
   if (globalFlag->isIncJet) {
     std::cout << "==> Running IncJet" << std::endl;
     auto incJet = std::make_unique<RunIncJet>(outName);
-    incJet->Run(skimT.get(), eventP.get(), objP.get(), objS.get(), fout.get());
+    incJet->Run(skimT.get(), eventP.get(), objP.get(), scaleObj.get(), fout.get());
   }
   if (globalFlag->isDiJet) {
     std::cout << "==> Running DiJet" << std::endl;
     auto diJet = std::make_unique<RunDiJet>(outName);
-    diJet->Run(skimT.get(), eventP.get(), objP.get(), objS.get(), fout.get());
+    diJet->Run(skimT.get(), eventP.get(), objP.get(), scaleObj.get(), fout.get());
   }
   if (globalFlag->isWqq) {
     std::cout << "==> Running Wqq" << std::endl;
     auto wqq = std::make_unique<RunWqq>(outName);
-    wqq->Run(skimT.get(), eventP.get(), objP.get(), objS.get(), fout.get());
+    wqq->Run(skimT.get(), eventP.get(), objP.get(), scaleObj.get(), fout.get());
   }
   */
 

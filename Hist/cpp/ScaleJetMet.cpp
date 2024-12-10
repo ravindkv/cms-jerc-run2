@@ -1,14 +1,14 @@
-#include "ApplyJerc.h"
+#include "ScaleJetMet.h"
 #include <iostream>
 #include <iomanip>
 
 // Constructor
-ApplyJerc::ApplyJerc(ObjectScale *objScale, bool isData, bool applyJer)
-    : objScale_(objScale), isData_(isData), applyJer_(applyJer) {
+ScaleJetMet::ScaleJetMet(ScaleObject *scaleObj, bool isData, bool applyJer)
+    : scaleObj_(scaleObj), isData_(isData), applyJer_(applyJer) {
     Initialize();
 }
 
-void ApplyJerc::Initialize() {
+void ScaleJetMet::Initialize() {
     // Clear existing corrections
     p4MapJet1_.clear();
     p4MapJetSum_.clear();
@@ -26,7 +26,7 @@ void ApplyJerc::Initialize() {
 
     // Initialize MET labels
     std::vector<std::string> metNames = {
-        "Nano", "Type1Corr"
+        "Nano", "Corr"
     };
     for (const auto& name : metNames) {
         p4MapMet_[name] = TLorentzVector();
@@ -34,7 +34,7 @@ void ApplyJerc::Initialize() {
 }
 
 // Apply corrections
-void ApplyJerc::applyCorrections(std::shared_ptr<SkimTree>& skimT, CorrectionLevel level) {
+void ScaleJetMet::applyCorrections(std::shared_ptr<SkimTree>& skimT, CorrectionLevel level) {
 
     Initialize();
 
@@ -101,49 +101,49 @@ void ApplyJerc::applyCorrections(std::shared_ptr<SkimTree>& skimT, CorrectionLev
     }//for nJet
 
     //Update the MET
-    p4MapMet_["Type1Corr"] = p4Met;
+    p4MapMet_["Corr"] = p4Met;
     skimT->ChsMET_pt  = p4Met.Pt(); 
     skimT->ChsMET_phi = p4Met.Phi();
 }
 
 // Undo NanoAOD correction
-void ApplyJerc::undoNanoAODCorrection(SkimTree& skimT, int i) {
+void ScaleJetMet::undoNanoAODCorrection(SkimTree& skimT, int i) {
     float scale = 1.0f - skimT.Jet_rawFactor[i];
     skimT.Jet_pt[i] *= scale;
     skimT.Jet_mass[i] *= scale;
 }
 
 // L1 FastJet correction
-void ApplyJerc::applyL1FastJetCorrection(SkimTree& skimT, int i) {
-    double corr = objScale_->getL1FastJetCorrection(skimT.Jet_area[i], skimT.Jet_eta[i],
+void ScaleJetMet::applyL1FastJetCorrection(SkimTree& skimT, int i) {
+    double corr = scaleObj_->getL1FastJetCorrection(skimT.Jet_area[i], skimT.Jet_eta[i],
                                                     skimT.Jet_pt[i], skimT.Rho);
     skimT.Jet_pt[i] *= corr;
     skimT.Jet_mass[i] *= corr;
 }
 
 // L2 Relative correction
-void ApplyJerc::applyL2RelativeCorrection(SkimTree& skimT, int i) {
-    double corr = objScale_->getL2RelativeCorrection(skimT.Jet_eta[i], skimT.Jet_pt[i]);
+void ScaleJetMet::applyL2RelativeCorrection(SkimTree& skimT, int i) {
+    double corr = scaleObj_->getL2RelativeCorrection(skimT.Jet_eta[i], skimT.Jet_pt[i]);
     skimT.Jet_pt[i] *= corr;
     skimT.Jet_mass[i] *= corr;
 }
 
 // L2L3 Residual correction
-void ApplyJerc::applyL2L3ResidualCorrection(SkimTree& skimT, int i) {
-    double corr = objScale_->getL2L3ResidualCorrection(skimT.Jet_eta[i], skimT.Jet_pt[i]);
+void ScaleJetMet::applyL2L3ResidualCorrection(SkimTree& skimT, int i) {
+    double corr = scaleObj_->getL2L3ResidualCorrection(skimT.Jet_eta[i], skimT.Jet_pt[i]);
     skimT.Jet_pt[i] *= corr;
     skimT.Jet_mass[i] *= corr;
 }
 
 // Jer correction
-void ApplyJerc::applyJerCorrection(SkimTree& skimT, int i) {
-    double corr = objScale_->getJerCorrection(skimT, i, "nom");
+void ScaleJetMet::applyJerCorrection(SkimTree& skimT, int i) {
+    double corr = scaleObj_->getJerCorrection(skimT, i, "nom");
     skimT.Jet_pt[i] *= corr;
     skimT.Jet_mass[i] *= corr;
 }
 
 // Print jet corrections
-void ApplyJerc::print() const {
+void ScaleJetMet::print() const {
     auto printCorrections = [](const std::unordered_map<std::string, TLorentzVector>& corrections, const std::string& header) {
         std::cout << header << '\n';
         for (const auto& [label, p4] : corrections) {

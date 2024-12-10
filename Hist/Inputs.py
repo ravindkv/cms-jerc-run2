@@ -9,7 +9,7 @@ Years.append('2017')
 Years.append('2018')
 
 Channels = {}
-Channels["ZeeJet"]    = "ZeeJet"
+#Channels["ZeeJet"]    = "ZeeJet"
 Channels["ZmmJet"]    = "ZmmJet"
 Channels["GamJet"]    = "GamJet"
 #Channels["MultiJet"]  = "MultiJet"

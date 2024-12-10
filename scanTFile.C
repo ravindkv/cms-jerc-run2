@@ -19,25 +19,102 @@ using namespace std;
 //$ ./scanTFile file.root [deep]
 
 void printASCIIHistogram(TH1 *h1, int maxBins = 50) {
+    if (h1 == nullptr) {
+        std::cerr << "Error: Null histogram pointer provided.\n";
+        return;
+    }
+
     int nbinsX = h1->GetNbinsX();
     int binsToPrint = std::min(nbinsX, maxBins);
     double maxContent = h1->GetMaximum();
 
-    std::cout << std::setw(5) << "Bin" <<std::setw(10) <<"Center" << " | Content"<<'\n';
+    // Vector to store bins with NaN content
+    std::vector<std::string> nanBins;
+
+    // Header
+    std::cout << std::setw(7) << "Bin" 
+              << std::setw(12) << "Center" 
+              << " | Content" << '\n';
+    std::cout << "----------------------------------------\n";
+
+    // Print each bin
     for (int bin = 1; bin <= binsToPrint; ++bin) {
         double content = h1->GetBinContent(bin);
         double center  = h1->GetBinCenter(bin);
         int barLength = 0;
-        if (maxContent > 0) {
-            barLength = int(50 * content / maxContent);
+        bool isNan = false;
+
+        if (std::isnan(content)) {
+            isNan = true;
+            nanBins.emplace_back("Bin " + std::to_string(bin));
+        } else if (maxContent > 0) {
+            barLength = static_cast<int>(50.0 * content / maxContent);
+            // Ensure barLength does not exceed 50
+            barLength = std::min(barLength, 50);
         }
-        std::cout << std::setw(5) << bin <<std::setw(10) <<center << " | ";
-        for (int i = 0; i < barLength; ++i) {
-            std::cout << "*";
+
+        // Print bin number, center, and bar
+        std::cout << std::setw(7) << bin 
+                  << std::setw(12) << std::fixed << std::setprecision(2) << center 
+                  << " | ";
+
+        if (isNan) {
+            std::cout << "NaN";
+        } else {
+            for (int i = 0; i < barLength; ++i) {
+                std::cout << "*";
+            }
+            // Align content to the right
+            std::cout << std::setw(8) << std::fixed << std::setprecision(2) << content;
         }
-        std::cout<<"  "<< std::fixed << std::setprecision(2) << content;
-        //if(barLength>0) std::cout<<"  "<<content;
         std::cout << std::endl;
+    }
+
+    // Separator before underflow and overflow
+    std::cout << "----------------------------------------\n";
+
+    // Function to process underflow and overflow
+    auto processSpecialBin = [&](const std::string& label, double content) -> void {
+        int barLength = 0;
+        bool isNan = false;
+
+        if (std::isnan(content)) {
+            isNan = true;
+            nanBins.emplace_back(label + "flow");
+        } else if (maxContent > 0) {
+            barLength = static_cast<int>(50.0 * content / maxContent);
+            barLength = std::min(barLength, 50);
+        }
+
+        std::cout << std::setw(7) << label 
+                  << std::setw(12) << "N/A" 
+                  << " | ";
+
+        if (isNan) {
+            std::cout << "NaN";
+        } else {
+            for (int i = 0; i < barLength; ++i) {
+                std::cout << "*";
+            }
+            std::cout << std::setw(8) << std::fixed << std::setprecision(2) << content;
+        }
+        std::cout << std::endl;
+    };
+
+    // Print Underflow
+    double underContent = h1->GetBinContent(0); // Underflow bin
+    processSpecialBin("Under", underContent);
+
+    // Print Overflow
+    double overContent = h1->GetBinContent(nbinsX + 1); // Overflow bin
+    processSpecialBin("Over", overContent);
+
+    // Print summary of NaN bins, if any
+    if (!nanBins.empty()) {
+        std::cout << "\nWarning: The following bins contain NaN values:\n";
+        for (const auto& binName : nanBins) {
+            std::cout << "  - " << binName << "\n";
+        }
     }
 }
 

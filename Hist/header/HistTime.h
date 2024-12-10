@@ -16,7 +16,7 @@
 
 // User-defined includes
 #include "SkimTree.h"
-#include "ObjectScale.h"
+#include "ScaleObject.h"
 #include "VarBin.h"
 
 /**
@@ -64,7 +64,7 @@ public:
      * the corresponding histograms with the provided data.
      * 
      * @param skimT Pointer to the SkimTree containing event data.
-     * @param objS Pointer to the ObjectScale instance for scaling factors.
+     * @param scaleObj Pointer to the ScaleObject instance for scaling factors.
      * @param iJet1 Index of the first jet in the event.
      * @param bal Balance factor.
      * @param mpf Momentum fraction.

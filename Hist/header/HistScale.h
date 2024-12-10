@@ -1,5 +1,5 @@
-#ifndef HISTJERC_H
-#define HISTJERC_H
+#ifndef HISTSCALE_H
+#define HISTSCALE_H
 
 #include <memory>
 #include <string>
@@ -14,7 +14,10 @@
 // Custom includes
 #include "VarBin.h"
 #include "Helper.h"
-#include "ApplyJerc.h"
+#include "ScaleElectron.h"
+#include "ScaleMuon.h"
+#include "ScalePhoton.h"
+#include "ScaleJetMet.h"
 
 /**
  * @brief Class to handle histograms related to jet energy corrections.
@@ -22,53 +25,54 @@
  * This class encapsulates the creation and filling of histograms that monitor
  * variables after applying jet energy corrections. It manages histograms using ROOT's TH1D.
  */
-class HistJerc {
+class HistScale {
 public:
     /**
-     * @brief Constructs a HistJerc object and initializes histograms.
+     * @brief Constructs a HistScale object and initializes histograms.
      * 
      * @param origDir Pointer to the original ROOT directory.
      * @param directoryName Name of the directory within the ROOT file to store histograms.
      * @param varBin Object defining variable binning.
      */
-    HistJerc(TDirectory* origDir, const std::string& directoryName, const VarBin& varBin);
+    HistScale(TDirectory* origDir, const std::string& directoryName, const VarBin& varBin);
     
     /**
      * @brief Default destructor.
      */
-    ~HistJerc() = default;
+    ~HistScale() = default;
     
-    /**
-     * @brief Fills the JEC histograms based on the corrected jet variables.
-     * 
-     * @param appliedJerc Instance of ApplyJerc containing corrected jet variables.
-     * @param weight Event weight.
-     */
-    void Fill(const ApplyJerc& appliedJerc, double weight);
+    void FillElectron(const ScaleElectron& scaleElectron, double weight);
+    void FillMuon(const ScaleMuon& scaleMuon, double weight);
+    void FillPhoton(const ScalePhoton& scalePhoton, double weight);
+    void FillJetMet(const ScaleJetMet& scaleJetMet, double weight);
     
 private:
-    // Map to hold histograms for jet1 and jetSum corrections
-    std::unordered_map<std::string, std::unique_ptr<TH1D>> histJet1Pt_;
-    std::unordered_map<std::string, std::unique_ptr<TH1D>> histJet1Mass_;
-    std::unordered_map<std::string, std::unique_ptr<TH1D>> histJetSumPt_;
-    std::unordered_map<std::string, std::unique_ptr<TH1D>> histJetSumMass_;
+    // Map to hold histograms for Electron
+    std::unordered_map<std::string, std::unique_ptr<TH1D>> histElectron1Pt_;
 
+    // Map to hold histograms for Muon
+    std::unordered_map<std::string, std::unique_ptr<TH1D>> histMuon1Pt_;
+
+    // Map to hold histograms for Photon
+    std::unordered_map<std::string, std::unique_ptr<TH1D>> histPhoton1Pt_;
+
+    // Map to hold histograms for Jet
+    std::unordered_map<std::string, std::unique_ptr<TH1D>> histJet1Pt_;
+    std::unordered_map<std::string, std::unique_ptr<TH1D>> histJetSumPt_;
+
+    // Map to hold histograms for Met
     std::unordered_map<std::string, std::unique_ptr<TH1D>> histMetPt_;
     std::unordered_map<std::string, std::unique_ptr<TH1D>> histMetPhi_;
     
+    // Map to hold histograms for JetMet
+    std::unordered_map<std::string, std::unique_ptr<TH1D>> histJetMetSumPt_;
+
     // Correction names
     std::vector<std::string> jecNames_;
-    std::vector<std::string> metNames_;
+    std::vector<std::string> corrNames_;
     
-    /**
-     * @brief Initializes all histograms and sets up the internal structures.
-     * 
-     * @param origDir Pointer to the original ROOT directory.
-     * @param directoryName Name of the directory within the ROOT file to store histograms.
-     * @param varBin Object defining variable binning.
-     */
     void InitializeHistograms(TDirectory* origDir, const std::string& directoryName, const VarBin& varBin);
 };
 
-#endif // HISTJERC_H
+#endif // HISTSCALE_H
 

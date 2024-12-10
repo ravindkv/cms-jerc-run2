@@ -14,7 +14,6 @@
 #include <TLorentzVector.h>
 
 #include "SkimTree.h"
-#include "ObjectScale.h"
 #include "GlobalFlag.h"
 
 class ObjectPick{
@@ -23,51 +22,53 @@ public:
     explicit ObjectPick(GlobalFlag& globalFlags);
     ~ObjectPick();
 
-    // Set the SkimTree pointer
-    void setInput(const std::shared_ptr<SkimTree>& skimTree, const std::shared_ptr<ObjectScale>& objectScale);
-
     // Clear picked objects
     void clearObjects();
 
     // Reco objects
-    void pickElectrons();
-    void pickMuons();
-    void pickPhotons();
-    void pickRefs();
+    void pickElectrons(const SkimTree& skimT);
+    void pickMuons(const SkimTree& skimT);
+    void pickPhotons(const SkimTree& skimT);
+    void pickRefs(const SkimTree& skimT);
+    void pickJets(const SkimTree& skimT, const TLorentzVector& p4Ref);
 
     // Gen objects
-    void pickGenElectrons();
-    void pickGenMuons();
-    void pickGenPhotons();
-    void pickGenRefs();
+    void pickGenElectrons(const SkimTree& skimT);
+    void pickGenMuons(const SkimTree& skimT);
+    void pickGenPhotons(const SkimTree& skimT);
+    void pickGenRefs(const SkimTree& skimT);
+    void pickGenJets(const SkimTree& skimT);
 
     // Accessors for picked objects
     const std::vector<int>& getPickedElectrons() const;
     const std::vector<int>& getPickedMuons() const;
     const std::vector<int>& getPickedPhotons() const;
     const std::vector<TLorentzVector>& getPickedRefs() const;
+    const std::vector<TLorentzVector>& getPickedJetsP4() const;
+    const std::vector<int>& getPickedJetsIndex() const;
 
     const std::vector<int>& getPickedGenElectrons() const;
     const std::vector<int>& getPickedGenMuons() const;
     const std::vector<int>& getPickedGenPhotons() const;
     const std::vector<TLorentzVector>& getPickedGenRefs() const;
+    const std::vector<TLorentzVector>& getPickedGenJets() const;
 
 private:
-    // Pointer to SkimTree
-    std::shared_ptr<SkimTree> skimTree_;
-    std::shared_ptr<ObjectScale> objectScale_;
 
     // Reco objects
     std::vector<int> pickedElectrons_;
     std::vector<int> pickedMuons_;
     std::vector<int> pickedPhotons_;
     std::vector<TLorentzVector> pickedRefs_;
+    std::vector<TLorentzVector> pickedJetsP4_;
+    std::vector<int> pickedJetsIndex_;
 
     // Gen objects
     std::vector<int> pickedGenElectrons_;
     std::vector<int> pickedGenMuons_;
     std::vector<int> pickedGenPhotons_;
     std::vector<TLorentzVector> pickedGenRefs_;
+    std::vector<TLorentzVector> pickedGenJets_;
 
     // Reference to GlobalFlag instance
     GlobalFlag& globalFlags_;

@@ -1,11 +1,11 @@
-#ifndef APPLYJERC_H
-#define APPLYJERC_H
+#ifndef SCALEJETMET_H
+#define SCALEJETMET_H
 
 #include <unordered_map>
 #include <memory>
 #include <string>
 #include "SkimTree.h"
-#include "ObjectScale.h"
+#include "ScaleObject.h"
 #include "TLorentzVector.h"
 
 /**
@@ -13,7 +13,7 @@
  * 
  * This class applies JECs up to a specified level. It is independent of channel-specific logic.
  */
-class ApplyJerc {
+class ScaleJetMet {
 public:
     enum class CorrectionLevel {
         None = 0,
@@ -22,7 +22,7 @@ public:
         L2L3Res = 3
     };
 
-    ApplyJerc(ObjectScale *objScale, bool isData, bool applyJer);
+    ScaleJetMet(ScaleObject *scaleObj, bool isData, bool applyJer);
     
     void Initialize();
     void applyCorrections(std::shared_ptr<SkimTree>& skimT, CorrectionLevel level);
@@ -42,7 +42,7 @@ public:
     void print() const;
 
 private:
-    ObjectScale *objScale_;
+    ScaleObject *scaleObj_;
     bool isData_;
     bool applyJer_;
 
@@ -61,5 +61,5 @@ private:
     void applyJerCorrection(SkimTree& skimT, int i);
 };
 
-#endif // APPLYJERC_H
+#endif // SCALEJETMET_H
 

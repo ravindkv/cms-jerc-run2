@@ -4,7 +4,7 @@ from copy import deepcopy
 
 # Base template for FigConfigBase
 baseTemplate = {
-    "histDir": "passJet1EtaJet2Pt",
+    "histDir": "passAlpha",
     "xTitle": "Reference Jet p_{T} (GeV)",
     "yTitle": "Response",
     "xMin": -9999,
@@ -115,13 +115,13 @@ configs["ConfigEras1D"].append(
     createConfig(
         "ConfigEras1D",
         "h1EventInRefMass",
-        histDir="Base/passAtleast1Ref/HistBarrel",
+        histDir="Base/passExactly1Ref/HistRef",
         yTitle="Events (normalized to 1)",
         xTitle="Reference Z mass (GeV)",
         xMin=60,
         xMax=120,
         yMin=0.001,
-        yMax=1.1,
+        yMax=0.4,
         isNorm=True
     )
 )
@@ -129,7 +129,7 @@ configs["ConfigEras1D"].append(
     createConfig(
         "ConfigEras1D",
         "p1RefMassInRefPt",
-        histDir="Base/passAtleast1Ref/HistBarrel",
+        histDir="Base/passExactly1Ref/HistRef",
         yTitle="Mean of Z mass (GeV)",
         xTitle="Reference Z p_{T} (GeV)",
         yMin=70,
@@ -142,7 +142,7 @@ configs["ConfigEras1D"].append(
     createConfig(
         "ConfigEras1D",
         "p1DbRespInRefPt",
-        histDir="Base/passJet1EtaJet2Pt/HistMain",
+        histDir="Base/passAlpha/HistMain",
         yTitle="DB Response",
         xTitle="Reference Z p_{T} (GeV)",
         yMin=0.01,
@@ -154,7 +154,7 @@ configs["ConfigEras1D"].append(
     createConfig(
         "ConfigEras1D",
         "p1MpfRespInRefPt",
-        histDir="Base/passJet1EtaJet2Pt/HistMain",
+        histDir="Base/passAlpha/HistMain",
         yTitle="MPF Response",
         xTitle="Reference Z p_{T} (GeV)",
         yMin=0.01,
@@ -166,7 +166,7 @@ configs["ConfigEras1D"].append(
     createConfig(
         "ConfigEras1D",
         "p1Jet1ChhefInRefPt",
-        histDir="Base/passJet1EtaJet2Pt/HistMain",
+        histDir="Base/passAlpha/HistMain",
         yTitle="Mean of Charged Hadron Energy Fraction",
         xTitle="Reference Z p_{T} (GeV)",
         yMin=0.1,
@@ -178,7 +178,7 @@ configs["ConfigEras1D"].append(
     createConfig(
         "ConfigEras1D",
         "p1Jet1NeemefInRefPt",
-        histDir="Base/passJet1EtaJet2Pt/HistMain",
+        histDir="Base/passAlpha/HistMain",
         yTitle="Mean of Neutral EM Energy Fraction",
         xTitle="Reference Z p_{T} (GeV)",
         yMin=0.01,
@@ -190,7 +190,7 @@ configs["ConfigEras1D"].append(
     createConfig(
         "ConfigEras1D",
         "p1Jet1ChemefInRefPt",
-        histDir="Base/passJet1EtaJet2Pt/HistMain",
+        histDir="Base/passAlpha/HistMain",
         yTitle="Mean of Charged EM Energy Fraction",
         xTitle="Reference Z p_{T} (GeV)",
         yMin=0.001,
@@ -202,7 +202,7 @@ configs["ConfigEras1D"].append(
     createConfig(
         "ConfigEras1D",
         "p1Jet1NehefInRefPt",
-        histDir="Base/passJet1EtaJet2Pt/HistMain",
+        histDir="Base/passAlpha/HistMain",
         yTitle="Mean of Neutral Hadron Energy Fraction",
         xTitle="Reference Z p_{T} (GeV)",
         yMin=0.01,
@@ -214,7 +214,7 @@ configs["ConfigEras1D"].append(
     createConfig(
         "ConfigEras1D",
         "p1Jet1MuefInRefPt",
-        histDir="Base/passJet1EtaJet2Pt/HistMain",
+        histDir="Base/passAlpha/HistMain",
         yTitle="Mean of Muon Energy Fraction",
         xTitle="Reference Z p_{T} (GeV)",
         yMin=0.001,
@@ -241,7 +241,7 @@ configs["ConfigEra2D"].append(
     createConfig(
         "ConfigEra2D",
         "h2EventInRefPhiRefEta",
-        histDir="Base/passAtleast1Ref/HistBarrel",
+        histDir="Base/passExactly1Ref/HistRef",
         yMin=-2.5,
         yMax=2.5,
         xTitle="Reference #eta",
@@ -254,7 +254,7 @@ configs["ConfigEra2D"].append(
     createConfig(
         "ConfigEra2D",
         "p2DbRespInRefPtJet1Eta",
-        histDir="Base/passJet1EtaJet2Pt/HistMain",
+        histDir="Base/passAlpha/HistMain",
         xMin=-2.5,
         xMax=2.5,
         yMin=20,
@@ -274,7 +274,7 @@ configs["ConfigErasXY"].append(
     createConfig(
         "ConfigErasXY",
         "p2DbRespInRefPtJet1Eta",
-        histDir="Base/passJet1EtaJet2Pt/HistMain",
+        histDir="Base/passAlpha/HistMain",
         varName="Z p_{T}",
         varMin=100,
         varMax=120,
@@ -292,7 +292,7 @@ configs["ConfigErasXY"].append(
     createConfig(
         "ConfigErasXY",
         "p2MpfRespInRefPtJet1Eta",
-        histDir="Base/passJet1EtaJet2Pt/HistMain",
+        histDir="Base/passAlpha/HistMain",
         varName="Z p_{T}",
         varMin=100,
         varMax=120,
@@ -312,7 +312,7 @@ configs["ConfigEraXY"].append(
     createConfig(
         "ConfigEraXY",
         "p2DbRespInRefPtJet1Eta",
-        histDir="Base/passJet1EtaJet2Pt/HistMain",
+        histDir="Base/passAlpha/HistMain",
         varName="J_{1} #eta",
         varBins=[0.0, 1.3, 2.5, 3.0, 3.5],
         isVarOnX=False,
@@ -332,7 +332,7 @@ configs["ConfigEraXY"].append(
     createConfig(
         "ConfigEraXY",
         "p2MpfRespInRefPtJet1Eta",
-        histDir="Base/passJet1EtaJet2Pt/HistMain",
+        histDir="Base/passAlpha/HistMain",
         varName="J_{1} #eta",
         varBins=[0.0, 1.3, 2.5, 3.0, 3.5],
         isVarOnX=False,

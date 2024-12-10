@@ -18,7 +18,7 @@
 #include "SkimTree.h"
 #include "EventPick.h"
 #include "ObjectPick.h"
-#include "ObjectScale.h"
+#include "ScaleObject.h"
 #include "GlobalFlag.h"
 #include "VarCut.h"
 
@@ -28,7 +28,7 @@ public:
     explicit RunZeeJet(GlobalFlag& globalFlags);
     ~RunZeeJet() = default;
 
-    int Run(std::shared_ptr<SkimTree>& skimT, EventPick* eventP, ObjectPick* objP, ObjectScale* objS, TFile* fout);
+    int Run(std::shared_ptr<SkimTree>& skimT, EventPick* eventP, ObjectPick* objP, ScaleObject* scaleObject, TFile* fout);
 
 private:
     // Reference to GlobalFlag instance
