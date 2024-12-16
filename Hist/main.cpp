@@ -113,7 +113,7 @@ int main(int argc, char* argv[]) {
     // Initialize GlobalFlag instance
     GlobalFlag globalFlag(outName);
     globalFlag.setDebug(false);
-    globalFlag.setNDebug(10000);
+    globalFlag.setNDebug(1000);
     globalFlag.printFlags();  
 
     std::cout << "\n--------------------------------------" << std::endl;

@@ -131,7 +131,7 @@ auto RunZmmJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
         p4GenRef.SetPtEtaPhiM(0, 0, 0, 0);
         if (globalFlags_.isMC()) {
             objP->pickGenMuons(*skimT);
-            objP->pickGenRefs(*skimT);
+            objP->pickGenRefs(*skimT, p4Ref);
             std::vector<TLorentzVector> p4GenRefs = objP->getPickedGenRefs();
             if (p4GenRefs.empty()) continue;
             p4GenRef = p4GenRefs.at(0);
@@ -270,7 +270,8 @@ auto RunZmmJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
 
     }  // end of event loop
 
-    Helper::printCutflow(h1EventInCutflow->getHistogram());
+    h1EventInCutflow->printCutflow();
+    h1EventInCutflow->fillFractionCutflow();
     fout->Write();
     //Helper::scanTFile(fout);
     std::cout << "Output file: " << fout->GetName() << '\n';

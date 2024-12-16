@@ -5,6 +5,7 @@ EventPick::EventPick(GlobalFlag& globalFlags) :
     globalFlags_(globalFlags),
     year_(globalFlags_.getYear()),
     channel_(globalFlags_.getChannel()),
+    isMC_(globalFlags_.isMC()),
     isDebug_(globalFlags_.isDebug()){
 }
 
@@ -83,11 +84,73 @@ auto EventPick::passHLT(const std::shared_ptr<SkimTree>& tree) const -> bool {
             hlts.push_back(tree->HLT_Photon20_HoverELoose); 
         }
         // Check if any of the HLT conditions are true
-        pass_HLT = std::any_of(hlts.begin(), hlts.end(), [](bool hlt) { return hlt; });
+        pass_HLT = std::any_of(hlts.begin(), hlts.end(), [](bool hlt) {
+            return hlt;
+        });
+        if (isDebug_){
+            for (auto hlt: hlts) std::cout << "HLT value: " << hlt << "\n";
+        }
     }//GamJet
 
     printDebug("pass_HLT = " + std::to_string(pass_HLT));
     return pass_HLT;
+}
+
+
+auto EventPick::passHltWithPt(const std::shared_ptr<SkimTree>& tree, const double& pt) const -> bool {
+    bool passHlt = false;
+
+    if (channel_ == GlobalFlag::Channel::GamJet) {
+        // Combine all HLT conditions into a vector for easier management
+        std::vector<bool> hlts = {};
+        if (year_ == GlobalFlag::Year::Year2016Pre || year_ == GlobalFlag::Year::Year2016Post) {
+        	hlts.push_back(tree->HLT_Photon175                  && pt>=230          );
+			hlts.push_back(tree->HLT_Photon165_R9Id90_HE10_IsoM && pt>=175 && pt<230);
+			hlts.push_back(tree->HLT_Photon120_R9Id90_HE10_IsoM && pt>=130 && pt<175);
+			hlts.push_back(tree->HLT_Photon90_R9Id90_HE10_IsoM  && pt>=105 && pt<130);
+			hlts.push_back(tree->HLT_Photon75_R9Id90_HE10_IsoM  && pt>=85  && pt<105);
+			hlts.push_back(tree->HLT_Photon50_R9Id90_HE10_IsoM  && pt>=60  && pt<85 );
+			hlts.push_back(tree->HLT_Photon36_R9Id90_HE10_IsoM  && pt>=40  && pt<60 );
+			hlts.push_back(tree->HLT_Photon30_R9Id90_HE10_IsoM  && pt>=35  && pt<40 );
+			hlts.push_back(tree->HLT_Photon22_R9Id90_HE10_IsoM  && pt>=20  && pt<35 );
+			hlts.push_back(isMC_                         && pt>=40  && pt<60 );
+			hlts.push_back(isMC_                         && pt>=35  && pt<40 );
+			hlts.push_back(isMC_                         && pt>=20  && pt<35 );
+        }
+
+        else if (year_ == GlobalFlag::Year::Year2017){
+			hlts.push_back(tree->HLT_Photon200                  && pt>=230         );
+            hlts.push_back(tree->HLT_Photon165_R9Id90_HE10_IsoM && pt>=175 && pt<230);
+            hlts.push_back(tree->HLT_Photon120_R9Id90_HE10_IsoM && pt>=130 && pt<175);
+            hlts.push_back(tree->HLT_Photon90_R9Id90_HE10_IsoM  && pt>=105 && pt<130);
+            hlts.push_back(tree->HLT_Photon75_R9Id90_HE10_IsoM  && pt>=85  && pt<105);
+            hlts.push_back(tree->HLT_Photon50_R9Id90_HE10_IsoM  && pt>=60  && pt<85 );
+            hlts.push_back(tree->HLT_Photon30_HoverELoose       && pt>=35  && pt<60 );
+            hlts.push_back(tree->HLT_Photon20_HoverELoose       && pt>=20  && pt<35 );
+            hlts.push_back(isMC_                           && pt>=35  && pt<60);
+            hlts.push_back(isMC_                           && pt>=20  && pt<35);
+        } 
+
+        else if (year_ == GlobalFlag::Year::Year2018){
+			hlts.push_back(tree->HLT_Photon200                    && pt>=230          );
+            hlts.push_back(tree->HLT_Photon110EB_TightID_TightIso && pt>=130 && pt<230);
+            hlts.push_back(tree->HLT_Photon100EB_TightID_TightIso && pt>=105 && pt<130);
+            hlts.push_back(tree->HLT_Photon90_R9Id90_HE10_IsoM    && pt>=95  && pt<105);
+            hlts.push_back(tree->HLT_Photon75_R9Id90_HE10_IsoM    && pt>=85  && pt<95 );
+            hlts.push_back(tree->HLT_Photon50_R9Id90_HE10_IsoM    && pt>=60  && pt<85 );
+            hlts.push_back(tree->HLT_Photon30_HoverELoose         && pt>=35  && pt<60 );
+            hlts.push_back(tree->HLT_Photon20_HoverELoose         && pt>=20  && pt<35 );
+            hlts.push_back(isMC_                           && pt>=35  && pt<60);
+            hlts.push_back(isMC_                           && pt>=20  && pt<35);
+        }
+        // Check if any of the HLT conditions are true
+        passHlt = std::any_of(hlts.begin(), hlts.end(), [](bool hlt) {
+            return hlt;
+        });
+    }//GamJet
+
+    printDebug("passHlt = " + std::to_string(passHlt));
+    return passHlt;
 }
 
 // Function to apply event filters

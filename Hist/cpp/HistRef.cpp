@@ -71,32 +71,35 @@ void HistRef::InitializeHistograms(TDirectory *origDir, const std::string& direc
 void HistRef::Fill(const int& nRef, const TLorentzVector& p4Ref, const TLorentzVector& p4GenRef, 
                     double weight)
 {
-    double ptRef = p4Ref.Pt();
-    hist_.h2EventInCountRefRefPt->Fill(ptRef, nRef, weight);
+    double refPt    = p4Ref.Pt();
+    double refEta   = p4Ref.Eta();
+    double refPhi   = p4Ref.Phi();
+    double refMass  = p4Ref.M();
+    hist_.h2EventInCountRefRefPt->Fill(refPt, nRef, weight);
     
     // Fill h1EventInRefPt
-    hist_.h1EventInRefPt->Fill(ptRef, weight);
-    hist_.h1EventInRefMass->Fill(p4Ref.M(), weight);
-    hist_.p1RefMassInRefPt->Fill(p4Ref.Pt(), p4Ref.M(), weight);
+    hist_.h1EventInRefPt->Fill(refPt, weight);
+    hist_.h1EventInRefMass->Fill(refMass, weight);
+    hist_.p1RefMassInRefPt->Fill(refPt, refMass, weight);
     
-    hist_.h2EventInRefPhiRefEta->Fill(p4Ref.Eta(), p4Ref.Phi(), weight);
-    hist_.h2EventInRefPhiRebinRefEta->Fill(p4Ref.Eta(), p4Ref.Phi(), weight);
+    hist_.h2EventInRefPhiRefEta->Fill(refEta, refPhi, weight);
+    hist_.h2EventInRefPhiRebinRefEta->Fill(refEta, refPhi, weight);
     
     // Conditional filling for RefPt >= 110
-    if (ptRef >= 110) {
-        hist_.h2EventInRefPhiRefEtaForRefPt110->Fill(p4Ref.Eta(), p4Ref.Phi(), weight);
-        hist_.h2EventInRefPhiRebinRefEtaForRefPt110->Fill(p4Ref.Eta(), p4Ref.Phi(), weight);
+    if (refPt >= 110) {
+        hist_.h2EventInRefPhiRefEtaForRefPt110->Fill(refEta, refPhi, weight);
+        hist_.h2EventInRefPhiRebinRefEtaForRefPt110->Fill(refEta, refPhi, weight);
     }
     
 	// Gen objects handling
 	if (p4GenRef.Pt() > 0 && fabs(p4GenRef.Eta()) < 1.3) {
 		hist_.h1EventInGenRefPtForGenRefBarrel->Fill(p4GenRef.Pt(), weight);
 	}
-    if (fabs(p4Ref.Eta()) < 1.3) {
-        hist_.h1EventInRefPtForRefBarrel->Fill(ptRef, weight);
+    if (fabs(refEta) < 1.3) {
+        hist_.h1EventInRefPtForRefBarrel->Fill(refPt, weight);
         if (p4GenRef.Pt() > 0) {
-           hist_.p1RefPtOverGenRefPtInGenRefPt->Fill(p4GenRef.Pt(), ptRef / p4GenRef.Pt(), weight);
-           hist_.p1GenRefPtOverRefPtInRefPt->Fill(ptRef, p4GenRef.Pt() / ptRef, weight);
+           hist_.p1RefPtOverGenRefPtInGenRefPt->Fill(p4GenRef.Pt(), refPt / p4GenRef.Pt(), weight);
+           hist_.p1GenRefPtOverRefPtInRefPt->Fill(refPt, p4GenRef.Pt() / refPt, weight);
         }
     }
 }

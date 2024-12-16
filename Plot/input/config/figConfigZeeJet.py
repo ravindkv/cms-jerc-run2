@@ -115,9 +115,9 @@ configs["ConfigEras1D"].append(
     createConfig(
         "ConfigEras1D",
         "h1EventInRefMass",
-        histDir="Base/passExactly1Ref/HistRef",
+        histDir="Base/passAlpha/HistRef",
         yTitle="Events (normalized to 1)",
-        xTitle="Reference Z mass (GeV)",
+        xTitle="Reference mass (GeV)",
         xMin=60,
         xMax=120,
         yMin=0.001,
@@ -128,10 +128,23 @@ configs["ConfigEras1D"].append(
 configs["ConfigEras1D"].append(
     createConfig(
         "ConfigEras1D",
+        "h1EventInRefPt",
+        histDir="Base/passAlpha/HistRef",
+        yTitle="Events (normalized to 1)",
+        xTitle="Reference pT (GeV)",
+        yMin=0.001,
+        yMax=0.5,
+        xLog=True,
+        isNorm=True
+    )
+)
+configs["ConfigEras1D"].append(
+    createConfig(
+        "ConfigEras1D",
         "p1RefMassInRefPt",
-        histDir="Base/passExactly1Ref/HistRef",
+        histDir="Base/passAlpha/HistRef",
         yTitle="Mean of Z mass (GeV)",
-        xTitle="Reference Z p_{T} (GeV)",
+        xTitle="Reference p_{T} (GeV)",
         yMin=70,
         yMax=120,
         xLog=True
@@ -144,7 +157,7 @@ configs["ConfigEras1D"].append(
         "p1DbRespInRefPt",
         histDir="Base/passAlpha/HistMain",
         yTitle="DB Response",
-        xTitle="Reference Z p_{T} (GeV)",
+        xTitle="Reference p_{T} (GeV)",
         yMin=0.01,
         yMax=2.5,
         xLog=True
@@ -156,7 +169,7 @@ configs["ConfigEras1D"].append(
         "p1MpfRespInRefPt",
         histDir="Base/passAlpha/HistMain",
         yTitle="MPF Response",
-        xTitle="Reference Z p_{T} (GeV)",
+        xTitle="Reference p_{T} (GeV)",
         yMin=0.01,
         yMax=2.5,
         xLog=True
@@ -168,7 +181,7 @@ configs["ConfigEras1D"].append(
         "p1Jet1ChhefInRefPt",
         histDir="Base/passAlpha/HistMain",
         yTitle="Mean of Charged Hadron Energy Fraction",
-        xTitle="Reference Z p_{T} (GeV)",
+        xTitle="Reference p_{T} (GeV)",
         yMin=0.1,
         yMax=1.2,
         xLog=True
@@ -180,7 +193,7 @@ configs["ConfigEras1D"].append(
         "p1Jet1NeemefInRefPt",
         histDir="Base/passAlpha/HistMain",
         yTitle="Mean of Neutral EM Energy Fraction",
-        xTitle="Reference Z p_{T} (GeV)",
+        xTitle="Reference p_{T} (GeV)",
         yMin=0.01,
         yMax=0.6,
         xLog=True
@@ -192,7 +205,7 @@ configs["ConfigEras1D"].append(
         "p1Jet1ChemefInRefPt",
         histDir="Base/passAlpha/HistMain",
         yTitle="Mean of Charged EM Energy Fraction",
-        xTitle="Reference Z p_{T} (GeV)",
+        xTitle="Reference p_{T} (GeV)",
         yMin=0.001,
         yMax=0.2,
         xLog=True
@@ -204,7 +217,7 @@ configs["ConfigEras1D"].append(
         "p1Jet1NehefInRefPt",
         histDir="Base/passAlpha/HistMain",
         yTitle="Mean of Neutral Hadron Energy Fraction",
-        xTitle="Reference Z p_{T} (GeV)",
+        xTitle="Reference p_{T} (GeV)",
         yMin=0.01,
         yMax=0.4,
         xLog=True
@@ -216,7 +229,7 @@ configs["ConfigEras1D"].append(
         "p1Jet1MuefInRefPt",
         histDir="Base/passAlpha/HistMain",
         yTitle="Mean of Muon Energy Fraction",
-        xTitle="Reference Z p_{T} (GeV)",
+        xTitle="Reference p_{T} (GeV)",
         yMin=0.001,
         yMax=0.025,
         xLog=True
@@ -228,7 +241,7 @@ configs["ConfigEras1D"].append(
         "p1MpfRespInRefPt_bi",
         histDir="Base/passRefBarrel/HistTag",
         yTitle="MPF Response for b-tagged jet",
-        xTitle="Reference Z p_{T} (GeV)",
+        xTitle="Reference p_{T} (GeV)",
         yMin=0.01,
         yMax=3.0,
         xLog=True
@@ -241,7 +254,7 @@ configs["ConfigEra2D"].append(
     createConfig(
         "ConfigEra2D",
         "h2EventInRefPhiRefEta",
-        histDir="Base/passExactly1Ref/HistRef",
+        histDir="Base/passAlpha/HistRef",
         yMin=-2.5,
         yMax=2.5,
         xTitle="Reference #eta",

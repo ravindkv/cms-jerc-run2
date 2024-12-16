@@ -12,6 +12,7 @@ public:
 
     bool passFilter(const std::shared_ptr<SkimTree>& tree) const;
     bool passHLT(const std::shared_ptr<SkimTree>& tree) const;
+    bool passHltWithPt(const std::shared_ptr<SkimTree>& tree, const double& pt) const;
     
     std::vector<std::string> getTrigNames() const;
     std::map<std::string, const Bool_t*> getTrigValues() const;
@@ -24,6 +25,7 @@ private:
     const GlobalFlag::Year year_;
     const GlobalFlag::Channel channel_;
     const bool isDebug_;
+    const bool isMC_;
     void printDebug(const std::string& message) const;
 };
 

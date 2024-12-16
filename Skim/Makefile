@@ -1,30 +1,45 @@
+##############################################
+#  Automatic .d File Generation Makefile
+##############################################
 
-ROOT_L=`root-config --libs`
-ROOT_I=-I`root-config --incdir` -I./header
-GCC=g++ -g -std=c++17
+# Compiler and standard
+GCC       = g++ -g -std=c++17
 
-# Add clang-tidy check
-CLANG_TIDY = clang-tidy
-#@echo "--> Running clang-tidy on $<"
-#@$(CLANG_TIDY) $<  --  -std=c++17 $(ROOT_I)
-#@$(CLANG_TIDY) $< -fix --  -std=c++17 $(ROOT_I)
+# ROOT flags
+ROOT_L    = `root-config --libs`
+ROOT_I    = -I`root-config --incdir` -I./header
 
-SRCDIR   = cpp
-OBJDIR   = obj
-SOURCES     := $(wildcard $(SRCDIR)/*.cpp)
-OBJECTS     := $(SOURCES:$(SRCDIR)/%.cpp=$(OBJDIR)/%.o)
-BINS        := runMain
+# Directories
+SRCDIR    = cpp
+OBJDIR    = obj
 
+# Source and object files
+SOURCES   := $(wildcard $(SRCDIR)/*.cpp)
+OBJECTS   := $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SOURCES))
+BINS      := runMain
+
+# Compiler flags:
+#   -MMD -MP to generate .d files for all headers automatically.
+CXXFLAGS  = $(ROOT_I) -MMD -MP
+LDFLAGS   = $(ROOT_L)
+
+# Primary target: build the main executable
 $(BINS): $(OBJECTS) main.cpp
-	@echo "--> Creating executables $@"
-	@$(GCC) -o $@ main.cpp ${ROOT_I} ${ROOT_L} $(OBJECTS)
+	@echo "--> Creating executable $@"
+	@$(GCC) main.cpp $(OBJECTS) -o $@ $(CXXFLAGS) $(LDFLAGS)
 
-$(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.cpp header/%.h
+# Rule for building object files + .d dependencies
+$(OBJDIR)/%.o : $(SRCDIR)/%.cpp
 	@echo "--> Creating object $@"
 	@mkdir -p $(OBJDIR)
-	@$(GCC) -c $< -o $@  ${ROOT_I} ${ROOT_L}
+	@$(GCC) -c $< -o $@ $(CXXFLAGS) $(LDFLAGS)
+
+# Include automatically-generated dependency files
+# Each .o has a matching .d that lists which headers it depends on.
+-include $(OBJECTS:.o=.d)
 
 clean:
-	rm -f $(wildcard $(OBJDIR)/*.o) $(BINS)
+	rm -f $(OBJDIR)/*.o $(OBJDIR)/*.d $(BINS)
 
-.PHONY: all clean
+.PHONY: clean
+

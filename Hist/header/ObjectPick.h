@@ -36,7 +36,7 @@ public:
     void pickGenElectrons(const SkimTree& skimT);
     void pickGenMuons(const SkimTree& skimT);
     void pickGenPhotons(const SkimTree& skimT);
-    void pickGenRefs(const SkimTree& skimT);
+    void pickGenRefs(const SkimTree& skimT, const TLorentzVector& p4Ref);
     void pickGenJets(const SkimTree& skimT);
 
     // Accessors for picked objects

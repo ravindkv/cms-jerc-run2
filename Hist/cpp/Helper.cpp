@@ -77,36 +77,6 @@ void Helper::printProgress(Long64_t jentry, Long64_t nentries,
     }
 }
 
-// Function to print histogram bins and their statistics
-void Helper::printCutflow(const TH1D* hist){
-    // Print the header
-    std::cout << "---------: Cutflow Summary :--------" << '\n';
-    std::cout << std::setw(20) << "CUT" << std::setw(15) << "ENTRIES" << std::setw(15) << "REMAINED" << '\n';
-
-    int nBins = hist->GetNbinsX();
-    double previous = hist->GetBinContent(1);
-
-    // Print the first bin's content (no change for the first bin)
-    std::cout << std::setw(20) << hist->GetXaxis()->GetBinLabel(1)
-              << std::setw(15) << previous
-              << std::setw(15) << "N/A" << '\n';
-
-    // Loop over the remaining bins
-    for (int i = 2; i <= nBins; ++i) {
-        double current = hist->GetBinContent(i);
-        double change = (previous != 0) ? (current / previous) * 100.0 : 0.0;
-
-        // Print the cut name, entries, and percentage change
-        std::cout << std::setw(20) << hist->GetXaxis()->GetBinLabel(i)
-                  << std::setw(15) << current
-                  << std::setw(10) << " => "
-                  << std::fixed << std::setprecision(1)
-                  << change << " %" << '\n';
-
-        previous = current;
-    }
-}
-
 // Function to print information about ROOT objects
 void Helper::printInfo(const TObject* obj){
     if (const auto* tree = dynamic_cast<const TTree*>(obj)) {

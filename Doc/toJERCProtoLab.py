@@ -17,19 +17,27 @@ def copy_histograms(input_file_path, output_dir):
         return
 
     # Recursively copy objects
+    # Recursively copy objects while excluding specific 2D histogram classes
     def copy_objects(input_dir, output_dir):
+        excluded_classes = ["TH2D", "TH2F", "TProfile2D"]  # Add more classes as needed
         for key in input_dir.GetListOfKeys():
             obj = key.ReadObj()
-            if obj.InheritsFrom("TH1") or obj.InheritsFrom("TProfile"):
+            cls = obj.ClassName()
+            
+            # Check if the object is a TH1 or TProfile but not in the excluded list
+            if (obj.InheritsFrom("TH1") or obj.InheritsFrom("TProfile")) and cls not in excluded_classes:
                 output_dir.cd()
                 obj.Write()
             elif obj.InheritsFrom("TDirectory"):
                 sub_input_dir = obj
                 output_dir.cd()
-                sub_output_dir = output_dir.mkdir(obj.GetName())
+                # Create the subdirectory if it doesn't exist
+                sub_output_dir = output_dir.GetDirectory(obj.GetName()) or output_dir.mkdir(obj.GetName())
                 copy_objects(sub_input_dir, sub_output_dir)
 
+    # Usage
     copy_objects(input_file, output_dir)
+
     input_file.Close()
 
 def process_dict(d, parent_dir):
@@ -44,9 +52,22 @@ def process_dict(d, parent_dir):
 
 # Loop over channels and years
 for channel, years in merged_hist_files.items():
+    yToY = {}
+    yToY["2016Pre"] = "Summer20UL16APV"
+    yToY["2016Post"] = "Summer20UL16"
+    yToY["2017"] = "Summer20UL17"
+    yToY["2018"] = "Summer20UL18"
+
+    if "GamJet" in channel: continue
+    chToCh = {}
+    chToCh["ZeeJet"] = "L3Residual_Z/JEC_Combination_Zee"
+    chToCh["ZmmJet"] = "L3Residual_Z/JEC_Combination_Zmm"
+    chToCh["GamJet"] = "L3Residual_gamma/JEC_Combination_Gamma"
     for year, data_mc in years.items():
         # Create the output ROOT file for each channel and year
-        output_file_name = f"combined_{channel}_{year}.root"
+        dirN = "%s/%s"%(yToY[year], chToCh[channel])
+        os.system(f"mkdir -p {dirN}")
+        output_file_name = f"{dirN}/commit_9ba540f_{channel}_MiniAODv2_%s_JECV7_L1L2L3.root"%yToY[year]
         output_file = ROOT.TFile(output_file_name, "RECREATE")
         
         # Process the Data and MC for this channel and year

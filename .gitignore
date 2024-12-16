@@ -1,6 +1,7 @@
 ./scanTFile
 ./diffTFiles
 
+Skim/runMain.d
 Skim/.clang-tidy
 Skim/runMain
 Skim/obj
@@ -11,6 +12,7 @@ Skim/__pycache__
 Skim/input/__pycache__
 Skim/condor/__pycache__
 
+Hist/runMain.d
 Hist/.clang-tidy
 Hist/runMain
 Hist/corrlib

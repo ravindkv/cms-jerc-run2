@@ -31,9 +31,6 @@ public:
                        std::chrono::time_point<std::chrono::high_resolution_clock>& startClock, 
                        double& totTime);
 
-    // Function to print and compare bin content of cutflow 
-    static void printCutflow(const TH1D* hist);
-
     // Functions to scan a root file and print infor for TTree, TH1, etc 
     static void printInfo(const TObject* obj);
     static void scanDirectory(TDirectory* dir, const std::string& path);

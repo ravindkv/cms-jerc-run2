@@ -115,21 +115,21 @@ auto RunGamJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
         std::vector<TLorentzVector> p4Refs = objP->getPickedRefs();
 
         if (p4Refs.size()!=1) continue; 
+        p4Ref = p4Refs.at(0);
+        p4RawRef = p4Refs.at(0);
+        double ptRef = p4Ref.Pt();
+        if (!eventP->passHltWithPt(skimT, ptRef)) continue; 
         h1EventInCutflow->fill("passExactly1Ref");
 
         // Weight
         double weight = (globalFlags_.isMC() ? skimT->genWeight : 1.0);
         if (globalFlags_.isMC()) weight *= scaleObject->getPuCorrection(skimT->Pileup_nTrueInt, "nominal");
 
-        p4Ref = p4Refs.at(0);
-        p4RawRef = p4Refs.at(0);
-        double ptRef = p4Ref.Pt();
-
         // Gen objects
         p4GenRef.SetPtEtaPhiM(0, 0, 0, 0);
         if (globalFlags_.isMC()) {
             objP->pickGenPhotons(*skimT);
-            objP->pickGenRefs(*skimT);
+            objP->pickGenRefs(*skimT, p4Ref);
             std::vector<TLorentzVector> p4GenRefs = objP->getPickedGenRefs();
             if (p4GenRefs.empty()) continue;
             p4GenRef = p4GenRefs.at(0);
@@ -251,8 +251,11 @@ auto RunGamJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
         histTag.SetResponse(bal, mpf, mpf1, mpfn, mpfu);
         histTag.FillHistograms(skimT.get(), ptRef, iJet1, iGenJet, weight);
 
-        double alpha = p4Jet2.Pt()/ptRef;
-        if(alpha > 1.0) continue;
+        //double alpha = p4Jet2.Pt()/ptRef;
+        double pt2Min = 30;
+        double ptJet2 = p4Jet2.Pt();
+        bool passAlpha = (ptJet2 < ptRef || ptJet2 < pt2Min); 
+        if(!passAlpha) continue;
         h1EventInCutflow->fill("passAlpha");
         histRef2.Fill(p4Refs.size(), p4Ref, p4GenRef, weight); 
 
@@ -268,8 +271,10 @@ auto RunGamJet::Run(std::shared_ptr<SkimTree>& skimT, EventPick *eventP, ObjectP
 
     }  // end of event loop
 
-    Helper::printCutflow(h1EventInCutflow->getHistogram());
+    h1EventInCutflow->printCutflow();
+    h1EventInCutflow->fillFractionCutflow();
     fout->Write();
+    
     //Helper::scanTFile(fout);
     std::cout << "Output file: " << fout->GetName() << '\n';
     return 0;
