@@ -8,6 +8,7 @@
 
 SkimTree::SkimTree(GlobalFlag& globalFlags): 
     globalFlags_(globalFlags),
+    trigDetail_(globalFlags),
     year_(globalFlags_.getYear()),
     era_(globalFlags_.getEra()),
     channel_(globalFlags_.getChannel()),
@@ -196,38 +197,12 @@ void SkimTree::loadTree() {
 	fChain_->SetBranchAddress("Jet_rawFactor", &Jet_rawFactor);
 	fChain_->SetBranchAddress("Jet_jetId", &Jet_jetId);
 	
-	if(channel_ == GlobalFlag::Channel::VetoMap || 
-        channel_ == GlobalFlag::Channel::DiJet || 
-        channel_ == GlobalFlag::Channel::IncJet || 
-        channel_ == GlobalFlag::Channel::MultiJet || 
-        channel_ == GlobalFlag::Channel::Wqq){
-	    fChain_->SetBranchAddress("HLT_PFJet40"            , & HLT_PFJet40            );
-	    fChain_->SetBranchAddress("HLT_PFJet60"            , & HLT_PFJet60            );
-	    fChain_->SetBranchAddress("HLT_PFJet80"            , & HLT_PFJet80            );
-	    fChain_->SetBranchAddress("HLT_PFJet140"           , & HLT_PFJet140           );
-	    fChain_->SetBranchAddress("HLT_PFJet200"           , & HLT_PFJet200           );
-	    fChain_->SetBranchAddress("HLT_PFJet260"           , & HLT_PFJet260           );
-	    fChain_->SetBranchAddress("HLT_PFJet320"           , & HLT_PFJet320           );
-	    fChain_->SetBranchAddress("HLT_PFJet400"           , & HLT_PFJet400           );
-	    fChain_->SetBranchAddress("HLT_PFJet450"           , & HLT_PFJet450           );
-	    fChain_->SetBranchAddress("HLT_PFJet500"           , & HLT_PFJet500           );
-	    fChain_->SetBranchAddress("HLT_DiPFJetAve40"       , & HLT_DiPFJetAve40       );
-	    fChain_->SetBranchAddress("HLT_DiPFJetAve60"       , & HLT_DiPFJetAve60       );
-	    fChain_->SetBranchAddress("HLT_DiPFJetAve80"       , & HLT_DiPFJetAve80       );
-	    fChain_->SetBranchAddress("HLT_DiPFJetAve140"      , & HLT_DiPFJetAve140      );
-	    fChain_->SetBranchAddress("HLT_DiPFJetAve200"      , & HLT_DiPFJetAve200      );
-	    fChain_->SetBranchAddress("HLT_DiPFJetAve260"      , & HLT_DiPFJetAve260      );
-	    fChain_->SetBranchAddress("HLT_DiPFJetAve320"      , & HLT_DiPFJetAve320      );
-	    fChain_->SetBranchAddress("HLT_DiPFJetAve400"      , & HLT_DiPFJetAve400      );
-	    fChain_->SetBranchAddress("HLT_DiPFJetAve500"      , & HLT_DiPFJetAve500      );
-	    fChain_->SetBranchAddress("HLT_DiPFJetAve60_HFJEC" , & HLT_DiPFJetAve60_HFJEC );
-	    fChain_->SetBranchAddress("HLT_DiPFJetAve80_HFJEC" , & HLT_DiPFJetAve80_HFJEC );
-	    fChain_->SetBranchAddress("HLT_DiPFJetAve100_HFJEC", & HLT_DiPFJetAve100_HFJEC);
-	    fChain_->SetBranchAddress("HLT_DiPFJetAve160_HFJEC", & HLT_DiPFJetAve160_HFJEC);
-	    fChain_->SetBranchAddress("HLT_DiPFJetAve220_HFJEC", & HLT_DiPFJetAve220_HFJEC);
-	    fChain_->SetBranchAddress("HLT_DiPFJetAve300_HFJEC", & HLT_DiPFJetAve300_HFJEC);
-	}
-	
+	//--------------------------------------- 
+	// HLT and MET Filters
+	//--------------------------------------- 
+	initializeTriggers();
+	initializeFilters();
+
 	//--------------------------------------- 
 	// Photon (for GamJet)
 	//--------------------------------------- 
@@ -244,45 +219,6 @@ void SkimTree::loadTree() {
 	  	fChain_->SetBranchAddress("Photon_cutBased", &Photon_cutBased);
 	  	fChain_->SetBranchAddress("Photon_jetIdx", &Photon_jetIdx);
 	  	fChain_->SetBranchAddress("Photon_seedGain", &Photon_seedGain);
-
-	    fChain_->SetBranchAddress("HLT_Photon20", &HLT_Photon20);
-	    fChain_->SetBranchAddress("HLT_Photon33", &HLT_Photon33);
-	    fChain_->SetBranchAddress("HLT_Photon50", &HLT_Photon50);
-	    fChain_->SetBranchAddress("HLT_Photon75", &HLT_Photon75);
-	    fChain_->SetBranchAddress("HLT_Photon90", &HLT_Photon90);
-	    fChain_->SetBranchAddress("HLT_Photon120", &HLT_Photon120);
-	    fChain_->SetBranchAddress("HLT_Photon150", &HLT_Photon150);
-	    fChain_->SetBranchAddress("HLT_Photon175", &HLT_Photon175);
-	    fChain_->SetBranchAddress("HLT_Photon200", &HLT_Photon200);
-	    fChain_->SetBranchAddress("HLT_Photon50_R9Id90_HE10_IsoM", &HLT_Photon50_R9Id90_HE10_IsoM);
-	    fChain_->SetBranchAddress("HLT_Photon75_R9Id90_HE10_IsoM", &HLT_Photon75_R9Id90_HE10_IsoM);
-	    fChain_->SetBranchAddress("HLT_Photon90_R9Id90_HE10_IsoM", &HLT_Photon90_R9Id90_HE10_IsoM);
-        if (year_ == GlobalFlag::Year::Year2016Pre || year_ == GlobalFlag::Year::Year2016Post) {
-            fChain_->SetBranchAddress("HLT_Photon36",                      &HLT_Photon36);
-            fChain_->SetBranchAddress("HLT_Photon30",                      &HLT_Photon30);
-            fChain_->SetBranchAddress("HLT_Photon22",                      &HLT_Photon22);
-            fChain_->SetBranchAddress("HLT_Photon165_R9Id90_HE10_IsoM",    &HLT_Photon165_R9Id90_HE10_IsoM);
-            fChain_->SetBranchAddress("HLT_Photon120_R9Id90_HE10_IsoM",    &HLT_Photon120_R9Id90_HE10_IsoM);
-            fChain_->SetBranchAddress("HLT_Photon36_R9Id90_HE10_IsoM",     &HLT_Photon36_R9Id90_HE10_IsoM);
-            fChain_->SetBranchAddress("HLT_Photon30_R9Id90_HE10_IsoM",     &HLT_Photon30_R9Id90_HE10_IsoM);
-            fChain_->SetBranchAddress("HLT_Photon22_R9Id90_HE10_IsoM",     &HLT_Photon22_R9Id90_HE10_IsoM); 
-        }
-        else if (year_ == GlobalFlag::Year::Year2017){
-            fChain_->SetBranchAddress("HLT_Photon165_R9Id90_HE10_IsoM",    &HLT_Photon165_R9Id90_HE10_IsoM);
-            fChain_->SetBranchAddress("HLT_Photon120_R9Id90_HE10_IsoM",    &HLT_Photon120_R9Id90_HE10_IsoM);
-            fChain_->SetBranchAddress("HLT_Photon60_HoverELoose",          &HLT_Photon60_HoverELoose);
-            fChain_->SetBranchAddress("HLT_Photon50_HoverELoose",          &HLT_Photon50_HoverELoose);
-            fChain_->SetBranchAddress("HLT_Photon40_HoverELoose",          &HLT_Photon40_HoverELoose);
-            fChain_->SetBranchAddress("HLT_Photon30_HoverELoose",          &HLT_Photon30_HoverELoose);
-            fChain_->SetBranchAddress("HLT_Photon20_HoverELoose",          &HLT_Photon20_HoverELoose); 
-        }
-        else if (year_ == GlobalFlag::Year::Year2018){
-            fChain_->SetBranchAddress("HLT_Photon120EB_TightID_TightIso",  &HLT_Photon120EB_TightID_TightIso);
-            fChain_->SetBranchAddress("HLT_Photon110EB_TightID_TightIso",  &HLT_Photon110EB_TightID_TightIso);
-            fChain_->SetBranchAddress("HLT_Photon100EB_TightID_TightIso",  &HLT_Photon100EB_TightID_TightIso);
-            fChain_->SetBranchAddress("HLT_Photon30_HoverELoose",          &HLT_Photon30_HoverELoose);
-            fChain_->SetBranchAddress("HLT_Photon20_HoverELoose",          &HLT_Photon20_HoverELoose); 
-        }
 	}//GamJet
 	
 	//--------------------------------------- 
@@ -302,11 +238,6 @@ void SkimTree::loadTree() {
 		fChain_->SetBranchAddress("Electron_mass", &Electron_mass);
 		fChain_->SetBranchAddress("Electron_eCorr", &Electron_eCorr);
 		fChain_->SetBranchAddress("Electron_cutBased", &Electron_cutBased);
-		//address trigger
-		if(year_ == GlobalFlag::Year::Year2016Pre || year_ == GlobalFlag::Year::Year2016Post)
-			fChain_->SetBranchAddress("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ", &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ);
-		if(year_ == GlobalFlag::Year::Year2017 || year_ == GlobalFlag::Year::Year2018)
-			fChain_->SetBranchAddress("HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL", &HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL);
 	}
 	
 	//--------------------------------------- 
@@ -331,11 +262,6 @@ void SkimTree::loadTree() {
 	  	fChain_->SetBranchAddress("Muon_tkRelIso", &Muon_tkRelIso);
 	  	fChain_->SetBranchAddress("Muon_dxy", &Muon_dxy);
 	  	fChain_->SetBranchAddress("Muon_dz", &Muon_dz);
-	  	//address trigger
-	  	if(year_ == GlobalFlag::Year::Year2016Pre || year_ == GlobalFlag::Year::Year2016Post)
-	    fChain_->SetBranchAddress("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ", &HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ);
-	  	if(year_ == GlobalFlag::Year::Year2017 || year_ == GlobalFlag::Year::Year2018)
-	    fChain_->SetBranchAddress("HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8", &HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8);
 	}
 	
 	fChain_->SetBranchAddress("ChsMET_phi", &ChsMET_phi);
@@ -346,25 +272,6 @@ void SkimTree::loadTree() {
 	fChain_->SetBranchAddress("PV_npvs", &PV_npvs);
 	fChain_->SetBranchAddress("PV_npvsGood", &PV_npvsGood);
 	
-	fChain_->SetBranchStatus("Flag_goodVertices",true);
-	fChain_->SetBranchAddress("Flag_goodVertices",&Flag_goodVertices);
-	fChain_->SetBranchStatus("Flag_globalSuperTightHalo2016Filter",true);
-	fChain_->SetBranchAddress("Flag_globalSuperTightHalo2016Filter", &Flag_globalSuperTightHalo2016Filter);
-	fChain_->SetBranchStatus("Flag_HBHENoiseFilter",true);
-	fChain_->SetBranchAddress("Flag_HBHENoiseFilter", &Flag_HBHENoiseFilter);
-	fChain_->SetBranchStatus("Flag_HBHENoiseIsoFilter",true);
-	fChain_->SetBranchAddress("Flag_HBHENoiseIsoFilter", &Flag_HBHENoiseIsoFilter);
-	fChain_->SetBranchStatus("Flag_EcalDeadCellTriggerPrimitiveFilter",true);
-	fChain_->SetBranchAddress("Flag_EcalDeadCellTriggerPrimitiveFilter", &Flag_EcalDeadCellTriggerPrimitiveFilter);
-	fChain_->SetBranchStatus("Flag_BadPFMuonFilter",true);
-	fChain_->SetBranchAddress("Flag_BadPFMuonFilter",&Flag_BadPFMuonFilter);
-	fChain_->SetBranchStatus("Flag_eeBadScFilter",true);
-	fChain_->SetBranchAddress("Flag_eeBadScFilter", &Flag_eeBadScFilter);
-	if(year_ == GlobalFlag::Year::Year2017 || year_ == GlobalFlag::Year::Year2018){
-	    fChain_->SetBranchStatus("Flag_ecalBadCalibFilter",true);
-	    fChain_->SetBranchAddress("Flag_ecalBadCalibFilter",&Flag_ecalBadCalibFilter);
-	}
-	  
 	
 	if (isMC_){ 
 		fChain_->SetBranchAddress("genWeight", &genWeight);
@@ -397,6 +304,108 @@ void SkimTree::loadTree() {
 	  	}
 	} // isMC_
 }
+
+
+//--------------------------------------- 
+// HLT 
+//--------------------------------------- 
+void SkimTree::initializeTriggers() {
+    const auto& triggerNames = trigDetail_.getTrigNames();
+
+    size_t numTriggers = triggerNames.size();
+    std::cout<<"numTriggers = "<<numTriggers<<std::endl;
+    // Reserve space to prevent reallocations
+    trigNames_.reserve(numTriggers);
+    trigValues_.reserve(numTriggers);
+    trigNameToIndex_.reserve(numTriggers);
+
+    for (size_t index = 0; index < numTriggers; ++index) {
+        const auto& trigName = triggerNames[index];
+        trigNames_.emplace_back(trigName);
+        trigValues_.emplace_back(0); // Initialize to 0 (false)
+        trigNameToIndex_.emplace(trigName, index);
+
+        // Set branch status and address
+        fChain_->SetBranchStatus(trigName.c_str(), true);
+        fChain_->SetBranchAddress(trigName.c_str(), &trigValues_[index]);
+    }
+    // After population
+    if (isDebug_) {
+        std::cout << "Initialized " << trigNames_.size() << " triggers." << std::endl;
+    }
+    
+    if (trigNames_.size() != trigValues_.size()) {
+        throw std::runtime_error("Mismatch between trigNames_ and trigValues sizes during initialization.");
+    }
+}
+
+
+Bool_t SkimTree::getTrigValue(const std::string& trigName) const {
+    auto it = trigNameToIndex_.find(trigName);
+    if (it != trigNameToIndex_.end()) {
+        return trigValues_[it->second] != 0; // Convert to bool
+    }
+    else{
+        if (isDebug_) {
+            std::cerr << "Trigger name not found: " << trigName << std::endl;
+        }
+        return false; // Default to false if trigger not found
+    }
+}
+
+//--------------------------------------- 
+// MET Filter 
+//--------------------------------------- 
+void SkimTree::initializeFilters() {
+    std::vector<std::string> filterNames = {
+	    "Flag_goodVertices",
+	    "Flag_globalSuperTightHalo2016Filter",
+	    "Flag_HBHENoiseFilter",
+	    "Flag_HBHENoiseIsoFilter",
+	    "Flag_EcalDeadCellTriggerPrimitiveFilter",
+	    "Flag_BadPFMuonFilter",
+	    "Flag_eeBadScFilter"
+    };
+	if(year_ == GlobalFlag::Year::Year2017 || year_ == GlobalFlag::Year::Year2018){
+        filterNames.push_back("Flag_ecalBadCalibFilter");
+	}
+    size_t numFilters = filterNames.size();
+    std::cout<<"numFilters = "<<numFilters<<std::endl;
+    // Reserve space to prevent reallocations
+    filterNames_.reserve(numFilters);
+    filterValues_.reserve(numFilters);
+    filterNameToIndex_.reserve(numFilters);
+
+    for (size_t index = 0; index < numFilters; ++index) {
+        const auto& filterName = filterNames[index];
+        filterNames_.emplace_back(filterName);
+        filterValues_.emplace_back(0); // Initialize to 0 (false)
+        filterNameToIndex_.emplace(filterName, index);
+
+        // Set branch status and address
+        fChain_->SetBranchStatus(filterName.c_str(), true);
+        fChain_->SetBranchAddress(filterName.c_str(), &filterValues_[index]);
+    }
+    // After population
+    if (isDebug_) {
+        std::cout << "Initialized " << filterNames_.size() << " filters." << std::endl;
+    }
+    
+}
+
+Bool_t SkimTree::getFilterValue(const std::string& filterName) const {
+    auto it = filterNameToIndex_.find(filterName);
+    if (it != filterNameToIndex_.end()) {
+        return filterValues_[it->second] != 0; // Convert to bool
+    }
+    else{
+        if (isDebug_) {
+            std::cerr << "Filter name not found: " << filterName << std::endl;
+        }
+        return false; // Default to false if filterger not found
+    }
+}
+
 
 auto SkimTree::getEntries() const -> Long64_t {
     return fChain_ ? fChain_->GetEntries() : 0;

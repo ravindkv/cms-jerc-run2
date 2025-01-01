@@ -2,6 +2,7 @@
 #include "FigConfig.h"
 #include "ReadConfig.h"
 #include "Helper.h"
+#include "PlotTime1D.h"
 #include "PlotEras1D.h"
 #include "PlotEra2D.h"
 #include "PlotEraXY.h"
@@ -12,7 +13,7 @@ using json = nlohmann::json;
    
 int RunGamJet::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &channelSlide, Slide &allChannelSlide){
     channelSlide.startDocument("JME-21-001: L3Residual from GamJet channel");
-    addGamJetSlides(channelSlide);
+    //addGamJetSlides(channelSlide);
 
     allChannelSlide.addCenteredTextSlide("Next we show results from GamJet channel");
 
@@ -23,10 +24,40 @@ int RunGamJet::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &chan
     }
 
     ReadConfig readConfig("input/config/json/FigConfigGamJet.json");
+    const auto& figConfigVecTime1D = readConfig.getFigConfigVecTime1D();
     const auto& figConfigVecEras1D = readConfig.getFigConfigVecEras1D();
     const auto& figConfigVecEra2D  = readConfig.getFigConfigVecEra2D();
     const auto& figConfigVecErasXY = readConfig.getFigConfigVecErasXY();
     const auto& figConfigVecEraXY  = readConfig.getFigConfigVecEraXY();
+
+	//-------------------------------------
+	// Plot1D: As function of Run (Time) 
+	//-------------------------------------
+    if(isPlotTime1D){
+        auto outPlotDirTime1D = eosPlotDir+"/"+channel+"/"+"Time1D"; 
+        std::filesystem::create_directories(outPlotDirTime1D);
+        channelSlide.addCenteredTextSlide("Next we show 1D plots");
+        for (const auto & config: figConfigVecTime1D){
+            auto names = config.histNames;
+            std::string name("");
+            for (const auto& n: names){name = n + "_";}
+            auto dir  = config.histDir;
+            if(isPrintFigConfig) config.print();
+            std::vector<std::string> plotsForSlide;
+            for (auto &year: years){
+                auto time1D = std::make_unique<PlotTime1D<TProfile>>();
+                time1D->setInput(inputJson, channel, year);
+                time1D->setFigConfigTime1D(config);
+                time1D->loadHists("Data");
+                string outName = Helper::dirToName(dir);
+                auto outPdfName = outPlotDirTime1D+"/"+year+"_"+outName+"_"+name+".pdf";
+                time1D->overlayData(outPdfName);
+                plotsForSlide.push_back(outPdfName);
+            }
+            channelSlide.addPlotSlide(plotsForSlide, dir+"/"+name+" for different Runs");
+            allChannelSlide.addPlotSlide(plotsForSlide, dir+"/"+name+" from GamJet channel for different Runs");
+        }//config
+    }//isPlot1D
 
 	//-------------------------------------
 	// Plot1D: multiple eras in one plot

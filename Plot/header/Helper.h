@@ -24,6 +24,8 @@ public:
     // General function to combine multiple histograms
     template<typename T>
     static T* combineHists(const std::vector<T*>& hists);
+
+    static std::vector<std::string> splitString(const std::string& str, char delimiter);
 };
 
 // Include the template implementation here

@@ -36,8 +36,50 @@ auto RunGamJet::Run(std::shared_ptr<NanoTree>& nanoT, TFile *fout) -> int{
 	// Set trigger list
 	//----------------------------------
     std::vector<std::string> patterns;
-    patterns = {"HLT_Photon*"};
-    trigList_  = Helper::GetMatchingBranchNames(nanoT->fChain->GetTree(), patterns);
+    if(globalFlags_.is2016Pre || globalFlags_.is2016Post){
+        patterns = { 
+        	"HLT_Photon175",
+			"HLT_Photon165_R9Id90_HE10_IsoM",
+			"HLT_Photon120_R9Id90_HE10_IsoM",
+			"HLT_Photon90_R9Id90_HE10_IsoM",
+			"HLT_Photon75_R9Id90_HE10_IsoM",
+			"HLT_Photon50_R9Id90_HE10_IsoM",
+			"HLT_Photon36_R9Id90_HE10_IsoM",
+			"HLT_Photon30_R9Id90_HE10_IsoM",
+			"HLT_Photon22_R9Id90_HE10_IsoM"
+        };
+    }
+    if(globalFlags_.is2017){
+        patterns = { 
+			"HLT_Photon200",
+            "HLT_Photon165_R9Id90_HE10_IsoM",
+            "HLT_Photon120_R9Id90_HE10_IsoM",
+            "HLT_Photon90_R9Id90_HE10_IsoM",
+            "HLT_Photon75_R9Id90_HE10_IsoM",
+            "HLT_Photon50_R9Id90_HE10_IsoM",
+            "HLT_Photon30_HoverELoose",
+            "HLT_Photon20_HoverELoose"
+        }; 
+    }
+    if(globalFlags_.is2018){
+        patterns = { 
+			"HLT_Photon200",
+            "HLT_Photon110EB_TightID_TightIso",
+            "HLT_Photon100EB_TightID_TightIso",
+            "HLT_Photon90_R9Id90_HE10_IsoM",
+            "HLT_Photon75_R9Id90_HE10_IsoM",
+            "HLT_Photon50_R9Id90_HE10_IsoM",
+            "HLT_Photon30_HoverELoose",
+            "HLT_Photon20_HoverELoose"
+        }; 
+    }
+    trigList_  = patterns; 
+
+    if (trigList_.empty()) {
+        std::cerr << "No triggers found for channel: ZeeJet" << '\n';
+        exit(EXIT_FAILURE);
+    }
+
 
     if (trigList_.empty()) {
         std::cerr << "No triggers found for channel: GamJet" << '\n';

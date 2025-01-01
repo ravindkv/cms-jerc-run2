@@ -1,7 +1,7 @@
-#include "ObjectPick.h"
+#include "PickObject.h"
 
 // Constructor implementation
-ObjectPick::ObjectPick(GlobalFlag& globalFlags) : 
+PickObject::PickObject(GlobalFlag& globalFlags) : 
     globalFlags_(globalFlags),
     year_(globalFlags_.getYear()),
     channel_(globalFlags_.getChannel()),
@@ -9,12 +9,12 @@ ObjectPick::ObjectPick(GlobalFlag& globalFlags) :
 {
 }
 // Destructor
-ObjectPick::~ObjectPick() {
+PickObject::~PickObject() {
     // Cleanup if necessary
 }
 
 // Clear picked objects
-void ObjectPick::clearObjects() {
+void PickObject::clearObjects() {
     pickedElectrons_.clear();
     pickedMuons_.clear();
     pickedPhotons_.clear();
@@ -30,59 +30,59 @@ void ObjectPick::clearObjects() {
 }
 
 // Helper function for debug printing
-void ObjectPick::printDebug(const std::string& message) const {
+void PickObject::printDebug(const std::string& message) const {
     if (isDebug_) {
         std::cout << message << '\n';
     }
 }
 
 // Accessors for picked objects
-auto ObjectPick::getPickedElectrons() const -> const std::vector<int>& {
+auto PickObject::getPickedElectrons() const -> const std::vector<int>& {
     return pickedElectrons_;
 }
 
-auto ObjectPick::getPickedMuons() const -> const std::vector<int>& {
+auto PickObject::getPickedMuons() const -> const std::vector<int>& {
     return pickedMuons_;
 }
 
-auto ObjectPick::getPickedPhotons() const -> const std::vector<int>& {
+auto PickObject::getPickedPhotons() const -> const std::vector<int>& {
     return pickedPhotons_;
 }
 
-auto ObjectPick::getPickedRefs() const -> const std::vector<TLorentzVector>& {
+auto PickObject::getPickedRefs() const -> const std::vector<TLorentzVector>& {
     return pickedRefs_;
 }
 
-auto ObjectPick::getPickedJetsP4() const -> const std::vector<TLorentzVector>& {
+auto PickObject::getPickedJetsP4() const -> const std::vector<TLorentzVector>& {
     return pickedJetsP4_;
 }
 
-auto ObjectPick::getPickedJetsIndex() const -> const std::vector<int>& {
+auto PickObject::getPickedJetsIndex() const -> const std::vector<int>& {
     return pickedJetsIndex_;
 }
 
-auto ObjectPick::getPickedGenElectrons() const -> const std::vector<int>& {
+auto PickObject::getPickedGenElectrons() const -> const std::vector<int>& {
     return pickedGenElectrons_;
 }
 
-auto ObjectPick::getPickedGenMuons() const -> const std::vector<int>& {
+auto PickObject::getPickedGenMuons() const -> const std::vector<int>& {
     return pickedGenMuons_;
 }
 
-auto ObjectPick::getPickedGenPhotons() const -> const std::vector<int>& {
+auto PickObject::getPickedGenPhotons() const -> const std::vector<int>& {
     return pickedGenPhotons_;
 }
 
-auto ObjectPick::getPickedGenRefs() const -> const std::vector<TLorentzVector>& {
+auto PickObject::getPickedGenRefs() const -> const std::vector<TLorentzVector>& {
     return pickedGenRefs_;
 }
 
-auto ObjectPick::getPickedGenJets() const -> const std::vector<TLorentzVector>& {
+auto PickObject::getPickedGenJets() const -> const std::vector<TLorentzVector>& {
     return pickedGenJets_;
 }
 
 // Reco objects
-void ObjectPick::pickMuons(const SkimTree& skimT) {
+void PickObject::pickMuons(const SkimTree& skimT) {
     printDebug("Starting Selection, nMuon = "+std::to_string(skimT.nMuon));
 
     for (UInt_t m = 0; m < skimT.nMuon; ++m) {
@@ -109,7 +109,7 @@ void ObjectPick::pickMuons(const SkimTree& skimT) {
     printDebug("Total Muons Selected: " + std::to_string(pickedMuons_.size()));
 }
 
-void ObjectPick::pickElectrons(const SkimTree& skimT) {
+void PickObject::pickElectrons(const SkimTree& skimT) {
     printDebug("Starting Selection, nElectron = "+std::to_string(skimT.nElectron));
 
     for (int eleInd = 0; eleInd < skimT.nElectron; ++eleInd) {
@@ -137,22 +137,24 @@ void ObjectPick::pickElectrons(const SkimTree& skimT) {
 }
 
 // Photon selection
-void ObjectPick::pickPhotons(const SkimTree& skimT) {
+void PickObject::pickPhotons(const SkimTree& skimT) {
     printDebug("Starting Selection, nPhoton = "+std::to_string(skimT.nPhoton));
 
     for (int phoInd = 0; phoInd < skimT.nPhoton; ++phoInd) {
-        double pt = skimT.Photon_pt[phoInd];
-        double r9 = skimT.Photon_r9[phoInd];
+        double pt  = skimT.Photon_pt[phoInd];
+        double absEta = std::abs(skimT.Photon_eta[phoInd]);
+        double r9  = skimT.Photon_r9[phoInd];
         double hoe = skimT.Photon_hoe[phoInd];
         Int_t id = skimT.Photon_cutBased[phoInd];  // Tight ID
         // R9>0.94 to avoid bias wrt R9Id90 triggers and from photon conversions
-        if(pt > 15 && r9 > 0.94 && r9 < 1.0 && hoe < 0.02148 && id==3){
+        if(pt > 15 && absEta < 1.3 && r9 > 0.94 && r9 < 1.0 && hoe < 0.02148 && id==3){
             pickedPhotons_.push_back(phoInd);
         }
         printDebug(
             "Photon " + std::to_string(phoInd) + 
             ", Id  = " + std::to_string(id) + 
             ", pt  = " + std::to_string(pt) + 
+            ", absEta  = " + std::to_string(absEta) + 
             ", hoe  = " + std::to_string(hoe) + 
             ", r9  = " + std::to_string(r9)
        );
@@ -161,7 +163,7 @@ void ObjectPick::pickPhotons(const SkimTree& skimT) {
 }
 
 // Reference object selection
-void ObjectPick::pickRefs(const SkimTree& skimT) {
+void PickObject::pickRefs(const SkimTree& skimT) {
     // Z->ee + jets channel
     if (channel_ == GlobalFlag::Channel::ZeeJet && pickedElectrons_.size() > 1) {
         int j = pickedElectrons_.at(0);
@@ -217,7 +219,7 @@ void ObjectPick::pickRefs(const SkimTree& skimT) {
 
 
 // Jet selection
-void ObjectPick::pickJets(const SkimTree& skimT, const TLorentzVector& p4Ref) {
+void PickObject::pickJets(const SkimTree& skimT, const TLorentzVector& p4Ref) {
     printDebug("Starting Selection, nJet = "+std::to_string(skimT.nJet));
     TLorentzVector p4Jeti;
     TLorentzVector p4Jet1, p4Jet2, p4Jetn;
@@ -293,7 +295,7 @@ void ObjectPick::pickJets(const SkimTree& skimT, const TLorentzVector& p4Ref) {
 }
 
 // Gen objects
-void ObjectPick::pickGenMuons(const SkimTree& skimT) {
+void PickObject::pickGenMuons(const SkimTree& skimT) {
     printDebug("Starting Selection, nGenDressedLepton = "+std::to_string(skimT.nGenDressedLepton));
 
     for (int i = 0; i < skimT.nGenDressedLepton; ++i) {
@@ -306,7 +308,7 @@ void ObjectPick::pickGenMuons(const SkimTree& skimT) {
     printDebug("Total Gen Muons Selected: " + std::to_string(pickedGenMuons_.size()));
 }
 
-void ObjectPick::pickGenElectrons(const SkimTree& skimT) {
+void PickObject::pickGenElectrons(const SkimTree& skimT) {
     printDebug("Starting Selection, nGenDressedLepton = "+std::to_string(skimT.nGenDressedLepton));
 
     for (int i = 0; i < skimT.nGenDressedLepton; ++i) {
@@ -319,7 +321,7 @@ void ObjectPick::pickGenElectrons(const SkimTree& skimT) {
     printDebug("Total Gen Electrons Selected: " + std::to_string(pickedGenElectrons_.size()));
 }
 
-void ObjectPick::pickGenPhotons(const SkimTree& skimT) {
+void PickObject::pickGenPhotons(const SkimTree& skimT) {
     printDebug("Starting Selection, nGenIsolatedPhoton = "+std::to_string(skimT.nGenIsolatedPhoton));
 
     for (int i = 0; i < skimT.nGenIsolatedPhoton; ++i) {
@@ -330,7 +332,7 @@ void ObjectPick::pickGenPhotons(const SkimTree& skimT) {
     printDebug("Total Gen Photons Selected: " + std::to_string(pickedGenPhotons_.size()));
 }
 
-void ObjectPick::pickGenRefs(const SkimTree& skimT, const TLorentzVector& p4Ref) {
+void PickObject::pickGenRefs(const SkimTree& skimT, const TLorentzVector& p4Ref) {
     // Z->ee + jets channel
     if (channel_ == GlobalFlag::Channel::ZeeJet && pickedGenElectrons_.size() > 1) {
         for (size_t j = 0; j < pickedGenElectrons_.size(); ++j) {

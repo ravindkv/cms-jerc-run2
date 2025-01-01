@@ -22,6 +22,7 @@ Hist/input/json
 Hist/condor/tmpSub
 Hist/condor/__pycache__
 Hist/input/__pycache__
+Hist/POG/LUM/HLT/*.csv
 
 Hist/tmp
 Hist/files

@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <vector>
 #include <iostream>
 #include <cassert>
@@ -55,8 +55,8 @@ public:
     void SetResponse(const double &bal, const double &mpf, const double &mpf1, const double &mpfn, const double &mpfu);
 
 private:
-    // Nested map to store histograms: var -> tag -> flavor -> histogram
-    std::map<std::string, std::map<std::string, std::map<std::string, std::unique_ptr<TH1>>>> varTagFlvMap_;
+    // Nested unordered_map to store histograms: var -> tag -> flavor -> histogram
+    std::unordered_map<std::string, std::unordered_map<std::string, std::unordered_map<std::string, std::unique_ptr<TH1>>>> varTagFlvMap_;
     
     // Tag and flavor identifiers
     std::vector<std::string> atag_;
@@ -71,7 +71,7 @@ private:
     double threshBtagDeepFlavUDS_;
 
     // Map to hold variable values
-    std::map<std::string, double> mvar_;
+    std::unordered_map<std::string, double> mvar_;
     double bal_;
     double mpf_;
     double mpf1_;
@@ -79,7 +79,7 @@ private:
     double mpfu_;
 
     /**
-     * @brief Initializes all histograms and sets up the internal maps.
+     * @brief Initializes all histograms and sets up the internal unordered_maps.
      * 
      * @param fout Pointer to the output ROOT file.
      * @param directoryName Name of the directory within the ROOT file to store histograms.

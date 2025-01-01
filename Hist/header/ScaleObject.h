@@ -11,9 +11,7 @@
 #include "RoccoR.h"
 #include "GlobalFlag.h"
 
-#include "TH2D.h"
 #include "TRandom3.h"
-#include "TCanvas.h"
 #include <nlohmann/json.hpp>
 
 class ScaleObject{
@@ -24,10 +22,6 @@ public:
     
     void setInputs();
 
-    // Jet veto
-    void loadJetVetoRef();
-    bool checkJetVetoMap(const SkimTree& skimT) const;
-    
     // L1 Offset (aka PU or L1RC) correction
     void loadJetL1FastJetRef();
     double getL1FastJetCorrection(double jetArea, double jetEta, double jetPt, double rho) const;
@@ -65,22 +59,8 @@ public:
     void loadEleSsRef();
     double getEleSsCorrection(const SkimTree& skimT, int index, const std::string& syst) const;
     
-    // Lumi
-    void loadLumiJson();
-    bool checkGoodLumi(const unsigned int& run, const unsigned int& lumi) const;
-
-    // Pileup
-    void loadPuRef();
-    double getPuCorrection(Float_t nTrueInt, const std::string& nomOrSyst) const;
-
 private:
 
-    // Jet veto
-    std::string jetVetoJsonPath_;
-    std::string jetVetoName_;
-    std::string jetVetoKey_;
-    correction::Correction::Ref loadedJetVetoRef_;
-    
     std::string jercJsonPath_;
     
     // L1 Offset (aka PU or L1RC) correction
@@ -121,17 +101,6 @@ private:
     // Muon rochester corrections 
     std::string muRochJsonPath_;
     RoccoR loadedRochRef_; 
-
-    // Lumi
-    std::string lumiJsonPath_;
-    nlohmann::json loadedLumiJson_;
-
-    // Pileup
-    std::string puJsonPath_;
-    std::string puName_;
-    correction::Correction::Ref loadedPuRef_;
-    
-    double minbXsec_{};
 
     // Reference to GlobalFlag instance
     GlobalFlag& globalFlags_;

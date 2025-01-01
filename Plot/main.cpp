@@ -57,7 +57,7 @@ int main(int argc, char* argv[]){
       case 'h':
         std::cout << "\nFor file: " << jsonFile << std::endl;
         for (auto& element : js.items()) {
-          std::cout <<" ./runMain -o "<<element.key()+"_Plot.tex" << std::endl;
+          std::cout <<"./runMain -o "<<element.key()+"_Plot.tex" << std::endl;
         }
         file.close();  // Close the file after usage
         return 0;

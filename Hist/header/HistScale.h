@@ -41,10 +41,10 @@ public:
      */
     ~HistScale() = default;
     
-    void FillElectron(const ScaleElectron& scaleElectron, double weight);
-    void FillMuon(const ScaleMuon& scaleMuon, double weight);
-    void FillPhoton(const ScalePhoton& scalePhoton, double weight);
-    void FillJetMet(const ScaleJetMet& scaleJetMet, double weight);
+    void FillElectron(const ScaleElectron& scaleElectron);
+    void FillMuon(const ScaleMuon& scaleMuon);
+    void FillPhoton(const ScalePhoton& scalePhoton);
+    void FillJetMet(const ScaleJetMet& scaleJetMet);
     
 private:
     // Map to hold histograms for Electron

@@ -3,7 +3,7 @@
 
 #include <memory>
 #include <string>
-#include <map>
+#include <unordered_map>
 #include <vector>
 #include <iostream>
 #include <cassert>
@@ -76,7 +76,7 @@ public:
 
 private:
     // Map from pTRef threshold to its corresponding RunHistograms
-    std::map<int, RunHistograms> histMap_;
+    std::unordered_map<int, RunHistograms> histMap_;
     
     // List of pTRef thresholds
     std::vector<int> pTRefs_;

@@ -60,5 +60,11 @@ struct FigConfigEraXY : public FigConfigEras1D {
     void print() const override; // Declaration only
 };
 
+// Derived configuration for Time1D
+struct FigConfigTime1D : public FigConfigBase {
+    std::vector<std::string> histNames;
+
+    void print() const override; // Declaration only
+};
 #endif // FIGCONFIG_H
 

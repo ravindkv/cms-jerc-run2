@@ -72,9 +72,6 @@ void PlotErasXY<T>::loadHists(const std::vector<std::string>& bins, const std::s
 
     TProfile* clonedHist = projectAndClone(hist, bin);
     if (clonedHist) {
-      if (tdrStyle_->getIsNorm() && clonedHist->Integral() > 0.0)
-        clonedHist->Scale(1 / clonedHist->Integral());
-
       tdrStyle_->setStyle(clonedHist);
 
       // Add the histogram to the appropriate list (dataHists_ or mcHists_)
@@ -149,15 +146,15 @@ void PlotErasXY<T>::overlayDataWithMcInRatio(const std::string &outputFile) {
   canvas.cd();
   tdrStyle_->setTdrStyle();
 
-  if (dataHists_.size() > 0 && mcHists_.size() == 0) {
+  if (!dataHists_.empty() && mcHists_.empty()) {
     drawHists(dataHists_);
   }
   
-  if (mcHists_.size() > 0 && dataHists_.size() == 0) {
-    drawHists(mcHists_);
+  if (!mcHists_.empty() && dataHists_.empty()) {
+    drawHists( mcHists_);
   }
   
-  if (mcHists_.size() > 0 && dataHists_.size() > 0) {
+  if (!mcHists_.empty() && !dataHists_.empty()) {
     TPad *pad1 = new TPad("pad1", "pad1", 0.0, 0.3, 1.0, 1.0);
     pad1->SetBottomMargin(0.00);
     pad1->Draw();

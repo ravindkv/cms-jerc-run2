@@ -80,7 +80,7 @@ void TdrStyle::setStyle(T* obj) {
     else if constexpr (std::is_same_v<T, TLegend>) {
         obj->SetFillStyle(kNone);
         obj->SetBorderSize(0);
-        obj->SetTextSize(0.040);
+        obj->SetTextSize(0.035);
     }
     else {
         static_assert(always_false<T>::value, "Unsupported type for setStyle");

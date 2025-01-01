@@ -49,3 +49,13 @@ void FigConfigEraXY::print() const {
               << "isVarOnX: " << (isVarOnX ? "true" : "false") << std::endl;
 }
 
+// Print function for FigConfigTime1D
+void FigConfigTime1D::print() const {
+    FigConfigBase::print();
+    std::cout << "histNames:";
+    for(const auto& histName: histNames){
+        std::cout << ", " << histName;
+    }
+    std::cout << "\n";
+
+}

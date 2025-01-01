@@ -15,6 +15,7 @@ public:
     const std::vector<FigConfigEra2D>& getFigConfigVecEra2D() const;
     const std::vector<FigConfigErasXY>& getFigConfigVecErasXY() const;
     const std::vector<FigConfigEraXY>& getFigConfigVecEraXY() const;
+    const std::vector<FigConfigTime1D>& getFigConfigVecTime1D() const;
 
 private:
     void readConfigFile(const std::string& configFilePath);
@@ -26,6 +27,7 @@ private:
     std::vector<FigConfigEra2D> figConfigVecEra2D_;
     std::vector<FigConfigErasXY> figConfigVecErasXY_;
     std::vector<FigConfigEraXY> figConfigVecEraXY_;
+    std::vector<FigConfigTime1D> figConfigVecTime1D_;
 };
 
 #endif // READCONFIG_H

@@ -25,6 +25,8 @@ void ReadConfig::readConfigFile(const std::string& configFilePath) {
             readFigConfig(configGroup, figConfigVecErasXY_);
         } else if (era == "ConfigEraXY") {
             readFigConfig(configGroup, figConfigVecEraXY_);
+        }else if (era == "ConfigTime1D") {
+            readFigConfig(configGroup, figConfigVecTime1D_);
         }
     }
 }
@@ -70,6 +72,9 @@ void ReadConfig::readFigConfig(const nlohmann::json& configGroup, std::vector<T>
             figConfig.varBins = params.value("varBins", std::vector<double>{});
             figConfig.isVarOnX = params.value("isVarOnX", false);
         }
+        if constexpr (std::is_same_v<T, FigConfigTime1D>) {
+            figConfig.histNames = params.value("histNames", std::vector<std::string>{});
+        }
 
         configVec.push_back(figConfig);
     }
@@ -86,5 +91,8 @@ const std::vector<FigConfigErasXY>& ReadConfig::getFigConfigVecErasXY() const {
 }
 const std::vector<FigConfigEraXY>& ReadConfig::getFigConfigVecEraXY() const {
     return figConfigVecEraXY_;
+}
+const std::vector<FigConfigTime1D>& ReadConfig::getFigConfigVecTime1D() const {
+    return figConfigVecTime1D_;
 }
 

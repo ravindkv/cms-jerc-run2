@@ -1,5 +1,7 @@
 # Compiler and standard
-GCC = g++ -g -std=c++17
+#GCC = g++ -fsanitize=address -g -O1 -std=c++17
+#GCC = g++ -g -std=c++17
+GCC = g++ -std=c++17
 
 # Directories
 SRCDIR   = cpp

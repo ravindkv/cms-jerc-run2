@@ -29,7 +29,7 @@ public:
     static void initProgress(Long64_t nentries); 
     static void printProgress(Long64_t jentry, Long64_t nentries, 
                        std::chrono::time_point<std::chrono::high_resolution_clock>& startClock, 
-                       double& totTime);
+                       double& totTime, bool isDebug);
 
     // Functions to scan a root file and print infor for TTree, TH1, etc 
     static void printInfo(const TObject* obj);

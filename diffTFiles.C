@@ -119,13 +119,13 @@ void compareHistograms(TH1* h1, TH1* h2, const std::string& objPath, const char*
     // Create upper and lower pads
     TPad* pad1 = new TPad("pad1", "pad1", 0, 0.3, 1, 1);
     pad1->SetBottomMargin(0.02);
-    pad1->SetLogx(true);
-    pad1->SetLogy(true);
+    ///pad1->SetLogx(true);
+    ///pad1->SetLogy(true);
     pad1->Draw();
     TPad* pad2 = new TPad("pad2", "pad2", 0, 0, 1, 0.3);
     pad2->SetTopMargin(0.02);
     pad2->SetBottomMargin(0.3);
-    pad2->SetLogx(true);
+    ///pad2->SetLogx(true);
     pad2->Draw();
     
     // Upper pad
@@ -222,7 +222,7 @@ void compareHistograms(TH1* h1, TH1* h2, const std::string& objPath, const char*
     // Optional: Log scale or no exponent for x-axis
     graphRatio->GetHistogram()->GetXaxis()->SetMoreLogLabels();
     graphRatio->GetHistogram()->GetXaxis()->SetNoExponent();
-    graphRatio->GetHistogram()->GetYaxis()->SetRangeUser(0.9, 1.1);
+    ///graphRatio->GetHistogram()->GetYaxis()->SetRangeUser(0.9, 1.1);
     
     graphRatio->Draw("APz");
     

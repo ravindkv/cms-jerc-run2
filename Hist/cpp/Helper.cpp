@@ -6,6 +6,7 @@
 #include "TProfile2D.h"
 #include "TMath.h"
 
+
 double Helper::DELTAPHI(double phi1, double phi2) {
   double dphi = fabs(phi1 - phi2);
   return (dphi <= TMath::Pi() ? dphi : TMath::TwoPi() - dphi);
@@ -61,9 +62,8 @@ void Helper::initProgress(Long64_t nentries){
 
 void Helper::printProgress(Long64_t jentry, Long64_t nentries,
                               std::chrono::time_point<std::chrono::high_resolution_clock>& startClock,
-                              double& totTime){
-    bool isDebug_ = false;
-    if (isDebug_) {
+                              double& totTime, bool isDebug){
+    if (isDebug) {
         std::cout << "\n=== Event: " << jentry << " ===\n" << '\n';
     }
     if (nentries > 100 && jentry % (nentries / 100) == 0) {  // Print progress every 1%
@@ -155,3 +155,4 @@ TDirectory* Helper::createTDirectory(TDirectory* origDir, const std::string& dir
 
     return currentDir; // The final directory
 }
+

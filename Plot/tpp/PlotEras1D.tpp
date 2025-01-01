@@ -68,10 +68,6 @@ void PlotEras1D<T>::loadHists(const std::string& sourceType, const std::vector<s
         gROOT->cd();  // Change to ROOT's global directory
         T* clonedHist = (T*)hist->Clone(bin.c_str());  // Clone the histogram
 
-        // Normalize if needed
-        if (tdrStyle_->getIsNorm() && clonedHist->Integral() > 0.0)
-            clonedHist->Scale(1 / clonedHist->Integral());
-
         // Apply style settings
         tdrStyle_->setStyle(clonedHist);
 
@@ -101,8 +97,13 @@ void PlotEras1D<T>::drawHists(const std::vector<T*>& hists) {
   if(tdrStyle_->getXLog())gPad->SetLogx(true);
   if(tdrStyle_->getYLog())gPad->SetLogy(true);
   for (size_t i = 0; i < hists.size(); i++) {
-    auto hist = hists.at(i);
+    // Clone the histogram and cast it back to type T*
+    T* hist = static_cast<T*>(hists.at(i)->Clone(hists.at(i)->GetName()));
     if (hist != nullptr) {
+      // Normalize 
+      if (tdrStyle_->getIsNorm() && hist->Integral() > 0.0){
+        hist->Scale(1./hist->Integral());
+      }
       tdrStyle_->setColor(hist, i);
       hist->Draw(i == 0 ? "Pz" : "Pz SAME");
       leg->AddEntry(hist, hist->GetName(), "L");
@@ -118,19 +119,19 @@ void PlotEras1D<T>::drawHists(const std::vector<T*>& hists) {
 // Overlay Data with Mc and Plot Ratio
 template<typename T>
 void PlotEras1D<T>::overlayDataWithMcInRatio(const std::string &outPdfName) {
+  tdrStyle_->setTdrStyle();
   TCanvas canvas("c", "Data and Mc Ratio", 600, 600);
   canvas.cd();
-  tdrStyle_->setTdrStyle();
 
-  if (dataHists_.size() > 0 && mcHists_.size() == 0) {
+  if (!dataHists_.empty() && mcHists_.empty()) {
     drawHists(dataHists_);
   }
   
-  if (mcHists_.size() > 0 && dataHists_.size() == 0) {
+  if (!mcHists_.empty() && dataHists_.empty()) {
     drawHists( mcHists_);
   }
   
-  if (mcHists_.size() > 0 && dataHists_.size() > 0) {
+  if (!mcHists_.empty() && !dataHists_.empty()) {
     TPad *pad1 = new TPad("pad1", "pad1", 0.0, 0.3, 1.0, 1.0);
     pad1->SetBottomMargin(0.00);
     pad1->Draw();
@@ -154,6 +155,13 @@ void PlotEras1D<T>::overlayDataWithMcInRatio(const std::string &outPdfName) {
 
     std::vector<TGraphErrors*> ratioGraphs;
     for (auto dataHist : dataHists_) {
+      // Normalize 
+      if (tdrStyle_->getIsNorm() && dataHist->Integral() > 0.0){
+        dataHist->Scale(1./dataHist->Integral());
+      }
+      if (tdrStyle_->getIsNorm() && mergedMcHist->Integral() > 0.0){
+        mergedMcHist->Scale(1./mergedMcHist->Integral());
+      }
       TGraphErrors* ratioGraph = new TGraphErrors(dataHist->GetNbinsX());
       Helper::calculateHistRatio(dataHist, mergedMcHist, ratioGraph);
       ratioGraphs.push_back(ratioGraph);

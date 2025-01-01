@@ -21,6 +21,8 @@ $ gdb --args ./runMain -o Data_2024Cv1_DiJet_JetMET1_Hist_1of100.root
 * (gdb) backtrace
 * (gdb) quit
 
+Additionally
+* valgrind --leak-check=full ./runMain -o Data_2024Cv1_DiJet_JetMET1_Hist_1of100.root
 ## Detect bugs
 Use clang-tidy for that. 
 * echo "Checks: 'modernize-*,performance-*,cppcoreguidelines-*'" > .clang-tidy

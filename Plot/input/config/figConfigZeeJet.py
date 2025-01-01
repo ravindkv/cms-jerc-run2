@@ -18,6 +18,7 @@ baseTemplate = {
 
 # Templates for each configuration type
 templates = {
+    "ConfigTime1D": deepcopy(baseTemplate),
     "ConfigEras1D": deepcopy(baseTemplate),
     "ConfigEra2D": deepcopy(baseTemplate),
     "ConfigErasXY": deepcopy(baseTemplate),
@@ -25,12 +26,16 @@ templates = {
 }
 
 # Extend templates with specific fields for each configuration type
+# ConfigTime1D inherits from FigConfigBase and adds:
+templates["ConfigTime1D"].update({
+    "histNames": ["", ""],
+})
 
 # ConfigEras1D inherits from FigConfigBase and adds:
 templates["ConfigEras1D"].update({
     "rTitle": "Data/MC",
-    "rMin": 0.5,
-    "rMax": 1.5
+    "rMin": 0.0,
+    "rMax": 2.0
 })
 
 # ConfigEra2D inherits from FigConfigBase and adds:
@@ -85,6 +90,7 @@ def createConfig(config_type, hist_name, **overrides):
 
 # Initialize the main configuration dictionary
 configs = {
+    "ConfigTime1D": [],
     "ConfigEras1D": [],
     "ConfigEra2D": [],
     "ConfigErasXY": [],
@@ -92,6 +98,26 @@ configs = {
 }
 
 # Example usage:
+#-------------------------------------
+# Adding elements to ConfigTime1D
+#-------------------------------------
+configs["ConfigTime1D"].append(
+    createConfig(
+        "ConfigTime1D",
+        "p1DbRespInRunForRefPt30",
+        histNames = ["p1DbRespInRunForRefPt30", 
+                    "p1MpfRespInRunForRefPt30", 
+                    "p1JetChhefInRunForRefPt30",
+                    "p1JetNeemefInRunForRefPt30",
+                    "p1JetNehefInRunForRefPt30",
+                    "p1JetChemefInRunForRefPt30"],
+        histDir="Base/passResponse/HistTime", 
+        xTitle="Run Number",
+        yTitle="Response and energy fractions",
+        yMin=0.0001,
+        yMax=2
+    )
+)
 
 #-------------------------------------
 # Adding elements to ConfigEras1D
@@ -114,6 +140,20 @@ configs["ConfigEras1D"].append(
 configs["ConfigEras1D"].append(
     createConfig(
         "ConfigEras1D",
+        "h1EventFractionInCutflow",
+        histDir="Base/HistCutflow", 
+        xTitle="Cutflow bins",
+        yTitle="Events (normalized to first bin)",
+        yMin=0.0001,
+        yMax=100,
+        rMin = 0.0,
+        rMax = 2.0,
+        yLog=True
+    )
+)
+configs["ConfigEras1D"].append(
+    createConfig(
+        "ConfigEras1D",
         "h1EventInRefMass",
         histDir="Base/passAlpha/HistRef",
         yTitle="Events (normalized to 1)",
@@ -122,6 +162,19 @@ configs["ConfigEras1D"].append(
         xMax=120,
         yMin=0.001,
         yMax=0.4,
+        isNorm=True
+    )
+)
+configs["ConfigEras1D"].append(
+    createConfig(
+        "ConfigEras1D",
+        "h1EventInRefPt",
+        histDir="Base/passExactly1Ref/HistRef",
+        yTitle="Events (normalized to 1)",
+        xTitle="Reference pT (GeV)",
+        yMin=0.001,
+        yMax=0.5,
+        xLog=True,
         isNorm=True
     )
 )

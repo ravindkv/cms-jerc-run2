@@ -4,7 +4,7 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <memory>
 #include <iostream>
 #include <iomanip>
@@ -52,7 +52,7 @@ private:
     std::vector<std::string> cutNames_;
     std::unique_ptr<TH1D> h1EventInCutflow_;
     std::unique_ptr<TH1D> h1EventFractionInCutflow_;
-    std::map<std::string, int> cutToBinMap;
+    std::unordered_map<std::string, int> cutToBinMap;
 
     /**
      * @brief Validates the input histogram.

@@ -16,10 +16,6 @@ ScaleObject::ScaleObject(GlobalFlag& globalFlags) :
 
 void ScaleObject::setInputs() {
   if (year_ == GlobalFlag::Year::Year2016Pre) {
-    // Jet veto
-    jetVetoJsonPath_ = "POG/JME/2016preVFP_UL/jetvetomaps.json.gz";
-    jetVetoName_     = "Summer19UL16_V1";
-    jetVetoKey_      = "jetvetomap_hot";
     // Jet L1, L2, L3
     jercJsonPath_          = "POG/JME/2016preVFP_UL/jet_jerc.json.gz";
     jetL1FastJetName_      = "Summer19UL16APV_V7_MC_L1FastJet_AK4PFchs";
@@ -52,17 +48,9 @@ void ScaleObject::setInputs() {
     // Electron SS
     eleSsJsonPath_   = "POG/EGM/electronSS.json";
     eleSsName_       = "2022Re-recoBCD_ScaleJSON";
-    // Lumi golden JSON
-    lumiJsonPath_    = "POG/LUM/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt";
-    puJsonPath_      = "POG/LUM/2016preVFP_UL/puWeights.json";
-    puName_          = "Collisions16_UltraLegacy_goldenJSON";
 	} 
 
   else if (year_ == GlobalFlag::Year::Year2016Post) {
-    // Jet veto
-    jetVetoJsonPath_ = "POG/JME/2016postVFP_UL/jetvetomaps.json.gz";
-    jetVetoName_     = "Summer19UL16_V1";
-    jetVetoKey_      = "jetvetomap_hot";
     // Jet L1, L2, L3
     jercJsonPath_          = "POG/JME/2016postVFP_UL/jet_jerc.json.gz";
     jetL1FastJetName_      = "Summer19UL16_V7_MC_L1FastJet_AK4PFchs";
@@ -90,17 +78,9 @@ void ScaleObject::setInputs() {
     // Electron SS
     eleSsJsonPath_   = "POG/EGM/electronSS.json";
     eleSsName_       = "2022Re-recoBCD_ScaleJSON";
-    // Lumi golden JSON
-    lumiJsonPath_    = "POG/LUM/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt";
-    puJsonPath_      = "POG/LUM/2016postVFP_UL/puWeights.json";
-    puName_          = "Collisions16_UltraLegacy_goldenJSON";
   }
 
   else if (year_ == GlobalFlag::Year::Year2017) {
-    // Jet veto
-    jetVetoJsonPath_ = "POG/JME/2017_UL/jetvetomaps.json.gz";
-    jetVetoName_     = "Summer19UL17_V1";
-    jetVetoKey_      = "jetvetomap_hot";
     // Jet L1, L2, L3
     jercJsonPath_          = "POG/JME/2017_UL/jet_jerc.json.gz";
     jetL1FastJetName_      = "Summer19UL17_V5_MC_L1FastJet_AK4PFchs";
@@ -148,17 +128,9 @@ void ScaleObject::setInputs() {
     // Electron SS
     eleSsJsonPath_   = "POG/EGM/electronSS.json";
     eleSsName_       = "2022Re-recoBCD_ScaleJSON";
-    // Lumi golden JSON
-    lumiJsonPath_    = "POG/LUM/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt";
-    puJsonPath_      = "POG/LUM/2017_UL/puWeights.json";
-    puName_          = "Collisions17_UltraLegacy_goldenJSON";
   } 
 
   else if (year_ == GlobalFlag::Year::Year2018) {
-    // Jet veto
-    jetVetoJsonPath_ = "POG/JME/2018_UL/jetvetomaps.json.gz";
-    jetVetoName_     = "Summer19UL18_V1";
-    jetVetoKey_      = "jetvetomap_hot";
     // Jet L1, L2, L3
     jercJsonPath_          = "POG/JME/2018_UL/jet_jerc.json.gz";
     jetL1FastJetName_      = "Summer19UL18_V5_MC_L1FastJet_AK4PFchs";
@@ -201,18 +173,11 @@ void ScaleObject::setInputs() {
     // Electron SS
     eleSsJsonPath_   = "POG/EGM/electronSS.json";
     eleSsName_       = "2022Re-recoBCD_ScaleJSON";
-    // Lumi golden JSON
-    lumiJsonPath_    = "POG/LUM/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt";
-    puJsonPath_      = "POG/LUM/2018_UL/puWeights.json";
-    puName_          = "Collisions18_UltraLegacy_goldenJSON";
   }//is2018
   else {
     throw std::runtime_error("Error: Year is not specified correctly in ScaleObject::setInputs().");
   }
 
-  std::cout<<"jetVetoJsonPath        = " << jetVetoJsonPath_      <<'\n';
-  std::cout<<"jetVetoKey             = " << jetVetoKey_           <<'\n';
-  std::cout<<"jetVetoName            = " << jetVetoName_          <<'\n'<<'\n';
   std::cout<<"jercJsonPath           = " << jercJsonPath_         <<'\n';
   std::cout<<"jetL1FastJetName       = " << jetL1FastJetName_     <<'\n';
   std::cout<<"jetL2RelativeName      = " << jetL2RelativeName_    <<'\n';
@@ -224,54 +189,8 @@ void ScaleObject::setInputs() {
   std::cout<<"muRochJsonPath         = " << muRochJsonPath_       <<'\n'<<'\n';
   std::cout<<"eleSsJsonPath          = " << eleSsJsonPath_        <<'\n';
   std::cout<<"eleSsName              = " << eleSsName_            <<'\n'<<'\n';
-  std::cout<<"lumiJsonPath           = " << lumiJsonPath_         <<'\n';
-  std::cout<<"puJsonPath             = " << puJsonPath_           <<'\n';
-  std::cout<<"puName                 = " << puName_               <<'\n';
 }//setInputs 
 
-
-void ScaleObject::loadJetVetoRef() {
-  std::cout << "==> loadJetVetoRef()" << '\n';
-  try {
-    loadedJetVetoRef_ = correction::CorrectionSet::from_file(jetVetoJsonPath_)->at(jetVetoName_);
-  } catch (const std::exception &e) {
-    std::cerr << "\nEXCEPTION: ScaleObject::loadJetVetoRef()" << '\n';
-    std::cerr << "Check " << jetVetoJsonPath_ << " or " << jetVetoName_ << '\n';
-    std::cerr << e.what() << '\n';
-    throw std::runtime_error("Failed to load Jet Veto Reference");
-  }
-}
-
-auto ScaleObject::checkJetVetoMap(const SkimTree& skimT) const -> bool {
-  bool isVeto = false;
-  const double maxEtaInMap = 5.191;
-  const double maxPhiInMap = 3.1415926;
-
-  try {
-    for (int i = 0; i != skimT.nJet; ++i) {
-      if (std::abs(skimT.Jet_eta[i]) > maxEtaInMap) continue;
-      if (std::abs(skimT.Jet_phi[i]) > maxPhiInMap) continue;
-
-      auto jvNumber = loadedJetVetoRef_->evaluate({jetVetoKey_, skimT.Jet_eta[i], skimT.Jet_phi[i]});
-      if (isDebug_) {
-        std::cout << 
-            jetVetoKey_
-            << ", jetEta= " << skimT.Jet_eta[i]
-            << ", jetPhi= " << skimT.Jet_phi[i]
-            << ", jetVetoNumber = " << jvNumber 
-            << '\n';
-      }
-      if (jvNumber > 0) {
-        isVeto = true;
-        break; // Exit the loop as soon as we find a veto.
-      }
-    }
-  } catch (const std::exception &e) {
-    std::cerr << "\nEXCEPTION: in checkJetVetoMap(): " << e.what() << '\n';
-    throw std::runtime_error("Failed to check Jet Veto Map");
-  }
-  return isVeto;
-}
 
 void ScaleObject::loadJetL1FastJetRef() {
   std::cout << "==> loadJetL1FastJetRef()" << '\n';
@@ -623,64 +542,4 @@ auto ScaleObject::getEleSsCorrection(const SkimTree& skimT, int index, const std
                 << '\n';
    return corrEleSs; 
 }
-
-//-------------------------------------
-// Golden lumi Json
-//-------------------------------------
-void ScaleObject::loadLumiJson() {
-  std::cout << "==> loadLumiJson()" << '\n';
-  std::ifstream file(lumiJsonPath_);
-  file >> loadedLumiJson_;
-}
-
-auto ScaleObject::checkGoodLumi(const unsigned int &run, const unsigned int &lumi) const -> bool {
-  try {
-    auto it = loadedLumiJson_.find(std::to_string(run));
-    if (it == loadedLumiJson_.end()) {
-      return false;
-    }
-    for (const auto &lumiBlock : it.value()) {
-      if (lumi >= lumiBlock[0] && lumi <= lumiBlock[1]) {
-        return true;
-      }
-    }
-  } catch (const std::exception &e) {
-    std::cout << "\nEXCEPTION: ScaleObject::checkGoodLumi()" << '\n';
-    std::cout << "Run = " << run << ", Lumi = " << lumi << '\n';
-    std::cout << e.what() << '\n';
-    throw std::runtime_error("Error checking good luminosity.");
-  }
-  return false;
-}
-
-
-//-------------------------------------
-// Pileup Json 
-//-------------------------------------
-void ScaleObject::loadPuRef() {
-  std::cout << "==> loadPuRef()" << '\n';
-  try {
-    loadedPuRef_ = correction::CorrectionSet::from_file(puJsonPath_)->at(puName_);
-  } catch (const std::exception &e) {
-    std::cout << "\nEXCEPTION: ScaleObject::loadPuRef()" << '\n';
-    std::cout << "Check " << puJsonPath_ << " or " << puName_ << '\n';
-    std::cout << e.what() << '\n';
-    throw std::runtime_error("Error loading Pileup Reference.");
-  }
-}
-
-auto ScaleObject::getPuCorrection(Float_t nTrueInt, const std::string &nomOrSyst) const -> double {
-  double puSf = 1.0;
-  try {
-    puSf = loadedPuRef_->evaluate({nTrueInt, nomOrSyst.c_str()});
-    if (isDebug_) std::cout << "nomOrSyst = " << nomOrSyst 
-              << ", nTrueInt = " << nTrueInt 
-              << ", puSf= " << puSf << '\n';
-  } catch (const std::exception &e) {
-    std::cout << "\nEXCEPTION: in ScaleObject::getPuCorrection(): " << e.what() << '\n';
-    throw std::runtime_error("Error calculating Pileup Correction.");
-  }
-  return puSf;
-}
-
 

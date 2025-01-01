@@ -101,7 +101,7 @@ void HistScale::InitializeHistograms(TDirectory* origDir, const std::string& dir
 
 
 // Fill
-void HistScale::FillElectron(const ScaleElectron& scaleElectron, double weight)
+void HistScale::FillElectron(const ScaleElectron& scaleElectron)
 {
     const auto& p4MapElectron1 = scaleElectron.getP4MapElectron1();
 
@@ -110,13 +110,13 @@ void HistScale::FillElectron(const ScaleElectron& scaleElectron, double weight)
         const auto& p4Electron1Iter = p4MapElectron1.find(corrName);
         if (p4Electron1Iter != p4MapElectron1.end()) {
             const auto& p4Electron1 = p4Electron1Iter->second;
-            histElectron1Pt_[corrName]->Fill(p4Electron1.Pt(), weight);
+            histElectron1Pt_[corrName]->Fill(p4Electron1.Pt());
         }
     }
 
 }
 
-void HistScale::FillMuon(const ScaleMuon& scaleMuon, double weight)
+void HistScale::FillMuon(const ScaleMuon& scaleMuon)
 {
     const auto& p4MapMuon1 = scaleMuon.getP4MapMuon1();
 
@@ -125,13 +125,13 @@ void HistScale::FillMuon(const ScaleMuon& scaleMuon, double weight)
         const auto& p4Muon1Iter = p4MapMuon1.find(corrName);
         if (p4Muon1Iter != p4MapMuon1.end()) {
             const auto& p4Muon1 = p4Muon1Iter->second;
-            histMuon1Pt_[corrName]->Fill(p4Muon1.Pt(), weight);
+            histMuon1Pt_[corrName]->Fill(p4Muon1.Pt());
         }
     }
 
 }
 
-void HistScale::FillPhoton(const ScalePhoton& scalePhoton, double weight)
+void HistScale::FillPhoton(const ScalePhoton& scalePhoton)
 {
     const auto& p4MapPhoton1 = scalePhoton.getP4MapPhoton1();
 
@@ -140,13 +140,13 @@ void HistScale::FillPhoton(const ScalePhoton& scalePhoton, double weight)
         const auto& p4Photon1Iter = p4MapPhoton1.find(corrName);
         if (p4Photon1Iter != p4MapPhoton1.end()) {
             const auto& p4Photon1 = p4Photon1Iter->second;
-            histPhoton1Pt_[corrName]->Fill(p4Photon1.Pt(), weight);
+            histPhoton1Pt_[corrName]->Fill(p4Photon1.Pt());
         }
     }
 
 }
 
-void HistScale::FillJetMet(const ScaleJetMet& scaleJetMet, double weight)
+void HistScale::FillJetMet(const ScaleJetMet& scaleJetMet)
 {
     const auto& p4MapJet1 = scaleJetMet.getP4MapJet1();
     const auto& getP4MapJetSum = scaleJetMet.getP4MapJetSum();
@@ -156,7 +156,7 @@ void HistScale::FillJetMet(const ScaleJetMet& scaleJetMet, double weight)
         const auto& p4Jet1Iter = p4MapJet1.find(corrName);
         if (p4Jet1Iter != p4MapJet1.end()) {
             const auto& p4Jet1 = p4Jet1Iter->second;
-            histJet1Pt_[corrName]->Fill(p4Jet1.Pt(), weight);
+            histJet1Pt_[corrName]->Fill(p4Jet1.Pt());
         }
     }
 
@@ -165,7 +165,7 @@ void HistScale::FillJetMet(const ScaleJetMet& scaleJetMet, double weight)
         const auto& p4JetSumIter = getP4MapJetSum.find(corrName);
         if (p4JetSumIter != getP4MapJetSum.end()) {
             const auto& p4JetSum = p4JetSumIter->second;
-            histJetSumPt_[corrName]->Fill(p4JetSum.Pt(), weight);
+            histJetSumPt_[corrName]->Fill(p4JetSum.Pt());
         }
     }
 
@@ -176,8 +176,8 @@ void HistScale::FillJetMet(const ScaleJetMet& scaleJetMet, double weight)
         const auto& p4MetIter = p4MapMet.find(corrName);
         if (p4MetIter != p4MapMet.end()) {
             const auto& p4Met = p4MetIter->second;
-            histMetPt_[corrName]->Fill(p4Met.Pt(), weight);
-            histMetPhi_[corrName]->Fill(p4Met.Phi(), weight);
+            histMetPt_[corrName]->Fill(p4Met.Pt());
+            histMetPhi_[corrName]->Fill(p4Met.Phi());
         }
     }
     // Fill Jet+MET histograms
@@ -188,7 +188,7 @@ void HistScale::FillJetMet(const ScaleJetMet& scaleJetMet, double weight)
         if (p4JetSumIter == getP4MapJetSum.end()) continue;
         const auto& p4Met = p4MetIter->second;
         const auto& p4JetSum = p4JetSumIter->second;
-        histJetMetSumPt_[corrName]->Fill((p4Met + p4JetSum).Pt(), weight);
+        histJetMetSumPt_[corrName]->Fill((p4Met + p4JetSum).Pt());
     }
 }
 

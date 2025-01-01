@@ -55,4 +55,3 @@ with open(output_file, 'w') as outfile:
 
 #print(merged_json_data)
 print(f'Merged and reorganized data saved to {output_file}')
-

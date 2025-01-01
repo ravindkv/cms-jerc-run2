@@ -19,3 +19,14 @@ std::string Helper::dirToName(const std::string& dir) {
     // Append .pdf extension
     return filename;
 }
+
+// Splits a string `str` by the given `delimiter` and returns a vector of tokens
+std::vector<std::string> Helper::splitString(const std::string& str, char delimiter) {
+    std::vector<std::string> tokens;
+    std::stringstream ss(str);
+    std::string token;
+    while (std::getline(ss, token, delimiter)) {
+        tokens.push_back(token);
+    }
+    return tokens;
+}

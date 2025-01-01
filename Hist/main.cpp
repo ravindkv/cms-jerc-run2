@@ -11,7 +11,9 @@
 //#include "HistWqq.h"
 
 #include "SkimTree.h"
-#include "EventPick.h"
+#include "PickEvent.h"
+#include "PickObject.h"
+#include "ScaleEvent.h"
 #include "ScaleObject.h"
 #include "GlobalFlag.h"
 
@@ -113,7 +115,7 @@ int main(int argc, char* argv[]) {
     // Initialize GlobalFlag instance
     GlobalFlag globalFlag(outName);
     globalFlag.setDebug(false);
-    globalFlag.setNDebug(1000);
+    globalFlag.setNDebug(10000);
     globalFlag.printFlags();  
 
     std::cout << "\n--------------------------------------" << std::endl;
@@ -129,22 +131,36 @@ int main(int argc, char* argv[]) {
     skimT->loadTree();
 
     std::cout << "\n--------------------------------------" << std::endl;
+    std::cout << " Set and load ScaleEvent.cpp" << std::endl;
+    std::cout << "--------------------------------------" << std::endl;
+    // Pass GlobalFlag reference to ScaleEvent
+    std::shared_ptr<ScaleEvent> scaleEvent = std::make_shared<ScaleEvent>(globalFlag);
+    try {
+        scaleEvent->setInputs();
+        scaleEvent->loadJetVetoRef();
+        scaleEvent->loadPuRef();
+        if (globalFlag.isData()) {
+            scaleEvent->loadGoldenLumiJson();
+            scaleEvent->loadHltLumiJson();
+        }
+    } catch (const std::runtime_error& e) {
+        std::cerr << "Critical error: " << e.what() << std::endl;
+        return EXIT_FAILURE;  // Exit with failure code
+    }
+
+
+    std::cout << "\n--------------------------------------" << std::endl;
     std::cout << " Set and load ScaleObject.cpp" << std::endl;
     std::cout << "--------------------------------------" << std::endl;
-    
     // Pass GlobalFlag reference to ScaleObject
     std::shared_ptr<ScaleObject> scaleObj = std::make_shared<ScaleObject>(globalFlag);
-    
     try {
         scaleObj->setInputs();
-        scaleObj->loadJetVetoRef();
         scaleObj->loadJetL1FastJetRef();
         scaleObj->loadJetL2RelativeRef();
         scaleObj->loadJetL2L3ResidualRef();
         scaleObj->loadJerResoRef();
         scaleObj->loadJerSfRef();
-        scaleObj->loadPuRef();
-
         // Use the GlobalFlag instance for conditional checks
         if (globalFlag.getChannel() == GlobalFlag::Channel::GamJet) {  // Scale and Smearing
             //scaleObj->loadPhoSsRef();
@@ -153,27 +169,24 @@ int main(int argc, char* argv[]) {
         if (globalFlag.getChannel() == GlobalFlag::Channel::ZmmJet) { 
             scaleObj->loadMuRochRef();
         }
-        if (globalFlag.isData()) {
-            scaleObj->loadLumiJson();
-        }
     } catch (const std::runtime_error& e) {
         std::cerr << "Critical error: " << e.what() << std::endl;
         return EXIT_FAILURE;  // Exit with failure code
     }
 
     std::cout << "\n--------------------------------------" << std::endl;
-    std::cout << " Set and load EventPick.cpp" << std::endl;
+    std::cout << " Set and load PickEvent.cpp" << std::endl;
     std::cout << "--------------------------------------" << std::endl;
     
-    // Pass GlobalFlag reference to EventPick
-    auto eventP = std::make_unique<EventPick>(globalFlag);
+    // Pass GlobalFlag reference to PickEvent
+    auto pickEvent = std::make_unique<PickEvent>(globalFlag);
 
     std::cout << "\n--------------------------------------" << std::endl;
-    std::cout << " Set and load ObjectPick.cpp" << std::endl;
+    std::cout << " Set and load PickObject.cpp" << std::endl;
     std::cout << "--------------------------------------" << std::endl;
     
-    // Pass GlobalFlag reference to ObjectPick
-    auto objP = std::make_unique<ObjectPick>(globalFlag);
+    // Pass GlobalFlag reference to PickObject
+    auto pickObject = std::make_unique<PickObject>(globalFlag);
 
     // Output directory setup
     std::string outDir = "output";
@@ -187,18 +200,18 @@ int main(int argc, char* argv[]) {
     if (globalFlag.getChannel() == GlobalFlag::Channel::ZeeJet) {
         std::cout << "==> Running ZeeJet" << std::endl;
         auto zeeJet = std::make_unique<RunZeeJet>(globalFlag);
-        zeeJet->Run(skimT, eventP.get(), objP.get(), scaleObj.get(), fout.get());
+        zeeJet->Run(skimT, pickEvent.get(), pickObject.get(), scaleEvent.get(), scaleObj.get(), fout.get());
     }
     if (globalFlag.getChannel() == GlobalFlag::Channel::ZmmJet) {
         std::cout << "==> Running ZmmJet" << std::endl;
         auto zmmJet = std::make_unique<RunZmmJet>(globalFlag);
-        zmmJet->Run(skimT, eventP.get(), objP.get(), scaleObj.get(), fout.get());
+        zmmJet->Run(skimT, pickEvent.get(), pickObject.get(), scaleEvent.get(), scaleObj.get(), fout.get());
     }
 
     if (globalFlag.getChannel() == GlobalFlag::Channel::GamJet) {
         std::cout << "==> Running GamJet" << std::endl;
         auto gamJet = std::make_unique<RunGamJet>(globalFlag);
-        gamJet->Run(skimT, eventP.get(), objP.get(), scaleObj.get(), fout.get());
+        gamJet->Run(skimT, pickEvent.get(), pickObject.get(), scaleEvent.get(), scaleObj.get(), fout.get());
     }
 
 /*
@@ -206,37 +219,37 @@ int main(int argc, char* argv[]) {
     if (globalFlag.getChannel() == GlobalFlag::Channel::MultiJet) {
         std::cout << "==> Running MultiJet" << std::endl;
         auto multiJet = std::make_unique<RunMultiJet>(globalFlag);
-        multiJet->Run(skimT, eventP.get(), objP.get(), scaleObj.get(), fout.get());
+        multiJet->Run(skimT, pickEvent.get(), pickObject.get(), scaleEvent.get(), scaleObj.get(), fout.get());
     }
   if (globalFlag->isMCTruth) {
     std::cout << "==> Running MCTruth" << std::endl;
     auto mcTruth = std::make_unique<RunMCTruth>(outName);
-    mcTruth->Run(skimT.get(), eventP.get(), objP.get(), scaleObj.get(), fout.get());
+    mcTruth->Run(skimT.get(), pickEvent.get(), pickObject.get(), scaleEvent.get(), scaleObj.get(), fout.get());
   }
   if (globalFlag->isFlavour) {
     std::cout << "==> Running Flavour" << std::endl;
     auto mcFlavour = std::make_unique<RunFlavour>(outName);
-    mcFlavour->Run(skimT.get(), eventP.get(), objP.get(), scaleObj.get(), fout.get());
+    mcFlavour->Run(skimT.get(), pickEvent.get(), pickObject.get(), scaleEvent.get(), scaleObj.get(), fout.get());
   }
   if (globalFlag->isVetoMap) {
     std::cout << "==> Running VetoMap" << std::endl;
     auto vetoMap = std::make_unique<RunVetoMap>(outName);
-    vetoMap->Run(skimT.get(), eventP.get(), objP.get(), scaleObj.get(), fout.get());
+    vetoMap->Run(skimT.get(), pickEvent.get(), pickObject.get(), scaleEvent.get(), scaleObj.get(), fout.get());
   }
   if (globalFlag->isIncJet) {
     std::cout << "==> Running IncJet" << std::endl;
     auto incJet = std::make_unique<RunIncJet>(outName);
-    incJet->Run(skimT.get(), eventP.get(), objP.get(), scaleObj.get(), fout.get());
+    incJet->Run(skimT.get(), pickEvent.get(), pickObject.get(), scaleEvent.get(), scaleObj.get(), fout.get());
   }
   if (globalFlag->isDiJet) {
     std::cout << "==> Running DiJet" << std::endl;
     auto diJet = std::make_unique<RunDiJet>(outName);
-    diJet->Run(skimT.get(), eventP.get(), objP.get(), scaleObj.get(), fout.get());
+    diJet->Run(skimT.get(), pickEvent.get(), pickObject.get(), scaleEvent.get(), scaleObj.get(), fout.get());
   }
   if (globalFlag->isWqq) {
     std::cout << "==> Running Wqq" << std::endl;
     auto wqq = std::make_unique<RunWqq>(outName);
-    wqq->Run(skimT.get(), eventP.get(), objP.get(), scaleObj.get(), fout.get());
+    wqq->Run(skimT.get(), pickEvent.get(), pickObject.get(), scaleEvent.get(), scaleObj.get(), fout.get());
   }
   */
 

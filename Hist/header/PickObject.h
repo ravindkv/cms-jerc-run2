@@ -1,5 +1,5 @@
-#ifndef OBJECTPICK_H
-#define OBJECTPICK_H
+#ifndef PICKOBJECT_H
+#define PICKOBJECT_H
 
 #include <vector>
 #include <string>
@@ -16,11 +16,11 @@
 #include "SkimTree.h"
 #include "GlobalFlag.h"
 
-class ObjectPick{
+class PickObject{
 public:
     // Constructor accepting a reference to GlobalFlag
-    explicit ObjectPick(GlobalFlag& globalFlags);
-    ~ObjectPick();
+    explicit PickObject(GlobalFlag& globalFlags);
+    ~PickObject();
 
     // Clear picked objects
     void clearObjects();
@@ -80,5 +80,5 @@ private:
     void printDebug(const std::string& message) const;
 };
 
-#endif  // OBJECTPICK_H
+#endif  // PICKOBJECT_H
 

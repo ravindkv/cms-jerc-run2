@@ -18,6 +18,7 @@ class GlobalFlag{
     bool isPlotEra2D;
     bool isPlotErasXY;
     bool isPlotEraXY;
+    bool isPlotTime1D;
 
     bool isPrintFigConfig;
 

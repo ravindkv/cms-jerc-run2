@@ -10,6 +10,7 @@
 #include <nlohmann/json.hpp>
 
 #include "GlobalFlag.h"
+#include "TrigDetail.h"
 
 class SkimTree{
 public:
@@ -72,50 +73,6 @@ public:
 
     Short_t Jet_genJetIdx[nJetMax]{}; // NanoV12
 
-    // Trigger information
-    Bool_t HLT_MC{};
-    Bool_t HLT_ZeroBias{};
-    Bool_t HLT_DiPFJetAve40{};
-    Bool_t HLT_DiPFJetAve60{};
-    Bool_t HLT_DiPFJetAve80{};
-    Bool_t HLT_DiPFJetAve140{};
-    Bool_t HLT_DiPFJetAve200{};
-    Bool_t HLT_DiPFJetAve260{};
-    Bool_t HLT_DiPFJetAve320{};
-    Bool_t HLT_DiPFJetAve400{};
-    Bool_t HLT_DiPFJetAve500{};
-
-    Bool_t HLT_PFJet40{};
-    Bool_t HLT_PFJet60{};
-    Bool_t HLT_PFJet80{};
-    Bool_t HLT_PFJet140{};
-    Bool_t HLT_PFJet200{};
-    Bool_t HLT_PFJet260{};
-    Bool_t HLT_PFJet320{};
-    Bool_t HLT_PFJet400{}; // v14
-    Bool_t HLT_PFJet450{};
-    Bool_t HLT_PFJet500{};
-    Bool_t HLT_PFJet550{};
-
-    Bool_t HLT_DiPFJetAve60_HFJEC{};
-    Bool_t HLT_DiPFJetAve80_HFJEC{};
-    Bool_t HLT_DiPFJetAve100_HFJEC{};
-    Bool_t HLT_DiPFJetAve160_HFJEC{};
-    Bool_t HLT_DiPFJetAve220_HFJEC{};
-    Bool_t HLT_DiPFJetAve300_HFJEC{};
-
-    Bool_t HLT_PFJetFwd40{};
-    Bool_t HLT_PFJetFwd60{};
-    Bool_t HLT_PFJetFwd80{};
-    Bool_t HLT_PFJetFwd140{};
-    Bool_t HLT_PFJetFwd200{};
-    Bool_t HLT_PFJetFwd260{};
-    Bool_t HLT_PFJetFwd320{};
-    Bool_t HLT_PFJetFwd400{};
-    Bool_t HLT_PFJetFwd450{};
-    Bool_t HLT_PFJetFwd500{};
-
-
     // Photon variables
     static const int nPhotonMax = 200;
     UInt_t nPhoton{}; // NanoV11,10
@@ -131,40 +88,11 @@ public:
     Float_t Photon_eCorr[nPhotonMax]{};
     Float_t Photon_energyErr[nPhotonMax]{};
 
-    // Triggers from 2016
-    Bool_t          HLT_Photon250_NoHE{};
-    Bool_t          HLT_Photon300_NoHE{};
-    // Triggers from 2016
-    Bool_t          HLT_Photon22{};
-    Bool_t          HLT_Photon30{};
-    Bool_t          HLT_Photon36{};
-    Bool_t          HLT_Photon50{};
-    Bool_t          HLT_Photon75{};
-    Bool_t          HLT_Photon90{};
-    Bool_t          HLT_Photon120{};
-    Bool_t          HLT_Photon175{};
-    Bool_t          HLT_Photon165_HE10{};
-    Bool_t          HLT_Photon22_R9Id90_HE10_IsoM{};
-    Bool_t          HLT_Photon30_R9Id90_HE10_IsoM{};
-    Bool_t          HLT_Photon36_R9Id90_HE10_IsoM{};
-    Bool_t          HLT_Photon50_R9Id90_HE10_IsoM{};
-    Bool_t          HLT_Photon75_R9Id90_HE10_IsoM{};
-    Bool_t          HLT_Photon90_R9Id90_HE10_IsoM{};
-    Bool_t          HLT_Photon120_R9Id90_HE10_IsoM{};
-    Bool_t          HLT_Photon165_R9Id90_HE10_IsoM{};
-    Bool_t          HLT_Photon100EB_TightID_TightIso{};
-    Bool_t          HLT_Photon110EB_TightID_TightIso{};
-    Bool_t          HLT_Photon120EB_TightID_TightIso{};
-    Bool_t          HLT_Photon200{};
-    Bool_t          HLT_Photon20_HoverELoose{};
-    Bool_t          HLT_Photon30_HoverELoose{};
-    Bool_t          HLT_Photon150{};
-    Bool_t          HLT_Photon33{};
-    Bool_t          HLT_Photon20{};
-    // Triggers from 2017
-    Bool_t          HLT_Photon40_HoverELoose{};
-    Bool_t          HLT_Photon50_HoverELoose{};
-    Bool_t          HLT_Photon60_HoverELoose{};
+    //HLT and MET Filters
+    std::vector<std::string> getTrigNames() const {return trigNames_;}
+    Bool_t getTrigValue(const std::string& trigName) const;
+    std::vector<std::string> getFilterNames() const {return filterNames_;}
+    Bool_t getFilterValue(const std::string& filterName) const;
 
     // Gen photon variables
     UInt_t nGenIsolatedPhoton{};
@@ -184,8 +112,6 @@ public:
     Float_t Electron_mass[nElectronMax]{};
     Float_t Electron_eCorr[nElectronMax]{};
     Int_t Electron_cutBased[nElectronMax]{};
-    Bool_t HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL{};
-    Bool_t HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ{};
 
     // Gen lepton variables
     UInt_t nGenDressedLepton{};
@@ -211,8 +137,6 @@ public:
     Bool_t Muon_highPurity[nMuonMax]{};
     Float_t Muon_dxy[nMuonMax]{};
     Float_t Muon_dz[nMuonMax]{};
-    Bool_t HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ{};
-    Bool_t HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8{};
 
     // Other variables
     Float_t Rho{}; // Run2, Run3
@@ -221,16 +145,6 @@ public:
     Int_t PV_npvsGood{}; // NanoV12
     Float_t PV_z{};
     Float_t GenVtx_z{};
-
-    // Flags
-    Bool_t Flag_goodVertices{};
-    Bool_t Flag_globalSuperTightHalo2016Filter{};
-    Bool_t Flag_HBHENoiseFilter{};
-    Bool_t Flag_HBHENoiseIsoFilter{};
-    Bool_t Flag_EcalDeadCellTriggerPrimitiveFilter{};
-    Bool_t Flag_BadPFMuonFilter{};
-    Bool_t Flag_ecalBadCalibFilter{};
-    Bool_t Flag_eeBadScFilter{};
 
     // MC-specific variables
     static const int nGenJetMax = 100;
@@ -267,6 +181,21 @@ private:
     // Disable copying and assignment
     SkimTree(const SkimTree&) = delete;
     SkimTree& operator=(const SkimTree&) = delete;
+
+    // HLT
+    TrigDetail trigDetail_;
+    std::vector<std::string> trigNames_;
+    std::vector<char> trigValues_; // Changed from std::vector<Bool_t> to std::vector<char>
+    std::unordered_map<std::string, size_t> trigNameToIndex_;
+    void initializeTriggers();
+
+    // MET Filter
+    std::vector<std::string> filterNames_;
+    std::vector<char> filterValues_; // Changed from std::vector<Bool_t> to std::vector<char>
+    std::unordered_map<std::string, size_t> filterNameToIndex_;
+    void initializeFilters();
+    
+    //std::unordered_map<std::string, Bool_t> metFilterName2Values_;
 
     // Reference to GlobalFlag instance
     GlobalFlag& globalFlags_;
