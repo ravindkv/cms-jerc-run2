@@ -80,7 +80,12 @@ void HistTag::InitializeHistograms(TDirectory *origDir, const std::string& direc
         "p1RhoInRefPt",
         "p1Jet1PtOverRefPtInRefPt",
         "p1GenJet1PtOverRefPtInRefPt",
-        "p1Jet1PtOverGenJet1PtInGenJet1Pt"
+        "p1Jet1PtOverGenJet1PtInGenJet1Pt",
+        "p1Jet1ChHefInRefPt", 
+        "p1Jet1NeHefInRefPt", 
+        "p1Jet1NeEmefInRefPt", 
+        "p1Jet1ChEmefInRefPt", 
+        "p1Jet1MuefInRefPt" 
     };
 
     // Initialize tag and flavor identifiers
@@ -128,6 +133,11 @@ void HistTag::FillHistograms(
 ) {
    double genJetPt = skimT->GenJet_pt[iGenJet]; 
    double jetPt = skimT->Jet_pt[iJet1]; 
+   double chHEF  =  skimT->Jet_chHEF[iJet1];
+   double neHEF  =  skimT->Jet_neHEF[iJet1];
+   double neEmEF =  skimT->Jet_neEmEF[iJet1];
+   double chEmEF =  skimT->Jet_chEmEF[iJet1];
+   double muEF   =  skimT->Jet_muEF[iJet1];
    mvar_["h1EventInRefPt"] = 1.0;
    mvar_["p1DbRespInRefPt"] = bal_;
    mvar_["p1MpfRespInRefPt"] = mpf_;
@@ -138,6 +148,11 @@ void HistTag::FillHistograms(
    mvar_["p1Jet1PtOverRefPtInRefPt"] = jetPt/ ptRef;
    mvar_["p1GenJet1PtOverRefPtInRefPt"] = (genJetPt / ptRef);
    mvar_["p1Jet1PtOverGenJet1PtInGenJet1Pt"] = (genJetPt != 0 ? jetPt / genJetPt : 0.0);
+   mvar_["p1Jet1ChHefInRefPt"]  = chHEF;
+   mvar_["p1Jet1NeHefInRefPt"]  = neHEF;
+   mvar_["p1Jet1NeEmefInRefPt"] = neEmEF;
+   mvar_["p1Jet1ChEmefInRefPt"] = chEmEF;
+   mvar_["p1Jet1MuefInRefPt" ]  = muEF;
 
     // Determine the flavor of the jet
     int flv = (isMC_ ? skimT->GenJet_partonFlavour[iGenJet] : 99);
@@ -150,7 +165,7 @@ void HistTag::FillHistograms(
     bool isq = (skimT->Jet_btagDeepFlavQG[iJet1] > threshBtagDeepFlavQG_ 
                 && !isb 
                 && !isc);
-    bool isg = (skimT->Jet_btagDeepFlavG[iJet1] > threshBtagDeepFlavG_ 
+    bool isg = (skimT->Jet_btagDeepFlavQG[iJet1] < threshBtagDeepFlavG_ 
                 && !isb 
                 && !isc);
     bool isn = (!isb && !isc && !isq && !isg);
@@ -202,8 +217,8 @@ void HistTag::FillHistograms(
                         static_cast<TProfile*>(h)->Fill(x, val, weight);
                     }
                 }
-            }
-        }
-    }
+            }//aflv_
+        }//atag_
+    }//mvar_
 }
 

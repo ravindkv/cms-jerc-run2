@@ -46,6 +46,7 @@ private:
     std::vector<std::string> dataEras_;
     std::vector<std::string> mcHtBins_;
     std::string histDir_;
+    std::vector<std::string> trigDirs_;
     std::string histName_;
     
     std::vector<T*> dataHists_;  

@@ -26,11 +26,11 @@ struct RunHistograms {
     std::unique_ptr<TH1D> h1EventInRun;          
     std::unique_ptr<TProfile> p1DbRespInRun;     
     std::unique_ptr<TProfile> p1MpfRespInRun;    
-    std::unique_ptr<TProfile> p1JetChhefInRun;   
-    std::unique_ptr<TProfile> p1JetNehefInRun;   
-    std::unique_ptr<TProfile> p1JetNeemefInRun;  
-    std::unique_ptr<TProfile> p1JetChemefInRun;  
-    std::unique_ptr<TProfile> p1JetMuefInRun;  
+    std::unique_ptr<TProfile> p1Jet1ChHefInRun;   
+    std::unique_ptr<TProfile> p1Jet1NeHefInRun;   
+    std::unique_ptr<TProfile> p1Jet1NeEmefInRun;  
+    std::unique_ptr<TProfile> p1Jet1ChEmefInRun;  
+    std::unique_ptr<TProfile> p1Jet1MuefInRun;  
 };
 
 /**

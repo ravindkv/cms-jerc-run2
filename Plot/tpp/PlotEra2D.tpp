@@ -33,6 +33,7 @@ template<typename T>
 void PlotEra2D<T>::setFigConfigEra2D(const FigConfigEra2D & params) {
   tdrStyle_->setFigConfig(params);
   histDir_  = params.histDir;
+  trigDirs_ = params.trigDirs;
   histName_ = params.histName;
 }
 
@@ -59,7 +60,13 @@ void PlotEra2D<T>::drawHist2D(const std::string &outPdfName) {
     std::cerr << "Error: Could not open file " << fileName << std::endl;
     return;
   }
-  T* hist = (T*)file.Get(path.c_str());
+  // Retrieve the histogram
+  T* hist = nullptr;
+  if(!trigDirs_.empty()){
+      hist = Helper::sumHistsFromTrigDirs<T>(file, histDir_, trigDirs_, histName_);
+  } else{
+      hist = static_cast<T*>(file.Get(path.c_str()));
+  }
   if (hist){
     tdrStyle_->setTdrStyle();
     tdrStyle_->setStyle(hist);

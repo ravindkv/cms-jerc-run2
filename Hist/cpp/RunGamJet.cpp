@@ -1,7 +1,7 @@
 #include "RunGamJet.h"
 
 #include "HistCutflow.h"
-#include "HistObjectId.h"
+#include "HistObjectVar.h"
 #include "HistTag.h"
 #include "HistTime.h"
 #include "HistRef.h"
@@ -15,6 +15,8 @@
 
 #include "Helper.h"
 #include "VarBin.h"
+#include "VarCut.h"
+#include "MathHdm.h"
    
 // Constructor implementation
 RunGamJet::RunGamJet(GlobalFlag& globalFlags)
@@ -35,20 +37,20 @@ auto RunGamJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pick
     // Cutflow histograms
     std::vector<std::string> cuts = {
     		"passSkim", "passHlt", "passGoodLumi", "passMetFilter", "passExactly1Ref",
-    		"passHltWithPt", "passAtleast1Jet", "passJetVetoMap", "passDPhiRefJet1",
+    		"passHltWithPt", "passAtleast2Jet", "passJetVetoMap", "passDPhiRefJet1",
             "passRefBarrel", "passAlpha", "passResponse"
     };
-    auto h1EventInCutflow = std::make_unique<HistCutflow>(origDir, "", cuts);
+    auto h1EventInCutflow = std::make_unique<HistCutflow>(origDir, "", cuts, globalFlags_);
       
     // Variable binning
     VarBin varBin(globalFlags_);
     std::vector<int> pTRefs = {30, 110, 230};
 
-    HistObjectId histObjectId(origDir, "passMetFilter", varBin);
+    HistObjectVar histObjectVar(origDir, "passMetFilter", varBin);
 
     HistRef histRef(origDir, "passExactly1Ref", varBin);
 
-    HistScale histScale(origDir, "passAtleast1Jet", varBin);
+    HistScale histScale(origDir, "passAtleast2Jet", varBin);
     
     HistBarrel histBarrel(origDir, "passRefBarrel", varBin);
 
@@ -59,7 +61,6 @@ auto RunGamJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pick
     HistMain histMain(origDir, "passAlpha", varBin);
 
     HistFinal histFinal(origDir, "passAlpha", varBin);
-
     HistTime histTime(origDir, "passResponse", varBin, pTRefs);
 
     // Scale constructor
@@ -73,17 +74,19 @@ auto RunGamJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pick
     TLorentzVector p4Met1, p4Metn, p4Metu, p4Metnu;
     TLorentzVector p4Jeti, p4CorrMet;
     TLorentzVector p4GenJeti, p4GenJet1, p4GenJet2;
-    TLorentzVector p4Refx; // for MPFX
+    MathHdm mathHdm(globalFlags_);
 
     double totalTime = 0.0;
     auto startClock = std::chrono::high_resolution_clock::now();
     Long64_t nentries = skimT->getEntries();
     Helper::initProgress(nentries);
 
+    Float_t mcXssWeight = 1.0;
+    if (globalFlags_.isMC()) mcXssWeight = skimT->getMcXssWeight();
+
     for (Long64_t jentry = 0; jentry < nentries; ++jentry) {
         if (globalFlags_.isDebug() && jentry > globalFlags_.getNDebug()) break;
         Helper::printProgress(jentry, nentries, startClock, totalTime, globalFlags_.isDebug());
-       
         Long64_t ientry = skimT->loadEntry(jentry);
         if (ientry < 0) break; 
         skimT->getChain()->GetTree()->GetEntry(ientry);
@@ -104,7 +107,10 @@ auto RunGamJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pick
 
         if (!pickEvent->passFilter(skimT)) continue; 
         h1EventInCutflow->fill("passMetFilter");
-        histObjectId.FillPhoton(*skimT, 1.0);
+        // Weight
+        double weight = 1.0;
+        histObjectVar.FillPhoton(*skimT, weight);
+        histObjectVar.FillJet(*skimT, weight, 0);
 
         //------------------------------------------
         // Select objects
@@ -127,16 +133,17 @@ auto RunGamJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pick
         if (!pickEvent->passHltWithPt(skimT, ptRef)) continue; 
         h1EventInCutflow->fill("passHltWithPt");
 
-        // Weight
-        double weight = 1.0;
-        double lumiPerHlt = 1.0;
         if (globalFlags_.isMC()){
             weight *= skimT->genWeight;
             weight *= scaleEvent->getPuCorrection(skimT->Pileup_nTrueInt, "nominal");
+            weight *= mcXssWeight; 
         }
+        double weightLumiPerHlt = 1.0;
         if (globalFlags_.isData()){
+            double lumiPerHlt = 1.0;
             lumiPerHlt = scaleEvent->cacheHltLumiPerRun(skimT, ptRef);
             lumiPerHlt *= 10e-9; //convert ub-1 to fb-1
+            if(lumiPerHlt>0.0) weightLumiPerHlt *= (1/lumiPerHlt);
         }
 
         // Gen objects
@@ -149,7 +156,7 @@ auto RunGamJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pick
             p4GenRef = p4GenRefs.at(0);
         }
         // Fill HistRef histograms
-        histRef.Fill(p4Refs.size(), p4Ref, p4GenRef, lumiPerHlt, weight); 
+        histRef.Fill(p4Refs.size(), p4Ref, p4GenRef, weight*weightLumiPerHlt); 
         
         // Apply jet energy scaleions
         scaleJetMet->applyCorrections(skimT, ScaleJetMet::CorrectionLevel::L2L3Res);
@@ -162,11 +169,11 @@ auto RunGamJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pick
 
         //Pick index of jets
         std::vector<int> jetsIndex = pickObject->getPickedJetsIndex();
-        if (jetsIndex.empty()) continue; 
-        int iJet1 = -1, iJet2 = -1;
-        iJet1 = jetsIndex.at(0);
-        if(jetsIndex.size() > 1) iJet2 = jetsIndex.at(1);
-
+        if (jetsIndex.size()!=2) continue; //sanity 
+        int iJet1 = jetsIndex.at(0);
+        int iJet2 = jetsIndex.at(1);
+        if (iJet1==-1) continue; //Make sure the events have first leading jet
+        if (iJet2==-1) continue; //Make sure the events have second leading jet
         //Pick p4 of jets
         TLorentzVector p4Jet1, p4Jet2, p4Jetn;
         std::vector<TLorentzVector> jetsP4 = pickObject->getPickedJetsP4();
@@ -175,8 +182,7 @@ auto RunGamJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pick
         p4Jetn  = jetsP4.at(2);
         p4Jetn+= p4Jet2; // except leading jet
 
-        if (fabs(p4Jet1.Eta()) >= 1.3) continue; 
-        h1EventInCutflow->fill("passAtleast1Jet");
+        h1EventInCutflow->fill("passAtleast2Jet");
         histScale.FillPhoton(*scalePhoton);
         histScale.FillJetMet(*scaleJetMet);
 
@@ -189,48 +195,14 @@ auto RunGamJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pick
         p4CorrMet.SetPtEtaPhiM(skimT->ChsMET_pt, 0, skimT->ChsMET_phi, 0);
         // Replace PF Ref with Reco Ref
         p4CorrMet += p4RawRef - p4Ref; 
-        // Unclustered MET from corrMET
-        // Eq.8 of hdm_2023082.pdf
-        p4Metu = p4CorrMet + p4Ref + p4Jet1 + p4Jetn;
-        p4Met1 = - p4Ref - p4Jet1 ;
-        p4Metn = - p4Jetn;
-        p4Metnu = p4Metn + 1.1*p4Metu;
-        
-        // Make MET transverse
-        p4CorrMet.SetPz(0);
-        p4CorrMet.SetPz(0);
-        p4Metn.SetPz(0);
-        p4Met1.SetPz(0);
-        p4Metu.SetPz(0);
-        
-        //------------------------------------------------
-        // Calculate basic variables
-        //------------------------------------------------
-        double bal = p4Jet1.Pt() / ptRef;
-        double mpf  = 1 + p4CorrMet.Vect().Dot(p4Ref.Vect()) / (ptRef * ptRef);
-        double mpf1 = 1 + p4Met1.Vect().Dot(p4Ref.Vect()) / (ptRef * ptRef);
-        double mpfn = p4Metn.Vect().Dot(p4Ref.Vect()) / (ptRef * ptRef);
-        double mpfu = p4Metu.Vect().Dot(p4Ref.Vect()) / (ptRef * ptRef);
-        double mpfnu = p4Metnu.Vect().Dot(p4Ref.Vect()) / (ptRef * ptRef);
 
-        // For MPFX
-        p4Refx.SetPtEtaPhiM(p4Ref.Pt(), p4Ref.Eta(), p4Ref.Phi() + 0.5 * TMath::Pi(), 0.0);
-        double mpfx  = 1 + p4CorrMet.Vect().Dot(p4Refx.Vect()) / (ptRef * ptRef);
-        double mpf1x = 1 + p4Met1.Vect().Dot(p4Refx.Vect()) / (ptRef * ptRef);
-        double mpfnPt= p4Metn.Vect().Dot(p4Refx.Vect()) / (ptRef * ptRef);
-        double mpfux = p4Metu.Vect().Dot(p4Refx.Vect()) / (ptRef * ptRef);
-        double mpfnux = p4Metnu.Vect().Dot(p4Refx.Vect()) / (ptRef * ptRef);
-         
-        // Sanity checks for HDM inputs
-        if (!(fabs(mpf1 + mpfn + mpfu - mpf) < 1e-4)) {
-            std::cout << "\nHDM input error: mpf=" << mpf << " mpf1=" << mpf1
-                      << " mpfn=" << mpfn << " mpfu=" << mpfu << '\n';
-            std::cout << "Difference = " << mpf1 + mpfn + mpfu - mpf << '\n' << std::flush;
-            std::cout << "Skip entry " << jentry
-                      << " (" << skimT->run << "," << skimT->luminosityBlock << "," << skimT->event << ")"
-                      << " in file " << fout->GetName() << '\n' << std::flush;
-            continue;
-        }
+        mathHdm.calcResponse(p4CorrMet, p4Ref, p4Jet1, p4Jetn);
+        double bal   = mathHdm.getBal();  
+        double mpf   = mathHdm.getMpf();  
+        double mpf1  = mathHdm.getMpf1(); 
+        double mpfn  = mathHdm.getMpfn(); 
+        double mpfu  = mathHdm.getMpfu(); 
+        double mpfnu = mathHdm.getMpfnu();
        
         double deltaPhi = Helper::DELTAPHI(p4Ref.Phi(), p4Jet1.Phi());
         if (fabs(deltaPhi - TMath::Pi()) >= 0.44) continue; 
@@ -240,30 +212,24 @@ auto RunGamJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pick
         h1EventInCutflow->fill("passRefBarrel");
 
         //------------------------------------------------
-        // GenJet loop
+        // GenJet
         //------------------------------------------------
-        // Select p4GenJet1 matching leading and subleading reco jet
-        int iGenJet(-1), iGenJet2(-1);
-        p4GenJet1.SetPtEtaPhiM(0, 0, 0, 0);
-        p4GenJet2.SetPtEtaPhiM(0, 0, 0, 0);
-        if (globalFlags_.isMC()) {
-            for (Int_t i = 0; i != skimT->nGenJet; ++i) {
-                p4GenJeti.SetPtEtaPhiM(skimT->GenJet_pt[i], skimT->GenJet_eta[i],
-                                       skimT->GenJet_phi[i], skimT->GenJet_mass[i]);
-                if (iJet1 != -1 && p4GenJeti.DeltaR(p4Jet1) < 0.4 && iGenJet == -1) {
-                    iGenJet = i;
-                    p4GenJet1 = p4GenJeti;
-                } else if (iJet2 != -1 && p4GenJeti.DeltaR(p4Jet2) < 0.4 && iGenJet2 == -1) {
-                    iGenJet2 = i;
-                    p4GenJet2 = p4GenJeti;
-                }
-            }
+        int iGenJet1 = -1;
+        int iGenJet2 = -1;
+        if (globalFlags_.isMC()){
+            pickObject->pickGenJets(*skimT, iJet1, iJet2, p4Jet1, p4Jet2);
+            std::vector<TLorentzVector> genJetsP4 = pickObject->getPickedGenJetsP4();
+            p4GenJet1  = genJetsP4.at(0);
+            p4GenJet2  = genJetsP4.at(1);
+            std::vector<int> genJetsIndex = pickObject->getPickedGenJetsIndex();
+            iGenJet1 = genJetsIndex.at(0);
+            iGenJet2 = genJetsIndex.at(1);
         }
         histBarrel.Fill(p4Ref, p4Jet1, p4GenJet1, weight);
  
         //flavorXTaggedY
         histTag.SetResponse(bal, mpf, mpf1, mpfn, mpfu);
-        histTag.FillHistograms(skimT.get(), ptRef, iJet1, iGenJet, weight);
+        histTag.FillHistograms(skimT.get(), ptRef, iJet1, iGenJet1, weight);
 
         //double alpha = p4Jet2.Pt()/ptRef;
         double pt2Min = 30;
@@ -271,8 +237,7 @@ auto RunGamJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pick
         bool passAlpha = (ptJet2 < ptRef || ptJet2 < pt2Min); 
         if(!passAlpha) continue;
         h1EventInCutflow->fill("passAlpha");
-        histRef2.Fill(p4Refs.size(), p4Ref, p4GenRef, lumiPerHlt, weight); 
-
+        histRef2.Fill(p4Refs.size(), p4Ref, p4GenRef, weight*weightLumiPerHlt); 
         histFinal.Fill(ptRef, bal, mpf, p4Jet2, p4GenJet2, iGenJet2, globalFlags_.isMC(), weight);
 
         histMain.Fill(skimT.get(), iJet1, bal, mpf, ptRef, weight);

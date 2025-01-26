@@ -89,14 +89,20 @@ def main():
             allSamples.update(dataSamples)
 
             for sampleKey, dataset in allSamples.items():
-                filesNano = getFiles(dataset)
+                if(len(sampleKey.split("_"))!=4):
+                    print(f"{sampleKey} has more than 3 underscores, follow DataOrMC_Channel_Year_SampleName convention")
+                    print(f"Skipped this {sampleKey}")
+                    continue
+                datasetXssOrLumi = dataset[0] 
+                datasetName = dataset[1] 
+                filesNano = getFiles(datasetName)
                 if not filesNano:
-                    print(f"PROBLEM: No files found for dataset '{dataset}'.\n")
+                    print(f"PROBLEM: No files found for datasetName '{datasetName}'.\n")
                     continue
 
                 toNano[sampleKey] = filesNano
                 nFiles = len(filesNano)
-                nEvents = getEvents(dataset)
+                nEvents = getEvents(datasetName)
                 evtStr = formatNum(nEvents)
 
                 # Determine the number of jobs based on whether it's Data or MC
@@ -107,8 +113,13 @@ def main():
 
                 # Ensure the number of jobs does not exceed the number of files
                 nJobs = min(nJobs, nFiles)
-
-                toJobs[sampleKey] = [nJobs, evtStr, nEvents, nFiles]
+                jobDict = {}
+                jobDict["xssOrLumi"] = datasetXssOrLumi
+                jobDict["nSkimJobs"] = nJobs
+                jobDict["nEvents"] = nEvents
+                jobDict["nEventsPretty"] = evtStr
+                jobDict["nNanoFiles"] = nFiles
+                toJobs[sampleKey] = [datasetXssOrLumi, nJobs, evtStr, nEvents, nFiles]
                 allJobsYear += nJobs
 
                 # Generate skim file paths
@@ -116,7 +127,7 @@ def main():
                     f"{eosSkimDir}/{channel}/{year}/{sampleKey}_Skim_{i+1}of{nJobs}.root"
                     for i in range(nJobs)
                 ]
-                toSkim[sampleKey] = skimFiles
+                toSkim[sampleKey] = [jobDict, skimFiles]
 
                 print(f"{nFiles}\t {nJobs}\t {evtStr}\t {sampleKey}")
 
@@ -124,14 +135,14 @@ def main():
             allJobsChannel += allJobsYear
             # Define output JSON file paths
             filesNanoPath = jsonDir / f"FilesNano_{channel}_{year}.json"
-            jobsSkimPath = jsonDir / f"JobsSkim_{channel}_{year}.json"
+            #jobsSkimPath = jsonDir / f"JobsSkim_{channel}_{year}.json"
             filesSkimPath = jsonDir / f"FilesSkim_{channel}_{year}.json"
             
             # Write JSON files
             with open(filesNanoPath, 'w') as f:
                 json.dump(toNano, f, indent=4)
-            with open(jobsSkimPath, 'w') as f:
-                json.dump(toJobs, f, indent=4)
+            #with open(jobsSkimPath, 'w') as f:
+                #json.dump(toJobs, f, indent=4)
             with open(filesSkimPath, 'w') as f:
                 json.dump(toSkim, f, indent=4)
             

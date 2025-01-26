@@ -23,19 +23,19 @@ void PickEvent::printDebug(const std::string& message) const {
 }
 
 
-bool PickEvent::passHlt(const std::shared_ptr<SkimTree>& skimT) const {
+bool PickEvent::passHlt(const std::shared_ptr<SkimTree>& skimT){
+    passedHlts_.clear();
+    bool isPass = false;
     for (const auto& trigName : skimT->getTrigNames()){
         const auto& trigValue = static_cast<int>(skimT->getTrigValue(trigName));
-        if (isDebug_) {
-            std::cout << trigName << ": " << trigValue << std::endl;
-        }
         if (trigValue) {
-            return true; // An event fired this trigger
+            passedHlts_.push_back(trigName);
+            printDebug(trigName + ": "+ std::to_string(trigValue));
+            isPass = true;
         }
     }
-    return false; // No trigger fired
+    return isPass; 
 }
-
 
 auto PickEvent::passHltWithPt(const std::shared_ptr<SkimTree>& skimT, const double& pt) const -> bool {
     if (channel_ == GlobalFlag::Channel::GamJet) {
@@ -44,10 +44,9 @@ auto PickEvent::passHltWithPt(const std::shared_ptr<SkimTree>& skimT, const doub
         for (const auto& [trigName, trigRangePt] : trigs){
             const auto& trigValue = static_cast<int>(skimT->getTrigValue(trigName));
              //exit the loop when an event fires any trigger
-            printDebug(trigName + ", pt = "+std::to_string(pt)+" : "+ std::to_string(trigValue));
-            if (isDebug_) printDebug(trigName + ", pt = "+std::to_string(pt)+" : "+ std::to_string(trigValue));
             if (trigValue && pt>=trigRangePt.ptMin && pt< trigRangePt.ptMax){
-               return true;
+                printDebug(trigName + ", pt = "+std::to_string(pt)+" : "+ std::to_string(trigValue));
+                return true;
             }
         }//trig loop
     }//GamJet
@@ -58,10 +57,10 @@ auto PickEvent::passHltWithPt(const std::shared_ptr<SkimTree>& skimT, const doub
 auto PickEvent::passFilter(const std::shared_ptr<SkimTree>& skimT) const -> bool {
     for (const auto& filterName : skimT->getFilterNames()){
         const auto& filterValue = static_cast<int>(skimT->getFilterValue(filterName));
-        if (isDebug_) printDebug(filterName + ": "+ std::to_string(filterValue));
         //exit the loop when a filter is NOT true
         if (!filterValue){
-           return false;
+            printDebug(filterName + ": "+ std::to_string(filterValue));
+            return false;
         }
     }//filter loop
     return true;

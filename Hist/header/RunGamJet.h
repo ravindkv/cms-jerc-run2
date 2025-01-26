@@ -21,7 +21,6 @@
 #include "ScaleEvent.h"
 #include "ScaleObject.h"
 #include "GlobalFlag.h"
-#include "VarCut.h"
 
 class RunGamJet{
 public:

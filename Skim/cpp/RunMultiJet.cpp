@@ -14,9 +14,37 @@ auto RunMultiJet::Run(std::shared_ptr<NanoTree>& nanoT, TFile *fout) -> int{
 	//----------------------------------
 	// Set trigger list
 	//----------------------------------
-    std::vector<std::string> patterns;
-    patterns = { "HLT_PFJet*", "HLT_DiPFJet*"};
-    trigList_  = Helper::GetMatchingBranchNames(nanoT->fChain->GetTree(), patterns);
+    trigList_  = { 
+        "HLT_ZeroBias",
+        "HLT_MC",
+        "HLT_DiPFJetAve40",       
+        "HLT_PFJet40",            
+        "HLT_PFJet60",            
+        "HLT_PFJet80",            
+        "HLT_PFJet140",           
+        "HLT_PFJet200",           
+        "HLT_PFJet260",           
+        "HLT_PFJet320",           
+        "HLT_PFJet400",           
+        "HLT_PFJet450",           
+        "HLT_PFJet500",           
+        "HLT_PFJet550",           
+        "HLT_DiPFJetAve40",       
+        "HLT_DiPFJetAve60",       
+        "HLT_DiPFJetAve80",       
+        "HLT_DiPFJetAve140",      
+        "HLT_DiPFJetAve200",      
+        "HLT_DiPFJetAve260",      
+        "HLT_DiPFJetAve320",      
+        "HLT_DiPFJetAve400",      
+        "HLT_DiPFJetAve500",      
+        "HLT_DiPFJetAve60_HFJEC", 
+        "HLT_DiPFJetAve80_HFJEC", 
+        "HLT_DiPFJetAve100_HFJEC",
+        "HLT_DiPFJetAve160_HFJEC",
+        "HLT_DiPFJetAve220_HFJEC",
+        "HLT_DiPFJetAve300_HFJEC"
+    };
 
     if (trigList_.empty()) {
         std::cerr << "No triggers found for channel: MultiJet" << '\n';

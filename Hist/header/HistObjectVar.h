@@ -1,5 +1,5 @@
-#ifndef HISTOBJECTID_H
-#define HISTOBJECTID_H
+#ifndef HISTOBJECTVAR_H
+#define HISTOBJECTVAR_H
 
 #include <memory>
 #include <string>
@@ -20,11 +20,11 @@
 /**
  * @brief Struct to hold all final histograms for specific directories.
  */
-struct HistElectronId {
+struct HistElectronVar {
     std::unique_ptr<TH2D> h2EventInElePtEleEta;
 };
 
-struct HistPhotonId {
+struct HistPhotonVar {
     std::unique_ptr<TH2D> h2EventInPhoEtaPhoPt;
     std::unique_ptr<TH2D> h2EventInPhoCountPhoPt;
     std::unique_ptr<TH2D> h2EventInPhoR9PhoPt;
@@ -32,15 +32,28 @@ struct HistPhotonId {
     std::unique_ptr<TH2D> h2EventInPhoIdPhoPt;
 };
 
-struct HistMuonId {
+struct HistMuonVar {
     std::unique_ptr<TH2D> h2EventInMuPtMuEta;
 };
 
-struct HistJetId {
+struct HistJetVar {
+    //All jets
     std::unique_ptr<TH2D> h2EventInJetPtJetEta;
+    std::unique_ptr<TH1D> h1EventInJetChHef;
+    std::unique_ptr<TH1D> h1EventInJetNeHef;
+    std::unique_ptr<TH1D> h1EventInJetNeEmef;
+    std::unique_ptr<TH1D> h1EventInJetChEmef;
+    std::unique_ptr<TH1D> h1EventInJetMuef;
+    //Leading jet
+    std::unique_ptr<TH2D> h2EventInJet1PtJetEta;
+    std::unique_ptr<TH1D> h1EventInJet1ChHef;
+    std::unique_ptr<TH1D> h1EventInJet1NeHef;
+    std::unique_ptr<TH1D> h1EventInJet1NeEmef;
+    std::unique_ptr<TH1D> h1EventInJet1ChEmef;
+    std::unique_ptr<TH1D> h1EventInJet1Muef;
 };
 
-struct HistMetId {
+struct HistMetVar {
     std::unique_ptr<TH2D> h2EventInMetPtMetPhi;
 };
 /**
@@ -49,38 +62,38 @@ struct HistMetId {
  * This class encapsulates the creation and filling of histograms that monitor
  * variables after applying jet energy corrections. It manages histograms using ROOT's TH1D.
  */
-class HistObjectId {
+class HistObjectVar {
 public:
     /**
-     * @brief Constructs a HistObjectId object and initializes histograms.
+     * @brief Constructs a HistObjectVar object and initializes histograms.
      * 
      * @param origDir Pointer to the original ROOT directory.
      * @param directoryName Name of the directory within the ROOT file to store histograms.
      * @param varBin Object defining variable binning.
      */
-    HistObjectId(TDirectory* origDir, const std::string& directoryName, const VarBin& varBin);
+    HistObjectVar(TDirectory* origDir, const std::string& directoryName, const VarBin& varBin);
     
     /**
      * @brief Default destructor.
      */
-    ~HistObjectId() = default;
+    ~HistObjectVar() = default;
     
     void FillElectron(const SkimTree& skimT, double weight);
     void FillPhoton(const SkimTree& skimT, double weight);
     void FillMuon(const SkimTree& skimT, double weight);
-    void FillJet(const SkimTree& skimT, double weight);
+    void FillJet(const SkimTree& skimT, double weight, int iJet1);
     void FillMet(const SkimTree& skimT, double weight);
 
 private:
     // Struct holding all final histograms
-    HistElectronId histEle_;
-    HistPhotonId histPho_;
-    HistMuonId histMu_;
-    HistJetId histJet_;
-    HistMetId histMet_;
+    HistElectronVar histEle_;
+    HistPhotonVar histPho_;
+    HistMuonVar histMu_;
+    HistJetVar histJet_;
+    HistMetVar histMet_;
     
     void InitializeHistograms(TDirectory* origDir, const std::string& directoryName, const VarBin& varBin);
 };
 
-#endif // HISTOBJECTID_H
+#endif // HISTOBJECTVAR_H
 

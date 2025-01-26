@@ -1,8 +1,8 @@
 #include "TdrStyle.h"
-#include "PlotEraXY.h"
+#include "PlotEraXYs.h"
 
 template<typename T>
-PlotEraXY<T>::PlotEraXY() : 
+PlotEraXYs<T>::PlotEraXYs() : 
   channel_(""), 
   year_(""), 
   varName_(""),
@@ -18,7 +18,7 @@ PlotEraXY<T>::PlotEraXY() :
 
 // Clean up each cloned histogram
 template<typename T>
-PlotEraXY<T>::~PlotEraXY() {
+PlotEraXYs<T>::~PlotEraXYs() {
   for (auto hist : dataHists_) {
       delete hist; 
   }
@@ -28,16 +28,17 @@ PlotEraXY<T>::~PlotEraXY() {
 }
 
 template<typename T>
-void PlotEraXY<T>::setInput(const nlohmann::json &inputJson, const std::string & channel, const std::string & year){
+void PlotEraXYs<T>::setInput(const nlohmann::json &inputJson, const std::string & channel, const std::string & year){
   inputJson_ = inputJson;
   channel_ = channel;
   year_ = year;
 }
 
 template<typename T>
-void PlotEraXY<T>::setFigConfigEraXY(const FigConfigEraXY & params) {
+void PlotEraXYs<T>::setFigConfigEraXYs(const FigConfigEraXYs & params) {
   tdrStyle_->setFigConfig(params);
   histDir_  = params.histDir;
+  trigDirs_ = params.trigDirs;
   histName_ = params.histName;
   varBins_ = params.varBins;
   varName_ = params.varName;
@@ -45,7 +46,7 @@ void PlotEraXY<T>::setFigConfigEraXY(const FigConfigEraXY & params) {
 }
 
 template<typename T>
-void PlotEraXY<T>::loadHists(const std::string& sourceType, const std::string& dataEra, const std::vector<std::string>& mcHtBins) {
+void PlotEraXYs<T>::loadHists(const std::string& sourceType, const std::string& dataEra, const std::vector<std::string>& mcHtBins) {
     // Determine which bins to use based on sourceType (Data or MC)
     std::vector<std::string> bins;
 
@@ -66,7 +67,13 @@ void PlotEraXY<T>::loadHists(const std::string& sourceType, const std::string& d
             continue;
         }
 
-        T* hist = (T*)file.Get(path.c_str());
+        // Retrieve the histogram
+        T* hist = nullptr;
+        if(!trigDirs_.empty()){
+            hist = Helper::sumHistsFromTrigDirs<T>(file, histDir_, trigDirs_, histName_);
+        } else{
+            hist = static_cast<T*>(file.Get(path.c_str()));
+        }
         if (!hist) {
             std::cerr << "Error: Could not retrieve histogram " << path << " from " << fileName << std::endl;
             file.Close();
@@ -102,7 +109,7 @@ void PlotEraXY<T>::loadHists(const std::string& sourceType, const std::string& d
 
 // Helper function for projecting and cloning histograms
 template<typename T>
-TProfile* PlotEraXY<T>::projectAndClone(T* hist, const std::string& bin, int i) {
+TProfile* PlotEraXYs<T>::projectAndClone(T* hist, const std::string& bin, int i) {
     std::string nameBin;
     TProfile* clonedHist = nullptr;
 
@@ -126,7 +133,7 @@ TProfile* PlotEraXY<T>::projectAndClone(T* hist, const std::string& bin, int i) 
 
 // Helper function to draw histograms (Data/Mc), set styles, and handle the legend
 template<typename T>
-void PlotEraXY<T>::drawHists(const std::vector<TProfile*>& hists) {
+void PlotEraXYs<T>::drawHists(const std::vector<TProfile*>& hists) {
   if (hists.empty()) {
     std::cerr << "Error: Histograms vector is empty." << std::endl;
     return;
@@ -155,7 +162,7 @@ void PlotEraXY<T>::drawHists(const std::vector<TProfile*>& hists) {
 
 // Overlay Data with Mc and Plot Ratio
 template<typename T>
-void PlotEraXY<T>::overlayDataWithMcInRatio(const std::string &outputFile) {
+void PlotEraXYs<T>::overlayDataWithMcInRatio(const std::string &outputFile) {
   TCanvas canvas("c", "Data and Mc Ratio", 600, 600);
   canvas.cd();
   tdrStyle_->setTdrStyle();

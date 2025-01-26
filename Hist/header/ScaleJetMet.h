@@ -32,7 +32,7 @@ public:
         return p4MapJet1_;
     }
     const std::unordered_map<std::string, TLorentzVector>& getP4MapJetSum() const {
-        return p4MapJetSum_;
+        return p4MapSelJetSum_;
     }
 
     const std::unordered_map<std::string, TLorentzVector>& getP4MapMet() const {
@@ -46,9 +46,14 @@ private:
     bool isData_;
     bool applyJer_;
 
+    //For debug
+    TLorentzVector p4SumAllNano_;
+    TLorentzVector p4SumCorrAndUnCorr_;
+
+
     // Jet correction maps
     std::unordered_map<std::string, TLorentzVector> p4MapJet1_;
-    std::unordered_map<std::string, TLorentzVector> p4MapJetSum_;
+    std::unordered_map<std::string, TLorentzVector> p4MapSelJetSum_;
 
     // MET
     std::unordered_map<std::string, TLorentzVector> p4MapMet_;

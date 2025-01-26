@@ -107,7 +107,10 @@ void SkimTree::loadInputJson() {
     }
 
     try {
-        js.at(loadedSampKey_).get_to(loadedAllFileNames_);
+        js.at(loadedSampKey_).at(1).get_to(loadedAllFileNames_);
+        js.at(loadedSampKey_).at(0).at("xssOrLumi").get_to(nanoXssOrLumi_);
+        js.at(loadedSampKey_).at(0).at("nEvents").get_to(nanoEvents_);
+        std::cout<<"nanoXssOrLumi = "<<nanoXssOrLumi_ <<", "<<"nanoEvents = "<<nanoEvents_<<'\n';
     } catch (const std::exception& e) {
         std::ostringstream oss;
         oss << "Key not found in JSON: " << loadedSampKey_ << "\n"
@@ -145,6 +148,7 @@ void SkimTree::loadJobFileNames() {
     if (loadedNthJob_ - 1 >= static_cast<int>(smallVectors.size())) {
         throw std::runtime_error("Error: loadedNthJob_ is out of range after splitting file names in loadJobFileNames()");
     }
+    //loadedJobFileNames_ = {"/afs/cern.ch/work/r/rverma/public/JME/JERC/cms-jerc-run2/Skim/output/MC_GamJetFake_2016Pre_QCDHT100to200_Skim_1of100.root"};
     loadedJobFileNames_ = smallVectors[loadedNthJob_ - 1];
 }
 
@@ -183,7 +187,7 @@ void SkimTree::loadTree() {
 	fChain_->SetBranchAddress("Jet_btagDeepFlavCvB", &Jet_btagDeepFlavCvB);
 	fChain_->SetBranchAddress("Jet_btagDeepFlavG", &Jet_btagDeepFlavG);
 	fChain_->SetBranchAddress("Jet_btagDeepFlavQG", &Jet_btagDeepFlavQG);
-	fChain_->SetBranchAddress("Jet_btagDeepFlavUDS", &Jet_btagDeepFlavUDS);
+	//fChain_->SetBranchAddress("Jet_btagDeepFlavUDS", &Jet_btagDeepFlavUDS);
 
 	fChain_->SetBranchAddress("Jet_chEmEF"  , &Jet_chEmEF);
 	fChain_->SetBranchAddress("Jet_chHEF"   , &Jet_chHEF);

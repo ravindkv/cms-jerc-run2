@@ -1,3 +1,8 @@
+
+//$ g++ -o /afs/cern.ch/user/r/rverma/public/scanTFile scanTFile.C `root-config --cflags --glibs` 
+
+//$ ./scanTFile file.root [deep]
+
 #include <TFile.h>
 #include <TDirectory.h>
 #include <TKey.h>
@@ -13,10 +18,6 @@
 #include <algorithm>
 
 using namespace std;
-
-//$ g++ -o /afs/cern.ch/user/r/rverma/public/scanTFile scanTFile.C `root-config --cflags --glibs` 
-
-//$ ./scanTFile file.root [deep]
 
 void printASCIIHistogram(TH1 *h1, int maxBins = 50) {
     if (h1 == nullptr) {

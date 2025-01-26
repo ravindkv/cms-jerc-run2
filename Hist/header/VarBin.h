@@ -28,6 +28,8 @@ public:
     const std::vector<double>& getRangeDeltaR() const;
     const std::vector<double>& getRangeDeltaPhi() const;
     const std::vector<double>& getRangeResponse() const;
+    const std::vector<double>& getRangeFraction() const;
+    const std::vector<double>& getRangeIndex() const;
     const std::vector<double>& getRangeCountRef() const;
 
 private:
@@ -60,6 +62,8 @@ private:
     std::vector<double> rangeDeltaPhi_;
     std::vector<double> rangeResponse_;
     std::vector<double> rangeCountRef_;
+    std::vector<double> rangeFraction_;
+    std::vector<double> rangeIndex_;
 
     void InitializeBins();
 };

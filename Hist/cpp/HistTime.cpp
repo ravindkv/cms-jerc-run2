@@ -58,45 +58,45 @@ void HistTime::InitializeHistograms(TDirectory *origDir, const std::string& dire
             runMax_
         );
         
-        std::string p1JetChhefName = "p1JetChhefInRunFor" + suffix;
-        rh.p1JetChhefInRun = std::make_unique<TProfile>(
-            p1JetChhefName.c_str(),
+        std::string p1Jet1ChHefName = "p1Jet1ChHefInRunFor" + suffix;
+        rh.p1Jet1ChHefInRun = std::make_unique<TProfile>(
+            p1Jet1ChHefName.c_str(),
             ";Run Number;Jet chHEF",
             runN_,
             runMin_,
             runMax_
         );
         
-        std::string p1JetNehefName = "p1JetNehefInRunFor" + suffix;
-        rh.p1JetNehefInRun = std::make_unique<TProfile>(
-            p1JetNehefName.c_str(),
+        std::string p1Jet1NeHefName = "p1Jet1NeHefInRunFor" + suffix;
+        rh.p1Jet1NeHefInRun = std::make_unique<TProfile>(
+            p1Jet1NeHefName.c_str(),
             ";Run Number;Jet neHEF",
             runN_,
             runMin_,
             runMax_
         );
         
-        std::string p1JetNeemefName = "p1JetNeemefInRunFor" + suffix;
-        rh.p1JetNeemefInRun = std::make_unique<TProfile>(
-            p1JetNeemefName.c_str(),
+        std::string p1Jet1NeEmefName = "p1Jet1NeEmefInRunFor" + suffix;
+        rh.p1Jet1NeEmefInRun = std::make_unique<TProfile>(
+            p1Jet1NeEmefName.c_str(),
             ";Run Number;Jet neEmEF",
             runN_,
             runMin_,
             runMax_
         );
 
-        std::string p1JetChemefName = "p1JetChemefInRunFor" + suffix;
-        rh.p1JetChemefInRun = std::make_unique<TProfile>(
-            p1JetChemefName.c_str(),
+        std::string p1Jet1ChEmefName = "p1Jet1ChEmefInRunFor" + suffix;
+        rh.p1Jet1ChEmefInRun = std::make_unique<TProfile>(
+            p1Jet1ChEmefName.c_str(),
             ";Run Number;Jet chEmEF",
             runN_,
             runMin_,
             runMax_
         );
 
-        std::string p1JetMuefName = "p1JetMuefInRunFor" + suffix;
-        rh.p1JetMuefInRun = std::make_unique<TProfile>(
-            p1JetMuefName.c_str(),
+        std::string p1Jet1MuefName = "p1Jet1MuefInRunFor" + suffix;
+        rh.p1Jet1MuefInRun = std::make_unique<TProfile>(
+            p1Jet1MuefName.c_str(),
             ";Run Number;Jet muEF",
             runN_,
             runMin_,
@@ -133,20 +133,20 @@ void HistTime::Fill(SkimTree* skimT, int iJet1, double bal, double mpf, double p
             // Fill p1MpfRespInRun
             rh.p1MpfRespInRun->Fill(skimT->run, mpf, weight);
             
-            // Fill p1JetChhefInRun
-            rh.p1JetChhefInRun->Fill(skimT->run, skimT->Jet_chHEF[iJet1], weight);
+            // Fill p1Jet1ChHefInRun
+            rh.p1Jet1ChHefInRun->Fill(skimT->run, skimT->Jet_chHEF[iJet1], weight);
             
-            // Fill p1JetNehefInRun
-            rh.p1JetNehefInRun->Fill(skimT->run, skimT->Jet_neHEF[iJet1], weight);
+            // Fill p1Jet1NeHefInRun
+            rh.p1Jet1NeHefInRun->Fill(skimT->run, skimT->Jet_neHEF[iJet1], weight);
             
-            // Fill p1JetNeemefInRun
-            rh.p1JetNeemefInRun->Fill(skimT->run, skimT->Jet_neEmEF[iJet1], weight);
+            // Fill p1Jet1NeEmefInRun
+            rh.p1Jet1NeEmefInRun->Fill(skimT->run, skimT->Jet_neEmEF[iJet1], weight);
 
-            // Fill p1JetChemefInRun
-            rh.p1JetChemefInRun->Fill(skimT->run, skimT->Jet_chEmEF[iJet1], weight);
+            // Fill p1Jet1ChEmefInRun
+            rh.p1Jet1ChEmefInRun->Fill(skimT->run, skimT->Jet_chEmEF[iJet1], weight);
 
-            // Fill p1JetMuefInRun
-            rh.p1JetMuefInRun->Fill(skimT->run, skimT->Jet_muEF[iJet1], weight);
+            // Fill p1Jet1MuefInRun
+            rh.p1Jet1MuefInRun->Fill(skimT->run, skimT->Jet_muEF[iJet1], weight);
         }
     }
 }

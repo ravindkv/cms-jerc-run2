@@ -47,7 +47,7 @@ void TrigDetail::InitializeList(){
     else if (year_ == GlobalFlag::Year::Year2017){
         // ZeeJet channel
         if(channel_ == GlobalFlag::Channel::ZeeJet){
-            trigList_ = {"HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ"};
+            trigList_ = {"HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL"};
         }        
 
         // ZmmJet channel
@@ -71,7 +71,7 @@ void TrigDetail::InitializeList(){
     else if (year_ == GlobalFlag::Year::Year2018){
         // ZeeJet channel
         if(channel_ == GlobalFlag::Channel::ZeeJet){
-            trigList_ = {"HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ"};
+            trigList_ = {"HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL"};
         }        
 
         // ZmmJet channel
@@ -94,7 +94,7 @@ void TrigDetail::InitializeList(){
 
     if(channel_ == GlobalFlag::Channel::MultiJet){
         //DiJet, Multijet channels
-        trigMapRangePtEta_["HLT_DiPFJetAve40"]       = TrigRangePtEta{40, 85, 0, 5.2};
+        //trigMapRangePtEta_["HLT_DiPFJetAve40"]       = TrigRangePtEta{40, 85, 0, 5.2};
         trigMapRangePtEta_["HLT_PFJet40"]            = TrigRangePtEta{40, 85, 0, 5.2};
         trigMapRangePtEta_["HLT_PFJet60"]            = TrigRangePtEta{85, 100, 0, 5.2};
         trigMapRangePtEta_["HLT_PFJet80"]            = TrigRangePtEta{100, 155, 0, 5.2};
@@ -106,21 +106,21 @@ void TrigDetail::InitializeList(){
         trigMapRangePtEta_["HLT_PFJet450"]           = TrigRangePtEta{500, 600, 0, 5.2};
         trigMapRangePtEta_["HLT_PFJet500"]           = TrigRangePtEta{600, 6500, 0, 5.2};
         trigMapRangePtEta_["HLT_PFJet550"]           = TrigRangePtEta{700, 6500, 0, 5.2};
-        trigMapRangePtEta_["HLT_DiPFJetAve40"]       = TrigRangePtEta{40, 85, 0, 5.2};
-        trigMapRangePtEta_["HLT_DiPFJetAve60"]       = TrigRangePtEta{85, 100, 0, 5.2};
-        trigMapRangePtEta_["HLT_DiPFJetAve80"]       = TrigRangePtEta{100, 155, 0, 5.2};
-        trigMapRangePtEta_["HLT_DiPFJetAve140"]      = TrigRangePtEta{155, 210, 0, 5.2};
-        trigMapRangePtEta_["HLT_DiPFJetAve200"]      = TrigRangePtEta{210, 300, 0, 5.2};
-        trigMapRangePtEta_["HLT_DiPFJetAve260"]      = TrigRangePtEta{300, 400, 0, 5.2};
-        trigMapRangePtEta_["HLT_DiPFJetAve320"]      = TrigRangePtEta{400, 500, 0, 5.2};
-        trigMapRangePtEta_["HLT_DiPFJetAve400"]      = TrigRangePtEta{500, 600, 0, 5.2};
-        trigMapRangePtEta_["HLT_DiPFJetAve500"]      = TrigRangePtEta{600, 6500, 0, 5.2};
-        trigMapRangePtEta_["HLT_DiPFJetAve60_HFJEC"] = TrigRangePtEta{85, 100, 3.139, 5.2};
-        trigMapRangePtEta_["HLT_DiPFJetAve80_HFJEC"] = TrigRangePtEta{100, 125, 3.139, 5.2};
-        trigMapRangePtEta_["HLT_DiPFJetAve100_HFJEC"]= TrigRangePtEta{125, 180, 3.139, 5.2};
-        trigMapRangePtEta_["HLT_DiPFJetAve160_HFJEC"]= TrigRangePtEta{180, 250, 3.139, 5.2};
-        trigMapRangePtEta_["HLT_DiPFJetAve220_HFJEC"]= TrigRangePtEta{250, 350, 2.964, 5.2};
-        trigMapRangePtEta_["HLT_DiPFJetAve300_HFJEC"]= TrigRangePtEta{350, 6500, 2.964, 5.2};
+        //trigMapRangePtEta_["HLT_DiPFJetAve40"]       = TrigRangePtEta{40, 85, 0, 5.2};
+        //trigMapRangePtEta_["HLT_DiPFJetAve60"]       = TrigRangePtEta{85, 100, 0, 5.2};
+        //trigMapRangePtEta_["HLT_DiPFJetAve80"]       = TrigRangePtEta{100, 155, 0, 5.2};
+        //trigMapRangePtEta_["HLT_DiPFJetAve140"]      = TrigRangePtEta{155, 210, 0, 5.2};
+        //trigMapRangePtEta_["HLT_DiPFJetAve200"]      = TrigRangePtEta{210, 300, 0, 5.2};
+        //trigMapRangePtEta_["HLT_DiPFJetAve260"]      = TrigRangePtEta{300, 400, 0, 5.2};
+        //trigMapRangePtEta_["HLT_DiPFJetAve320"]      = TrigRangePtEta{400, 500, 0, 5.2};
+        //trigMapRangePtEta_["HLT_DiPFJetAve400"]      = TrigRangePtEta{500, 600, 0, 5.2};
+        //trigMapRangePtEta_["HLT_DiPFJetAve500"]      = TrigRangePtEta{600, 6500, 0, 5.2};
+        //trigMapRangePtEta_["HLT_DiPFJetAve60_HFJEC"] = TrigRangePtEta{85, 100, 3.139, 5.2};
+        //trigMapRangePtEta_["HLT_DiPFJetAve80_HFJEC"] = TrigRangePtEta{100, 125, 3.139, 5.2};
+        //trigMapRangePtEta_["HLT_DiPFJetAve100_HFJEC"]= TrigRangePtEta{125, 180, 3.139, 5.2};
+        //trigMapRangePtEta_["HLT_DiPFJetAve160_HFJEC"]= TrigRangePtEta{180, 250, 3.139, 5.2};
+        //trigMapRangePtEta_["HLT_DiPFJetAve220_HFJEC"]= TrigRangePtEta{250, 350, 2.964, 5.2};
+        //trigMapRangePtEta_["HLT_DiPFJetAve300_HFJEC"]= TrigRangePtEta{350, 6500, 2.964, 5.2};
     }
 }
 

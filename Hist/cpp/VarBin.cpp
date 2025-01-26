@@ -78,6 +78,8 @@ void VarBin::InitializeBins(){
     rangeDeltaPhi_ = { 100, 0, 5 };
     rangeResponse_ = { 100, 0, 5 };
     rangeCountRef_ = { 5, -0.5, 4.5 };
+    rangeFraction_ = { 50, 0.0, 1.0};
+    rangeIndex_ = { 30, -0.5, 29.5};
 }
 
 // Helper method to print bin values
@@ -164,4 +166,12 @@ const std::vector<double>& VarBin::getRangeResponse() const {
 const std::vector<double>& VarBin::getRangeCountRef() const {
     printBins("getRangeCountRef()", rangeCountRef_);
     return rangeCountRef_;
+}
+const std::vector<double>& VarBin::getRangeFraction() const {
+    printBins("getRangeFraction()", rangeFraction_);
+    return rangeFraction_;
+}
+const std::vector<double>& VarBin::getRangeIndex() const {
+    printBins("getRangeIndex()", rangeIndex_);
+    return rangeIndex_;
 }

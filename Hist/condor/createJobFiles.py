@@ -43,7 +43,7 @@ if __name__=="__main__":
         print("Deleted dir: tmpSub")
     os.system("mkdir -p tmpSub")
     tarFile = "tmpSub/Hist.tar.gz"
-    os.system("tar --exclude condor --exclude corrlib --exclude tmp --exclude output -zcvf %s ../../Hist"%tarFile)
+    os.system("tar --exclude condor --exclude corrlib/.git --exclude tmp --exclude output -zcvf %s ../../Hist"%tarFile)
     os.system("cp runMain.sh tmpSub/")
     libPath = "./../corrlib/lib/libcorrectionlib.so"
     os.system(f"ls {libPath}")

@@ -21,77 +21,78 @@ public:
     double ptMin, ptMax, absEtaMin, absEtaMax;
 
     // Histograms and profiles
-    TH1D* h1EventsInPtAvpAll;
-    TH1D* h1EventsInPtAveAll;
-    TH1D* h1EventsInPtLeadAll;
-    TH1D* h1EventsInPtRecoilAll;
-    TH1D* h1EventsInPtAvpSel;
-    TH1D* h1EventsInPtAveSel;
-    TH1D* h1EventsInPtLeadSel;
-    TH1D* h1EventsInPtRecoilSel;
+    TH1D* h1EventInAvgProjPt;
+    TH1D* h1EventInAvgPt;
+    TH1D* h1EventInLeadPt;
+    TH1D* h1EventInRecoilPt;
+    TH1D* h1EventInAvgProjPtForTrigCut;
+    TH1D* h1EventInAvgPtForTrigCut;
+    TH1D* h1EventInLeadPtForTrigCut;
+    TH1D* h1EventInRecoilPtForTrigCut;
 
-    TProfile* p1RespInPtAvp;
-    TProfile* p1RespInPtAve;
-    TProfile* p1RespInPtLead;
-    TProfile* p1RespInPtRecoil;
+    TProfile* p1RespInAvgProjPt;
+    TProfile* p1RespInAvgPt;
+    TProfile* p1RespInLeadPt;
+    TProfile* p1RespInRecoilPt;
 
-    TProfile* p1PtLeadInPtAvp;
-    TProfile* p1PtLeadInPtAve;
-    TProfile* p1PtLeadInPtLead;
-    TProfile* p1PtLeadInPtRecoil;
+    TProfile* p1LeadPtInAvgProjPt;
+    TProfile* p1LeadPtInAvgPt;
+    TProfile* p1LeadPtInLeadPt;
+    TProfile* p1LeadPtInRecoilPt;
 
-    TProfile* p1CRecoilInPtAvp;
-    TProfile* p1CRecoilInPtAve;
-    TProfile* p1CRecoilInPtLead;
-    TProfile* p1CRecoilInPtRecoil;
+    TProfile* p1CrecoilInAvgProjPt;
+    TProfile* p1CrecoilInAvgPt;
+    TProfile* p1CrecoilInLeadPt;
+    TProfile* p1CrecoilInRecoilPt;
 
-    TProfile* p1M0InPtAvp;
-    TProfile* p1M3InPtAvp;
-    TProfile* p1MnInPtAvp;
-    TProfile* p1MuInPtAvp;
+    TProfile* p1MpfResp0InAvgProjPt;
+    TProfile* p1MpfResp3InAvgProjPt;
+    TProfile* p1MpfRespnInAvgProjPt;
+    TProfile* p1MpfRespuInAvgProjPt;
 
-    TProfile* p1M0InPtAve;
-    TProfile* p1M3InPtAve;
-    TProfile* p1MnInPtAve;
-    TProfile* p1MuInPtAve;
+    TProfile* p1MpfResp0InAvgPt;
+    TProfile* p1MpfResp3InAvgPt;
+    TProfile* p1MpfRespnInAvgPt;
+    TProfile* p1MpfRespuInAvgPt;
 
-    TProfile* p1M0InPtLead;
-    TProfile* p1M3InPtLead;
-    TProfile* p1MnInPtLead;
-    TProfile* p1MuInPtLead;
+    TProfile* p1MpfResp0InLeadPt;
+    TProfile* p1MpfResp3InLeadPt;
+    TProfile* p1MpfRespnInLeadPt;
+    TProfile* p1MpfRespuInLeadPt;
 
-    TProfile* p1M0InPtRecoil;
-    TProfile* p1M3InPtRecoil;
-    TProfile* p1MnInPtRecoil;
-    TProfile* p1MuInPtRecoil;
+    TProfile* p1MpfResp0InRecoilPt;
+    TProfile* p1MpfResp3InRecoilPt;
+    TProfile* p1MpfRespnInRecoilPt;
+    TProfile* p1MpfRespuInRecoilPt;
 
     // 2D recoils
-    TH2D* h2RecoilInPtAvp;
-    TH2D* h2RecoilInPtAve;
-    TH2D* h2RecoilInPtLead;
-    TH2D* h2RecoilInPtRecoil;
+    TH2D* h2JetsPtInAvgProjPt;
+    TH2D* h2JetsPtInAvgPt;
+    TH2D* h2JetsPtInLeadPt;
+    TH2D* h2JetsPtInRecoilPt;
 
     // PF composition plots
-    TProfile* p1Pt13InPtAvp;
-    TProfile* p1Rho13InPtAvp;
-    TProfile* p1Chf13InPtAvp;
-    TProfile* p1Nhf13InPtAvp;
-    TProfile* p1Nef13InPtAvp;
-    TProfile* p1Cef13InPtAvp;
-    TProfile* p1Muf13InPtAvp;
+    TProfile* p1RhoInAvgProjPt;
+    TProfile* p1JetsPtInAvgProjPt;
+    TProfile* p1JetsChfInAvgProjPt;
+    TProfile* p1JetsNhfInAvgProjPt;
+    TProfile* p1JetsNefInAvgProjPt;
+    TProfile* p1JetsCefInAvgProjPt;
+    TProfile* p1JetsMufInAvgProjPt;
 
-    TProfile* p1Pt25InPtAvp;
-    TProfile* p1Rho25InPtAvp;
-    TProfile* p1Chf25InPtAvp;
-    TProfile* p1Nhf25InPtAvp;
-    TProfile* p1Nef25InPtAvp;
-    TProfile* p1Cef25InPtAvp;
-    TProfile* p1Muf25InPtAvp;
+    TProfile* p1RhoInAvgProjPtForLeadEta1p3;
+    TProfile* p1Jet1PtInAvgProjPtForLeadEta1p3;
+    TProfile* p1Jet1ChfInAvgProjPtForLeadEta1p3;
+    TProfile* p1Jet1NhfInAvgProjPtForLeadEta1p3;
+    TProfile* p1Jet1NefInAvgProjPtForLeadEta1p3;
+    TProfile* p1Jet1CefInAvgProjPtForLeadEta1p3;
+    TProfile* p1Jet1MufInAvgProjPtForLeadEta1p3;
+
 
     // Controls
-    TH2D* h2M0InPtAvp;
-    TH2D* h2M3InPtAvp;
-    TH1D* h1CosDeltaPhiInEvents;
+    TH2D* h2MpfResp0InAvgProjPt;
+    TH2D* h2MpfResp3InAvgProjPt;
+    TH1D* h1EventInCosDeltaPhiLeadRecoil;
 
     // Method to initialize histograms
     void initializeHistograms(const std::vector<double>& binsPt, TDirectory* dirOut);

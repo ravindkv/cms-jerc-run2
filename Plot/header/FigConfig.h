@@ -9,7 +9,7 @@
 // Base configuration structure
 struct FigConfigBase {
     std::string histDir;
-    std::string histName;
+    std::vector<std::string> trigDirs;
     std::string xTitle;
     std::string yTitle;
     double xMin;
@@ -25,6 +25,25 @@ struct FigConfigBase {
 
 // Derived configuration for Eras1D
 struct FigConfigEras1D : public FigConfigBase {
+    std::string histName;
+    std::string rTitle;
+    double rMin;
+    double rMax;
+
+    void print() const override; // Declaration only
+};
+// Derived configuration for Era1Ds
+struct FigConfigEra1Ds : public FigConfigBase {
+    std::vector<std::string> histNames;
+    std::string rTitle;
+    double rMin;
+    double rMax;
+
+    void print() const override; // Declaration only
+};
+// Derived configuration for Year1Ds
+struct FigConfigYear1Ds : public FigConfigBase {
+    std::vector<std::string> histNames;
     std::string rTitle;
     double rMin;
     double rMax;
@@ -34,6 +53,7 @@ struct FigConfigEras1D : public FigConfigBase {
 
 // Derived configuration for Era2D
 struct FigConfigEra2D : public FigConfigBase {
+    std::string histName;
     std::string zTitle;
     bool zLog;
 
@@ -42,6 +62,7 @@ struct FigConfigEra2D : public FigConfigBase {
 
 // Derived configuration for ErasXY
 struct FigConfigErasXY : public FigConfigEras1D {
+    std::string histName;
     std::string varName;
     double varMin;
     double varMax;
@@ -51,8 +72,9 @@ struct FigConfigErasXY : public FigConfigEras1D {
     void print() const override; // Declaration only
 };
 
-// Derived configuration for EraXY
-struct FigConfigEraXY : public FigConfigEras1D {
+// Derived configuration for EraXYs
+struct FigConfigEraXYs : public FigConfigEras1D {
+    std::string histName;
     std::string varName;
     std::vector<double> varBins;
     bool isVarOnX;
@@ -60,8 +82,8 @@ struct FigConfigEraXY : public FigConfigEras1D {
     void print() const override; // Declaration only
 };
 
-// Derived configuration for Time1D
-struct FigConfigTime1D : public FigConfigBase {
+// Derived configuration for Time1Ds
+struct FigConfigTime1Ds : public FigConfigBase {
     std::vector<std::string> histNames;
 
     void print() const override; // Declaration only

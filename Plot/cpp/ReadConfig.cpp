@@ -19,14 +19,18 @@ void ReadConfig::readConfigFile(const std::string& configFilePath) {
     for (auto& [era, configGroup] : configJson.items()) {
         if (era == "ConfigEras1D") {
             readFigConfig(configGroup, figConfigVecEras1D_);
+        } else if (era == "ConfigEra1Ds") {
+            readFigConfig(configGroup, figConfigVecEra1Ds_);
+        } else if (era == "ConfigYear1Ds") {
+            readFigConfig(configGroup, figConfigVecYear1Ds_);
         } else if (era == "ConfigEra2D") {
             readFigConfig(configGroup, figConfigVecEra2D_);
         } else if (era == "ConfigErasXY") {
             readFigConfig(configGroup, figConfigVecErasXY_);
-        } else if (era == "ConfigEraXY") {
-            readFigConfig(configGroup, figConfigVecEraXY_);
-        }else if (era == "ConfigTime1D") {
-            readFigConfig(configGroup, figConfigVecTime1D_);
+        } else if (era == "ConfigEraXYs") {
+            readFigConfig(configGroup, figConfigVecEraXYs_);
+        }else if (era == "ConfigTime1Ds") {
+            readFigConfig(configGroup, figConfigVecTime1Ds_);
         }
     }
 }
@@ -38,7 +42,7 @@ void ReadConfig::readFigConfig(const nlohmann::json& configGroup, std::vector<T>
     for (auto& [name, params] : configGroup.items()) {
         T figConfig;
         figConfig.histDir = params.value("histDir", "");
-        figConfig.histName = params.value("histName", "");
+        figConfig.trigDirs = params.value("trigDirs", std::vector<std::string>{});
         figConfig.xTitle = params.value("xTitle", "");
         figConfig.yTitle = params.value("yTitle", "");
         figConfig.xMin = params.value("xMin", 0.0);
@@ -52,28 +56,44 @@ void ReadConfig::readFigConfig(const nlohmann::json& configGroup, std::vector<T>
         // Special handling for specific types
         if constexpr (std::is_same_v<T, FigConfigEras1D> || 
                      std::is_same_v<T, FigConfigErasXY> || 
-                     std::is_same_v<T, FigConfigEraXY>) {
+                     std::is_same_v<T, FigConfigEraXYs>) {
+            figConfig.histName = params.value("histName", "");
             figConfig.rTitle = params.value("rTitle", "");
             figConfig.rMin = params.value("rMin", 0.0);
             figConfig.rMax = params.value("rMax", 2.0);
         }
         if constexpr (std::is_same_v<T, FigConfigEra2D>) {
+            figConfig.histName = params.value("histName", "");
             figConfig.zTitle = params.value("zTitle", "");
             figConfig.zLog = params.value("zLog", false);
         }
         if constexpr (std::is_same_v<T, FigConfigErasXY>) {
+            figConfig.histName = params.value("histName", "");
             figConfig.varName = params.value("varName", "");
             figConfig.varMin = params.value("varMin", 0.0);
             figConfig.varMax = params.value("varMax", 2.0);
             figConfig.isVarOnX = params.value("isVarOnX", false);
         }
-        if constexpr (std::is_same_v<T, FigConfigEraXY>) {
+        if constexpr (std::is_same_v<T, FigConfigEraXYs>) {
+            figConfig.histName = params.value("histName", "");
             figConfig.varName = params.value("varName", "");
             figConfig.varBins = params.value("varBins", std::vector<double>{});
             figConfig.isVarOnX = params.value("isVarOnX", false);
         }
-        if constexpr (std::is_same_v<T, FigConfigTime1D>) {
+        if constexpr (std::is_same_v<T, FigConfigTime1Ds> ){
             figConfig.histNames = params.value("histNames", std::vector<std::string>{});
+        }
+        if constexpr (std::is_same_v<T, FigConfigEra1Ds>){
+            figConfig.histNames = params.value("histNames", std::vector<std::string>{});
+            figConfig.rTitle = params.value("rTitle", "");
+            figConfig.rMin = params.value("rMin", 0.0);
+            figConfig.rMax = params.value("rMax", 2.0);
+        }
+        if constexpr (std::is_same_v<T, FigConfigYear1Ds>){
+            figConfig.histNames = params.value("histNames", std::vector<std::string>{});
+            figConfig.rTitle = params.value("rTitle", "");
+            figConfig.rMin = params.value("rMin", 0.0);
+            figConfig.rMax = params.value("rMax", 2.0);
         }
 
         configVec.push_back(figConfig);
@@ -83,16 +103,22 @@ void ReadConfig::readFigConfig(const nlohmann::json& configGroup, std::vector<T>
 const std::vector<FigConfigEras1D>& ReadConfig::getFigConfigVecEras1D() const {
     return figConfigVecEras1D_;
 }
+const std::vector<FigConfigEra1Ds>& ReadConfig::getFigConfigVecEra1Ds() const {
+    return figConfigVecEra1Ds_;
+}
+const std::vector<FigConfigYear1Ds>& ReadConfig::getFigConfigVecYear1Ds() const {
+    return figConfigVecYear1Ds_;
+}
 const std::vector<FigConfigEra2D>& ReadConfig::getFigConfigVecEra2D() const {
     return figConfigVecEra2D_;
 }
 const std::vector<FigConfigErasXY>& ReadConfig::getFigConfigVecErasXY() const {
     return figConfigVecErasXY_;
 }
-const std::vector<FigConfigEraXY>& ReadConfig::getFigConfigVecEraXY() const {
-    return figConfigVecEraXY_;
+const std::vector<FigConfigEraXYs>& ReadConfig::getFigConfigVecEraXYs() const {
+    return figConfigVecEraXYs_;
 }
-const std::vector<FigConfigTime1D>& ReadConfig::getFigConfigVecTime1D() const {
-    return figConfigVecTime1D_;
+const std::vector<FigConfigTime1Ds>& ReadConfig::getFigConfigVecTime1Ds() const {
+    return figConfigVecTime1Ds_;
 }
 

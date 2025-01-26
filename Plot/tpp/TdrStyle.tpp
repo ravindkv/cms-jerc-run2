@@ -191,8 +191,10 @@ void TdrStyle::setFigConfig(const T& params) {
 
     // Special handling for specific types
     if constexpr (std::is_same_v<T, FigConfigEras1D> || 
+                  std::is_same_v<T, FigConfigEra1Ds> || 
+                  std::is_same_v<T, FigConfigYear1Ds> || 
                   std::is_same_v<T, FigConfigErasXY> || 
-                  std::is_same_v<T, FigConfigEraXY>) {
+                  std::is_same_v<T, FigConfigEraXYs>) {
         rTitle_ = params.rTitle;
         rMin_ = params.rMin;
         rMax_ = params.rMax;

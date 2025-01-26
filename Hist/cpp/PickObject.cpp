@@ -1,4 +1,5 @@
 #include "PickObject.h"
+#include <TRandom.h>
 
 // Constructor implementation
 PickObject::PickObject(GlobalFlag& globalFlags) : 
@@ -26,7 +27,8 @@ void PickObject::clearObjects() {
     pickedGenMuons_.clear();
     pickedGenPhotons_.clear();
     pickedGenRefs_.clear();
-    pickedGenJets_.clear();
+    pickedGenJetsP4_.clear();
+    pickedGenJetsIndex_.clear();
 }
 
 // Helper function for debug printing
@@ -45,7 +47,7 @@ auto PickObject::getPickedMuons() const -> const std::vector<int>& {
     return pickedMuons_;
 }
 
-auto PickObject::getPickedPhotons() const -> const std::vector<int>& {
+auto PickObject::getPickedPhotonIndex() const -> const std::vector<int>& {
     return pickedPhotons_;
 }
 
@@ -77,13 +79,18 @@ auto PickObject::getPickedGenRefs() const -> const std::vector<TLorentzVector>& 
     return pickedGenRefs_;
 }
 
-auto PickObject::getPickedGenJets() const -> const std::vector<TLorentzVector>& {
-    return pickedGenJets_;
+auto PickObject::getPickedGenJetsP4() const -> const std::vector<TLorentzVector>& {
+    return pickedGenJetsP4_;
+}
+
+auto PickObject::getPickedGenJetsIndex() const -> const std::vector<int>& {
+    return pickedGenJetsIndex_;
 }
 
 // Reco objects
 void PickObject::pickMuons(const SkimTree& skimT) {
     printDebug("Starting Selection, nMuon = "+std::to_string(skimT.nMuon));
+    pickedMuons_.clear();
 
     for (UInt_t m = 0; m < skimT.nMuon; ++m) {
         double eta = skimT.Muon_eta[m];
@@ -111,6 +118,7 @@ void PickObject::pickMuons(const SkimTree& skimT) {
 
 void PickObject::pickElectrons(const SkimTree& skimT) {
     printDebug("Starting Selection, nElectron = "+std::to_string(skimT.nElectron));
+    pickedElectrons_.clear();
 
     for (int eleInd = 0; eleInd < skimT.nElectron; ++eleInd) {
         double eta = skimT.Electron_eta[eleInd];
@@ -139,6 +147,7 @@ void PickObject::pickElectrons(const SkimTree& skimT) {
 // Photon selection
 void PickObject::pickPhotons(const SkimTree& skimT) {
     printDebug("Starting Selection, nPhoton = "+std::to_string(skimT.nPhoton));
+    pickedPhotons_.clear();
 
     for (int phoInd = 0; phoInd < skimT.nPhoton; ++phoInd) {
         double pt  = skimT.Photon_pt[phoInd];
@@ -147,7 +156,7 @@ void PickObject::pickPhotons(const SkimTree& skimT) {
         double hoe = skimT.Photon_hoe[phoInd];
         Int_t id = skimT.Photon_cutBased[phoInd];  // Tight ID
         // R9>0.94 to avoid bias wrt R9Id90 triggers and from photon conversions
-        if(pt > 15 && absEta < 1.3 && r9 > 0.94 && r9 < 1.0 && hoe < 0.02148 && id==3){
+        if(pt > 25 && absEta < 1.3 && r9 > 0.94 && r9 < 1.0 && hoe < 0.02148 && id==3){
             pickedPhotons_.push_back(phoInd);
         }
         printDebug(
@@ -164,6 +173,7 @@ void PickObject::pickPhotons(const SkimTree& skimT) {
 
 // Reference object selection
 void PickObject::pickRefs(const SkimTree& skimT) {
+    pickedRefs_.clear();
     // Z->ee + jets channel
     if (channel_ == GlobalFlag::Channel::ZeeJet && pickedElectrons_.size() > 1) {
         int j = pickedElectrons_.at(0);
@@ -213,85 +223,323 @@ void PickObject::pickRefs(const SkimTree& skimT) {
             printDebug("Photon index added to references  = " + std::to_string(idx));
         }
     }
-
     printDebug("Total Reference Objects Selected: " + std::to_string(pickedRefs_.size()));
 }
 
 
-// Jet selection
+void PickObject::pickRefForFakeGamma(const SkimTree& skimT, const int& iJet) {
+    printDebug("\n pickRefForFakeGamma: Starting Selection");
+    pickedRefs_.clear();
+    int iGenJet = skimT.Jet_genJetIdx[iJet];
+    double offset = 1.0;
+    if (iGenJet >=0 && iGenJet < skimT.nGenJet) {
+        TLorentzVector p4Pho;
+        p4Pho.SetPtEtaPhiM(skimT.GenJet_pt[iGenJet], skimT.GenJet_eta[iGenJet], skimT.GenJet_phi[iGenJet], skimT.GenJet_mass[iGenJet]);
+        // QCD_CP5 has about 3.5 GeV/A of UE offset at generator level
+        // https://github.com/blehtela/gamjet-analysis/blob/919921427e6a1ec96df677bd774f0f819a19d108/GamHistosFill.C#L2562
+        if (p4Pho.Pt() > 0 ) offset = 1 - 3.5*skimT.Jet_area[iJet]/p4Pho.Pt();
+        p4Pho *= offset;
+        pickedRefs_.push_back(p4Pho);
+    }
+    printDebug("Jet index added to reference = " + std::to_string(iJet));
+    printDebug("GenJet index added to reference = " + std::to_string(iGenJet));
+    printDebug("UE offset = " + std::to_string(offset));
+    printDebug("pickRefForFakeGamma: Done.\n");
+}
+
+
 void PickObject::pickJets(const SkimTree& skimT, const TLorentzVector& p4Ref) {
-    printDebug("Starting Selection, nJet = "+std::to_string(skimT.nJet));
-    TLorentzVector p4Jeti;
-    TLorentzVector p4Jet1, p4Jet2, p4Jetn;
-    // Initialize jet indices and counts
-    int iJet1 = -1, iJet2 = -1, nJets = 0;
+    printDebug("pickJets: Starting Selection, nJet = " + std::to_string(skimT.nJet));
 
-    // Initialize four-momentum vectors to zero
-    p4Jet1.SetPtEtaPhiM(0, 0, 0, 0);
-    p4Jet2.SetPtEtaPhiM(0, 0, 0, 0);
-    p4Jetn.SetPtEtaPhiM(0, 0, 0, 0);
+    pickedJetsIndex_.clear();
+    pickedJetsP4_.clear();
 
-    // First jet loop: Identify Leading and Subleading Jets Based on Selection Criteria
+    //-----------------------------------------
+    // 1) Decide on pT threshold based on channel
+    //-----------------------------------------
+    float ptThreshold = (channel_ == GlobalFlag::Channel::GamJet) ? 15.f : 12.f;
+    float etaThreshold = 1.3;
+
+    //-----------------------------------------
+    // 2) Identify the photon->jet index if needed
+    //-----------------------------------------
+    int phoJetIdx = -1;
+    if (channel_ == GlobalFlag::Channel::GamJet && !pickedPhotons_.empty()) {
+        int phoInd   = pickedPhotons_.at(0);
+        phoJetIdx    = skimT.Photon_jetIdx[phoInd];
+        printDebug("GamJet channel: photon->jet index = " + std::to_string(phoJetIdx));
+    }
+
+    //-----------------------------------------
+    // 3) Gather candidate jet indices 
+    //    (pass minimal pT, skip photon jet if GamJet)
+    //-----------------------------------------
+    std::vector<int> candIndices;
+    candIndices.reserve(skimT.nJet);
+
     for (int i = 0; i < skimT.nJet; ++i) {
-        // Apply selection criteria
-        if (skimT.Jet_jetId[i] < 6) continue; // TightLepVeto
-        if (skimT.Jet_pt[i] < 12) continue;
+        float pt = skimT.Jet_pt[i];
+        if (pt < ptThreshold) {
+            continue; 
+        }
+        if (std::abs(skimT.Jet_eta[i]) >= etaThreshold) {
+            continue; 
+        }
 
-        // Create a TLorentzVector for the current jet
+        // Skip photon jet index in GamJet channel
+        if (channel_ == GlobalFlag::Channel::GamJet && (i == phoJetIdx)) {
+            printDebug("Skipping jet " + std::to_string(i) + " because it matches photon->jet index");
+            continue;
+        }
+
+        candIndices.push_back(i);
+    }
+
+    //-----------------------------------------
+    // 4) Sort the candidate jet indices by pT
+    //    in descending order
+    //-----------------------------------------
+    std::sort(candIndices.begin(), candIndices.end(),
+              [&](int idx1, int idx2) {
+                  return skimT.Jet_pt[idx1] > skimT.Jet_pt[idx2];
+              });
+
+    //-----------------------------------------
+    // 5) Pick the leading and subleading jets
+    //    (if they exist)
+    //-----------------------------------------
+    int iJet1 = -1;
+    int iJet2 = -1;
+
+    if (!candIndices.empty()) {
+        iJet1 = candIndices[0];
+    }
+    if (candIndices.size() > 1) {
+        iJet2 = candIndices[1];
+    }
+
+    printDebug("After picking top-2 pT jets: iJet1 = " + std::to_string(iJet1) +
+               ", iJet2 = " + std::to_string(iJet2));
+
+    //-----------------------------------------
+    // 6) Apply Jet ID (TightLepVeto >= 6)
+    //-----------------------------------------
+    if (iJet1 != -1 && skimT.Jet_jetId[iJet1] < 6) {
+        printDebug("iJet1 = " + std::to_string(iJet1) + " fails JetID check -> reset to -1");
+        iJet1 = -1;
+    }
+    if (iJet2 != -1 && skimT.Jet_jetId[iJet2] < 6) {
+        printDebug("iJet2 = " + std::to_string(iJet2) + " fails JetID check -> reset to -1");
+        iJet2 = -1;
+    }
+
+    printDebug("After JetID check: iJet1 = " + std::to_string(iJet1) +
+               ", iJet2 = " + std::to_string(iJet2));
+
+    //-----------------------------------------
+    // 7) Check \deltaR with reference object
+    //    (e.g., photon or something else)
+    //-----------------------------------------
+    auto passDeltaR = [&](int jetIdx) {
+        if (jetIdx < 0) return false; // invalid index
+        TLorentzVector p4Jet;
+        p4Jet.SetPtEtaPhiM(skimT.Jet_pt[jetIdx],
+                           skimT.Jet_eta[jetIdx],
+                           skimT.Jet_phi[jetIdx],
+                           skimT.Jet_mass[jetIdx]);
+
+        // Return true if dR >= 0.2 (i.e., pass)
+        return (p4Ref.DeltaR(p4Jet) >= 0.2);
+    };
+
+    if (iJet1 != -1 && !passDeltaR(iJet1)) {
+        printDebug("iJet1 = " + std::to_string(iJet1) + " fails dR check -> reset to -1");
+        iJet1 = -1;
+    }
+    if (iJet2 != -1 && !passDeltaR(iJet2)) {
+        printDebug("iJet2 = " + std::to_string(iJet2) + " fails dR check -> reset to -1");
+        iJet2 = -1;
+    }
+
+    printDebug("After dR check: iJet1 = " + std::to_string(iJet1) +
+               ", iJet2 = " + std::to_string(iJet2));
+
+    //-----------------------------------------
+    // 8) Store the final picked jet indices
+    //-----------------------------------------
+    pickedJetsIndex_.push_back(iJet1);
+    pickedJetsIndex_.push_back(iJet2);
+
+    //-----------------------------------------
+    // 9) Build the four-vectors: leading jet,
+    //    subleading jet, and sum of the rest
+    //-----------------------------------------
+    TLorentzVector p4Jet1(0, 0, 0, 0);
+    TLorentzVector p4Jet2(0, 0, 0, 0);
+    TLorentzVector p4Jetn(0, 0, 0, 0);
+
+    for (int i = 0; i < skimT.nJet; ++i) {
+        TLorentzVector p4Jeti;
         p4Jeti.SetPtEtaPhiM(skimT.Jet_pt[i],
-                           skimT.Jet_eta[i],
-                           skimT.Jet_phi[i],
-                           skimT.Jet_mass[i]);
+                            skimT.Jet_eta[i],
+                            skimT.Jet_phi[i],
+                            skimT.Jet_mass[i]);
 
-        // Check ΔR criterion
-        if (p4Ref.DeltaR(p4Jeti) < 0.2) continue;
-        nJets++;
-
-        // Select Leading Jet
-        if (iJet1 == -1 || p4Jeti.Pt() > p4Jet1.Pt()) {
-            // Demote current leading to subleading if applicable
-            if (iJet1 != -1) {
-                iJet2 = iJet1;
-                p4Jet2 = p4Jet1;
-            }
-            // Assign new leading jet
-            iJet1 = i;
+        // If this is the chosen leading or subleading jet, store individually
+        if (i == iJet1) {
             p4Jet1 = p4Jeti;
-            pickedJetsIndex_.push_back(iJet1);
-        }
-        // Select Subleading Jet
-        else if (iJet2 == -1 || p4Jeti.Pt() > p4Jet2.Pt()) {
-            iJet2 = i;
+        } 
+        else if (i == iJet2) {
             p4Jet2 = p4Jeti;
-            pickedJetsIndex_.push_back(iJet2);
+        } 
+        // Otherwise, accumulate in p4Jetn
+        else {
+            p4Jetn += p4Jeti;
         }
-        printDebug(
-            "Jet " + std::to_string(i) + 
-            ", Id  = " + std::to_string(skimT.Jet_jetId[i]) + 
-            ", pt  = " + std::to_string(skimT.Jet_pt[i]) + 
-            ", p4Ref pT  = " + std::to_string(p4Ref.Pt())
-       );
     }
 
-    // Second Loop: Accumulate p4Jetn with All Jets Except Leading and Subleading
-    for (int i = 0; i < skimT.nJet; ++i) {
-        // Skip the leading and subleading jets
-        if (i == iJet1 || i == iJet2) continue;
-
-        // Create a TLorentzVector for the current jet
-        p4Jeti.SetPtEtaPhiM(skimT.Jet_pt[i],
-                           skimT.Jet_eta[i],
-                           skimT.Jet_phi[i],
-                           skimT.Jet_mass[i]);
-
-        // Accumulate the four-momentum
-        p4Jetn += p4Jeti;
-    }
     pickedJetsP4_.push_back(p4Jet1);
     pickedJetsP4_.push_back(p4Jet2);
     pickedJetsP4_.push_back(p4Jetn);
 
-    printDebug("Total Jets Selected: " + std::to_string(nJets));
+    //-----------------------------------------
+    // 10) Final debug info
+    //-----------------------------------------
+    printDebug("Final Jets: iJet1 = " + std::to_string(iJet1) +
+               ", iJet2 = " + std::to_string(iJet2));
+    printDebug("pickJets: Done.");
+}
+
+
+void PickObject::pickJetsForFakeGamma(const SkimTree& skimT) {
+    printDebug("pickJetsForFakeGamma: Starting Selection, nJet = " + std::to_string(skimT.nJet));
+
+    pickedJetsIndex_.clear();
+    pickedJetsP4_.clear();
+
+    //-----------------------------------------
+    // 1) Decide on pT threshold based on channel
+    //-----------------------------------------
+    float ptThreshold = 15.f; 
+    float etaThreshold = 1.3;
+
+    //-----------------------------------------
+    // 2) Gather candidate jet indices 
+    //    (pass minimal pT, skip photon jet if GamJet)
+    //-----------------------------------------
+    std::vector<int> candIndices;
+    candIndices.reserve(skimT.nJet);
+
+    for (int i = 0; i < skimT.nJet; ++i) {
+        float pt = skimT.Jet_pt[i];
+        if (pt < ptThreshold) {
+            continue; 
+        }
+        if (std::abs(skimT.Jet_eta[i]) >= etaThreshold) {
+            continue; 
+        }
+        candIndices.push_back(i);
+    }
+
+    //-----------------------------------------
+    // 3) Sort the candidate jet indices by pT
+    //    in descending order
+    //-----------------------------------------
+    std::sort(candIndices.begin(), candIndices.end(),
+              [&](int idx1, int idx2) {
+                  return skimT.Jet_pt[idx1] > skimT.Jet_pt[idx2];
+              });
+
+    //-----------------------------------------
+    // 4) Pick the leading three jets
+    //    (if they exist)
+    //-----------------------------------------
+    int iJet1 = -1;
+    int iJet2 = -1;
+    int iJet3 = -1;
+
+    if (!candIndices.empty()) {
+        iJet1 = candIndices[0];
+    }
+    if (candIndices.size() > 1) {
+        iJet2 = candIndices[1];
+    }
+    if (candIndices.size() > 2) {
+        iJet3 = candIndices[2];
+    }
+
+    printDebug("After picking top-3 pT jets: iJet1 = " + std::to_string(iJet1) +
+               ", iJet2 = " + std::to_string(iJet2) +  ", iJet3 = " + std::to_string(iJet3));
+
+    //-----------------------------------------
+    // 5) Apply Jet ID (TightLepVeto >= 6)
+    //-----------------------------------------
+    if (iJet1 != -1 && skimT.Jet_jetId[iJet1] < 6) {
+        printDebug("iJet1 = " + std::to_string(iJet1) + " fails JetID check -> reset to -1");
+        iJet1 = -1;
+    }
+    if (iJet2 != -1 && skimT.Jet_jetId[iJet2] < 6) {
+        printDebug("iJet2 = " + std::to_string(iJet2) + " fails JetID check -> reset to -1");
+        iJet2 = -1;
+    }
+    if (iJet3 != -1 && skimT.Jet_jetId[iJet3] < 6) {
+        printDebug("iJet3 = " + std::to_string(iJet3) + " fails JetID check -> reset to -1");
+        iJet3 = -1;
+    }
+
+    printDebug("After JetID check: iJet1 = " + std::to_string(iJet1) +
+               ", iJet2 = " + std::to_string(iJet2) +  ", iJet3 = " + std::to_string(iJet3));
+
+    //-----------------------------------------
+    // 6) Store the final picked jet indices
+    //-----------------------------------------
+    pickedJetsIndex_.push_back(iJet1);
+    pickedJetsIndex_.push_back(iJet2);
+    pickedJetsIndex_.push_back(iJet3);
+
+    //-----------------------------------------
+    // 7) Build the four-vectors: leading jet,
+    //    subleading jet, and sum of the rest
+    //-----------------------------------------
+    TLorentzVector p4Jet1(0, 0, 0, 0);
+    TLorentzVector p4Jet2(0, 0, 0, 0);
+    TLorentzVector p4Jet3(0, 0, 0, 0);
+    TLorentzVector p4Jetn(0, 0, 0, 0);
+
+    for (int i = 0; i < skimT.nJet; ++i) {
+        TLorentzVector p4Jeti;
+        p4Jeti.SetPtEtaPhiM(skimT.Jet_pt[i],
+                            skimT.Jet_eta[i],
+                            skimT.Jet_phi[i],
+                            skimT.Jet_mass[i]);
+
+        // If this is the chosen leading or subleading jet, store individually
+        if (i == iJet1) {
+            p4Jet1 = p4Jeti;
+        } 
+        else if (i == iJet2) {
+            p4Jet2 = p4Jeti;
+        } 
+        else if (i == iJet3) {
+            p4Jet3 = p4Jeti;
+        } 
+        // Otherwise, accumulate in p4Jetn
+        else {
+            p4Jetn += p4Jeti;
+        }
+    }
+
+    pickedJetsP4_.push_back(p4Jet1);
+    pickedJetsP4_.push_back(p4Jet2);
+    pickedJetsP4_.push_back(p4Jet3);
+    pickedJetsP4_.push_back(p4Jetn);
+
+    //-----------------------------------------
+    // 10) Final debug info
+    //-----------------------------------------
+    printDebug("Final Jets: iJet1 = " + std::to_string(iJet1) +
+               ", iJet2 = " + std::to_string(iJet2) +  ", iJet3 = " + std::to_string(iJet3));
+    printDebug("pickJetsForFakeGamma: Done.");
 }
 
 // Gen objects
@@ -402,3 +650,36 @@ void PickObject::pickGenRefs(const SkimTree& skimT, const TLorentzVector& p4Ref)
     printDebug("Total Gen Reference Objects Selected: " + std::to_string(pickedGenRefs_.size()));
 }
 
+void PickObject::pickGenJets(const SkimTree& skimT, const int& iJet1, const int& iJet2, const TLorentzVector& p4Jet1, const TLorentzVector& p4Jet2) {
+    printDebug("pickGenJets: Starting Selection, nJet = " + std::to_string(skimT.nJet));
+
+    pickedGenJetsIndex_.clear();
+    pickedGenJetsP4_.clear();
+
+    // Select p4GenJet1 matching leading and subleading reco jet
+    int iGenJet1(-1), iGenJet2(-1);
+    TLorentzVector p4GenJeti, p4GenJet1, p4GenJet2;
+    p4GenJet1.SetPtEtaPhiM(0, 0, 0, 0);
+    p4GenJet2.SetPtEtaPhiM(0, 0, 0, 0);
+    for (Int_t i = 0; i != skimT.nGenJet; ++i) {
+        p4GenJeti.SetPtEtaPhiM(skimT.GenJet_pt[i], skimT.GenJet_eta[i],
+                               skimT.GenJet_phi[i], skimT.GenJet_mass[i]);
+        if (iJet1 != -1 && p4GenJeti.DeltaR(p4Jet1) < 0.4 && iGenJet1 == -1) {
+            iGenJet1 = i;
+            p4GenJet1 = p4GenJeti;
+        } else if (iJet2 != -1 && p4GenJeti.DeltaR(p4Jet2) < 0.4 && iGenJet2 == -1) {
+            iGenJet2 = i;
+            p4GenJet2 = p4GenJeti;
+        }
+    }
+
+    pickedGenJetsIndex_.push_back(iGenJet1);
+    pickedGenJetsIndex_.push_back(iGenJet2);
+
+    pickedGenJetsP4_.push_back(p4GenJet1);
+    pickedGenJetsP4_.push_back(p4GenJet2);
+
+    // debug info
+    printDebug("Final Jets: iJet1 = " + std::to_string(iGenJet1) +
+               ", iJet2 = " + std::to_string(iGenJet2));
+}

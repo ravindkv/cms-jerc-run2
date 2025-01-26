@@ -56,7 +56,7 @@ public:
 
     Float_t Jet_rawFactor[nJetMax]{};
     Float_t Jet_area[nJetMax]{};
-    UChar_t Jet_jetId[nJetMax]{}; // NanoV12
+    Int_t Jet_jetId[nJetMax]{}; // NanoV9
 
     Float_t Jet_btagDeepFlavB[nJetMax]{}; 
     Float_t Jet_btagDeepFlavCvL[nJetMax]{};
@@ -71,18 +71,18 @@ public:
     Float_t Jet_chEmEF[nJetMax]{};
     Float_t Jet_muEF[nJetMax]{};
 
-    Short_t Jet_genJetIdx[nJetMax]{}; // NanoV12
+    Short_t Jet_genJetIdx[nJetMax]{}; // NanoV12 , FIXME for V9
 
     // Photon variables
     static const int nPhotonMax = 200;
-    UInt_t nPhoton{}; // NanoV11,10
+    UInt_t nPhoton{}; 
     Float_t Photon_pt[nPhotonMax]{};
     Float_t Photon_eta[nPhotonMax]{};
     Float_t Photon_phi[nPhotonMax]{};
-    Float_t Photon_mass[nPhotonMax]{}; // Run2
+    Float_t Photon_mass[nPhotonMax]{}; 
     Float_t Photon_hoe[nPhotonMax]{};
-    Int_t Photon_cutBased[nPhotonMax]{}; // NanoV11,10
-    Short_t Photon_jetIdx[nPhotonMax]{}; // NanoV12
+    Int_t Photon_cutBased[nPhotonMax]{}; 
+    Int_t Photon_jetIdx[nPhotonMax]{}; 
     UChar_t Photon_seedGain[nPhotonMax]{};
     Float_t Photon_r9[nPhotonMax]{};
     Float_t Photon_eCorr[nPhotonMax]{};
@@ -139,10 +139,10 @@ public:
     Float_t Muon_dz[nMuonMax]{};
 
     // Other variables
-    Float_t Rho{}; // Run2, Run3
+    Float_t Rho{}; 
 
-    Int_t PV_npvs{};     // NanoV12
-    Int_t PV_npvsGood{}; // NanoV12
+    Int_t PV_npvs{};     
+    Int_t PV_npvsGood{}; 
     Float_t PV_z{};
     Float_t GenVtx_z{};
 
@@ -162,6 +162,15 @@ public:
     UInt_t nPSWeight{}; // NanoV11,10
     static const int nPSWeightMax = 400;
     Float_t PSWeight[nPSWeightMax]{}; // [nPSWeight]
+
+    const Float_t getNanoXssOrLumi(){return nanoXssOrLumi_;}
+    const Int_t getNanoEvents(){return nanoEvents_;}
+    const Float_t getMcXssWeight(){
+        Float_t xssWeight = 1.0;
+        if (nanoXssOrLumi_>0) xssWeight = nanoXssOrLumi_/nanoEvents_;
+        std::cout<<" SkimTree:: getMcXssWeight() = "<<xssWeight<<'\n';
+        return xssWeight;
+    }
 
 private:
     // Member variables
@@ -205,6 +214,9 @@ private:
     const bool isDebug_;
     const bool isData_;
     const bool isMC_;
+
+    Float_t nanoXssOrLumi_ = 1.0;
+    Int_t   nanoEvents_ = 1.0;
 };
 
 #endif // SKIMTREE_H

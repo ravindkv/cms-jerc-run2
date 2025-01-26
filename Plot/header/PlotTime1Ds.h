@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef PlotTime1D_H
-#define PlotTime1D_H
+#ifndef PlotTime1Ds_H
+#define PlotTime1Ds_H
 
 #include <map>
 #include <vector>
@@ -24,14 +24,14 @@
 #include "TdrStyle.h"
 
 template <typename T>
-class PlotTime1D {
+class PlotTime1Ds {
 public:
-    PlotTime1D();
-    ~PlotTime1D();
+    PlotTime1Ds();
+    ~PlotTime1Ds();
     
     // Setters
     void setInput(const nlohmann::json &inputJson, const std::string & channel, const std::string& year);
-    void setFigConfigTime1D(const FigConfigTime1D &params);
+    void setFigConfigTime1Ds(const FigConfigTime1Ds &params);
 
     // Loaders
     void loadHists(const std::string& sourceType);
@@ -50,6 +50,7 @@ private:
     std::string year_;
     std::vector<std::string> dataEras_;
     std::string histDir_;
+    std::vector<std::string> trigDirs_;
     std::vector<std::string> histNames_;
     double yMin_;
     double yMax_;
@@ -63,6 +64,6 @@ private:
     std::shared_ptr<TdrStyle> tdrStyle_;
 };
 
-#include "../tpp/PlotTime1D.tpp"
+#include "../tpp/PlotTime1Ds.tpp"
 #endif
 

@@ -39,6 +39,7 @@ template<typename T>
 void PlotErasXY<T>::setFigConfigErasXY(const FigConfigErasXY & params) {
   tdrStyle_->setFigConfig(params);
   histDir_  = params.histDir;
+  trigDirs_ = params.trigDirs;
   histName_ = params.histName;
   varMin_ = params.varMin;
   varMax_ = params.varMax;
@@ -60,7 +61,13 @@ void PlotErasXY<T>::loadHists(const std::vector<std::string>& bins, const std::s
       continue;
     }
 
-    T* hist = (T*)file.Get(path.c_str());
+    // Retrieve the histogram
+    T* hist = nullptr;
+    if(!trigDirs_.empty()){
+        hist = Helper::sumHistsFromTrigDirs<T>(file, histDir_, trigDirs_, histName_);
+    } else{
+        hist = static_cast<T*>(file.Get(path.c_str()));
+    }
     if (!hist) {
       std::cerr << "Error: Could not retrieve histogram " << path << " from " << fileName << std::endl;
       file.Close();

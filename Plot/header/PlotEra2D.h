@@ -43,6 +43,7 @@ private:
     std::string year_;
     std::string dataEraOrMcBin_;
     std::string histDir_;
+    std::vector<std::string> trigDirs_;
     std::string histName_;
     std::shared_ptr<TdrStyle> tdrStyle_;
 };

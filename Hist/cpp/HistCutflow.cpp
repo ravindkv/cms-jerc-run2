@@ -2,8 +2,12 @@
 #include "HistCutflow.h"
 #include "Helper.h"
 
-HistCutflow::HistCutflow(TDirectory* origDir, const std::string& directoryName, const std::vector<std::string>& cuts)
-    : cutNames_(cuts) {
+HistCutflow::HistCutflow(TDirectory* origDir, const std::string& directoryName, const std::vector<std::string>& cuts, const GlobalFlag& globalFlags)
+    : cutNames_(cuts),
+    globalFlags_(globalFlags),
+    year_(globalFlags_.getYear()),
+    channel_(globalFlags_.getChannel()),
+    isDebug_(globalFlags_.isDebug()){
 
     // Create or retrieve the desired directory within the original directory
     std::string dirName = directoryName + "/HistCutflow";
@@ -42,6 +46,7 @@ HistCutflow::~HistCutflow() {
 void HistCutflow::fill(const std::string& cutName, double weight) {
     auto it = cutToBinMap.find(cutName);
     if (it != cutToBinMap.end()) {
+        if(isDebug_) std::cout<<"passed cutflow: "<<cutName<<"\n";
         h1EventInCutflow_->Fill(it->second, weight);
     } else {
         std::cerr << "Warning: Cut name \"" << cutName << "\" not found in cutToBinMap.\n";

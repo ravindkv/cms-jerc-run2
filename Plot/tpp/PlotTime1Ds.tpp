@@ -1,8 +1,8 @@
-#include "PlotTime1D.h"
+#include "PlotTime1Ds.h"
 #include "Helper.h"
 
 template<typename T>
-PlotTime1D<T>::PlotTime1D() : 
+PlotTime1Ds<T>::PlotTime1Ds() : 
   channel_(), 
   year_(), 
   histDir_(""), 
@@ -16,7 +16,7 @@ PlotTime1D<T>::PlotTime1D() :
 
 // Clean up each cloned histogram
 template<typename T>
-PlotTime1D<T>::~PlotTime1D() {
+PlotTime1Ds<T>::~PlotTime1Ds() {
     for(auto &histMap : dataHists_) {
         for(auto &yearMap : histMap.second) {
             for(auto hist : yearMap.second) {
@@ -27,23 +27,24 @@ PlotTime1D<T>::~PlotTime1D() {
 }
 
 template<typename T>
-void PlotTime1D<T>::setInput(const nlohmann::json &inputJson, const std::string & channel, const std::string& year){
+void PlotTime1Ds<T>::setInput(const nlohmann::json &inputJson, const std::string & channel, const std::string& year){
     inputJson_ = inputJson;
     channel_ = channel;
     year_ = year;
 }
 
 template<typename T>
-void PlotTime1D<T>::setFigConfigTime1D(const FigConfigTime1D & params) {
+void PlotTime1Ds<T>::setFigConfigTime1Ds(const FigConfigTime1Ds & params) {
     tdrStyle_->setFigConfig(params);
     histDir_  = params.histDir;
+    trigDirs_ = params.trigDirs;
     histNames_ = params.histNames;
     yMin_ = params.yMin;
     yMax_ = params.yMax;
 }
 
 template<typename T>
-void PlotTime1D<T>::loadHists(const std::string& sourceType) {
+void PlotTime1Ds<T>::loadHists(const std::string& sourceType) {
     for (const auto& histName : histNames_) {
         auto eras = Helper::getEras(inputJson_, channel_, year_, sourceType);
         for (const auto& era : eras) {
@@ -71,9 +72,13 @@ void PlotTime1D<T>::loadHists(const std::string& sourceType) {
                 std::cerr << "Error: Could not open file " << fileName << std::endl;
                 continue;
             }
-
             // Retrieve the histogram
-            T* hist = (T*)file.Get(path.c_str());
+            T* hist = nullptr;
+            if(!trigDirs_.empty()){
+                hist = Helper::sumHistsFromTrigDirs<T>(file, histDir_, trigDirs_, histName);
+            } else{
+                hist = static_cast<T*>(file.Get(path.c_str()));
+            }
             if (!hist) {
                 std::cerr << "Error: Could not retrieve histogram " << path << " from " << fileName << std::endl;
                 file.Close();
@@ -102,7 +107,7 @@ void PlotTime1D<T>::loadHists(const std::string& sourceType) {
 
 // Helper function to draw histograms (Data/Mc), set styles, and handle the legend
 template<typename T>
-void PlotTime1D<T>::drawHists() {
+void PlotTime1Ds<T>::drawHists() {
     if (histNames_.empty()) {
         std::cerr << "Error: No histogram names specified." << std::endl;
         return;
@@ -172,7 +177,7 @@ void PlotTime1D<T>::drawHists() {
 }
 
 template<typename T>
-void PlotTime1D<T>::overlayData(const std::string &outPdfName) {
+void PlotTime1Ds<T>::overlayData(const std::string &outPdfName) {
     tdrStyle_->setTdrStyle();
     TCanvas canvas("c", "Energy Fractions over Time", 800, 600);
     canvas.cd();
@@ -185,7 +190,7 @@ void PlotTime1D<T>::overlayData(const std::string &outPdfName) {
 
 // Template function to generate a sorted vector of EraName and RunNumber
 template <typename T>
-std::vector<std::pair<std::string, int>> PlotTime1D<T> ::getEraRunMap(const std::vector<T*>& histsToDraw) {
+std::vector<std::pair<std::string, int>> PlotTime1Ds<T> ::getEraRunMap(const std::vector<T*>& histsToDraw) {
     std::vector<std::pair<std::string, int>> eraRunVector;
 
     for (const auto& hist : histsToDraw) {

@@ -15,10 +15,12 @@ class GlobalFlag{
     bool isDebug;
 
     bool isPlotEras1D;
+    bool isPlotEra1Ds;
+    bool isPlotYear1Ds;
     bool isPlotEra2D;
     bool isPlotErasXY;
-    bool isPlotEraXY;
-    bool isPlotTime1D;
+    bool isPlotEraXYs;
+    bool isPlotTime1Ds;
 
     bool isPrintFigConfig;
 

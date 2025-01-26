@@ -4,7 +4,7 @@
 #include "Helper.h"
 #include "PlotEras1D.h"
 #include "PlotEra2D.h"
-#include "PlotEraXY.h"
+#include "PlotEraXYs.h"
 #include "PlotErasXY.h"
 
 #include <filesystem>
@@ -26,7 +26,7 @@ int RunZmmJet::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &chan
     const auto& figConfigVecEras1D = readConfig.getFigConfigVecEras1D();
     const auto& figConfigVecEra2D  = readConfig.getFigConfigVecEra2D();
     const auto& figConfigVecErasXY = readConfig.getFigConfigVecErasXY();
-    const auto& figConfigVecEraXY  = readConfig.getFigConfigVecEraXY();
+    const auto& figConfigVecEraXYs  = readConfig.getFigConfigVecEraXYs();
 
 	//-------------------------------------
 	// Plot1D: multiple eras in one plot
@@ -123,11 +123,11 @@ int RunZmmJet::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &chan
 	//--------------------------
 	// PlotXY: one era in one plot
 	//--------------------------
-    if(isPlotEraXY){
-        auto outPlotDirEraXY = eosPlotDir+"/"+channel+"/"+"EraXY"; 
-        std::filesystem::create_directories(outPlotDirEraXY);
+    if(isPlotEraXYs){
+        auto outPlotDirEraXYs = eosPlotDir+"/"+channel+"/"+"EraXYs"; 
+        std::filesystem::create_directories(outPlotDirEraXYs);
         channelSlide.addCenteredTextSlide("Next we show Projection of X in MANY Y bins");
-        for (const auto & config: figConfigVecEraXY){
+        for (const auto & config: figConfigVecEraXYs){
             auto name = config.histName;
             auto dir  = config.histDir;
             if(isPrintFigConfig) config.print();
@@ -136,13 +136,13 @@ int RunZmmJet::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &chan
                 auto mcBins = Helper::getEras(inputJson, channel, year, "MC");
                 std::vector<std::string> plotsForSlide;
                 for (const auto& dataEra: dataEras){
-                    auto eraXY = std::make_unique<PlotEraXY<TProfile2D>>();
+                    auto eraXY = std::make_unique<PlotEraXYs<TProfile2D>>();
                     eraXY->setInput(inputJson, channel, year);
-                    eraXY->setFigConfigEraXY(config);
+                    eraXY->setFigConfigEraXYs(config);
                     eraXY->loadHists("Data", dataEra, std::vector<std::string>{});
                     eraXY->loadHists("MC", "", mcBins);
                     string outName = Helper::dirToName(dir);
-                    auto outPdfName = outPlotDirEraXY+"/"+dataEra+"_"+outName+"_"+name+".pdf";
+                    auto outPdfName = outPlotDirEraXYs+"/"+dataEra+"_"+outName+"_"+name+".pdf";
                     eraXY->overlayDataWithMcInRatio(outPdfName);
                     plotsForSlide.push_back(outPdfName);
                 }//eras

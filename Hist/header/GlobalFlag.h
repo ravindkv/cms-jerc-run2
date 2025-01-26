@@ -36,6 +36,7 @@ public:
     enum class Channel {
         NONE,
         GamJet,
+        GamJetFake,
         ZeeJet,
         ZmmJet,
         MCTruth,

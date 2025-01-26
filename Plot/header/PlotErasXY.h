@@ -49,6 +49,7 @@ private:
     std::string varName_;
     bool varIsOnXaxis_;
     std::string histDir_;
+    std::vector<std::string> trigDirs_;
     std::string histName_;
     
     std::vector<TProfile*> dataHists_;  

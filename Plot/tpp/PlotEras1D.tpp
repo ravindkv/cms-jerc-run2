@@ -36,6 +36,7 @@ template<typename T>
 void PlotEras1D<T>::setFigConfigEras1D(const FigConfigEras1D & params) {
   tdrStyle_->setFigConfig(params);
   histDir_  = params.histDir;
+  trigDirs_ = params.trigDirs;
   histName_ = params.histName;
 }
 
@@ -58,7 +59,12 @@ void PlotEras1D<T>::loadHists(const std::string& sourceType, const std::vector<s
         }
 
         // Retrieve the histogram
-        T* hist = (T*)file.Get(path.c_str());
+        T* hist = nullptr;
+        if(!trigDirs_.empty()){
+            hist = Helper::sumHistsFromTrigDirs<T>(file, histDir_, trigDirs_, histName_);
+        } else{
+            hist = static_cast<T*>(file.Get(path.c_str()));
+        }
         if (!hist) {
             std::cerr << "Error: Could not retrieve histogram " << path << " from " << fileName << std::endl;
             file.Close();

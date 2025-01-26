@@ -2,6 +2,7 @@
 #include "RunZeeJet.h"
 #include "RunZmmJet.h"
 #include "RunGamJet.h"
+#include "RunGamJetFake.h"
 #include "RunMultiJet.h"
 
 #include <iostream>
@@ -71,7 +72,7 @@ int main(int argc, char* argv[]){
             
             std::cout << "\nFor file: " << jsonFile << std::endl;
             for (auto& element : js.items()) {
-              std::cout <<" ./runMain -o "<<element.key()<<"_Skim_1of100.root" << std::endl;
+              std::cout <<"./runMain -o "<<element.key()<<"_Skim_1of100.root" << std::endl;
             }
           }
           return 0;
@@ -117,6 +118,11 @@ int main(int argc, char* argv[]){
         std::cout << "==> Running GamJet" << std::endl;
         auto gamJet = std::make_unique<RunGamJet>(globalFlag);
         gamJet->Run(nanoT, fout.get());
+    }
+    if (globalFlag.isGamJetFake) {
+        std::cout << "==> Running GamJetFake" << std::endl;
+        auto gamJetFake = std::make_unique<RunGamJetFake>(globalFlag);
+        gamJetFake->Run(nanoT, fout.get());
     }
     if (globalFlag.isMultiJet) {
         std::cout << "==> Running MultiJet" << std::endl;

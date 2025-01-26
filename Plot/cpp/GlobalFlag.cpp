@@ -3,11 +3,13 @@
 GlobalFlag::GlobalFlag(std::string oName){
   outName = oName;
   isDebug = false;
-  isPlotEras1D = true;
-  isPlotEra2D  = false;
-  isPlotErasXY = false;
-  isPlotEraXY  =  false;
-  isPlotTime1D = true;
+  isPlotTime1Ds = false;
+  isPlotEras1D  = false;
+  isPlotEra1Ds  = false;
+  isPlotYear1Ds = true;
+  isPlotEra2D   = false;
+  isPlotErasXY  = false;
+  isPlotEraXYs  = false;
 
   isPrintFigConfig = true;
 
@@ -26,10 +28,12 @@ GlobalFlag::GlobalFlag(std::string oName){
 void GlobalFlag::printFlag(){
   if(isDebug   )cout<<"isDebug    = true"<<endl;
   if(isPlotEras1D )cout<<"isPlotEras1D   = true"<<endl;
+  if(isPlotEra1Ds )cout<<"isPlotEra1Ds   = true"<<endl;
+  if(isPlotYear1Ds )cout<<"isPlotYear1Ds   = true"<<endl;
   if(isPlotEra2D  )cout<<"isPlotEra2D   = true"<<endl;
   if(isPlotErasXY )cout<<"isPlotErasXY   = true"<<endl;
-  if(isPlotEraXY  )cout<<"isPlotEraXY   = true"<<endl;
-  if(isPlotTime1D )cout<<"isPlotTime1D   = true"<<endl;
+  if(isPlotEraXYs  )cout<<"isPlotEraXYs   = true"<<endl;
+  if(isPlotTime1Ds )cout<<"isPlotTime1Ds   = true"<<endl;
 
   if(isPrintFigConfig  )cout<<"isPrintFigConfig   = true"<<endl;
 

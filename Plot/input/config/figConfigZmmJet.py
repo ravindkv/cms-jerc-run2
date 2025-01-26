@@ -1,5 +1,5 @@
 
-from figConfigZeeJet import *
+from figConfigBase import *
 
 # Convert to JSON string with indentation for better readability
 json_output = json.dumps(configs, indent=4)

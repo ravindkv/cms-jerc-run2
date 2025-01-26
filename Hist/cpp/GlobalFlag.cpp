@@ -71,7 +71,9 @@ void GlobalFlag::parseFlags() {
     }
 
     // Parsing Channels
-    if (outName_.find("GamJet") != std::string::npos) {
+    if (outName_.find("GamJetFake") != std::string::npos) {
+        channel_ = Channel::GamJetFake;
+    }else if (outName_.find("GamJet") != std::string::npos) {
         channel_ = Channel::GamJet;
     } else if (outName_.find("ZeeJet") != std::string::npos) {
         channel_ = Channel::ZeeJet;
@@ -173,6 +175,9 @@ void GlobalFlag::printFlags() const {
 
     // Print Channel
     switch (channel_) {
+        case Channel::GamJetFake:
+            std::cout << "Channel = GamJetFake" << '\n';
+            break;
         case Channel::GamJet:
             std::cout << "Channel = GamJet" << '\n';
             break;

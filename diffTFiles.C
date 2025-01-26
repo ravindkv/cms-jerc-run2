@@ -1,249 +1,391 @@
+
+//$ g++ -o /afs/cern.ch/user/r/rverma/public/diffTFiles diffTFiles.C `root-config --cflags --glibs`
+// ./diffTFiles file1.root file2.root ... fileN.root
+
 #include <TFile.h>
 #include <TDirectory.h>
 #include <TKey.h>
 #include <TH1.h>
 #include <TH2D.h>
 #include <TH2F.h>
+#include <TProfile.h>
 #include <TProfile2D.h>
 #include <TCanvas.h>
 #include <TPad.h>
 #include <TLegend.h>
 #include <TLatex.h>
-#include <iostream>
-#include <string>
 #include <TList.h>
 #include <TClass.h>
 #include <TGraphErrors.h>
 #include <TStyle.h>
 #include <TROOT.h>
+#include <iostream>
 #include <iomanip>
+#include <string>
+#include <sstream>
+#include <vector>
+#include <cmath>
 
-//$ g++ -o /afs/cern.ch/user/r/rverma/public/diffTFiles diffTFiles.C `root-config --cflags --glibs`
-// ./diffTFiles file1.root file2.root
-
-// General templated function to calculate ratio and fill a TGraphErrors
+//-------------------------------------------------//
+// General templated function to calculate ratio
+// ratioHist = (hist / refHist).
+//-------------------------------------------------//
 template<typename T>
-void calculateHistRatio(T* dataHist, T* mcHist, TGraphErrors* ratioGraph) {
-    int nBins = dataHist->GetNbinsX();
+void calculateHistRatio(
+    T* hist, T* refHist, TGraphErrors* ratioGraph)
+{
+    int nBins = hist->GetNbinsX();
     for (int i = 1; i <= nBins; ++i) {
-        double dataVal = dataHist->GetBinContent(i);
-        double mcVal = mcHist->GetBinContent(i);
-        double ratioVal = 0.0;
-        double ratioErr = 0.0;
-        double binWidth = dataHist->GetXaxis()->GetBinWidth(i);  // Get the bin width
-        if(mcVal > 0 && dataVal > 0){
-            ratioVal = dataVal / mcVal;
-            ratioErr = sqrt(pow(dataHist->GetBinError(i) / mcVal, 2) +
-                            pow(dataVal * mcHist->GetBinError(i) / pow(mcVal, 2), 2));
+        double thisVal  = hist->GetBinContent(i);
+        double thisErr  = hist->GetBinError(i);
+        double refVal   = refHist->GetBinContent(i);
+        double refErr   = refHist->GetBinError(i);
+        double ratioVal = 0.;
+        double ratioErr = 0.;
+        double binCenter = hist->GetXaxis()->GetBinCenter(i);
+        double binWidth  = hist->GetXaxis()->GetBinWidth(i);
+
+        if (refVal != 0.) {
+            ratioVal = thisVal / refVal;
+            // Error propagation:
+            //   ratioErr^2 = (thisErr/refVal)^2 + (thisVal * refErr / refVal^2)^2
+            ratioErr = std::sqrt(
+                std::pow(thisErr / refVal, 2) +
+                std::pow(thisVal * refErr / (refVal * refVal), 2));
         }
-        ratioGraph->SetPoint(i - 1, dataHist->GetXaxis()->GetBinCenter(i), ratioVal);
-        ratioGraph->SetPointError(i - 1, binWidth / 2.0, ratioErr);  // Set x-error to half the bin width
+
+        ratioGraph->SetPoint(i - 1, binCenter, ratioVal);
+        // If you want x-errors, set them to binWidth/2:
+        ratioGraph->SetPointError(i - 1, binWidth * 0.5, ratioErr);
     }
 }
 
+// Forward declarations
+void compareDirectories(const std::vector<TFile*>& files,
+                       TDirectory* refDir,
+                       const std::string& path,
+                       const char* pdfFileName,
+                       TCanvas* c1);
 
-void compareHistograms(TH1* h1, TH1* h2, const std::string& objPath, const char* pdfFileName, TCanvas* c1);
-void compareDirectories(TDirectory* dir1, TDirectory* dir2, const std::string& path, const char* pdfFileName, TCanvas* c1, const char* file1name, const char* file2name);
+void compareHistograms(const std::vector<TH1*>& hists,
+                       const std::string& objPath,
+                       const char* pdfFileName,
+                       TCanvas* c1);
 
-void compareRootFiles(const char* file1name, const char* file2name) {
-    TFile* file1 = TFile::Open(file1name);
-    TFile* file2 = TFile::Open(file2name);
-    
-    if (!file1 || !file2) {
-        std::cerr << "Error opening files." << std::endl;
-        return;
+//-------------------------------------------------//
+// Compare an arbitrary number of files.
+//-------------------------------------------------//
+void compareRootFiles(const std::vector<std::string>& fileNames)
+{
+    // Open TFiles
+    std::vector<TFile*> files;
+    files.reserve(fileNames.size());
+    for (auto& fn : fileNames) {
+        TFile* f = TFile::Open(fn.c_str());
+        if (!f || f->IsZombie()) {
+            std::cerr << "Failed to open file: " << fn << std::endl;
+            return;
+        }
+        files.push_back(f);
     }
-    
-    // Output PDF file
+    std::cout<<"Comparing "<<files.size()<<'\n';
+    // PDF output
     const char* pdfFileName = "comparison.pdf";
-    // Start the multi-page PDF
     TCanvas* c1 = new TCanvas("c1", "", 800, 800);
-    c1->Print(Form("%s[", pdfFileName)); // This starts the multi-page PDF
-    
-    compareDirectories(file1, file2, "", pdfFileName, c1, file1name, file2name);
-    
-    c1->Print(Form("%s]", pdfFileName)); // This ends the multi-page PDF
-    
+    c1->Print(Form("%s[", pdfFileName)); // open multi-page PDF
+
+    // Compare directories. Use the directory structure of the first file as reference.
+    compareDirectories(files, files[0], "", pdfFileName, c1);
+
+    c1->Print(Form("%s]", pdfFileName)); // close multi-page PDF
+
+    // Cleanup
     delete c1;
-    
-    file1->Close();
-    file2->Close();
+    for (auto f : files) {
+        f->Close();
+        delete f;
+    }
 }
 
-void compareDirectories(TDirectory* dir1, TDirectory* dir2, const std::string& path, const char* pdfFileName, TCanvas* c1, const char* file1name, const char* file2name) {
+//-------------------------------------------------//
+// Recursively compare directories among all files.
+// We'll use the directory structure from the refDir
+// (which is from the first file) to discover objects
+// and try to retrieve them from the other files.
+//-------------------------------------------------//
+void compareDirectories(const std::vector<TFile*>& files,
+                       TDirectory* refDir,
+                       const std::string& path,
+                       const char* pdfFileName,
+                       TCanvas* c1)
+{
+    if (!refDir) return;
+    TList* keys = refDir->GetListOfKeys();
+    if (!keys) return;
 
-    TList* keys = dir1->GetListOfKeys();
-    TIter nextkey(keys);
+    TIter nextKey(keys);
     TKey* key;
-     
-    while ((key = (TKey*)nextkey())) {
-        TObject* obj1 = key->ReadObj();
-        const char* name = obj1->GetName();
-        
-        // Build the path to the object
+    while ((key = (TKey*) nextKey())) {
+        TObject* obj = key->ReadObj();
+        if (!obj) continue;
+
+        const char* name = obj->GetName();
         std::string objPath = path.empty() ? name : path + "/" + name;
-        
-        // Try to get the object from dir2
-        TObject* obj2 = dir2->Get(name);
-        if (!obj2) {
-            std::cout << "Object " << objPath << " not found in second file." << std::endl;
-            continue;
+
+        // For directories, recurse
+        if (obj->InheritsFrom(TDirectory::Class())) {
+            TDirectory* subdir = dynamic_cast<TDirectory*>(obj);
+            if (!subdir) continue;
+            // We pass the same TDirectory (from file[0]) as the reference,
+            // but we want to check if the same subdir exists in all files
+            // before recursing, or at least skip if not found in others.
+            compareDirectories(files, subdir, objPath, pdfFileName, c1);
         }
-        
-        // Check if it's a directory
-        if (obj1->InheritsFrom(TDirectory::Class())) {
-            // It's a directory, recurse
-            TDirectory* subdir1 = (TDirectory*)obj1;
-            TDirectory* subdir2 = (TDirectory*)obj2;
-            compareDirectories(subdir1, subdir2, objPath, pdfFileName, c1, file1name, file2name);
-        }
-        else if (obj1->InheritsFrom(TH1::Class())) {
-            if (TProfile2D *prof2d = dynamic_cast<TProfile2D *>(obj1)) continue;
-            if (TH2D *th2d = dynamic_cast<TH2D *>(obj1)) continue;
-            if (TH2F *th2f = dynamic_cast<TH2F *>(obj1)) continue;
-            // It's a histogram, compare
-            TH1* h1 = (TH1*)obj1->Clone(file1name);
-            TH1* h2 = (TH1*)obj2->Clone(file2name);
-            compareHistograms(h1, h2, objPath, pdfFileName, c1);
+        // For histograms
+        else if (obj->InheritsFrom(TH1::Class())) {
+            // Skip 2D, Profile2D, etc. if desired:
+            if (dynamic_cast<TProfile2D*>(obj))  continue;
+            if (dynamic_cast<TH2*>(obj))         continue;
+            // If you want to skip TProfiles, comment out the next lines:
+            // if (dynamic_cast<TProfile*>(obj))   continue;
+
+            // Build a vector of hist pointers
+            std::vector<TH1*> hists;
+            hists.reserve(files.size());
+
+            // Attempt to retrieve the same object name from each file
+            for (auto& f : files) {
+                TH1* h = dynamic_cast<TH1*>(f->Get(objPath.c_str()));
+                if (!h) {
+                    // If not found in one of the files, skip.
+                    // Or you can push_back a nullptr if you want to be tolerant.
+                    hists.clear();
+                    break;
+                }
+                // Clone to separate them from each file’s memory mgmt
+                // (optional, depending on your usage)
+                TH1* clone = dynamic_cast<TH1*>(h->Clone(f->GetName()));
+                // Store the original name of the file or hist for labeling
+                clone->SetDirectory(nullptr);
+                hists.push_back(clone);
+            }
+
+            // If we have the same histogram in all files
+            if (hists.size() == files.size()) {
+                compareHistograms(hists, objPath, pdfFileName, c1);
+            }
+
+            // Cleanup local clones
+            for (auto& hh : hists) {
+                if (hh) delete hh;
+            }
         }
         else {
-            std::cout << "Object " << objPath << " is of unsupported type." << std::endl;
+            // Do nothing for unsupported object types
+            // e.g. TTree, TGraph, etc.
+            // std::cout << "Skipping " << objPath << std::endl;
         }
     }
 }
 
-void compareHistograms(TH1* h1, TH1* h2, const std::string& objPath, const char* pdfFileName, TCanvas* c1) {
-    gStyle->SetOptStat(0);
+//-------------------------------------------------//
+// Compare a vector of TH1 pointers: 
+//   - Overlays them all on the upper pad
+//   - Makes ratio to the first histogram in the lower pad
+//-------------------------------------------------//
+void compareHistograms(const std::vector<TH1*>& hists,
+                       const std::string& objPath,
+                       const char* pdfFileName,
+                       TCanvas* c1)
+{
+    if (hists.empty()) return;
+    // Decide if you want log scale or normalization:
+    // For example, skip log scale for TProfile, etc.
+    bool isLog  = false;
+    bool isNorm = true;
+    // If you need to do logic here, go for it.
+
     c1->Clear();
-    
-    // Create upper and lower pads
-    TPad* pad1 = new TPad("pad1", "pad1", 0, 0.3, 1, 1);
+    gStyle->SetOptStat(0);
+
+    // Create an upper pad and a lower pad
+    TPad* pad1 = new TPad("pad1","pad1",0,0.3,1,1);
     pad1->SetBottomMargin(0.02);
-    ///pad1->SetLogx(true);
-    ///pad1->SetLogy(true);
     pad1->Draw();
-    TPad* pad2 = new TPad("pad2", "pad2", 0, 0, 1, 0.3);
+
+    TPad* pad2 = new TPad("pad2","pad2",0,0,1,0.3);
     pad2->SetTopMargin(0.02);
     pad2->SetBottomMargin(0.3);
-    ///pad2->SetLogx(true);
     pad2->Draw();
-    
+
+    //--------------------
     // Upper pad
+    //--------------------
     pad1->cd();
-    h1->SetLineColor(kRed);
-    h1->SetLineWidth(2);
-    h1->GetYaxis()->CenterTitle();
-    h1->GetXaxis()->SetTitleOffset(1.0);
-    h1->GetYaxis()->SetTitleOffset(1.15);
-    h1->GetXaxis()->SetTitleSize(0.05);
-    h1->GetYaxis()->SetTitleSize(0.07);
-    h1->GetXaxis()->SetLabelSize(0.05);
-    h1->GetYaxis()->SetLabelSize(0.05);
-    h1->GetXaxis()->SetMoreLogLabels();
+    if (isLog) pad1->SetLogy(true);
 
-    h2->SetLineColor(kBlue);
-    h2->SetLineWidth(2);
-    h2->GetYaxis()->CenterTitle();
-    h2->GetXaxis()->SetTitleOffset(1.0);
-    h2->GetYaxis()->SetTitleOffset(1.15);
-    h2->GetXaxis()->SetTitleSize(0.05);
-    h2->GetYaxis()->SetTitleSize(0.07);
-    h2->GetXaxis()->SetLabelSize(0.05);
-    h2->GetYaxis()->SetLabelSize(0.05);
-    h2->GetXaxis()->SetMoreLogLabels();
-    
-    h1->Draw("hist");
-    h2->Draw("hist same");
-    
-    // Add legend
- 	TLegend* leg = new TLegend(0.2, 0.6, 0.9, 0.9);
-    leg->SetFillStyle(kNone);
+    // Optionally normalize all histograms
+    if (isNorm) {
+        for (auto* h : hists) {
+            double integral = h->Integral();
+            if (integral > 0.) {
+                h->Scale(1. / integral);
+            }
+        }
+    }
+
+    // Setup line colors/styles
+    // (Add more if you anticipate more than, say, 9 files)
+    static int colors[9] = {
+        kBlack, kRed, kBlue, kGreen+2, kMagenta, kOrange+1, kCyan+2, kGray+2, kViolet+2
+    };
+    static int markers[9] = {
+        20, 21, 22, 23, 24, 25, 26, 27, 28
+    };
+
+    // Let’s find a max for them all
+    double maxVal = 0.;
+    for (size_t i=0; i<hists.size(); i++) {
+        double thisMax = hists[i]->GetMaximum();
+        if (thisMax > maxVal) maxVal = thisMax;
+    }
+
+    // If log scale, set min to a small positive
+    if (isLog) {
+        for (auto* h : hists) {
+            if (h->GetMinimum() <= 0) {
+                h->SetMinimum(1e-4);
+            }
+            h->SetMaximum(maxVal * 10.);
+        }
+    } else {
+        // A little margin on top
+        for (auto* h : hists) {
+            h->SetMaximum(maxVal * 1.2);
+        }
+    }
+
+    // Draw them
+    for (size_t i=0; i<hists.size(); i++) {
+        hists[i]->SetLineColor(colors[i % 9]);
+        hists[i]->SetLineWidth(2);
+        // if you want fill color or marker style, do it here
+
+        if (i == 0) {
+            hists[i]->Draw("EP");
+        }
+        else {
+            hists[i]->Draw("EP same");
+        }
+    }
+
+    // Create a legend
+    TLegend* leg = new TLegend(0.2, 0.60, 0.90, 0.90);
+    leg->SetFillStyle(0);
     leg->SetBorderSize(0);
-    leg->SetTextSize(0.040);
+    leg->SetTextSize(0.04);
 
-    // Retrieve statistical information for the first histogram with rounded values
-    std::ostringstream h1StatsStream;
-    h1StatsStream << "Entries: " << static_cast<int>(h1->GetEntries()) 
-                  << ", Mean: " << std::fixed << std::setprecision(1) << h1->GetMean() 
-                  << ", RMS: " << std::fixed << std::setprecision(1) << h1->GetRMS(); 
-    std::string h1Stats = h1StatsStream.str();
+    // Add each histogram to the legend with stats
+    for (size_t i=0; i<hists.size(); i++) {
+        TH1* h = hists[i];
+        std::ostringstream ostr;
+        ostr << " (E=" << (int)h->GetEntries()
+             << ", M=" << std::fixed << std::setprecision(1) << h->GetMean()
+             << ", R=" << std::fixed << std::setprecision(1) << h->GetRMS()
+             << ")";
+        leg->AddEntry(h, h->GetName(), "l");
+        leg->AddEntry((TObject*)0, ostr.str().c_str(), "");
+    }
+    leg->Draw();
 
-    // Add the first entry (name) and second entry (stats) for h1
-    leg->AddEntry(h1, h1->GetName(), "l");
-    leg->AddEntry((TObject*)0, h1Stats.c_str(), "");
-
-    // Retrieve statistical information for the second histogram with rounded values
-    std::ostringstream h2StatsStream;
-    h2StatsStream << "Entries: " << static_cast<int>(h2->GetEntries()) 
-                  << ", Mean: " << std::fixed << std::setprecision(1) << h2->GetMean() 
-                  << ", RMS: " << std::fixed << std::setprecision(1) << h2->GetRMS(); 
-    std::string h2Stats = h2StatsStream.str();
-
-    // Add the first entry (name) and second entry (stats) for h2
-    leg->AddEntry(h2, h2->GetName(), "l");
-    leg->AddEntry((TObject*)0, h2Stats.c_str(), "");
-
-
-	leg->Draw();
- 
-    
-    // Add title
+    // Title on top
     TLatex* latex = new TLatex();
     latex->SetNDC();
     latex->SetTextSize(0.04);
     latex->DrawLatex(0.1, 0.92, objPath.c_str());
-    
-    // Lower pad
+
+    //--------------------
+    // Lower pad (ratios)
+    //--------------------
     pad2->cd();
-    
-    TGraphErrors* graphRatio = new TGraphErrors(h1->GetNbinsX());
-    calculateHistRatio(h1, h2, graphRatio);
-    
-	graphRatio->GetHistogram()->SetTitle("");
-    // X-axis styling
-    graphRatio->GetHistogram()->GetXaxis()->SetTitleSize(0.12);
-    graphRatio->GetHistogram()->GetXaxis()->SetLabelSize(0.12);
-    graphRatio->GetHistogram()->GetXaxis()->SetLabelFont(42);
-    graphRatio->GetHistogram()->GetXaxis()->SetTitleOffset(1.2);
-    graphRatio->GetHistogram()->GetXaxis()->SetLabelOffset(0.01);
 
-    // Y-axis styling
-    graphRatio->GetHistogram()->GetYaxis()->SetTitleSize(0.13);
-    graphRatio->GetHistogram()->GetYaxis()->SetLabelSize(0.12);
-    graphRatio->GetHistogram()->GetYaxis()->SetLabelFont(42);
-    graphRatio->GetHistogram()->GetYaxis()->SetNdivisions(6, 5, 0);
-    graphRatio->GetHistogram()->GetYaxis()->SetTitleOffset(0.6);
-    graphRatio->GetHistogram()->GetYaxis()->SetLabelOffset(0.01);
-    graphRatio->GetHistogram()->GetYaxis()->CenterTitle();
+    // We'll plot ratio to the *first* histogram:
+    TH1* refHist = hists[0];
+    int nBins = refHist->GetNbinsX();
 
-    // Additional styling
-    graphRatio->SetMarkerStyle(20);  // Set marker style for points
+    // We can store all ratio TGraphs in a vector
+    std::vector<TGraphErrors*> ratios;
+    ratios.reserve(hists.size()-1);
 
-    // Optional: Log scale or no exponent for x-axis
-    graphRatio->GetHistogram()->GetXaxis()->SetMoreLogLabels();
-    graphRatio->GetHistogram()->GetXaxis()->SetNoExponent();
-    ///graphRatio->GetHistogram()->GetYaxis()->SetRangeUser(0.9, 1.1);
-    
-    graphRatio->Draw("APz");
-    
-    // Save the canvas to the PDF file
+    // Create the ratio for each hist vs. the first
+    for (size_t i=1; i<hists.size(); i++) {
+        TGraphErrors* ratioGraph = new TGraphErrors(nBins);
+        calculateHistRatio(hists[i], refHist, ratioGraph);
+        // Style
+        ratioGraph->SetMarkerColor(colors[i % 9]);
+        ratioGraph->SetLineColor(colors[i % 9]);
+        ratioGraph->SetMarkerStyle(markers[i % 9]);
+        ratios.push_back(ratioGraph);
+    }
+
+    // Draw the first ratio
+    if (!ratios.empty()) {
+        ratios[0]->Draw("AP");
+        ratios[0]->SetTitle("");
+        ratios[0]->GetHistogram()->GetXaxis()->SetTitleSize(0.12);
+        ratios[0]->GetHistogram()->GetXaxis()->SetLabelSize(0.12);
+        ratios[0]->GetHistogram()->GetYaxis()->SetTitle("Hist / Ref");
+        ratios[0]->GetHistogram()->GetYaxis()->SetTitleSize(0.12);
+        ratios[0]->GetHistogram()->GetYaxis()->SetTitleOffset(0.55);
+        ratios[0]->GetHistogram()->GetYaxis()->SetLabelSize(0.11);
+        ratios[0]->GetHistogram()->GetYaxis()->SetNdivisions(6, 5, 0);
+        // You can choose appropriate range:
+        ratios[0]->GetHistogram()->GetYaxis()->SetRangeUser(0., 2.);
+    }
+
+    // Then overlay the rest of the ratio graphs
+    for (size_t i=1; i<ratios.size(); i++) {
+        ratios[i]->Draw("P same");
+    }
+
+    // Save page to PDF
     c1->Print(pdfFileName);
-    
-    // Clean up
-    delete graphRatio;
+
+    // Cleanup ratio objects
+    for (auto g : ratios) {
+        delete g;
+    }
     delete leg;
     delete latex;
-    // Note: do not delete pads, they are owned by the canvas
+
+    // DO NOT delete pads or the histograms that came from outside
+    // since they are managed by the caller (or above).
 }
 
-int main(int argc, char** argv) {
-    if (argc != 3) {
-        std::cout << "Usage: compareRootFiles file1.root file2.root" << std::endl;
+//-------------------------------------------------//
+// main()
+// Example usage:
+//   ./compareNFiles file1.root file2.root [file3.root ...]
+//-------------------------------------------------//
+int main(int argc, char** argv)
+{
+    if (argc < 2) {
+        std::cout << "Usage: " << argv[0]
+                  << " file1.root [file2.root ... fileN.root]\n";
         return 1;
     }
-    gROOT->SetBatch(true); 
-    compareRootFiles(argv[1], argv[2]);
-    
+
+    gROOT->SetBatch(true);
+
+    // Collect all filenames into a vector
+    std::vector<std::string> fileNames;
+    for (int i=1; i<argc; i++) {
+        fileNames.push_back(argv[i]);
+    }
+
+    std::cout<<"Comparing Names "<<fileNames.size()<<'\n';
+    compareRootFiles(fileNames);
+
     return 0;
 }
 

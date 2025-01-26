@@ -25,48 +25,49 @@
  */
 struct MainHistograms {
     // 1D Histograms
+    std::unique_ptr<TH1D> h1EventInJet1Index;
     std::unique_ptr<TProfile> p1Jet1EtaInRefPt;
     std::unique_ptr<TH2D> h2EventInRefPtJet1Eta;
     
     // 1D Composition and Response
     std::unique_ptr<TProfile> p1DbRespInRefPt;
     std::unique_ptr<TProfile> p1MpfRespInRefPt;
-    std::unique_ptr<TProfile> p1Jet1ChhefInRefPt;
-    std::unique_ptr<TProfile> p1Jet1NehefInRefPt;
-    std::unique_ptr<TProfile> p1Jet1NeemefInRefPt;
-    std::unique_ptr<TProfile> p1Jet1ChemefInRefPt;
+    std::unique_ptr<TProfile> p1Jet1ChHefInRefPt;
+    std::unique_ptr<TProfile> p1Jet1NeHefInRefPt;
+    std::unique_ptr<TProfile> p1Jet1NeEmefInRefPt;
+    std::unique_ptr<TProfile> p1Jet1ChEmefInRefPt;
     std::unique_ptr<TProfile> p1Jet1MuefInRefPt;
     std::unique_ptr<TProfile> p1Jet1Chpv0efInRefPt;
     
     // 2D Composition and Response
     std::unique_ptr<TProfile2D> p2DbRespInRefPtJet1Eta;
     std::unique_ptr<TProfile2D> p2MpfRespInRefPtJet1Eta;
-    std::unique_ptr<TProfile2D> p2JetChhefInRefPtJet1Eta;
-    std::unique_ptr<TProfile2D> p2JetNehefInRefPtJet1Eta;
-    std::unique_ptr<TProfile2D> p2JetNeemefInRefPtJet1Eta;
-    std::unique_ptr<TProfile2D> p2JetChemefInRefPtJet1Eta;
+    std::unique_ptr<TProfile2D> p2JetChHefInRefPtJet1Eta;
+    std::unique_ptr<TProfile2D> p2JetNeHefInRefPtJet1Eta;
+    std::unique_ptr<TProfile2D> p2JetNeEmefInRefPtJet1Eta;
+    std::unique_ptr<TProfile2D> p2JetChEmefInRefPtJet1Eta;
     std::unique_ptr<TProfile2D> p2JetMuefInRefPtJet1Eta;
-    std::unique_ptr<TProfile2D> p2JetChfpv0efInRefPtJet1Eta;
+    std::unique_ptr<TProfile2D> p2JetChPv0efInRefPtJet1Eta;
     
     // 2D Composition and Response with Phi
     std::unique_ptr<TProfile2D> p2DbRespInJet1PhiJet1Eta;
     std::unique_ptr<TProfile2D> p2MpfRespInJet1PhiJet1Eta;
-    std::unique_ptr<TProfile2D> p2JetChhefInJet1PhiJet1Eta;
-    std::unique_ptr<TProfile2D> p2JetNehefInJet1PhiJet1Eta;
-    std::unique_ptr<TProfile2D> p2JetNeemefInJet1PhiJet1Eta;
-    std::unique_ptr<TProfile2D> p2JetChemefInJet1PhiJet1Eta;
+    std::unique_ptr<TProfile2D> p2JetChHefInJet1PhiJet1Eta;
+    std::unique_ptr<TProfile2D> p2JetNeHefInJet1PhiJet1Eta;
+    std::unique_ptr<TProfile2D> p2JetNeEmefInJet1PhiJet1Eta;
+    std::unique_ptr<TProfile2D> p2JetChEmefInJet1PhiJet1Eta;
     std::unique_ptr<TProfile2D> p2JetMuefInJet1PhiJet1Eta;
-    std::unique_ptr<TProfile2D> p2JetChfpv0efInJet1PhiJet1Eta;
+    std::unique_ptr<TProfile2D> p2JetChPv0efInJet1PhiJet1Eta;
     
     // 2D Composition and Response for RefPt230
     std::unique_ptr<TProfile2D> p2DbRespInJet1PhiJet1EtaForRefPt230;
     std::unique_ptr<TProfile2D> p2MpfRespInJet1PhiJet1EtaForRefPt230;
-    std::unique_ptr<TProfile2D> p2JetChhefInJet1PhiJet1EtaForRefPt230;
-    std::unique_ptr<TProfile2D> p2JetNehefInJet1PhiJet1EtaForRefPt230;
-    std::unique_ptr<TProfile2D> p2JetNeemefInJet1PhiJet1EtaForRefPt230;
-    std::unique_ptr<TProfile2D> p2JetChemefInJet1PhiJet1EtaForRefPt230;
+    std::unique_ptr<TProfile2D> p2JetChHefInJet1PhiJet1EtaForRefPt230;
+    std::unique_ptr<TProfile2D> p2JetNeHefInJet1PhiJet1EtaForRefPt230;
+    std::unique_ptr<TProfile2D> p2JetNeEmefInJet1PhiJet1EtaForRefPt230;
+    std::unique_ptr<TProfile2D> p2JetChEmefInJet1PhiJet1EtaForRefPt230;
     std::unique_ptr<TProfile2D> p2JetMuefInJet1PhiJet1EtaForRefPt230;
-    std::unique_ptr<TProfile2D> p2JetChfpv0efInJet1PhiJet1EtaForRefPt230;
+    std::unique_ptr<TProfile2D> p2JetChPv0efInJet1PhiJet1EtaForRefPt230;
     
     // Control Plots
     std::unique_ptr<TProfile> p1RhoInRefPt;

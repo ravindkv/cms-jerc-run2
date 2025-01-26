@@ -26,6 +26,7 @@ class GlobalFlag{
         bool isZeeJet;
         bool isZmmJet;
         bool isGamJet;
+        bool isGamJetFake;
         bool isMultiJet;
         bool isWqq;
 

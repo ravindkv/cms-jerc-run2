@@ -1,0 +1,8 @@
+
+#https://twiki.cern.ch/twiki/bin/viewauth/CMS/HowToGenXSecAnalyzer
+# cd /afs/cern.ch/work/r/rverma/public/JME/JERC/GenXSecAnalyzer/CMSSW_10_6_0/src/
+# cmsenv
+# cd /afs/cern.ch/work/r/rverma/public/JME/JERC/GenXSecAnalyzer/genproductions/Utilities/calculateXSectionAndFilterEfficiency
+# python2 rverma_getMiniAod.py
+# ./calculateXSectionAndFilterEfficiency.sh -f datasets.txt -c RunIISummer20UL16MiniAODAPVv2
+

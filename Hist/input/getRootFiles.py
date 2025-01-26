@@ -46,7 +46,7 @@ if __name__=="__main__":
         for sKey in jSkim.keys():
             if year not in sKey:
                 continue
-            lSkim = jSkim[sKey]
+            lSkim = jSkim[sKey][1]
             nJob  = reducedJob(len(lSkim), sKey)
             yJobs = yJobs+nJob
             lHist = []

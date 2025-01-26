@@ -11,11 +11,12 @@
 #include <sstream>
 #include <TH1D.h>
 #include <TDirectory.h>
+#include "GlobalFlag.h"
 
 class HistCutflow {
 public:
     // Constructor
-    HistCutflow(TDirectory* origDir, const std::string& directoryName, const std::vector<std::string>& cuts);
+    HistCutflow(TDirectory* origDir, const std::string& directoryName, const std::vector<std::string>& cuts, const GlobalFlag& globalFlags);
 
     // Destructor
     ~HistCutflow();
@@ -49,6 +50,11 @@ public:
     void printCutflow(std::ostream& outputStream = std::cout) const;
 
 private:
+    // Reference to GlobalFlag instance
+    const GlobalFlag& globalFlags_;
+    const GlobalFlag::Year year_;
+    const GlobalFlag::Channel channel_;
+    const bool isDebug_;
     std::vector<std::string> cutNames_;
     std::unique_ptr<TH1D> h1EventInCutflow_;
     std::unique_ptr<TH1D> h1EventFractionInCutflow_;

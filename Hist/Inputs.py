@@ -1,6 +1,6 @@
 #-----------------------------------------------------------------
 #eosHistDir="/eos/user/r/rverma/www/public/cms-jerc-run2/Hist"
-eosHistDir="/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist"
+eosHistDir="/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/"
 #-----------------------------------------------------------------
 Years = []
 Years.append('2016Pre')
@@ -11,8 +11,9 @@ Years.append('2018')
 Channels = {}
 #Channels["ZeeJet"]    = "ZeeJet"
 #Channels["ZmmJet"]    = "ZmmJet"
-Channels["GamJet"]    = "GamJet"
-#Channels["MultiJet"]  = "MultiJet"
+#Channels["GamJet"]    = "GamJet"
+#Channels["GamJetFake"]    = "GamJetFake"
+Channels["MultiJet"]  = "MultiJet"
 #Channels["MCTruth"]   = "MultiJet"
 #Channels["Flavour"]   = "MultiJet"
 #Channels["VetoMap"]   = "MultiJet"

@@ -17,9 +17,10 @@
 
 // User-defined includes
 #include "SkimTree.h"
-#include "EventPick.h"
-#include "ObjectPick.h"
-#include "ObjectScale.h"
+#include "PickEvent.h"
+#include "PickObject.h"
+#include "ScaleEvent.h"
+#include "ScaleObject.h"
 #include "GlobalFlag.h"
 
 class RunMultiJet {
@@ -28,10 +29,9 @@ public:
     explicit RunMultiJet(GlobalFlag& globalFlags);
     ~RunMultiJet() = default;
 
-    int Run(std::shared_ptr<SkimTree>& skimT, EventPick* eventP, ObjectPick* objP, ObjectScale* objS, TFile* fout);
+    int Run(std::shared_ptr<SkimTree>& skimT, PickEvent* pickEvent, PickObject* pickObject, ScaleEvent* scaleEvent, ScaleObject* scaleObject, TFile* fout);
 
 private:
-    bool smearJets_ = false;
     // Reference to GlobalFlag instance
     GlobalFlag& globalFlags_;
 

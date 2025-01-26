@@ -1,7 +1,7 @@
 #pragma once
 
-#ifndef PlotEraXY_H
-#define PlotEraXY_H
+#ifndef PlotEraXYs_H
+#define PlotEraXYs_H
 
 #include <map>
 #include <vector>
@@ -25,14 +25,14 @@
 #include "TdrStyle.h"
 
 template <typename T>
-class PlotEraXY {
+class PlotEraXYs {
 public:
-    PlotEraXY();
-    ~PlotEraXY();
+    PlotEraXYs();
+    ~PlotEraXYs();
     
     // Setters remain the same...
     void setInput(const nlohmann::json &inputJson, const std::string & channel, const std::string & year);
-    void setFigConfigEraXY(const FigConfigEraXY &params);
+    void setFigConfigEraXYs(const FigConfigEraXYs &params);
 
     // Loaders (use templates for histogram type)
     void loadHists(const std::string& sourceType, const std::string& dataEra, const std::vector<std::string>& mcHtBins);
@@ -50,6 +50,7 @@ private:
     std::string varName_;
     bool varIsOnXaxis_;
     std::string histDir_;
+    std::vector<std::string> trigDirs_;
     std::string histName_;
     
     std::vector<TProfile*> dataHists_;  
@@ -58,6 +59,6 @@ private:
     std::shared_ptr<TdrStyle> tdrStyle_;
     TProfile* projectAndClone(T* hist, const std::string& bin, int i);
 };
-#include "../tpp/PlotEraXY.tpp"
+#include "../tpp/PlotEraXYs.tpp"
 #endif
 

@@ -16,6 +16,8 @@ else
 	tar -zxf Hist.tar.gz
     cp libcorrectionlib.so Hist/
     cd Hist
+    make clean
+    make
 fi
 
 #Run for Base, Signal region

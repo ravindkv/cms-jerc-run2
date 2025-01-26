@@ -36,14 +36,12 @@ auto RunZmmJet::Run(std::shared_ptr<NanoTree>& nanoT, TFile *fout) -> int{
 	//----------------------------------
 	// Set trigger list
 	//----------------------------------
-    std::vector<std::string> patterns;
     if(globalFlags_.is2016Pre || globalFlags_.is2016Post){
-        patterns = { "HLT_Mu17*_Mu8*_DZ"};
+        trigList_ = {"HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ"};
     }
     if(globalFlags_.is2017 || globalFlags_.is2018){
-        patterns = { "HLT_Mu17*_Mu8*_Mass8"};
+        trigList_ = {"HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8"};
     }
-    trigList_  = Helper::GetMatchingBranchNames(nanoT->fChain->GetTree(), patterns);
 
     if (trigList_.empty()) {
         std::cerr << "No triggers found for channel: ZeeJet" << '\n';

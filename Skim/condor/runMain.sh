@@ -14,6 +14,8 @@ else
     echo ${_CONDOR_SCRATCH_DIR}
 	tar -zxf Skim.tar.gz
     cd Skim
+    make clean
+    make
 fi
 
 #Run for Base, Signal region

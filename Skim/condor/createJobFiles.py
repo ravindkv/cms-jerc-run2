@@ -29,7 +29,7 @@ def createJobs(jsonFile, jdlFile, logDir="log"):
     jdlFile.write(common_command)
     for sKey, skims in data.items():
         jdlFile.write("\n")
-        for skim in skims:
+        for skim in skims[1]:
             outDir  = skim.split(sKey)[0]
             restStr = skim.split(sKey)[1]
             oName   = "%s%s"%(sKey, restStr)
@@ -50,6 +50,7 @@ if __name__=="__main__":
     submitAll = open("tmpSub/submitAll.sh", "w") 
     for year, ch in itertools.product(Years, Channels):
         outPath = f"{eosSkimDir}/{ch}/{year}"
+        os.system(f"gfal-mkdir -p {outPath}")
         print(f"Output dir: {outPath}")
         jsonFile = open(f"../input/json/FilesSkim_{ch}_{year}.json", "r")
         jdlName  = f'submitJobs_{ch}_{year}.jdl'

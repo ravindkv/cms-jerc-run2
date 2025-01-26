@@ -11,7 +11,7 @@ ScaleJetMet::ScaleJetMet(ScaleObject *scaleObj, bool isData, bool applyJer)
 void ScaleJetMet::Initialize() {
     // Clear existing corrections
     p4MapJet1_.clear();
-    p4MapJetSum_.clear();
+    p4MapSelJetSum_.clear();
     p4MapMet_.clear();
 
     // Initialize jet corrections with labels
@@ -21,7 +21,7 @@ void ScaleJetMet::Initialize() {
 
     for (const auto& name : jecNames) {
         p4MapJet1_[name] = TLorentzVector();
-        p4MapJetSum_[name] = TLorentzVector();
+        p4MapSelJetSum_[name] = TLorentzVector();
     }
 
     // Initialize MET labels
@@ -31,6 +31,8 @@ void ScaleJetMet::Initialize() {
     for (const auto& name : metNames) {
         p4MapMet_[name] = TLorentzVector();
     }
+    p4SumAllNano_ = TLorentzVector();
+    p4SumCorrAndUnCorr_ = TLorentzVector();
 }
 
 // Apply corrections
@@ -43,63 +45,73 @@ void ScaleJetMet::applyCorrections(std::shared_ptr<SkimTree>& skimT, CorrectionL
     p4MapMet_["Nano"] = p4Met;
 
     for (int i = 0; i < skimT->nJet; ++i) {
-        // Original NanoAOD jet
         TLorentzVector p4Jet;
-        p4Jet.SetPtEtaPhiM(skimT->Jet_pt[i], skimT->Jet_eta[i],
-                           skimT->Jet_phi[i], skimT->Jet_mass[i]);
-        if (i == 0) p4MapJet1_["Nano"] += p4Jet;
-        p4MapJetSum_["Nano"] += p4Jet;
-
-        p4Met += p4Jet;//Add default p4Jet
-
-        // Undo NanoAOD correction
-        undoNanoAODCorrection(*skimT, i);
-        p4Jet.SetPtEtaPhiM(skimT->Jet_pt[i], skimT->Jet_eta[i],
-                           skimT->Jet_phi[i], skimT->Jet_mass[i]);
-        if (i == 0) p4MapJet1_["Raw"] += p4Jet;
-        p4MapJetSum_["Raw"] += p4Jet;
-
-        // Apply corrections based on level
-        if (level >= CorrectionLevel::L1Rc) {
-            applyL1FastJetCorrection(*skimT, i);
+        // JECs are not reliable for low pTs and high etas. It is better
+        // to skip such jets than applying unreliable JEC
+        if(skimT->Jet_pt[i] > 15 && std::abs(skimT->Jet_eta[i]) < 5.2){ 
+            // Original NanoAOD jet
             p4Jet.SetPtEtaPhiM(skimT->Jet_pt[i], skimT->Jet_eta[i],
                                skimT->Jet_phi[i], skimT->Jet_mass[i]);
-            if (i == 0) p4MapJet1_["L1RcCorr"] += p4Jet;
-            p4MapJetSum_["L1RcCorr"] += p4Jet;
-        }
-
-        if (level >= CorrectionLevel::L2Rel) {
-            applyL2RelativeCorrection(*skimT, i);
+            if (i == 0) p4MapJet1_["Nano"] += p4Jet;
+            p4MapSelJetSum_["Nano"] += p4Jet;
+            p4SumAllNano_ += p4Jet;
+            
+            p4Met += p4Jet;//Add default p4Jet
+            
+            // Undo NanoAOD correction
+            undoNanoAODCorrection(*skimT, i);
             p4Jet.SetPtEtaPhiM(skimT->Jet_pt[i], skimT->Jet_eta[i],
                                skimT->Jet_phi[i], skimT->Jet_mass[i]);
-            if (i == 0) p4MapJet1_["L2RelCorr"] += p4Jet;
-            p4MapJetSum_["L2RelCorr"] += p4Jet;
-        }
-
-        if (level >= CorrectionLevel::L2L3Res && isData_) {
-            applyL2L3ResidualCorrection(*skimT, i);
+            if (i == 0) p4MapJet1_["Raw"] += p4Jet;
+            p4MapSelJetSum_["Raw"] += p4Jet;
+            
+            // Apply corrections based on level
+            if (level >= CorrectionLevel::L1Rc) {
+                applyL1FastJetCorrection(*skimT, i);
+                p4Jet.SetPtEtaPhiM(skimT->Jet_pt[i], skimT->Jet_eta[i],
+                                   skimT->Jet_phi[i], skimT->Jet_mass[i]);
+                if (i == 0) p4MapJet1_["L1RcCorr"] += p4Jet;
+                p4MapSelJetSum_["L1RcCorr"] += p4Jet;
+            }
+            
+            if (level >= CorrectionLevel::L2Rel) {
+                applyL2RelativeCorrection(*skimT, i);
+                p4Jet.SetPtEtaPhiM(skimT->Jet_pt[i], skimT->Jet_eta[i],
+                                   skimT->Jet_phi[i], skimT->Jet_mass[i]);
+                if (i == 0) p4MapJet1_["L2RelCorr"] += p4Jet;
+                p4MapSelJetSum_["L2RelCorr"] += p4Jet;
+            }
+            
+            if (level >= CorrectionLevel::L2L3Res && isData_) {
+                applyL2L3ResidualCorrection(*skimT, i);
+                p4Jet.SetPtEtaPhiM(skimT->Jet_pt[i], skimT->Jet_eta[i],
+                                   skimT->Jet_phi[i], skimT->Jet_mass[i]);
+                if (i == 0) p4MapJet1_["L2L3ResCorr"] += p4Jet;
+                p4MapSelJetSum_["L2L3ResCorr"] += p4Jet;
+            }
+            
+            if (applyJer_ && !isData_) {
+                applyJerCorrection(*skimT, i);
+                p4Jet.SetPtEtaPhiM(skimT->Jet_pt[i], skimT->Jet_eta[i],
+                                   skimT->Jet_phi[i], skimT->Jet_mass[i]);
+                if (i == 0) p4MapJet1_["JerCorr"] += p4Jet;
+                p4MapSelJetSum_["JerCorr"] += p4Jet;
+            }
+            
+            //Final correction
+            if (i == 0) p4MapJet1_["Corr"] += p4Jet;
+            p4MapSelJetSum_["Corr"] += p4Jet;
+            p4SumCorrAndUnCorr_ += p4Jet;
+            
+            p4Met -= p4Jet;//Substract corrected p4Jet
+        }//if pT, eta
+        else{
             p4Jet.SetPtEtaPhiM(skimT->Jet_pt[i], skimT->Jet_eta[i],
                                skimT->Jet_phi[i], skimT->Jet_mass[i]);
-            if (i == 0) p4MapJet1_["L2L3ResCorr"] += p4Jet;
-            p4MapJetSum_["L2L3ResCorr"] += p4Jet;
+            p4SumAllNano_ += p4Jet;
+            p4SumCorrAndUnCorr_ += p4Jet;
         }
-
-        if (applyJer_ && !isData_) {
-            applyJerCorrection(*skimT, i);
-            p4Jet.SetPtEtaPhiM(skimT->Jet_pt[i], skimT->Jet_eta[i],
-                               skimT->Jet_phi[i], skimT->Jet_mass[i]);
-            if (i == 0) p4MapJet1_["JerCorr"] += p4Jet;
-            p4MapJetSum_["JerCorr"] += p4Jet;
-        }
-
-        //Final correction
-        if (i == 0) p4MapJet1_["Corr"] += p4Jet;
-        p4MapJetSum_["Corr"] += p4Jet;
-
-        p4Met -= p4Jet;//Substract corrected p4Jet
-
     }//for nJet
-
     //Update the MET
     p4MapMet_["Corr"] = p4Met;
     skimT->ChsMET_pt  = p4Met.Pt(); 
@@ -154,7 +166,10 @@ void ScaleJetMet::print() const {
 
     std::cout << std::fixed << std::setprecision(3);
     printCorrections(p4MapJet1_, "Jet1 Corrections:");
-    printCorrections(p4MapJetSum_, "JetSum Corrections:");
+    printCorrections(p4MapSelJetSum_, "JetSum Corrections:");
     printCorrections(p4MapMet_, "Met Corrections:");
+    std::cout<<"Check momentum conservation, (p4Met - p4AllJet).Pt(): "<<'\n';
+    std::cout<<"    At Nano   : "<<(p4MapMet_.at("Nano") - p4SumAllNano_).Pt()<<'\n';
+    std::cout<<"    After JEC : "<<(p4MapMet_.at("Corr") - p4SumCorrAndUnCorr_).Pt()<<'\n';
 }
 

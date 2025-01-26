@@ -37,14 +37,12 @@ auto RunZeeJet::Run(std::shared_ptr<NanoTree>& nanoT, TFile *fout) -> int{
 	//----------------------------------
 	// Set trigger list
 	//----------------------------------
-    std::vector<std::string> patterns;
     if(globalFlags_.is2016Pre || globalFlags_.is2016Post){
-        patterns = { "HLT_Ele23*_Ele12*_DZ"};
+        trigList_ = {"HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ"};
     }
     if(globalFlags_.is2017 || globalFlags_.is2018){
-        patterns = { "HLT_Ele23*_Ele12*_IsoVL"};
+        trigList_ = {"HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL"};
     }
-    trigList_  = Helper::GetMatchingBranchNames(nanoT->fChain->GetTree(), patterns);
 
     if (trigList_.empty()) {
         std::cerr << "No triggers found for channel: ZeeJet" << '\n';

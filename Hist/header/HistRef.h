@@ -70,7 +70,7 @@ public:
      * @param ptRef Reference pT value for scaling.
      * @param weight Event weight.
      */
-    void Fill(const int& nRef, const TLorentzVector& p4Ref, const TLorentzVector& p4GenRef, double lumiPerHlt, double weight);
+    void Fill(const int& nRef, const TLorentzVector& p4Ref, const TLorentzVector& p4GenRef, double weight);
 
 private:
     // Struct holding all histograms

@@ -24,10 +24,10 @@ auto RunGamJet::Run(std::shared_ptr<NanoTree>& nanoT, TFile *fout) -> int{
    	nanoT->fChain->SetBranchStatus("Photon_pf*",true);
    	nanoT->fChain->SetBranchStatus("Photon_pixel*",true);
    	nanoT->fChain->SetBranchStatus("Photon_jetIdx",true);
-   	nanoT->fChain->SetBranchStatus("Photon_genPartIdx",true);
    	nanoT->fChain->SetBranchStatus("Photon_seedGain",true);
    	nanoT->fChain->SetBranchStatus("Photon_mass",true);
   	if(globalFlags_.isMC){
+   	  nanoT->fChain->SetBranchStatus("Photon_genPartIdx",true);
       nanoT->fChain->SetBranchStatus("GenIsolatedPhoton_*",true);
       nanoT->fChain->SetBranchStatus("nGenIsolatedPhoton",true);
     }
@@ -35,9 +35,8 @@ auto RunGamJet::Run(std::shared_ptr<NanoTree>& nanoT, TFile *fout) -> int{
 	//----------------------------------
 	// Set trigger list
 	//----------------------------------
-    std::vector<std::string> patterns;
     if(globalFlags_.is2016Pre || globalFlags_.is2016Post){
-        patterns = { 
+        trigList_ = { 
         	"HLT_Photon175",
 			"HLT_Photon165_R9Id90_HE10_IsoM",
 			"HLT_Photon120_R9Id90_HE10_IsoM",
@@ -50,36 +49,29 @@ auto RunGamJet::Run(std::shared_ptr<NanoTree>& nanoT, TFile *fout) -> int{
         };
     }
     if(globalFlags_.is2017){
-        patterns = { 
-			"HLT_Photon200",
-            "HLT_Photon165_R9Id90_HE10_IsoM",
-            "HLT_Photon120_R9Id90_HE10_IsoM",
-            "HLT_Photon90_R9Id90_HE10_IsoM",
-            "HLT_Photon75_R9Id90_HE10_IsoM",
-            "HLT_Photon50_R9Id90_HE10_IsoM",
-            "HLT_Photon30_HoverELoose",
-            "HLT_Photon20_HoverELoose"
+        trigList_ = { 
+		   "HLT_Photon200",
+           "HLT_Photon165_R9Id90_HE10_IsoM",
+           "HLT_Photon120_R9Id90_HE10_IsoM",
+           "HLT_Photon90_R9Id90_HE10_IsoM",
+           "HLT_Photon75_R9Id90_HE10_IsoM",
+           "HLT_Photon50_R9Id90_HE10_IsoM",
+           "HLT_Photon30_HoverELoose",
+           "HLT_Photon20_HoverELoose"
         }; 
     }
     if(globalFlags_.is2018){
-        patterns = { 
-			"HLT_Photon200",
-            "HLT_Photon110EB_TightID_TightIso",
-            "HLT_Photon100EB_TightID_TightIso",
-            "HLT_Photon90_R9Id90_HE10_IsoM",
-            "HLT_Photon75_R9Id90_HE10_IsoM",
-            "HLT_Photon50_R9Id90_HE10_IsoM",
-            "HLT_Photon30_HoverELoose",
-            "HLT_Photon20_HoverELoose"
+        trigList_ = { 
+		   "HLT_Photon200",
+           "HLT_Photon110EB_TightID_TightIso",
+           "HLT_Photon100EB_TightID_TightIso",
+           "HLT_Photon90_R9Id90_HE10_IsoM",
+           "HLT_Photon75_R9Id90_HE10_IsoM",
+           "HLT_Photon50_R9Id90_HE10_IsoM",
+           "HLT_Photon30_HoverELoose",
+           "HLT_Photon20_HoverELoose"
         }; 
     }
-    trigList_  = patterns; 
-
-    if (trigList_.empty()) {
-        std::cerr << "No triggers found for channel: ZeeJet" << '\n';
-        exit(EXIT_FAILURE);
-    }
-
 
     if (trigList_.empty()) {
         std::cerr << "No triggers found for channel: GamJet" << '\n';
@@ -128,7 +120,6 @@ auto RunGamJet::Run(std::shared_ptr<NanoTree>& nanoT, TFile *fout) -> int{
     Helper::printCutflow(h1EventInCutflow->getHistogram());
     std::cout<<"nEvents_Skim = "<<newTree->GetEntries()<<'\n';
     std::cout << "Output file path = "<<fout->GetName()<<'\n';
-    //newTree->Write();
     fout->Write();
     return EXIT_SUCCESS; 
 }
