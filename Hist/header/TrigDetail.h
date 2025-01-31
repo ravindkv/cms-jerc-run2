@@ -16,6 +16,7 @@ struct TrigRangePt {
 
 // Define the TrigRangePtEta struct
 struct TrigRangePtEta {
+    int trigPt;
     double ptMin;
     double ptMax;
     double absEtaMin;

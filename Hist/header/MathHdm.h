@@ -40,6 +40,17 @@ public:
     double getMpfux()  const { return mpfux_; }
     double getMpfnux() const { return mpfnux_; }
 
+    //For MultiJet channel
+    TLorentzVector buildUnitAxis(const TLorentzVector& A,
+                             const TLorentzVector& B);
+    //For MultiJet channel
+    TLorentzVector buildUnitAxisForBisector(const TLorentzVector A,
+                             const TLorentzVector B);
+    double mpfResponse(const TLorentzVector& obj,
+                   const TLorentzVector& axis,
+                   double scale,
+                   double offset);
+
 private:
     // Reference to GlobalFlag instance
     const GlobalFlag& globalFlags_;
@@ -78,6 +89,7 @@ private:
 
     // Helper method to make a 4-vector transverse (i.e. set Pz to zero)
     void makeTransverse(TLorentzVector& vec);
+
 };
 
 #endif // MATHHDM_H

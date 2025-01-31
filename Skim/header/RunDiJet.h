@@ -1,5 +1,5 @@
-#ifndef RUNMULTIJET_H
-#define RUNMULTIJET_H
+#ifndef RUNDIJET_H
+#define RUNDIJET_H
 
 #include <iostream>
 #include <TFile.h>
@@ -7,11 +7,11 @@
 #include "NanoTree.h"
 #include "GlobalFlag.h"
 
-class RunMultiJet{
+class RunDiJet{
 public:
     // Constructor accepting a reference to GlobalFlag
-    explicit RunMultiJet(GlobalFlag& globalFlags);
-    ~RunMultiJet() = default;
+    explicit RunDiJet(GlobalFlag& globalFlags);
+    ~RunDiJet() = default;
 
     int Run(std::shared_ptr<NanoTree>& skimT, TFile* fout);
 
@@ -24,5 +24,5 @@ private:
 
 };
 
-#endif // RUNMULTIJET_H
+#endif // RUNDIJET_H
 

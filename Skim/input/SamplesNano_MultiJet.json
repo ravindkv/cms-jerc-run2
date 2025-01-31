@@ -18,13 +18,7 @@
             "Data_MultiJet_2016PreC_JetHT":   [1.0, "/JetHT/Run2016C-HIPM_UL2016_MiniAODv2_JMENanoAODv9-v1/NANOAOD"],
             "Data_MultiJet_2016PreD_JetHT":   [1.0, "/JetHT/Run2016D-HIPM_UL2016_MiniAODv2_JMENanoAODv9-v1/NANOAOD"],
             "Data_MultiJet_2016PreE_JetHT":   [1.0, "/JetHT/Run2016E-HIPM_UL2016_MiniAODv2_JMENanoAODv9-v1/NANOAOD"],
-            "Data_MultiJet_2016PreF_JetHT":   [1.0, "/JetHT/Run2016F-HIPM_UL2016_MiniAODv2_JMENanoAODv9-v2/NANOAOD"],
-            "Data_MultiJet_2016PreBv1_ZeroBias": [1.0, "/ZeroBias/Run2016B-ver1_HIPM_UL2016_MiniAODv2_JMENanoAODv9-v1/NANOAOD"],
-            "Data_MultiJet_2016PreBv2_ZeroBias": [1.0, "/ZeroBias/Run2016B-ver2_HIPM_UL2016_MiniAODv2_JMENanoAODv9-v1/NANOAOD"],
-            "Data_MultiJet_2016PreC_ZeroBias":   [1.0, "/ZeroBias/Run2016C-HIPM_UL2016_MiniAODv2_JMENanoAODv9-v2/NANOAOD"],
-            "Data_MultiJet_2016PreD_ZeroBias":   [1.0, "/ZeroBias/Run2016D-HIPM_UL2016_MiniAODv2_JMENanoAODv9-v2/NANOAOD"],
-            "Data_MultiJet_2016PreE_ZeroBias":   [1.0, "/ZeroBias/Run2016E-HIPM_UL2016_MiniAODv2_JMENanoAODv9-v2/NANOAOD"],
-            "Data_MultiJet_2016PreF_ZeroBias":   [1.0, "/ZeroBias/Run2016F-HIPM_UL2016_MiniAODv2_JMENanoAODv9-v2/NANOAOD"]
+            "Data_MultiJet_2016PreF_JetHT":   [1.0, "/JetHT/Run2016F-HIPM_UL2016_MiniAODv2_JMENanoAODv9-v2/NANOAOD"]
         }
     },
     "2016Post": {
@@ -42,10 +36,7 @@
         "Data": {
             "Data_MultiJet_2016PostF_JetHT": [1.0, "/JetHT/Run2016F-UL2016_MiniAODv2_JMENanoAODv9-v1/NANOAOD"],
             "Data_MultiJet_2016PostG_JetHT": [1.0, "/JetHT/Run2016G-UL2016_MiniAODv2_JMENanoAODv9-v1/NANOAOD"],
-            "Data_MultiJet_2016PostH_JetHT": [1.0, "/JetHT/Run2016H-UL2016_MiniAODv2_JMENanoAODv9-v1/NANOAOD"],
-            "Data_MultiJet_2016PostF_ZeroBias": [1.0, "/ZeroBias/Run2016F-UL2016_MiniAODv2_JMENanoAODv9-v1/NANOAOD"],
-            "Data_MultiJet_2016PostG_ZeroBias": [1.0, "/ZeroBias/Run2016G-UL2016_MiniAODv2_JMENanoAODv9-v1/NANOAOD"],
-            "Data_MultiJet_2016PostH_ZeroBias": [1.0, "/ZeroBias/Run2016H-UL2016_MiniAODv2_JMENanoAODv9-v1/NANOAOD"]
+            "Data_MultiJet_2016PostH_JetHT": [1.0, "/JetHT/Run2016H-UL2016_MiniAODv2_JMENanoAODv9-v1/NANOAOD"]
         }
     },
     "2017": {
@@ -65,12 +56,7 @@
             "Data_MultiJet_2017C_JetHT": [1.0, "/JetHT/Run2017C-UL2017_MiniAODv2_JMENanoAODv9-v1/NANOAOD"],
             "Data_MultiJet_2017D_JetHT": [1.0, "/JetHT/Run2017D-UL2017_MiniAODv2_JMENanoAODv9-v1/NANOAOD"],
             "Data_MultiJet_2017E_JetHT": [1.0, "/JetHT/Run2017E-UL2017_MiniAODv2_JMENanoAODv9-v1/NANOAOD"],
-            "Data_MultiJet_2017F_JetHT": [1.0, "/JetHT/Run2017F-UL2017_MiniAODv2_JMENanoAODv9-v1/NANOAOD"],
-            "Data_MultiJet_2017B_ZeroBias": [1.0, "/ZeroBias/Run2017B-UL2017_MiniAODv2_JMENanoAODv9-v1/NANOAOD"],
-            "Data_MultiJet_2017C_ZeroBias": [1.0, "/ZeroBias/Run2017C-UL2017_MiniAODv2_JMENanoAODv9-v1/NANOAOD"],
-            "Data_MultiJet_2017D_ZeroBias": [1.0, "/ZeroBias/Run2017D-UL2017_MiniAODv2_JMENanoAODv9-v1/NANOAOD"],
-            "Data_MultiJet_2017E_ZeroBias": [1.0, "/ZeroBias/Run2017E-UL2017_MiniAODv2_JMENanoAODv9-v1/NANOAOD"],
-            "Data_MultiJet_2017F_ZeroBias": [1.0, "/ZeroBias/Run2017F-UL2017_MiniAODv2_JMENanoAODv9-v1/NANOAOD"]
+            "Data_MultiJet_2017F_JetHT": [1.0, "/JetHT/Run2017F-UL2017_MiniAODv2_JMENanoAODv9-v1/NANOAOD"]
         }
     },
     "2018": {
@@ -90,11 +76,7 @@
             "Data_MultiJet_2018A_JetHT": [1.0, "/JetHT/Run2018A-UL2018_MiniAODv2_JMENanoAODv9-v1/NANOAOD"],
             "Data_MultiJet_2018B_JetHT": [1.0, "/JetHT/Run2018B-UL2018_MiniAODv2_JMENanoAODv9-v1/NANOAOD"],
             "Data_MultiJet_2018C_JetHT": [1.0, "/JetHT/Run2018C-UL2018_MiniAODv2_JMENanoAODv9-v1/NANOAOD"],
-            "Data_MultiJet_2018D_JetHT": [1.0, "/JetHT/Run2018D-UL2018_MiniAODv2_JMENanoAODv9-v1/NANOAOD"],
-            "Data_MultiJet_2018A_ZeroBias": [1.0, "/ZeroBias/Run2018A-UL2018_MiniAODv2_JMENanoAODv9-v2/NANOAOD"],
-            "Data_MultiJet_2018B_ZeroBias": [1.0, "/ZeroBias/Run2018B-UL2018_MiniAODv2_JMENanoAODv9-v2/NANOAOD"],
-            "Data_MultiJet_2018C_ZeroBias": [1.0, "/ZeroBias/Run2018C-UL2018_MiniAODv2_JMENanoAODv9-v2/NANOAOD"],
-            "Data_MultiJet_2018D_ZeroBias": [1.0, "/ZeroBias/Run2018D-UL2018_MiniAODv2_JMENanoAODv9-v2/NANOAOD"]
+            "Data_MultiJet_2018D_JetHT": [1.0, "/JetHT/Run2018D-UL2018_MiniAODv2_JMENanoAODv9-v1/NANOAOD"]
         }
     }
 }

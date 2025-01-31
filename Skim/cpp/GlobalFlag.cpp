@@ -13,6 +13,7 @@ GlobalFlag::GlobalFlag(const string& outName) :
     isGamJet(false), 
     isGamJetFake(false), 
     isMultiJet(false), 
+    isDiJet(false), 
     isWqq(false), 
     isQCD(false), 
     isMG(false){
@@ -30,6 +31,7 @@ GlobalFlag::GlobalFlag(const string& outName) :
     if(outName.find("GamJetFake")!= string::npos)    isGamJetFake    = true;
     else if(outName.find("GamJet")!= string::npos)    isGamJet    = true;
     if(outName.find("MultiJet")!= string::npos)  isMultiJet  = true;
+    if(outName.find("DiJet")!= string::npos)  isDiJet  = true;
     if(outName.find("Wqq")!= string::npos)       isWqq       = true;
 
     if(outName.find("QCD")!= string::npos)    isQCD    = true;
@@ -49,6 +51,7 @@ void GlobalFlag::printFlag(){
     if(isGamJet  )cout<<"isGamJet  = true"<<'\n';
     if(isGamJetFake  )cout<<"isGamJetFake  = true"<<'\n';
     if(isMultiJet)cout<<"isMultiJet= true"<<'\n';
+    if(isDiJet)cout<<"isDiJet= true"<<'\n';
     if(isWqq     )cout<<"isWqq     = true"<<'\n';
 
     if(isQCD     )cout<<"isQCD     = true"<<'\n';

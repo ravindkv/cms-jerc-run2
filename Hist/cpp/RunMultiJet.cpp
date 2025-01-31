@@ -1,7 +1,9 @@
 #include "RunMultiJet.h"
+
 #include "HistCutflow.h"
 #include "HistMultiJet.h"
-#include "TrigDetail.h"
+#include "HistRef.h"
+#include "HistTime.h"
 
 #include "ScaleJetMet.h"
 
@@ -9,6 +11,7 @@
 #include "VarBin.h"
 #include "VarCut.h"
 #include "MathHdm.h"
+#include "TrigDetail.h"
 
 // Constructor implementation
 RunMultiJet::RunMultiJet(GlobalFlag& globalFlags)
@@ -17,6 +20,8 @@ RunMultiJet::RunMultiJet(GlobalFlag& globalFlags)
 
 auto RunMultiJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, PickObject *pickObject, ScaleEvent* scaleEvent,  ScaleObject *scaleObject, TFile *fout) -> int{
     assert(fout && !fout->IsZombie());
+    fout->mkdir("Base");
+    fout->cd("Base");
  
     TDirectory *origDir = gDirectory;
     //------------------------------------
@@ -25,68 +30,50 @@ auto RunMultiJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pi
     // Cutflow histogram
     std::vector<std::string> cuts = {
         "passSkim", "passHLT", "passGoodLumi", "passMetFilter", "passExactly1Lead",
-        "passAtleast2Recoil", "passJetVetoMap", "passDPhiLeadRecoil", "passVetoNearByJets",
-        "passMultiJet"
+        "passAtleast2Recoil", "passJetVetoMap", "passDPhiLeadAndRecoil", "passVetoNearByJets",
+        "passMultiJet", "passHltWithPtEta"
     };
     auto h1EventInCutflow = std::make_unique<HistCutflow>(origDir, "", cuts, globalFlags_);
 
-    fout->mkdir("Refs");
-    fout->cd("Refs");
-    TH1D* h1NumJetsInEvents = new TH1D("h1NumJetsInEvents", "Number of Jets", 500, 0, 500);
-    fout->cd();
-
     // Variable binning
     VarBin varBin(globalFlags_);
-    std::vector<double> binsPt  = varBin.getBinsPt(); 
-    std::vector<double> binsEta = varBin.getBinsEta(); 
+    std::vector<int> pTRefs = {30, 110, 230};
+
+    HistRef histRef(origDir, "passMultiJet", varBin);
+    HistTime histTime(origDir, "passMultiJet", varBin, pTRefs);
+    
+    // MultiJet Histograms per HLT
+    HistMultiJet histMultiJet(origDir, "passMultiJet", varBin);
 
     // Initialize TrigDetail
     TrigDetail trigDetail(globalFlags_);
     const auto& trigDetails = trigDetail.getTrigMapRangePtEta();
-
-    std::map<std::string, HistMultiJet*> mapTriggerToHistos;
+    std::map<std::string, HistMultiJet*> mapHistMultiJet;
     for (const auto& trigPair : trigDetails) {
         const std::string& trigName = trigPair.first;
-
-        if (globalFlags_.isDebug()) {
-            std::cout << "Processing Trigger: " << trigName << '\n';
-        }
-
-        fout->mkdir(trigName.c_str());
-        fout->cd(trigName.c_str());
-        TDirectory* dirOut = gDirectory;
-
         const TrigRangePtEta& r = trigPair.second;
-        // Create an instance of HistMultiJet
-        HistMultiJet* h = new HistMultiJet(trigName, r.ptMin, r.ptMax, r.absEtaMin, r.absEtaMax);
-
-        mapTriggerToHistos[trigName] = h;
-        h->triggerPt = static_cast<int>(r.ptMin);  // Assuming triggerPt corresponds to ptMin
-
-        // Initialize histograms
-        h->initializeHistograms(binsPt, dirOut);
-
-        // Return to the main directory
-        fout->cd();
+        HistMultiJet* hMultiJet = new HistMultiJet(origDir, "passMultiJet/"+trigName, varBin);
+        hMultiJet->trigPt = r.trigPt; 
+        mapHistMultiJet[trigName] = hMultiJet;
     } // End of trig loop
 
     auto scaleJetMet = std::make_shared<ScaleJetMet>(scaleObject, globalFlags_.isData(), VarCut::applyJer);
+
     //------------------------------------
     // Event loop
     //------------------------------------
     TLorentzVector p4Jet;
-    TLorentzVector p4LeadJet, p4RecoilJet;
-    TLorentzVector p4LeadJetRES, p4RecoilJetRES;
-    TLorentzVector p4Bisector, p4BisectorRecoil, p4BisectorLead, p4M;
     TLorentzVector p4L, p4R;
-    TLorentzVector p4CorrMet, p4NegSum_LeadRecoil, p4NegSum_Other, p4Unclustered;
+    TLorentzVector p4Bisector, p4BisectorRecoil, p4BisectorLead, p4M;
+    TLorentzVector p4CorrMet, p4SumLeadAndRecoil, p4SumOther, p4Unclustered;
 
-    TLorentzVector p4Lead;
-    TLorentzVector p4Recoil;
-    TLorentzVector p4LeadRES;
-    TLorentzVector p4RecoilRES;
+    TLorentzVector p4LeadJet, p4LeadGenJet;
+    TLorentzVector p4SumRecoiledJets;
+    TLorentzVector p4LeadJetRES;
+    TLorentzVector p4SumRecoiledJetsRES;
 
     TLorentzVector p4CorrectedJets, p4RawJet, p4RawJets, p4L1RCJet, p4L1RCJets, p4L1RCOffsets;
+    MathHdm mathHdm(globalFlags_);
 
     double totalTime = 0.0;
     auto startClock = std::chrono::high_resolution_clock::now();
@@ -131,158 +118,148 @@ auto RunMultiJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pi
         scaleJetMet->applyCorrections(skimT, ScaleJetMet::CorrectionLevel::L2L3Res);
         if(globalFlags_.isDebug()) scaleJetMet->print();
 
-        // Select leading jets. Just exclude Probe, don't apply JetID yet
-        int indexLeadingJet = -1, indexSecondJet = -1, numJets = 0;
-        double deltaJES = 1.0, jetEnergyScale = 1.0, resolution = 1.0;
-
-        int numLead = 0;
-        int numRecoil = 0;
-        bool multiJetVetoNear = false;
-        bool multiJetVetoFwd = false;
-
-        // Reset multi-jet vectors
-        p4Lead.SetPtEtaPhiM(0, 0, 0, 0);
-        p4Recoil.SetPtEtaPhiM(0, 0, 0, 0);
-        p4NegSum_LeadRecoil.SetPtEtaPhiM(0, 0, 0, 0);
-        p4NegSum_Other.SetPtEtaPhiM(0, 0, 0, 0);
-        p4Unclustered.SetPtEtaPhiM(0, 0, 0, 0);
-        p4LeadRES.SetPtEtaPhiM(0, 0, 0, 0);
-        p4RecoilRES.SetPtEtaPhiM(0, 0, 0, 0);
-
-        double ptHardestInRecoil = 0.0;
-        for (int i = 0; i != skimT->nJet; ++i) {
-            if(skimT->Jet_jetId[i] < 6)  continue;
-            p4Jet.SetPtEtaPhiM(skimT->Jet_pt[i], skimT->Jet_eta[i],
-                               skimT->Jet_phi[i], skimT->Jet_mass[i]);
-
-            // L3Res HDM (multi-jet)
-            if (i == 0 && p4Jet.Pt() > 30.0) { // leading jet
-                p4Lead += p4Jet;
-                p4NegSum_LeadRecoil -= p4Jet;
-                p4LeadRES += p4Jet;
-                ++numLead;
-            } else if (i > 0 && p4Jet.Pt() > 30.0 && fabs(p4Jet.Eta()) < 2.5 &&
-                       Helper::DELTAPHI(p4Jet.Phi(), p4Lead.Phi()) > 1.0) { // recoil jets
-                p4Recoil += p4Jet;
-                p4NegSum_LeadRecoil -= p4Jet;
-                p4RecoilRES += p4Jet;
-                ++numRecoil;
-                if(ptHardestInRecoil < p4Jet.Pt()) ptHardestInRecoil = p4Jet.Pt();
-            } else if (p4Jet.Pt() > 15.0) { // all other jets
-                p4NegSum_Other -= p4Jet;
-            }
-
-            // Veto nearby jets for multi-jet topology
-            if (i > 0 && p4Jet.Pt() > 30.0 && fabs(p4Jet.Eta()) < 2.5 &&
-                Helper::DELTAPHI(p4Jet.Phi(), p4Lead.Phi()) <= 1.0)
-                multiJetVetoNear = true;
-
-            // Veto forward jets for multi-jet topology
-            if (i > 0 && p4Jet.Pt() > 30.0 && fabs(p4Jet.Eta()) >= 2.5)
-                multiJetVetoFwd = true;
-
-        } // End of jet loop
-
-        if (numLead != 1) continue;
-        h1EventInCutflow->fill("passExactly1Lead");
-
-        if (numRecoil < 2) continue;
-        h1EventInCutflow->fill("passAtleast2Recoil");
-
-        //if (scaleEvent->checkJetVetoMap(*skimT)) continue; // expensive function
-        h1EventInCutflow->fill("passJetVetoMap");
-
-        if(!(fabs(Helper::DELTAPHI(p4Lead.Phi(), p4Recoil.Phi()) - TMath::Pi()) < 0.3)) continue;
-        h1EventInCutflow->fill("passDPhiLeadRecoil");
-
-        if(multiJetVetoNear) continue;
-        if(multiJetVetoFwd)  continue; 
-        h1EventInCutflow->fill("passVetoNearByJets");
-
-        bool passMultiJet  = p4Lead.Pt() > 0.7 * ptHardestInRecoil;
+        //------------------------------------------------
+        // Select JEC
+        //------------------------------------------------
+		bool multiJetVetoNear = false;
+		bool multiJetVetoFwd  = false;
+		
+		// We'll store which jets are "recoil" later
+		std::vector<int> recoilIndices;
+		
+		// Reset multi-jet vectors to zero
+		p4LeadJet.SetPtEtaPhiM(0, 0, 0, 0);
+		p4SumRecoiledJets.SetPtEtaPhiM(0, 0, 0, 0);
+		p4SumLeadAndRecoil.SetPtEtaPhiM(0, 0, 0, 0);
+		p4SumOther.SetPtEtaPhiM(0, 0, 0, 0);
+		
+		int iJet1 = -1;      // index of the leading jet
+		double maxPtLead = 0; 
+		double ptHardestInRecoil = 0.0;
+		
+		// ─────────────────────────────────────────────────────────────
+		// 1) First pass: find the index of the true highest-pT jet
+		// ─────────────────────────────────────────────────────────────
+		for (int i = 0; i < skimT->nJet; ++i) {
+			// Check basic jet ID
+			if (skimT->Jet_jetId[i] < 6) continue;
+		
+			double pt = skimT->Jet_pt[i];
+			if (pt > maxPtLead) {
+				maxPtLead = pt;
+				iJet1     = i;
+			}
+		}
+		
+		// If we found no valid jet or the max pT < 30, skip this event
+		if (iJet1 < 0 || maxPtLead < 30.0) {
+			// no "leading" jet by your threshold → reject event
+			continue;
+		}
+		h1EventInCutflow->fill("passExactly1Lead");
+		
+		// ─────────────────────────────────────────────────────────────
+		// 2) Build 4-vector for the leading jet using iJet1
+		// ─────────────────────────────────────────────────────────────
+		p4Jet.SetPtEtaPhiM(skimT->Jet_pt[iJet1], skimT->Jet_eta[iJet1],
+						   skimT->Jet_phi[iJet1], skimT->Jet_mass[iJet1]);
+		p4LeadJet = p4Jet;        // Use =, not +=
+		p4SumLeadAndRecoil += p4Jet;   
+		
+		
+		// ─────────────────────────────────────────────────────────────
+		// 3) Second pass: classify the rest of the jets
+		// ─────────────────────────────────────────────────────────────
+		for (int i = 0; i < skimT->nJet; ++i) {
+			// Skip the leading jet itself and any failing ID
+			if (i == iJet1) continue;
+			if (skimT->Jet_jetId[i] < 6) continue;
+			
+			p4Jet.SetPtEtaPhiM(skimT->Jet_pt[i], skimT->Jet_eta[i],
+							   skimT->Jet_phi[i], skimT->Jet_mass[i]);
+			
+			double pt  = p4Jet.Pt();
+			double eta = p4Jet.Eta();
+			double dphi = Helper::DELTAPHI(p4Jet.Phi(), p4LeadJet.Phi());
+		
+			// Classify as "recoil" jets
+			if (pt > 30.0 && fabs(eta) < 2.5 && dphi > 1.0) {
+				p4SumRecoiledJets += p4Jet;
+				p4SumLeadAndRecoil += p4Jet;
+				recoilIndices.push_back(i);
+				if (ptHardestInRecoil < pt) ptHardestInRecoil = pt;
+			}
+			// Or "other" jets if pT > 15.0
+			else if (pt > 15.0) {
+				p4SumOther += p4Jet;
+			}
+		
+			// Veto conditions:
+			//  - near the leading jet (Δφ <= 1.0)
+			//  - forward jet (|eta| >= 2.5)
+			if (pt > 30.0 && fabs(eta) < 2.5 && dphi <= 1.0) {
+				multiJetVetoNear = true;
+			}
+			if (pt > 30.0 && fabs(eta) >= 2.5) {
+				multiJetVetoFwd = true;
+			}
+		}
+		
+		// At least 2 recoil jets
+		if (recoilIndices.size() < 2) {
+			continue;
+		}
+		h1EventInCutflow->fill("passAtleast2Recoil");
+		
+		// if (scaleEvent->checkJetVetoMap(*skimT)) continue;
+		h1EventInCutflow->fill("passJetVetoMap");
+		
+		// Check Δφ(leading, sumRecoil) ≈ π
+		double deltaPhi = Helper::DELTAPHI(p4LeadJet.Phi(), p4SumRecoiledJets.Phi());
+		if (!(fabs(deltaPhi - TMath::Pi()) < 0.3)) {
+			continue;
+		}
+		h1EventInCutflow->fill("passDPhiLeadAndRecoil");
+		
+		// Veto near & forward jets
+		if (multiJetVetoNear) continue;
+		if (multiJetVetoFwd ) continue;
+		h1EventInCutflow->fill("passVetoNearByJets");
+		
+        bool passMultiJet  = p4LeadJet.Pt() > 0.7 * ptHardestInRecoil;
         if(!passMultiJet) continue;
         h1EventInCutflow->fill("passMultiJet");
 
+        double ptAvgProj = 0.0;
+        // Proper bisector axis (equal angles to each jet)
+        auto p4Bisector = mathHdm.buildUnitAxisForBisector(p4SumRecoiledJets, p4LeadJet);
+        // Average projection pT to bisector axis, pT_avp
+        // as explained in JME-21-001 (HDM method: bisector extension)
+        ptAvgProj = 0.5 * (p4SumRecoiledJets.Vect().Dot(p4Bisector.Vect()) -
+                                     p4LeadJet.Vect().Dot(p4Bisector.Vect()));
+
+        double ptLead = p4LeadJet.Pt();
+        double ptRecoil = p4SumRecoiledJets.Pt();
+        double sumF_i = 0.0;
+        double ptAverage = 0.5 * (ptLead + ptRecoil);
 
         // Calculate Crecoil
         double logCrecoil = 0.0;
-        double ptAvgProj = 0.0;
-
-        // Proper bisector axis (equal angles to each jet)
-        p4Bisector.SetPtEtaPhiM(0, 0, 0, 0);
-        p4BisectorRecoil.SetPtEtaPhiM(1, 0, p4Recoil.Phi(), 0);
-        p4BisectorLead.SetPtEtaPhiM(1, 0, p4Lead.Phi(), 0);
-        p4Bisector += p4BisectorRecoil;
-        p4Bisector -= p4BisectorLead;
-        p4Bisector.SetPtEtaPhiM(p4Bisector.Pt(), 0.0, p4Bisector.Phi(), 0.0);
-        p4Bisector *= 1.0 / p4Bisector.Pt();
-
-        // Average projection pT to bisector axis, pT_avp
-        // as explained in JME-21-001 (HDM method: bisector extension)
-        ptAvgProj = 0.5 * (p4Recoil.Vect().Dot(p4Bisector.Vect()) -
-                                     p4Lead.Vect().Dot(p4Bisector.Vect()));
-
-        double ptLead = p4Lead.Pt();
-        double ptRecoil = p4Recoil.Pt();
-        double sumF_i = 0.0;
-        double ptAverage = 0.5 * (ptLead + ptRecoil);
-        for (int i = 0; i != skimT->nJet; ++i) {
-            // Ensure selection matches the one above for p4Recoil
-            p4Jet.SetPtEtaPhiM(skimT->Jet_pt[i], skimT->Jet_eta[i],
-                               skimT->Jet_phi[i], skimT->Jet_mass[i]);
-            if (i > 0 && p4Jet.Pt() > 30.0 && fabs(p4Jet.Eta()) < 2.5 &&
-                Helper::DELTAPHI(p4Jet.Phi(), p4Lead.Phi()) > 1.0) {
-                double pt_i = p4Jet.Pt();
-                double f_i = pt_i / ptRecoil;
-                double F_i = f_i * cos(Helper::DELTAPHI(p4Jet.Phi(), p4Recoil.Phi()));
-                sumF_i +=F_i;
-                logCrecoil += F_i * log(f_i);
-                if (globalFlags_.isDebug()){
-                    std::cout<<
-                            "ptLead = "<<ptLead<<
-                            ", ptRecoil = "<<ptRecoil<<
-                            ", ptAvgProj = "<<ptAvgProj<<
-                            ", pt_i = "<<pt_i << 
-                            ", f_i = "<<f_i<<
-                            ", F_i = "<<F_i<<
-                            ", weight = "<<weight<<
-                    std::endl; 
-                }
-                // Fill histograms per trig
-                for (const auto& trigPair : trigDetails) {
-                    bool isPresent = std::find(passedHlts.begin(), passedHlts.end(),
-                                               trigPair.first) != passedHlts.end();
-
-                    if (!isPresent) continue;
-                    HistMultiJet* h = mapTriggerToHistos[trigPair.first];
-
-                    // Assumption is that sum_i F_i = 1, but should check?
-                    h->h2JetsPtInAvgProjPt->Fill(ptAvgProj, pt_i, weight * F_i);
-                    h->h2JetsPtInAvgPt->Fill(ptAverage, pt_i, weight * F_i);
-                    h->h2JetsPtInLeadPt->Fill(ptLead, pt_i, weight * F_i);
-                    h->h2JetsPtInRecoilPt->Fill(ptRecoil, pt_i, weight * F_i);
-
-                    // Fill PF composition histograms
-                    h->p1RhoInAvgProjPt->Fill(ptAvgProj, skimT->Rho, weight * F_i);
-                    h->p1JetsPtInAvgProjPt->Fill(ptAvgProj, skimT->Jet_pt[i], weight * F_i);
-                    h->p1JetsChfInAvgProjPt->Fill(ptAvgProj, skimT->Jet_chHEF[i], weight * F_i);
-                    h->p1JetsNhfInAvgProjPt->Fill(ptAvgProj, skimT->Jet_neHEF[i], weight * F_i);
-                    h->p1JetsNefInAvgProjPt->Fill(ptAvgProj, skimT->Jet_neEmEF[i], weight * F_i);
-                    h->p1JetsCefInAvgProjPt->Fill(ptAvgProj, skimT->Jet_chEmEF[i], weight * F_i);
-                    h->p1JetsMufInAvgProjPt->Fill(ptAvgProj, skimT->Jet_muEF[i], weight * F_i);
-                } // End of trig loop
-            } // End of good recoil jet condition
+		std::vector<int> recoilFs;
+        for (const auto& iRecoil: recoilIndices) {
+            p4Jet.SetPtEtaPhiM(skimT->Jet_pt[iRecoil], skimT->Jet_eta[iRecoil],
+                               skimT->Jet_phi[iRecoil], skimT->Jet_mass[iRecoil]);
+            double f_i = p4Jet.Pt() / ptRecoil;
+            double F_i = f_i * cos(Helper::DELTAPHI(p4Jet.Phi(), p4SumRecoiledJets.Phi()));
+            sumF_i +=F_i;
+            logCrecoil += F_i * log(f_i);
+            recoilFs.push_back(F_i);
         } // End of jet loop
         if(globalFlags_.isDebug()){
             std::cout<<"Summ F_i = "<<sumF_i<<'\n'; //sumF_i should be 1.0
         }
 
         double cRecoil = exp(logCrecoil);
-
-        h1NumJetsInEvents->Fill(skimT->nJet, weight);
-
-        // Multijet selection
-        if (globalFlags_.isDebug()) std::cout << "Analyze multiJet" << '\n';
 
         //------------------------------------------------
         // Set MET vectors
@@ -291,125 +268,91 @@ auto RunMultiJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pi
 
         // Projection to transverse plane (is this necessary?)
         p4CorrMet.SetPtEtaPhiM(p4CorrMet.Pt(), 0.0, p4CorrMet.Phi(), 0.0);
-        p4NegSum_LeadRecoil.SetPtEtaPhiM(p4NegSum_LeadRecoil.Pt(), 0.0, p4NegSum_LeadRecoil.Phi(), 0.0);
-        p4NegSum_Other.SetPtEtaPhiM(p4NegSum_Other.Pt(), 0.0, p4NegSum_Other.Phi(), 0.0);
-        p4Unclustered = p4CorrMet - p4NegSum_LeadRecoil - p4NegSum_Other;
+        p4SumLeadAndRecoil.SetPtEtaPhiM(p4SumLeadAndRecoil.Pt(), 0.0, p4SumLeadAndRecoil.Phi(), 0.0);
+        p4SumOther.SetPtEtaPhiM(p4SumOther.Pt(), 0.0, p4SumOther.Phi(), 0.0);
+        p4Unclustered = -(p4CorrMet + p4SumLeadAndRecoil + p4SumOther);
 
+        //-------------------------------
+        // Compute imputs for histograms
+        //-------------------------------
+        HistMultiJetInputs fillInputs;
+        fillInputs.ptAvgProj = ptAvgProj;
+        fillInputs.ptAverage = ptAverage;
+        fillInputs.ptLead    = ptLead;
+        fillInputs.etaLead    = p4LeadJet.Eta();
+        fillInputs.phiLead    = p4LeadJet.Phi();
+        fillInputs.ptRecoil  = ptRecoil;
+        fillInputs.phiRecoil  = p4SumRecoiledJets.Phi();
+        fillInputs.cRecoil   = std::exp(logCrecoil);
+        fillInputs.weight    = weight;
+        fillInputs.response  = 1.0;
+
+        double offsetOne  = 1.0;
+        double offsetZero = 0.0;
         // Bisector axis 
-        double m0b = 1 + (p4CorrMet.Vect().Dot(p4Bisector.Vect())) / ptAverage;
-        double m3b = 1 + (p4NegSum_LeadRecoil.Vect().Dot(p4Bisector.Vect())) / ptAverage;
-        double mnb = 0 + (p4NegSum_Other.Vect().Dot(p4Bisector.Vect())) / ptAverage;
-        double mub = 0 + (p4Unclustered.Vect().Dot(p4Bisector.Vect())) / ptAverage;
+        fillInputs.m0b       = mathHdm.mpfResponse(p4CorrMet, p4Bisector, ptAverage, offsetOne);
+        fillInputs.m3b       = mathHdm.mpfResponse(p4SumLeadAndRecoil, p4Bisector, ptAverage, offsetOne);
+        fillInputs.mnb       = mathHdm.mpfResponse(p4SumOther, p4Bisector, ptAverage, offsetZero);
+        fillInputs.mub       = mathHdm.mpfResponse(p4Unclustered, p4Bisector, ptAverage, offsetZero);
 
-        // Lead axis 
-        p4L.SetPtEtaPhiM(0, 0, 0, 0);
-        p4L -= p4Lead;
-        p4L.SetPtEtaPhiM(p4L.Pt(), 0.0, p4L.Phi(), 0.0);
-        p4L *= 1.0 / p4L.Pt();
+        // (Recoil - Lead) axis 
+        auto p4M = mathHdm.buildUnitAxis(-p4LeadJet, p4SumRecoiledJets);
+        fillInputs.m0m       = mathHdm.mpfResponse(p4CorrMet, p4M, ptAverage, offsetOne);
+        fillInputs.m3m       = mathHdm.mpfResponse(p4SumLeadAndRecoil, p4M, ptAverage, offsetOne);
+        fillInputs.mnm       = mathHdm.mpfResponse(p4SumOther, p4M, ptAverage, offsetZero);
+        fillInputs.mum       = mathHdm.mpfResponse(p4Unclustered, p4M, ptAverage, offsetZero);
 
-        double m0l = 1 + (p4CorrMet.Vect().Dot(p4L.Vect())) / ptLead;
-        double m3l = 1 + (p4NegSum_LeadRecoil.Vect().Dot(p4L.Vect())) / ptLead;
-        double mnl = 0 + (p4NegSum_Other.Vect().Dot(p4L.Vect())) / ptLead;
-        double mul = 0 + (p4Unclustered.Vect().Dot(p4L.Vect())) / ptLead;
+        // -Lead axis 
+        auto p4L = mathHdm.buildUnitAxis(-p4LeadJet, TLorentzVector());
+        fillInputs.m0l       = mathHdm.mpfResponse(p4CorrMet, p4L, ptLead, offsetOne);
+        fillInputs.m3l       = mathHdm.mpfResponse(p4SumLeadAndRecoil, p4L, ptLead, offsetOne);
+        fillInputs.mnl       = mathHdm.mpfResponse(p4SumOther, p4L, ptLead, offsetZero);
+        fillInputs.mul       = mathHdm.mpfResponse(p4Unclustered, p4L, ptLead, offsetZero);
 
         // Recoil axis 
-        p4R.SetPtEtaPhiM(0, 0, 0, 0);
-        p4R += p4Recoil;
-        p4R.SetPtEtaPhiM(p4R.Pt(), 0.0, p4R.Phi(), 0.0);
-        p4R *= 1.0 / p4R.Pt();
-
-        double m0r = 1 + (p4CorrMet.Vect().Dot(p4R.Vect())) / ptRecoil;
-        double m3r = 1 + (p4NegSum_LeadRecoil.Vect().Dot(p4R.Vect())) / ptRecoil;
-        double mnr = 0 + (p4NegSum_Other.Vect().Dot(p4R.Vect())) / ptRecoil;
-        double mur = 0 + (p4Unclustered.Vect().Dot(p4R.Vect())) / ptRecoil;
-
-        // (Lead - Recoil) axis 
-        p4M.SetPtEtaPhiM(0, 0, 0, 0);
-        p4M -= p4Lead;
-        p4M += p4Recoil;
-        p4M.SetPtEtaPhiM(p4M.Pt(), 0.0, p4M.Phi(), 0.0);
-        p4M *= 1.0 / p4M.Pt();
-
-        double m0m = 1 + (p4CorrMet.Vect().Dot(p4M.Vect())) / ptAverage;
-        double m3m = 1 + (p4NegSum_LeadRecoil.Vect().Dot(p4M.Vect())) / ptAverage;
-        double mnm = 0 + (p4NegSum_Other.Vect().Dot(p4M.Vect())) / ptAverage;
-        double mum = 0 + (p4Unclustered.Vect().Dot(p4M.Vect())) / ptAverage;
+        auto p4R = mathHdm.buildUnitAxis(p4SumRecoiledJets, TLorentzVector());
+        fillInputs.m0r       = mathHdm.mpfResponse(p4CorrMet, p4R, ptRecoil, offsetOne);
+        fillInputs.m3r       = mathHdm.mpfResponse(p4SumLeadAndRecoil, p4R, ptRecoil, offsetOne);
+        fillInputs.mnr       = mathHdm.mpfResponse(p4SumOther, p4R, ptRecoil, offsetZero);
+        fillInputs.mur       = mathHdm.mpfResponse(p4Unclustered, p4R, ptRecoil, offsetZero);
 
         for (const auto& trigPair : trigDetails) {
+            const std::string& trigName = trigPair.first;
             bool isPresent = std::find(passedHlts.begin(), passedHlts.end(),
-                                       trigPair.first) != passedHlts.end();
-
+                                       trigName) != passedHlts.end();
             if (!isPresent) continue;
-            HistMultiJet* h = mapTriggerToHistos[trigPair.first];
-
-            h->h1EventInAvgProjPt->Fill(ptAvgProj, weight);
-            h->h1EventInAvgPt->Fill(ptAverage, weight);
-            h->h1EventInLeadPt->Fill(ptLead, weight);
-            h->h1EventInRecoilPt->Fill(ptRecoil, weight);
-
-            if (ptAvgProj >= h->ptMin && ptAvgProj < h->ptMax)
-                h->h1EventInAvgProjPtForTrigCut->Fill(ptAvgProj, weight);
-            if (ptAverage >= h->ptMin && ptAverage < h->ptMax)
-                h->h1EventInAvgPtForTrigCut->Fill(ptAverage, weight);
-            if (ptLead >= h->ptMin && ptLead < h->ptMax)
-                h->h1EventInLeadPtForTrigCut->Fill(ptLead, weight);
-            if (ptRecoil >= h->ptMin && ptRecoil < h->ptMax)
-                h->h1EventInRecoilPtForTrigCut->Fill(ptRecoil, weight);
-
-            double response = (p4LeadRES.Pt() / p4RecoilRES.Pt()) /
-                              (p4Lead.Pt() / p4Recoil.Pt());
-            h->p1RespInAvgProjPt->Fill(ptAvgProj, response, weight);
-            h->p1RespInAvgPt->Fill(ptAverage, response, weight);
-            h->p1RespInLeadPt->Fill(ptLead, response, weight);
-            h->p1RespInRecoilPt->Fill(ptRecoil, response, weight);
-
-            h->p1LeadPtInAvgProjPt->Fill(ptAvgProj, ptLead, weight);
-            h->p1LeadPtInAvgPt->Fill(ptAverage, ptLead, weight);
-            h->p1LeadPtInLeadPt->Fill(ptLead, ptLead, weight);
-            h->p1LeadPtInRecoilPt->Fill(ptRecoil, ptLead, weight);
-
-            h->p1CrecoilInAvgProjPt->Fill(ptAvgProj, cRecoil, weight);
-            h->p1CrecoilInAvgPt->Fill(ptAverage, cRecoil, weight);
-            h->p1CrecoilInLeadPt->Fill(ptLead, cRecoil, weight);
-            h->p1CrecoilInRecoilPt->Fill(ptRecoil, cRecoil, weight);
-
-            h->p1MpfResp0InAvgProjPt->Fill(ptAvgProj, m0b, weight);
-            h->p1MpfResp3InAvgProjPt->Fill(ptAvgProj, m3b, weight);
-            h->p1MpfRespnInAvgProjPt->Fill(ptAvgProj, mnb, weight);
-            h->p1MpfRespuInAvgProjPt->Fill(ptAvgProj, mub, weight);
-
-            h->p1MpfResp0InAvgPt->Fill(ptAverage, m0m, weight);
-            h->p1MpfResp3InAvgPt->Fill(ptAverage, m3m, weight);
-            h->p1MpfRespnInAvgPt->Fill(ptAverage, mnm, weight);
-            h->p1MpfRespuInAvgPt->Fill(ptAverage, mum, weight);
-
-            h->p1MpfResp0InLeadPt->Fill(ptLead, m0l, weight);
-            h->p1MpfResp3InLeadPt->Fill(ptLead, m3l, weight);
-            h->p1MpfRespnInLeadPt->Fill(ptLead, mnl, weight);
-            h->p1MpfRespuInLeadPt->Fill(ptLead, mul, weight);
-
-            h->p1MpfResp0InRecoilPt->Fill(ptRecoil, m0r, weight);
-            h->p1MpfResp3InRecoilPt->Fill(ptRecoil, m3r, weight);
-            h->p1MpfRespnInRecoilPt->Fill(ptRecoil, mnr, weight);
-            h->p1MpfRespuInRecoilPt->Fill(ptRecoil, mur, weight);
-
-            // Multi-jet control
-            h->h2MpfResp0InAvgProjPt->Fill(ptAvgProj, m0b, weight);
-            h->h2MpfResp3InAvgProjPt->Fill(ptAvgProj, m3b, weight);
-            if (ptAverage > 1.25 * h->triggerPt)
-                h->h1EventInCosDeltaPhiLeadRecoil->Fill(cos(Helper::DELTAPHI(p4Lead.Phi(), p4Recoil.Phi())), weight);
-
-            // PF composition
-            if (std::abs(p4Lead.Eta()) < 1.3){
-                h->p1RhoInAvgProjPtForLeadEta1p3->Fill(ptAvgProj, skimT->Rho, weight);
-                h->p1Jet1PtInAvgProjPtForLeadEta1p3->Fill(ptAvgProj, skimT->Jet_pt[0], weight);
-                h->p1Jet1ChfInAvgProjPtForLeadEta1p3->Fill(ptAvgProj, skimT->Jet_chHEF[0], weight);
-                h->p1Jet1NhfInAvgProjPtForLeadEta1p3->Fill(ptAvgProj, skimT->Jet_neHEF[0], weight);
-                h->p1Jet1NefInAvgProjPtForLeadEta1p3->Fill(ptAvgProj, skimT->Jet_neEmEF[0], weight);
-                h->p1Jet1CefInAvgProjPtForLeadEta1p3->Fill(ptAvgProj, skimT->Jet_chEmEF[0], weight);
-                h->p1Jet1MufInAvgProjPtForLeadEta1p3->Fill(ptAvgProj, skimT->Jet_muEF[0], weight);
-            }
+            //Fill HistMultiJet
+            HistMultiJet* h = mapHistMultiJet[trigName];
+            h->setInputs(fillInputs);
+            for (int i = 0; i != recoilIndices.size(); ++i) {
+                histMultiJet.fillJetLevelHistos(skimT.get(), recoilIndices.at(i), weight * recoilFs.at(i));
+            }    
+            h->fillEventLevelHistos(skimT.get(), h->trigPt);
         } // End of trig loop
+
+
+        //------------------------------------------------
+        // Exclusive HLT for a given pT 
+        //------------------------------------------------
+        if (!pickEvent->passHltWithPtEta(skimT, ptLead, p4LeadJet.Eta())) continue; 
+        h1EventInCutflow->fill("passHltWithPtEta");
+
+        histMultiJet.setInputs(fillInputs);
+        for (int i = 0; i != recoilIndices.size(); ++i) {
+            histMultiJet.fillJetLevelHistos(skimT.get(), recoilIndices.at(i), weight* recoilFs.at(i));
+        } 
+        double trigPt = 1.0;
+        auto it = trigDetails.find(pickEvent->getPassedHlt());
+        if (it != trigDetails.end()) {
+            trigPt = it->second.trigPt;
+        }
+        histMultiJet.fillEventLevelHistos(skimT.get(), trigPt);
+
+        //Fill other histograms
+        histRef.Fill(1.0, p4LeadJet, p4LeadGenJet, weight); 
+        if(globalFlags_.isData()){
+            histTime.Fill(skimT.get(), iJet1, fillInputs.m0l, fillInputs.m3l, p4LeadJet.Pt(), weight);
+        }
 
     } // End of event loop
 

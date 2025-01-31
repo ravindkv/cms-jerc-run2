@@ -7,17 +7,62 @@
 #include <TH2D.h>
 #include <TProfile.h>
 
+#include "VarBin.h"
+#include "SkimTree.h"
+
+// In HistMultiJet.h (near the top or in a separate header if you prefer):
+
+/// A struct to hold all per-event quantities that we want to fill into HistMultiJet.
+/// Add or remove fields as needed for your analysis.
+struct HistMultiJetInputs {
+    double ptAvgProj   = 0.0;
+    double ptAverage   = 0.0;
+    double ptLead      = 0.0;
+    double etaLead     = 0.0;
+    double phiLead     = 0.0;
+    double ptRecoil    = 0.0;
+    double phiRecoil   = 0.0;
+    double cRecoil     = 0.0;
+    double response    = 0.0;
+    double m0b         = 0.0;
+    double m3b         = 0.0;
+    double mnb         = 0.0;
+    double mub         = 0.0;
+
+    double m0m         = 0.0;
+    double m3m         = 0.0;
+    double mnm         = 0.0;
+    double mum         = 0.0;
+
+    double m0l         = 0.0;
+    double m3l         = 0.0;
+    double mnl         = 0.0;
+    double mul         = 0.0;
+
+    double m0r         = 0.0;
+    double m3r         = 0.0;
+    double mnr         = 0.0;
+    double mur         = 0.0;
+    double weight      = 1.0;
+};
+
 class HistMultiJet {
 public:
     // Constructor
-    HistMultiJet(const std::string& triggerName, double ptMin, double ptMax, double absEtaMin, double absEtaMax);
+    HistMultiJet(TDirectory *origDir, const std::string& directoryName, const VarBin& varBin);
 
     // Destructor
     ~HistMultiJet();
 
+    // 1) A method to store all user inputs:
+    void setInputs(const HistMultiJetInputs& inputs);
+
+    // 2) A method to fill the histograms, using the stored inputs:
+    void fillHistos();
+
     // Basic information about the trigger
     std::string triggerName;
-    int triggerPt;
+    int trigPt;
     double ptMin, ptMax, absEtaMin, absEtaMax;
 
     // Histograms and profiles
@@ -25,10 +70,6 @@ public:
     TH1D* h1EventInAvgPt;
     TH1D* h1EventInLeadPt;
     TH1D* h1EventInRecoilPt;
-    TH1D* h1EventInAvgProjPtForTrigCut;
-    TH1D* h1EventInAvgPtForTrigCut;
-    TH1D* h1EventInLeadPtForTrigCut;
-    TH1D* h1EventInRecoilPtForTrigCut;
 
     TProfile* p1RespInAvgProjPt;
     TProfile* p1RespInAvgPt;
@@ -95,9 +136,13 @@ public:
     TH1D* h1EventInCosDeltaPhiLeadRecoil;
 
     // Method to initialize histograms
-    void initializeHistograms(const std::vector<double>& binsPt, TDirectory* dirOut);
+    void InitializeHistograms(TDirectory *origDir, const std::string& directoryName, const VarBin& varBin);
+    void fillJetLevelHistos(SkimTree* skimT, int iJet,  const double& weightFi);
+    void fillEventLevelHistos(SkimTree* skimT, const double& trigPt);
 
 private:
+    // Add a private data member to hold the current event’s inputs:
+    HistMultiJetInputs fInputs_;
 };
 
 #endif // HISTMULTIJET_H

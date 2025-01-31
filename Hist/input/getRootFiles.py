@@ -30,7 +30,7 @@ if __name__=="__main__":
         chSkim = Channels[ch]
         fSkim = open(f"{skimDir}/FilesSkim_{chSkim}_{year}.json", "r")
         jSkim = json.load(fSkim)
-        #Replace the keys (DiJet, IncJet, etc use same Skims)
+        #Replace the keys (DiJet, IncJet, etc to use same Skims)
         keyMap = {}
         for oldSkimKey in jSkim.keys():
             newSkimKey = oldSkimKey.replace(f"_{chSkim}_", f"_{ch}_")
@@ -38,7 +38,7 @@ if __name__=="__main__":
         for oldSkimKey, newSkimKey in keyMap.items():
             if oldSkimKey in jSkim:
                 jSkim[newSkimKey] = jSkim.pop(oldSkimKey)
-
+        
         fHist = open(f"json/FilesHist_{ch}_{year}.json", "w")
         dHist = {}
         print(f"{eosHistDir}/{ch}/{year}")

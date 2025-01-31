@@ -22,7 +22,7 @@ void MathHdm::calcResponse(const TLorentzVector& p4CorrMet,
     p4Jet1_    = p4Jet1;
     p4Jetn_    = p4Jetn;
 
-    p4Conservation_ = p4CorrMet -(p4Ref + p4Jet1 + p4Jetn);
+    p4Conservation_ = p4CorrMet + (p4Ref + p4Jet1 + p4Jetn);
 
     // Calculate intermediate 4-vectors according to the provided formulas.
     // Note: p4Ref.Pt() is used for the pt reference.
@@ -34,16 +34,12 @@ void MathHdm::calcResponse(const TLorentzVector& p4CorrMet,
     }
     
     //Eq.8 of hdm_2023082.pdf
-    // p4Metu = p4CorrMet + p4Ref + p4Jet1 + p4Jetn;
-    p4Metu_ = p4CorrMet_ + p4Ref_ + p4Jet1_ + p4Jetn_;
+    p4Metu_ = -(p4CorrMet_ + p4Ref_ + p4Jet1_ + p4Jetn_);
 
-    // p4Met1 = - p4Ref - p4Jet1 ;
     p4Met1_ = -p4Ref_ - p4Jet1_;
 
-    // p4Metn = - p4Jetn;
     p4Metn_ = -p4Jetn_;
 
-    // p4Metnu = p4Metn + 1.1 * p4Metu;
     p4Metnu_ = p4Metn_ + 1.1 * p4Metu_;
 
     // Make 4-vectors transverse (set Pz to zero)
@@ -86,7 +82,7 @@ void MathHdm::calcResponse(const TLorentzVector& p4CorrMet,
     mpfnux_ = p4Metnu_.Vect().Dot(p4Refx_.Vect()) /ptRefSqr;
 
     // Sanity check for HDM inputs:
-    double checkSum = mpf1_ + mpfn_ + mpfu_;
+    double checkSum = mpf1_ + mpfn_ - mpfu_;
     if (!(std::fabs(checkSum - mpf_) < 1e-4) || isDebug_) {
         std::cout << "\nHDM input error: mpf=" << mpf_
                   << " mpf1=" << mpf1_
@@ -134,4 +130,62 @@ void MathHdm::printInputs() const
     std::cout << "p4Conservation:    pt = " << p4Conservation_.Pt()
               << ", eta = " << p4Conservation_.Eta()
               << ", phi = " << p4Conservation_.Phi() << "\n\n";
+}
+
+// Builds an axis that is A ± B in the transverse plane, normalized to unit length.
+TLorentzVector MathHdm::buildUnitAxis(const TLorentzVector& A,
+                             const TLorentzVector& B)
+{
+    TLorentzVector axis;
+    axis.SetPtEtaPhiM(0, 0, 0, 0);
+
+    // 1) Start with A
+    axis += A;
+
+    // 2) Add or subtract B
+    axis += B;
+
+    // 3) Force to 2D (set eta=0, mass=0, but keep phi)
+    axis.SetPtEtaPhiM(axis.Pt(), 0.0, axis.Phi(), 0.0);
+
+    // 4) Normalize to unit length in transverse plane
+    if (axis.Pt() != 0.0) axis *= (1.0 / axis.Pt());
+
+    return axis;
+}
+
+TLorentzVector MathHdm::buildUnitAxisForBisector(const TLorentzVector A,
+                             const TLorentzVector B)
+{
+    TLorentzVector p4A = A;
+    TLorentzVector p4B = B;
+
+    TLorentzVector axis;
+    axis.SetPtEtaPhiM(0, 0, 0, 0);
+
+    p4A.SetPtEtaPhiM(1, 0, A.Phi(), 0);
+    p4B.SetPtEtaPhiM(1, 0, B.Phi(), 0);
+
+    // 1) Start with p4A
+    axis += p4A;
+
+    // 2) Add or subtract p4B
+    axis -= p4B;
+
+    // 3) Force to 2D (set eta=0, mass=0, but keep phi)
+    axis.SetPtEtaPhiM(axis.Pt(), 0.0, axis.Phi(), 0.0);
+
+    // 4) Normalize to unit length in transverse plane
+    if (axis.Pt() != 0.0) axis *= (1.0 / axis.Pt());
+
+    return axis;
+}
+
+double MathHdm:: mpfResponse(const TLorentzVector& obj,
+                   const TLorentzVector& axis,
+                   double scale,
+                   double offset)
+{
+    // Project obj onto axis, scale by 'scale', add offset
+    return offset + obj.Vect().Dot(axis.Vect()) / scale;
 }

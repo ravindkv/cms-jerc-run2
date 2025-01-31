@@ -14,11 +14,12 @@ Years = [
 ]
 
 Channels = [
-    'ZeeJet',
-    'ZmmJet',
+    #'ZeeJet',
+    #'ZmmJet',
     #'GamJet',
     #'GamJetFake',
     'MultiJet',
+    #'DiJet',
 ]
 
 # VOMS Proxy path (adjust as needed)

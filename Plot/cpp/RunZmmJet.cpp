@@ -2,7 +2,10 @@
 #include "FigConfig.h"
 #include "ReadConfig.h"
 #include "Helper.h"
+#include "PlotTime1Ds.h"
 #include "PlotEras1D.h"
+#include "PlotEra1Ds.h"
+#include "PlotYear1Ds.h"
 #include "PlotEra2D.h"
 #include "PlotEraXYs.h"
 #include "PlotErasXY.h"
@@ -12,7 +15,7 @@ using json = nlohmann::json;
    
 int RunZmmJet::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &channelSlide, Slide &allChannelSlide){
     channelSlide.startDocument("JME-21-001: L3Residual from ZmmJet channel");
-    addZmmJetSlides(channelSlide);
+    //addZmmJetSlides(channelSlide);
 
     allChannelSlide.addCenteredTextSlide("Next we show results from ZmmJet channel");
 
@@ -23,11 +26,111 @@ int RunZmmJet::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &chan
     }
 
     ReadConfig readConfig("input/config/json/FigConfigZmmJet.json");
+    const auto& figConfigVecTime1Ds = readConfig.getFigConfigVecTime1Ds();
     const auto& figConfigVecEras1D = readConfig.getFigConfigVecEras1D();
+    const auto& figConfigVecEra1Ds = readConfig.getFigConfigVecEra1Ds();
+    const auto& figConfigVecYear1Ds = readConfig.getFigConfigVecYear1Ds();
     const auto& figConfigVecEra2D  = readConfig.getFigConfigVecEra2D();
     const auto& figConfigVecErasXY = readConfig.getFigConfigVecErasXY();
     const auto& figConfigVecEraXYs  = readConfig.getFigConfigVecEraXYs();
 
+	//-------------------------------------
+	// Plot1D: As function of Run (Time) 
+	//-------------------------------------
+    if(isPlotTime1Ds){
+        auto outPlotDirTime1Ds = eosPlotDir+"/"+channel+"/"+"Time1Ds"; 
+        std::filesystem::create_directories(outPlotDirTime1Ds);
+        channelSlide.addCenteredTextSlide("Next we show 1D plots");
+        for (const auto & config: figConfigVecTime1Ds){
+            auto names = config.histNames;
+            std::string name("");
+            for (const auto& n: names){name = n + "_";}
+            auto dir  = config.histDir;
+            if(isPrintFigConfig) config.print();
+            std::vector<std::string> plotsForSlide;
+            for (auto &year: years){
+                auto time1D = std::make_unique<PlotTime1Ds<TProfile>>();
+                time1D->setInput(inputJson, channel, year);
+                time1D->setFigConfigTime1Ds(config);
+                time1D->loadHists("Data");
+                string outName = Helper::dirToName(dir);
+                auto outPdfName = outPlotDirTime1Ds+"/"+year+"_"+outName+"_"+name+".pdf";
+                time1D->overlayData(outPdfName);
+                plotsForSlide.push_back(outPdfName);
+            }
+            channelSlide.addPlotSlide(plotsForSlide, dir+"/"+name+" for different Runs");
+            allChannelSlide.addPlotSlide(plotsForSlide, dir+"/"+name+" from GamJet channel for different Runs");
+        }//config
+    }//isPlot1D
+
+	//-------------------------------------
+	// Plot1D: multiple hists from one era
+	//-------------------------------------
+    if(isPlotEra1Ds){
+        auto outPlotDirEra1Ds = eosPlotDir+"/"+channel+"/"+"Era1Ds"; 
+        std::filesystem::create_directories(outPlotDirEra1Ds);
+        channelSlide.addCenteredTextSlide("Next we show 1D plots");
+        for (const auto & config: figConfigVecEra1Ds){
+            auto names = config.histNames;
+            std::string name("");
+            for (const auto& n: names){name = n + "_";}
+            auto dir  = config.histDir;
+            if(isPrintFigConfig) config.print();
+            for (auto &year: years){
+                std::vector<std::string> plotsForSlide;
+                auto dataEras = Helper::getEras(inputJson, channel, year, "Data");
+                auto mcBins = Helper::getEras(inputJson, channel, year, "MC");
+                for (auto &era: dataEras){
+                    auto era1Ds = std::make_unique<PlotEra1Ds<TProfile>>();
+                    era1Ds->setInput(inputJson, channel, year);
+                    era1Ds->setFigConfigEra1Ds(config);
+                    era1Ds->loadHist("Data", era);
+                    era1Ds->loadHists("MC", mcBins);
+                    era1Ds->setOverlayMC(true);
+                    string outName = Helper::dirToName(dir);
+                    auto outPdfName = outPlotDirEra1Ds+"/"+year+"_"+era+"_"+outName+"_"+name+".pdf";
+                    era1Ds->overlayDataWithMcInRatio(outPdfName);
+                    plotsForSlide.push_back(outPdfName);
+                }//era
+                channelSlide.addPlotSlide(plotsForSlide, dir+"/Energy Fractions for "+ year);
+                allChannelSlide.addPlotSlide(plotsForSlide, dir+"/"+name+" from GamJet channel for different years");
+            }//year
+        }//config
+    }//isPlotEra1Ds
+
+
+	//-------------------------------------
+	// Plot1D: multiple hists from one year
+	//-------------------------------------
+    if(isPlotYear1Ds){
+        auto outPlotDirYear1Ds = eosPlotDir+"/"+channel+"/"+"Year1Ds"; 
+        std::filesystem::create_directories(outPlotDirYear1Ds);
+        channelSlide.addCenteredTextSlide("Next we show 1D plots");
+        for (const auto & config: figConfigVecYear1Ds){
+            auto names = config.histNames;
+            std::string name("");
+            for (const auto& n: names){name = n + "_";}
+            auto dir  = config.histDir;
+            if(isPrintFigConfig) config.print();
+            std::vector<std::string> plotsForSlide;
+            for (auto &year: years){
+                auto dataEras = Helper::getEras(inputJson, channel, year, "Data");
+                auto mcBins = Helper::getEras(inputJson, channel, year, "MC");
+                auto year1Ds = std::make_unique<PlotYear1Ds<TProfile>>();
+                year1Ds->setInput(inputJson, channel, year);
+                year1Ds->setFigConfigYear1Ds(config);
+                year1Ds->loadHists("Data", dataEras);
+                year1Ds->loadHists("MC", mcBins);
+                year1Ds->setOverlayMC(true);
+                string outName = Helper::dirToName(dir);
+                auto outPdfName = outPlotDirYear1Ds+"/"+year+"_"+outName+"_"+name+".pdf";
+                year1Ds->overlayDataWithMcInRatio(outPdfName);
+                plotsForSlide.push_back(outPdfName);
+            }//year
+            channelSlide.addPlotSlide(plotsForSlide, dir+"/Energy Fractions for different year");
+            allChannelSlide.addPlotSlide(plotsForSlide, dir+"/"+name+" from GamJet channel for different years");
+        }//config
+    }//isPlotYear1Ds
 	//-------------------------------------
 	// Plot1D: multiple eras in one plot
 	//-------------------------------------

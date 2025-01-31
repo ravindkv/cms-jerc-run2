@@ -111,11 +111,13 @@ void PlotYear1Ds<T>::drawHists(const std::vector<T*>& hists, const bool& isMC)
 
     // Create a legend whose vertical size depends on # of hists
     double legYmin = 0.85 - 0.05 * hists.size();
-    double legXmin = isMC ? 0.75 : 0.25;
-    double legXmax = isMC ? 0.90 : 0.50;
+    double legXmin = isMC ? 0.25: 0.35;
+    double legXmax = isMC ? 0.35: 0.90;
 
     TLegend* legend = new TLegend(legXmin, legYmin, legXmax, 0.90, "", "brNDC");
     tdrStyle_->setStyle(legend);
+    if(isMC) legend->AddEntry((TObject*)0, "MC", "");
+    else legend->AddEntry((TObject*)0, "Data", "");
 
     // Set log scales if needed
     if (tdrStyle_->getXLog()) {
@@ -159,9 +161,9 @@ void PlotYear1Ds<T>::drawHists(const std::vector<T*>& hists, const bool& isMC)
 
         // Add legend entry
         if (isMC) {
-            legend->AddEntry(hist, "MC", "L");
+            legend->AddEntry(hist, "", "L");
         } else {
-            legend->AddEntry(hist, (std::string("Data : ") + hist->GetName()).c_str(), "EP");
+            legend->AddEntry(hist, hist->GetName(), "E1");
         }
     }
 

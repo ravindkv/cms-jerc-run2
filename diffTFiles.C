@@ -136,6 +136,8 @@ void compareDirectories(const std::vector<TFile*>& files,
         if (obj->InheritsFrom(TDirectory::Class())) {
             TDirectory* subdir = dynamic_cast<TDirectory*>(obj);
             if (!subdir) continue;
+            if (std::string(subdir->GetName()).find("HLT_") != std::string::npos) continue;
+            
             // We pass the same TDirectory (from file[0]) as the reference,
             // but we want to check if the same subdir exists in all files
             // before recursing, or at least skip if not found in others.

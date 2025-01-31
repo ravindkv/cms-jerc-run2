@@ -1,165 +1,205 @@
 
-from figConfigBase import *
+import json
+import os
+from figConfigBase import configs, createConfig, isMorePlots
 
-cutsForResp = [
-    #"passAtleast1Jet",
-    #"passRefBarrel",
-    "passAlpha",
-]
-for cut in cutsForResp:
-    configs["ConfigYear1Ds"].append(
-        createConfig(
-            "ConfigYear1Ds",
-            histDir=f"HistMultijet/PFcomposition",
-            trigDirs = [
-                        "HLT_PFJet40",
-                        "HLT_PFJet60",
-                        ],
-            histNames = [
-                        "p1Jet1CefInAvgProjPtForLeadEta1p3",
-                        "p1Jet1NefInAvgProjPtForLeadEta1p3",
-                        "p1Jet1ChfInAvgProjPtForLeadEta1p3",
-                        "p1Jet1NhfInAvgProjPtForLeadEta1p3",
-                        #"p1Jet1MuefInRefPt",
-                        ],
-            xTitle="Reference p_{T} (GeV)",
-            yTitle="Jet Energy Fractions",
-            yMin=0.001,
-            yMax=1.0,
-            rMin = 0.5,
-            rMax = 1.5,
-            rTitle = "Data/MC",
-            xLog=True,
-            isNorm=False
-        )
-    )
-for cut in cutsForResp:
-    configs["ConfigYear1Ds"].append(
-        createConfig(
-            "ConfigYear1Ds",
-            histDir=f"HistMultijet",
-            trigDirs = [
-                        "HLT_PFJet40",
-                        "HLT_PFJet60",
-                        ],
-            histNames = [
-                        "p1MpfResp0InAvgProjPt",
-                        "p1MpfResp3InAvgProjPt",
-                        "p1MpfRespnInAvgProjPt",
-                        "p1MpfRespuInAvgProjPt",
-                        ],
-            xTitle="Reference p_{T} (GeV)",
-            yTitle="Response",
-            yMin=0.5,
-            yMax=1.5,
-            rMin = 0.5,
-            rMax = 1.5,
-            rTitle = "Data/MC",
-            xLog=True,
-            isNorm=False
-        )
-    )
+# reset configs
+for key in configs:
+    configs[key] = []
 
-if isMorePlots:
-    configs["ConfigEras1D"].append(
-        createConfig(
-            "ConfigEras1D",
-            histDir="Base/passRefBarrel/HistBarrel",
-            histName="h1EventInDeltaPhiJetRef",
-            yTitle="Events",
-            xTitle="Delta Phi (Jet1, Ref)",
-            xMin=2.0,
-            xMax=3.5,
-            yMin=0.02,
-            yMax=0.3,
-            isNorm=True
-        )
-    )
 
-    configs["ConfigEras1D"].append(
-        createConfig(
-            "ConfigEras1D",
-            histDir="Base/passRefBarrel/HistBarrel",
-            histName="h1EventInDeltaRadiusJetRef",
-            yTitle="Events",
-            xTitle="Delta Phi (Jet1, Ref)",
-            xMin=1.5,
-            xMax=4.5,
-            yMin=0.01,
-            yMax=0.7,
-            isNorm=True
-        )
+configs["ConfigTime1Ds"].append(
+    createConfig(
+        "ConfigTime1Ds",
+        histDir=f"Base/passMultiJet/HistTime", 
+        histNames = ["p1DbRespInRunForRefPt30", 
+                    "p1MpfRespInRunForRefPt30", 
+                    "p1Jet1ChHefInRunForRefPt30",
+                    "p1Jet1NeEmefInRunForRefPt30",
+                    "p1Jet1NeHefInRunForRefPt30",
+                    "p1Jet1ChEmefInRunForRefPt30"],
+        xTitle="Run Number",
+        yTitle="Mean of Response and energy fractions",
+        yMin=0.0001,
+        yMax=1.5
     )
+)
 
-    configs["ConfigEra2D"].append(
-        createConfig(
-            "ConfigEra2D",
-            histDir="Base/passMetFilter/HistObjectId",
-            histName="h2EventInPhoEtaPhoPt",
-            yMin=-2.5,
-            yMax=2.5,
-            xTitle="Reference #eta",
-            yTitle="Reference p_{T}",
-            zTitle="Events",
-            zLog=False
-        )
+configs["ConfigYear1Ds"].append(
+    createConfig(
+        "ConfigYear1Ds",
+        histDir=f"Base/passMultiJet/HistMultiJet",
+        histNames = [
+                    "p1CrecoilInAvgProjPt",
+                    "p1CrecoilInAvgPt",
+                    "p1CrecoilInLeadPt",
+                    "p1CrecoilInRecoilPt",
+                    ],
+        xTitle="p_{T} (GeV)",
+        yTitle="Mean of C_{recoil}",
+        yMin=0.4,
+        yMax=1.6,
+        rMin = 0.5,
+        rMax = 1.5,
+        rTitle = "Data/MC",
+        xLog=True,
+        isNorm=False
     )
+)
 
-    configs["ConfigEra2D"].append(
-        createConfig(
-            "ConfigEra2D",
-            histDir="Base/passMetFilter/HistObjectId",
-            histName="h2EventInPhoCountPhoPt",
-            yMin=0.0,
-            yMax=5.0,
-            xTitle="Reference count",
-            yTitle="Reference p_{T}",
-            zTitle="Events",
-            zLog=False
-        )
+configs["ConfigYear1Ds"].append(
+    createConfig(
+        "ConfigYear1Ds",
+        histDir=f"Base/passMultiJet/HistMultiJet",
+        histNames = [
+                    "h1EventInAvgProjPt",
+                    "h1EventInAvgPt",
+                    "h1EventInLeadPt",
+                    "h1EventInRecoilPt",
+                    ],
+        xTitle="p_{T} (GeV)",
+        yTitle="Events (normalized to 1)",
+        yMin=0.001,
+        yMax=1.0,
+        rMin = 0.5,
+        rMax = 1.5,
+        rTitle = "Data/MC",
+        xLog=True,
+        isNorm=True
     )
+)
 
-    configs["ConfigEra2D"].append(
-        createConfig(
-            "ConfigEra2D",
-            histDir="Base/passMetFilter/HistObjectId",
-            histName="h2EventInPhoR9PhoPt",
-            yMin=0.0,
-            yMax=2.0,
-            xTitle="Reference R9",
-            yTitle="Reference p_{T}",
-            zTitle="Events",
-            zLog=False
-        )
+configs["ConfigYear1Ds"].append(
+    createConfig(
+        "ConfigYear1Ds",
+        histDir=f"Base/passMultiJet/HistMultiJet",
+        histNames = [
+                    "p1LeadPtInAvgProjPt",
+                    "p1LeadPtInAvgPt",
+                    "p1LeadPtInLeadPt",
+                    "p1LeadPtInRecoilPt",
+                    ],
+        xTitle="p_{T} (GeV)",
+        yTitle="Mean of Leading jet p_{T} (GeV)",
+        yMin=10.0,
+        yMax=1000,
+        rMin = 0.5,
+        rMax = 1.5,
+        rTitle = "Data/MC",
+        xLog=True,
+        isNorm=False
     )
+)
 
-    configs["ConfigEra2D"].append(
-        createConfig(
-            "ConfigEra2D",
-            histDir="Base/passMetFilter/HistObjectId",
-            histName="h2EventInPhoHoePhoPt",
-            yMin=0.0,
-            yMax=2.0,
-            xTitle="Reference H/E",
-            yTitle="Reference p_{T}",
-            zTitle="Events",
-            zLog=False
-        )
+configs["ConfigYear1Ds"].append(
+    createConfig(
+        "ConfigYear1Ds",
+        histDir=f"Base/passMultiJet/HistMultiJet",
+        histNames = [
+                    "p1Jet1ChfInAvgProjPtForLeadEta1p3",
+                    "p1Jet1NefInAvgProjPtForLeadEta1p3",
+                    "p1Jet1NhfInAvgProjPtForLeadEta1p3",
+                    "p1Jet1CefInAvgProjPtForLeadEta1p3"
+                    ],
+        xTitle="Average Projected p_{T} (GeV)",
+        yTitle="Mean of Jet Energy Fractions",
+        yMin=0.001,
+        yMax=1.0,
+        rMin = 0.5,
+        rMax = 1.5,
+        rTitle = "Data/MC",
+        xLog=True,
+        isNorm=False
     )
+)
 
-    configs["ConfigEra2D"].append(
-        createConfig(
-            "ConfigEra2D",
-            histDir="Base/passMetFilter/HistObjectId",
-            histName="h2EventInPhoIdPhoPt",
-            yMin=0.0,
-            yMax=5.0,
-            xTitle="Reference ID",
-            yTitle="Reference p_{T}",
-            zTitle="Events",
-            zLog=False
-        )
+configs["ConfigYear1Ds"].append(
+    createConfig(
+        "ConfigYear1Ds",
+        histDir=f"Base/passMultiJet/HistMultiJet",
+        histNames = [
+                    "p1MpfResp0InAvgProjPt",
+                    "p1MpfResp0InAvgPt",
+                    "p1MpfResp0InLeadPt",
+                    "p1MpfResp0InRecoilPt",
+                    ],
+        xTitle="p_{T} (GeV)",
+        yTitle="Mean of Mpf0 Response",
+        yMin=0.5,
+        yMax=1.5,
+        rMin = 0.5,
+        rMax = 1.5,
+        rTitle = "Data/MC",
+        xLog=True,
+        isNorm=False
     )
+)
+
+configs["ConfigYear1Ds"].append(
+    createConfig(
+        "ConfigYear1Ds",
+        histDir=f"Base/passMultiJet/HistMultiJet",
+        histNames = [
+                    "p1MpfResp3InAvgProjPt",
+                    "p1MpfResp3InAvgPt",
+                    "p1MpfResp3InLeadPt",
+                    "p1MpfResp3InRecoilPt",
+                    ],
+        xTitle="p_{T} (GeV)",
+        yTitle="Mean of Mpf3 Response",
+        yMin=0.5,
+        yMax=1.5,
+        rMin = 0.5,
+        rMax = 1.5,
+        rTitle = "Data/MC",
+        xLog=True,
+        isNorm=False
+    )
+)
+
+configs["ConfigYear1Ds"].append(
+    createConfig(
+        "ConfigYear1Ds",
+        histDir=f"Base/passMultiJet/HistMultiJet",
+        histNames = [
+                    "p1MpfRespnInAvgProjPt",
+                    "p1MpfRespnInAvgPt",
+                    "p1MpfRespnInLeadPt",
+                    "p1MpfRespnInRecoilPt",
+                    ],
+        xTitle="p_{T} (GeV)",
+        yTitle="Mean of Mpfn Response",
+        yMin=0.5,
+        yMax=1.5,
+        rMin = 0.5,
+        rMax = 1.5,
+        rTitle = "Data/MC",
+        xLog=True,
+        isNorm=False
+    )
+)
+
+configs["ConfigYear1Ds"].append(
+    createConfig(
+        "ConfigYear1Ds",
+        histDir=f"Base/passMultiJet/HistMultiJet",
+        histNames = [
+                    "p1MpfRespuInAvgProjPt",
+                    "p1MpfRespuInAvgPt",
+                    "p1MpfRespuInLeadPt",
+                    "p1MpfRespuInRecoilPt",
+                    ],
+        xTitle="p_{T} (GeV)",
+        yTitle="Mean of Mpfu Response",
+        yMin=0.5,
+        yMax=1.5,
+        rMin = 0.5,
+        rMax = 1.5,
+        rTitle = "Data/MC",
+        xLog=True,
+        isNorm=False
+    )
+)
 # Convert to JSON string with indentation for better readability
 json_output = json.dumps(configs, indent=4)
 

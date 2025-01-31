@@ -148,7 +148,6 @@ void SkimTree::loadJobFileNames() {
     if (loadedNthJob_ - 1 >= static_cast<int>(smallVectors.size())) {
         throw std::runtime_error("Error: loadedNthJob_ is out of range after splitting file names in loadJobFileNames()");
     }
-    //loadedJobFileNames_ = {"/afs/cern.ch/work/r/rverma/public/JME/JERC/cms-jerc-run2/Skim/output/MC_GamJetFake_2016Pre_QCDHT100to200_Skim_1of100.root"};
     loadedJobFileNames_ = smallVectors[loadedNthJob_ - 1];
 }
 

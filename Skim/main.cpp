@@ -4,6 +4,7 @@
 #include "RunGamJet.h"
 #include "RunGamJetFake.h"
 #include "RunMultiJet.h"
+#include "RunDiJet.h"
 
 #include <iostream>
 #include <filesystem>
@@ -128,6 +129,11 @@ int main(int argc, char* argv[]){
         std::cout << "==> Running MultiJet" << std::endl;
         auto multiJet = std::make_unique<RunMultiJet>(globalFlag);
         multiJet->Run(nanoT, fout.get());
+    }
+    if (globalFlag.isDiJet) {
+        std::cout << "==> Running DiJet" << std::endl;
+        auto diJet = std::make_unique<RunDiJet>(globalFlag);
+        diJet->Run(nanoT, fout.get());
     }
 	return 0;
 }

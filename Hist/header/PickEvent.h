@@ -13,10 +13,11 @@ public:
 
     bool passFilter(const std::shared_ptr<SkimTree>& skimT) const;
     bool passHlt(const std::shared_ptr<SkimTree>& skimT);
-    bool passHltWithPt(const std::shared_ptr<SkimTree>& skimT, const double& pt) const;
+    bool passHltWithPt(const std::shared_ptr<SkimTree>& skimT, const double& pt);
+    bool passHltWithPtEta(const std::shared_ptr<SkimTree>& skimT, const double& pt, const double& eta);
     std::vector<std::string> getPassedHlts(){return passedHlts_;}
+    std::string getPassedHlt(){return passedHlt_;}
     
-    std::vector<std::string> getTrigNames() const;
     std::unordered_map<std::string, const Bool_t*> getTrigValues() const;
 
     ~PickEvent();
@@ -32,6 +33,7 @@ private:
 
     TrigDetail trigDetail_;
     std::vector<std::string> passedHlts_{};
+    std::string passedHlt_;
 };
 
 #endif // PICKEVENT_H

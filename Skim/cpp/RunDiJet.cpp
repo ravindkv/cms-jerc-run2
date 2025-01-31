@@ -1,20 +1,23 @@
-#include "RunMultiJet.h"
+#include "RunDiJet.h"
 #include "HistCutflow.h"
 #include "Helper.h"
    
 // Constructor implementation
-RunMultiJet::RunMultiJet(GlobalFlag& globalFlags)
+RunDiJet::RunDiJet(GlobalFlag& globalFlags)
     :globalFlags_(globalFlags) {
 }
 
 
-auto RunMultiJet::Run(std::shared_ptr<NanoTree>& nanoT, TFile *fout) -> int{
+auto RunDiJet::Run(std::shared_ptr<NanoTree>& nanoT, TFile *fout) -> int{
     fout->cd();
 
 	//----------------------------------
 	// Set trigger list
 	//----------------------------------
     trigList_  = { 
+        "HLT_ZeroBias",
+        "HLT_MC",
+        "HLT_DiPFJetAve40",       
         "HLT_PFJet40",            
         "HLT_PFJet60",            
         "HLT_PFJet80",            
@@ -26,21 +29,25 @@ auto RunMultiJet::Run(std::shared_ptr<NanoTree>& nanoT, TFile *fout) -> int{
         "HLT_PFJet450",           
         "HLT_PFJet500",           
         "HLT_PFJet550",           
-
-        "HLT_PFJetFwd40",       
-        "HLT_PFJetFwd60",       
-        "HLT_PFJetFwd80",       
-        "HLT_PFJetFwd140",      
-        "HLT_PFJetFwd200",      
-        "HLT_PFJetFwd260",      
-        "HLT_PFJetFwd320",      
-        "HLT_PFJetFwd400",      
-        "HLT_PFJetFwd450",      
-        "HLT_PFJetFwd500"
+        "HLT_DiPFJetAve40",       
+        "HLT_DiPFJetAve60",       
+        "HLT_DiPFJetAve80",       
+        "HLT_DiPFJetAve140",      
+        "HLT_DiPFJetAve200",      
+        "HLT_DiPFJetAve260",      
+        "HLT_DiPFJetAve320",      
+        "HLT_DiPFJetAve400",      
+        "HLT_DiPFJetAve500",      
+        "HLT_DiPFJetAve60_HFJEC", 
+        "HLT_DiPFJetAve80_HFJEC", 
+        "HLT_DiPFJetAve100_HFJEC",
+        "HLT_DiPFJetAve160_HFJEC",
+        "HLT_DiPFJetAve220_HFJEC",
+        "HLT_DiPFJetAve300_HFJEC"
     };
 
     if (trigList_.empty()) {
-        std::cerr << "No triggers found for channel: MultiJet" << '\n';
+        std::cerr << "No triggers found for channel: DiJet" << '\n';
         exit(EXIT_FAILURE);
     }
 	for (const auto& trigN : trigList_) {

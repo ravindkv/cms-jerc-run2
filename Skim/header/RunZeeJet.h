@@ -16,7 +16,6 @@ public:
     int Run(std::shared_ptr<NanoTree>& skimT, TFile* fout);
 
 private:
-    bool smearJets_ = false;
     GlobalFlag& globalFlags_;
 
     std::vector<std::string> trigList_;

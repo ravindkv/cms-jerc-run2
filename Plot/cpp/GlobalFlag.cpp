@@ -3,7 +3,7 @@
 GlobalFlag::GlobalFlag(std::string oName){
   outName = oName;
   isDebug = false;
-  isPlotTime1Ds = false;
+  isPlotTime1Ds = true;
   isPlotEras1D  = false;
   isPlotEra1Ds  = false;
   isPlotYear1Ds = true;
