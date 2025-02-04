@@ -22,6 +22,6 @@ Channels["MultiJet"]  = "MultiJet"
 #Channels["IncJet"]    = "MultiJet"
 
 vomsProxy = "x509up_u93032" # Does NOT work on condor node
-reduceJobsMCBy     = 5
-reduceJobsDataBy   = 10
+reduceJobsMCBy     = 2
+reduceJobsDataBy   = 5
 

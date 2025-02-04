@@ -141,9 +141,6 @@ auto RunMultiJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pi
 		// 1) First pass: find the index of the true highest-pT jet
 		// ─────────────────────────────────────────────────────────────
 		for (int i = 0; i < skimT->nJet; ++i) {
-			// Check basic jet ID
-			if (skimT->Jet_jetId[i] < 6) continue;
-		
 			double pt = skimT->Jet_pt[i];
 			if (pt > maxPtLead) {
 				maxPtLead = pt;
@@ -156,6 +153,7 @@ auto RunMultiJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pi
 			// no "leading" jet by your threshold → reject event
 			continue;
 		}
+	    if (iJet1  !=-1 && skimT->Jet_jetId[iJet1] < 6) continue;
 		h1EventInCutflow->fill("passExactly1Lead");
 		
 		// ─────────────────────────────────────────────────────────────
@@ -170,10 +168,10 @@ auto RunMultiJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pi
 		// ─────────────────────────────────────────────────────────────
 		// 3) Second pass: classify the rest of the jets
 		// ─────────────────────────────────────────────────────────────
+		bool passId = true;
 		for (int i = 0; i < skimT->nJet; ++i) {
 			// Skip the leading jet itself and any failing ID
 			if (i == iJet1) continue;
-			if (skimT->Jet_jetId[i] < 6) continue;
 			
 			p4Jet.SetPtEtaPhiM(skimT->Jet_pt[i], skimT->Jet_eta[i],
 							   skimT->Jet_phi[i], skimT->Jet_mass[i]);
@@ -184,19 +182,16 @@ auto RunMultiJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pi
 		
 			// Classify as "recoil" jets
 			if (pt > 30.0 && fabs(eta) < 2.5 && dphi > 1.0) {
+			    if (skimT->Jet_jetId[i] < 6) passId = false;
 				p4SumRecoiledJets += p4Jet;
 				p4SumLeadAndRecoil += p4Jet;
 				recoilIndices.push_back(i);
 				if (ptHardestInRecoil < pt) ptHardestInRecoil = pt;
 			}
-			// Or "other" jets if pT > 15.0
 			else if (pt > 15.0) {
 				p4SumOther += p4Jet;
 			}
-		
 			// Veto conditions:
-			//  - near the leading jet (Δφ <= 1.0)
-			//  - forward jet (|eta| >= 2.5)
 			if (pt > 30.0 && fabs(eta) < 2.5 && dphi <= 1.0) {
 				multiJetVetoNear = true;
 			}
@@ -204,6 +199,7 @@ auto RunMultiJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pi
 				multiJetVetoFwd = true;
 			}
 		}
+	    if (!passId) continue;
 		
 		// At least 2 recoil jets
 		if (recoilIndices.size() < 2) {
@@ -214,7 +210,7 @@ auto RunMultiJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pi
 		// if (scaleEvent->checkJetVetoMap(*skimT)) continue;
 		h1EventInCutflow->fill("passJetVetoMap");
 		
-		// Check Δφ(leading, sumRecoil) ≈ π
+		// Check Δφ(leading, sumRecoil) ~ π
 		double deltaPhi = Helper::DELTAPHI(p4LeadJet.Phi(), p4SumRecoiledJets.Phi());
 		if (!(fabs(deltaPhi - TMath::Pi()) < 0.3)) {
 			continue;
@@ -226,7 +222,7 @@ auto RunMultiJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pi
 		if (multiJetVetoFwd ) continue;
 		h1EventInCutflow->fill("passVetoNearByJets");
 		
-        bool passMultiJet  = p4LeadJet.Pt() > 0.7 * ptHardestInRecoil;
+        bool passMultiJet  = ptHardestInRecoil < 0.7 * p4SumRecoiledJets.Pt();
         if(!passMultiJet) continue;
         h1EventInCutflow->fill("passMultiJet");
 
@@ -264,7 +260,7 @@ auto RunMultiJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pi
         //------------------------------------------------
         // Set MET vectors
         //------------------------------------------------
-        p4CorrMet.SetPtEtaPhiM(skimT->ChsMET_pt, 0, skimT->ChsMET_phi, 0);
+        p4CorrMet.SetPtEtaPhiM(skimT->ChsMET_pt, 0, skimT->ChsMET_phi, 0);  //CRTICAL
 
         // Projection to transverse plane (is this necessary?)
         p4CorrMet.SetPtEtaPhiM(p4CorrMet.Pt(), 0.0, p4CorrMet.Phi(), 0.0);

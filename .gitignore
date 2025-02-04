@@ -41,5 +41,11 @@ Plot/input/root/json
 
 Hist/Logger.h
 Hist/Logger.cpp
-Fit/mikko
 
+Fit/mikko
+Fit/Classic/input/*.root
+Fit/Classic/input/json/
+Fit/Classic/obj/
+Fit/Classic/output/
+Fit/Classic/runMain
+Fit/Classic/runMain.d

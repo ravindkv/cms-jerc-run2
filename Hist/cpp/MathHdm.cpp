@@ -169,7 +169,7 @@ TLorentzVector MathHdm::buildUnitAxisForBisector(const TLorentzVector A,
     // 1) Start with p4A
     axis += p4A;
 
-    // 2) Add or subtract p4B
+    // 2) subtract p4B
     axis -= p4B;
 
     // 3) Force to 2D (set eta=0, mass=0, but keep phi)
