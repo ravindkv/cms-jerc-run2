@@ -12,8 +12,8 @@ Channels = {}
 #Channels["ZeeJet"]    = "ZeeJet"
 #Channels["ZmmJet"]    = "ZmmJet"
 #Channels["GamJet"]    = "GamJet"
-#Channels["GamJetFake"]    = "GamJetFake"
-Channels["MultiJet"]  = "MultiJet"
+Channels["GamJetFake"]= "GamJetFake"
+#Channels["MultiJet"]  = "MultiJet"
 #Channels["MCTruth"]   = "MultiJet"
 #Channels["Flavour"]   = "MultiJet"
 #Channels["VetoMap"]   = "MultiJet"
@@ -22,6 +22,6 @@ Channels["MultiJet"]  = "MultiJet"
 #Channels["IncJet"]    = "MultiJet"
 
 vomsProxy = "x509up_u93032" # Does NOT work on condor node
-reduceJobsMCBy     = 2
-reduceJobsDataBy   = 5
+reduceJobsMCBy     = 5
+reduceJobsDataBy   = 10
 

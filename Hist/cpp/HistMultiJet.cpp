@@ -69,18 +69,18 @@ void HistMultiJet::InitializeHistograms(TDirectory *origDir, const std::string& 
     h2MpfResp3InAvgProjPt = new TH2D("h2MpfResp3InAvgProjPt", "", nPt, binsPt.data(), 200, -1, 3);
     h1EventInCosDeltaPhiLeadRecoil = new TH1D("h1EventInCosDeltaPhiLeadRecoil", "", 102, -1.01, 1.01);
 
-    h2JetsPtInAvgProjPt = new TH2D("h2JetsPtInAvgProjPt", "", nPt, binsPt.data(), nPt, binsPt.data());
-    h2JetsPtInAvgPt = new TH2D("h2JetsPtInAvgPt", "", nPt, binsPt.data(), nPt, binsPt.data());
-    h2JetsPtInLeadPt = new TH2D("h2JetsPtInLeadPt", "", nPt, binsPt.data(), nPt, binsPt.data());
-    h2JetsPtInRecoilPt = new TH2D("h2JetsPtInRecoilPt", "", nPt, binsPt.data(), nPt, binsPt.data());
+    h2RecoilJetsPtInAvgProjPt = new TH2D("h2RecoilJetsPtInAvgProjPt", "", nPt, binsPt.data(), nPt, binsPt.data());
+    h2RecoilJetsPtInAvgPt = new TH2D("h2RecoilJetsPtInAvgPt", "", nPt, binsPt.data(), nPt, binsPt.data());
+    h2RecoilJetsPtInLeadPt = new TH2D("h2RecoilJetsPtInLeadPt", "", nPt, binsPt.data(), nPt, binsPt.data());
+    h2RecoilJetsPtInRecoilPt = new TH2D("h2RecoilJetsPtInRecoilPt", "", nPt, binsPt.data(), nPt, binsPt.data());
 
     p1RhoInAvgProjPt = new TProfile("p1RhoInAvgProjPt", "", nPt, binsPt.data());
-    p1JetsPtInAvgProjPt = new TProfile("p1JetsPtInAvgProjPt", "", nPt, binsPt.data());
-    p1JetsChfInAvgProjPt = new TProfile("p1JetsChfInAvgProjPt", "", nPt, binsPt.data());
-    p1JetsNhfInAvgProjPt = new TProfile("p1JetsNhfInAvgProjPt", "", nPt, binsPt.data());
-    p1JetsNefInAvgProjPt = new TProfile("p1JetsNefInAvgProjPt", "", nPt, binsPt.data());
-    p1JetsCefInAvgProjPt = new TProfile("p1JetsCefInAvgProjPt", "", nPt, binsPt.data());
-    p1JetsMufInAvgProjPt = new TProfile("p1JetsMufInAvgProjPt", "", nPt, binsPt.data());
+    p1RecoilJetsPtInAvgProjPt = new TProfile("p1RecoilJetsPtInAvgProjPt", "", nPt, binsPt.data());
+    p1RecoilJetsChfInAvgProjPt = new TProfile("p1RecoilJetsChfInAvgProjPt", "", nPt, binsPt.data());
+    p1RecoilJetsNhfInAvgProjPt = new TProfile("p1RecoilJetsNhfInAvgProjPt", "", nPt, binsPt.data());
+    p1RecoilJetsNefInAvgProjPt = new TProfile("p1RecoilJetsNefInAvgProjPt", "", nPt, binsPt.data());
+    p1RecoilJetsCefInAvgProjPt = new TProfile("p1RecoilJetsCefInAvgProjPt", "", nPt, binsPt.data());
+    p1RecoilJetsMufInAvgProjPt = new TProfile("p1RecoilJetsMufInAvgProjPt", "", nPt, binsPt.data());
 
 
     p1RhoInAvgProjPtForLeadEta1p3 = new TProfile("p1RhoInAvgProjPtForLeadEta1p3", "", nPt, binsPt.data());
@@ -99,7 +99,7 @@ void HistMultiJet::setInputs(const HistMultiJetInputs& inputs){
     fInputs_ = inputs;
 }
 
-void HistMultiJet::fillEventLevelHistos(SkimTree* skimT, const double& trigPt)
+void HistMultiJet::fillEventLevelHistos(SkimTree* skimT, const int& iJet1, const double& trigPt)
 {
     // Here, read from fInputs_ and fill all relevant histos.
     // This is the code that used to be repeated in your big loops.
@@ -153,14 +153,14 @@ void HistMultiJet::fillEventLevelHistos(SkimTree* skimT, const double& trigPt)
 
     h2MpfResp0InAvgProjPt->Fill(ptAvgProj, fInputs_.m0b, weight);
     h2MpfResp3InAvgProjPt->Fill(ptAvgProj, fInputs_.m3b, weight);
-    if (skimT->nJet > 0 && std::abs(fInputs_.etaLead) < 1.3){
+    if (iJet1 != -1 && std::abs(fInputs_.etaLead) < 1.3){
         p1RhoInAvgProjPtForLeadEta1p3->Fill(ptAvgProj, skimT->Rho, weight);
-        p1Jet1PtInAvgProjPtForLeadEta1p3->Fill(ptAvgProj, skimT->Jet_pt[0], weight);
-        p1Jet1ChfInAvgProjPtForLeadEta1p3->Fill(ptAvgProj, skimT->Jet_chHEF[0], weight);
-        p1Jet1NhfInAvgProjPtForLeadEta1p3->Fill(ptAvgProj, skimT->Jet_neHEF[0], weight);
-        p1Jet1NefInAvgProjPtForLeadEta1p3->Fill(ptAvgProj, skimT->Jet_neEmEF[0], weight);
-        p1Jet1CefInAvgProjPtForLeadEta1p3->Fill(ptAvgProj, skimT->Jet_chEmEF[0], weight);
-        p1Jet1MufInAvgProjPtForLeadEta1p3->Fill(ptAvgProj, skimT->Jet_muEF[0], weight);
+        p1Jet1PtInAvgProjPtForLeadEta1p3->Fill(ptAvgProj, skimT->Jet_pt[iJet1], weight);
+        p1Jet1ChfInAvgProjPtForLeadEta1p3->Fill(ptAvgProj, skimT->Jet_chHEF[iJet1], weight);
+        p1Jet1NhfInAvgProjPtForLeadEta1p3->Fill(ptAvgProj, skimT->Jet_neHEF[iJet1], weight);
+        p1Jet1NefInAvgProjPtForLeadEta1p3->Fill(ptAvgProj, skimT->Jet_neEmEF[iJet1], weight);
+        p1Jet1CefInAvgProjPtForLeadEta1p3->Fill(ptAvgProj, skimT->Jet_chEmEF[iJet1], weight);
+        p1Jet1MufInAvgProjPtForLeadEta1p3->Fill(ptAvgProj, skimT->Jet_muEF[iJet1], weight);
     }
     if (ptAverage > 1.25 *trigPt){
         h1EventInCosDeltaPhiLeadRecoil->Fill(
@@ -168,7 +168,7 @@ void HistMultiJet::fillEventLevelHistos(SkimTree* skimT, const double& trigPt)
     }
 }
 
-void HistMultiJet::fillJetLevelHistos(SkimTree* skimT, int iJet, const double& weightFi){
+void HistMultiJet::fillJetLevelHistos(SkimTree* skimT, const int& iJet, const double& weightFi){
     
     double pt_i = skimT->Jet_pt[iJet];
     const double& ptAverage = fInputs_.ptAverage;
@@ -176,18 +176,18 @@ void HistMultiJet::fillJetLevelHistos(SkimTree* skimT, int iJet, const double& w
     const double& ptLead    = fInputs_.ptLead;
     const double& ptRecoil  = fInputs_.ptRecoil;
 
-    h2JetsPtInAvgProjPt->Fill(ptAvgProj, pt_i, weightFi);
-    h2JetsPtInAvgPt->Fill(ptAverage, pt_i, weightFi);
-    h2JetsPtInLeadPt->Fill(ptLead, pt_i, weightFi);
-    h2JetsPtInRecoilPt->Fill(ptRecoil, pt_i, weightFi);
+    h2RecoilJetsPtInAvgProjPt->Fill(ptAvgProj, pt_i, weightFi);
+    h2RecoilJetsPtInAvgPt->Fill(ptAverage, pt_i, weightFi);
+    h2RecoilJetsPtInLeadPt->Fill(ptLead, pt_i, weightFi);
+    h2RecoilJetsPtInRecoilPt->Fill(ptRecoil, pt_i, weightFi);
 
     // Fill PF composition histograms
     p1RhoInAvgProjPt->Fill(ptAvgProj, skimT->Rho, weightFi);
-    p1JetsPtInAvgProjPt->Fill(ptAvgProj, skimT->Jet_pt[iJet], weightFi);
-    p1JetsChfInAvgProjPt->Fill(ptAvgProj, skimT->Jet_chHEF[iJet], weightFi);
-    p1JetsNhfInAvgProjPt->Fill(ptAvgProj, skimT->Jet_neHEF[iJet], weightFi);
-    p1JetsNefInAvgProjPt->Fill(ptAvgProj, skimT->Jet_neEmEF[iJet], weightFi);
-    p1JetsCefInAvgProjPt->Fill(ptAvgProj, skimT->Jet_chEmEF[iJet], weightFi);
-    p1JetsMufInAvgProjPt->Fill(ptAvgProj, skimT->Jet_muEF[iJet], weightFi);
+    p1RecoilJetsPtInAvgProjPt->Fill(ptAvgProj, skimT->Jet_pt[iJet], weightFi);
+    p1RecoilJetsChfInAvgProjPt->Fill(ptAvgProj, skimT->Jet_chHEF[iJet], weightFi);
+    p1RecoilJetsNhfInAvgProjPt->Fill(ptAvgProj, skimT->Jet_neHEF[iJet], weightFi);
+    p1RecoilJetsNefInAvgProjPt->Fill(ptAvgProj, skimT->Jet_neEmEF[iJet], weightFi);
+    p1RecoilJetsCefInAvgProjPt->Fill(ptAvgProj, skimT->Jet_chEmEF[iJet], weightFi);
+    p1RecoilJetsMufInAvgProjPt->Fill(ptAvgProj, skimT->Jet_muEF[iJet], weightFi);
 }
 

@@ -207,7 +207,7 @@ auto RunMultiJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pi
 		}
 		h1EventInCutflow->fill("passAtleast2Recoil");
 		
-		// if (scaleEvent->checkJetVetoMap(*skimT)) continue;
+		if (scaleEvent->checkJetVetoMap(*skimT)) continue;
 		h1EventInCutflow->fill("passJetVetoMap");
 		
 		// Check Δφ(leading, sumRecoil) ~ π
@@ -241,7 +241,7 @@ auto RunMultiJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pi
 
         // Calculate Crecoil
         double logCrecoil = 0.0;
-		std::vector<int> recoilFs;
+		std::vector<double> recoilFs;
         for (const auto& iRecoil: recoilIndices) {
             p4Jet.SetPtEtaPhiM(skimT->Jet_pt[iRecoil], skimT->Jet_eta[iRecoil],
                                skimT->Jet_phi[iRecoil], skimT->Jet_mass[iRecoil]);
@@ -323,7 +323,7 @@ auto RunMultiJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pi
             for (int i = 0; i != recoilIndices.size(); ++i) {
                 histMultiJet.fillJetLevelHistos(skimT.get(), recoilIndices.at(i), weight * recoilFs.at(i));
             }    
-            h->fillEventLevelHistos(skimT.get(), h->trigPt);
+            h->fillEventLevelHistos(skimT.get(), iJet1, h->trigPt);
         } // End of trig loop
 
 
@@ -342,7 +342,7 @@ auto RunMultiJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pi
         if (it != trigDetails.end()) {
             trigPt = it->second.trigPt;
         }
-        histMultiJet.fillEventLevelHistos(skimT.get(), trigPt);
+        histMultiJet.fillEventLevelHistos(skimT.get(), iJet1, trigPt);
 
         //Fill other histograms
         histRef.Fill(1.0, p4LeadJet, p4LeadGenJet, weight); 

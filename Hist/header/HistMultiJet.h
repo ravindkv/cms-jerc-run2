@@ -107,19 +107,19 @@ public:
     TProfile* p1MpfRespuInRecoilPt;
 
     // 2D recoils
-    TH2D* h2JetsPtInAvgProjPt;
-    TH2D* h2JetsPtInAvgPt;
-    TH2D* h2JetsPtInLeadPt;
-    TH2D* h2JetsPtInRecoilPt;
+    TH2D* h2RecoilJetsPtInAvgProjPt;
+    TH2D* h2RecoilJetsPtInAvgPt;
+    TH2D* h2RecoilJetsPtInLeadPt;
+    TH2D* h2RecoilJetsPtInRecoilPt;
 
     // PF composition plots
     TProfile* p1RhoInAvgProjPt;
-    TProfile* p1JetsPtInAvgProjPt;
-    TProfile* p1JetsChfInAvgProjPt;
-    TProfile* p1JetsNhfInAvgProjPt;
-    TProfile* p1JetsNefInAvgProjPt;
-    TProfile* p1JetsCefInAvgProjPt;
-    TProfile* p1JetsMufInAvgProjPt;
+    TProfile* p1RecoilJetsPtInAvgProjPt;
+    TProfile* p1RecoilJetsChfInAvgProjPt;
+    TProfile* p1RecoilJetsNhfInAvgProjPt;
+    TProfile* p1RecoilJetsNefInAvgProjPt;
+    TProfile* p1RecoilJetsCefInAvgProjPt;
+    TProfile* p1RecoilJetsMufInAvgProjPt;
 
     TProfile* p1RhoInAvgProjPtForLeadEta1p3;
     TProfile* p1Jet1PtInAvgProjPtForLeadEta1p3;
@@ -137,8 +137,8 @@ public:
 
     // Method to initialize histograms
     void InitializeHistograms(TDirectory *origDir, const std::string& directoryName, const VarBin& varBin);
-    void fillJetLevelHistos(SkimTree* skimT, int iJet,  const double& weightFi);
-    void fillEventLevelHistos(SkimTree* skimT, const double& trigPt);
+    void fillJetLevelHistos(SkimTree* skimT, const int& iJet,  const double& weightFi);
+    void fillEventLevelHistos(SkimTree* skimT, const int& iJet1, const double& trigPt);
 
 private:
     // Add a private data member to hold the current event’s inputs:

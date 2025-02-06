@@ -98,6 +98,7 @@ auto ScaleEvent::checkJetVetoMap(const SkimTree& skimT) const -> bool {
     for (int i = 0; i != skimT.nJet; ++i) {
       if (std::abs(skimT.Jet_eta[i]) > maxEtaInMap) continue;
       if (std::abs(skimT.Jet_phi[i]) > maxPhiInMap) continue;
+      if (skimT.Jet_jetId[i] < 6) continue;
 
       auto jvNumber = loadedJetVetoRef_->evaluate({jetVetoKey_, skimT.Jet_eta[i], skimT.Jet_phi[i]});
       if (isDebug_) {

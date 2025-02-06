@@ -1,58 +1,58 @@
-import os
-import sys
 import json
-import itertools
-import multiprocessing
-from functools import partial
+import glob
+import os
 
-sys.dont_write_bytecode = True
-sys.path.insert(0, os.getcwd().replace("input/root",""))
-from Inputs import *
+# Function to reorganize the JSON data
+def reorganize_json_data(files):
+    merged_data = {}
 
-def merge_histograms(sKey, jHist, dirName):
-    # Remove the last part of the path (the filename)
-    dirPath = os.path.dirname(jHist[sKey][0])
-    hAddIn = ' '.join(jHist[sKey])
-    hAddOut = f"{dirPath}/{sKey}_Hist_Merged.root"
-    print(f"Merging into {hAddOut}")
-    os.system(f"hadd -f -v 0 -k {hAddOut} {hAddIn}")
-    return sKey, hAddOut
+    # Iterate over each JSON file
+    for file in files:
+        # Parse the filename to extract year, channel, and other details
+        file_name = file.split('/')[-1]
+        _, channel_year = file_name.split('FilesHistMergedJobs_')
+        channel, year = channel_year.split('_')
+        year = year.replace('.json', '')
 
-if __name__=="__main__":
-    histDir = "../../../Hist/input/json/"
-    dirName = "json"
-    os.makedirs(dirName, exist_ok=True)
-    
-    allJobs = 0
-    tasks = []
+        # Load the content of each JSON file
+        with open(file, 'r') as f:
+            data = json.load(f)
 
-    for ch, year in itertools.product(Channels.keys(), Years):
-        chHist = Channels[ch]
-        print(f"\nProcessing Channel: {ch}, Year: {year}\n")
-        fHist = open(f"{histDir}/FilesHist_{chHist}_{year}.json", "r")
-        jHist = json.load(fHist)
-        fHist.close()  # Close the file after reading
+        # Initialize the structure if channel is not present
+        if channel not in merged_data:
+            merged_data[channel] = {}
 
-        dPlot = {}
-        sKeysToProcess = []
+        # Initialize the structure if year is not present for the channel
+        if year not in merged_data[channel]:
+            merged_data[channel][year] = {'Data': {}, 'MC': {}}
 
-        for sKey in jHist.keys():
-            sKeysToProcess.append(sKey)
+        # Reorganize data for Data and MC categories
+        for key, file_list in data.items():
+            if key.startswith('Data_'):
+                merged_data[channel][year]['Data'][key] = file_list
+            elif key.startswith('MC_'):
+                if "Herwig" in key: continue; #FIXME
+                merged_data[channel][year]['MC'][key] = file_list
 
-        # Prepare the merge tasks
-        with multiprocessing.Pool() as pool:
-            # Use partial to fix the arguments that are the same for all tasks
-            merge_func = partial(merge_histograms, jHist=jHist, dirName=dirName)
-            # Map the function to the list of sKeys
-            results = pool.map(merge_func, sKeysToProcess)
+    merged_data["L3Res"] = {} # For L3Res: GamJet + ZeeJet + ZmmJet + MultiJet
+    return merged_data
 
-        # Collect the results
-        for sKey, hAddOut in results:
-            dPlot[sKey] = hAddOut
+# Define the path where JSON files are stored (change this to your actual path)
+json_files_path = '../../../Hist/condor/merge/merged_json/FilesHistMergedJobs*.json'
 
-        fileName = f"FilesHistMerged_{ch}_{year}.json"
-        with open(f"{dirName}/{fileName}", "w") as fHistMerged:
-            json.dump(dPlot, fHistMerged, indent=4)
+# List all JSON files that match the pattern
+json_files = glob.glob(json_files_path)
 
-        print(f"Merged histograms saved to {dirName}/{fileName}")
+# Reorganize and merge the JSON data
+merged_json_data = reorganize_json_data(json_files)
 
+# Output the merged and reorganized data into a single JSON file
+dirName = "json"
+os.system(f"mkdir -p {dirName}")
+fileName = 'MergedHistFiles.json'
+output_file = f"{dirName}/{fileName}"
+with open(output_file, 'w') as outfile:
+    json.dump(merged_json_data, outfile, indent=4)
+
+#print(merged_json_data)
+print(f'Merged and reorganized data saved to {output_file}')

@@ -14,9 +14,29 @@ VarBin::VarBin(const GlobalFlag& globalFlags)
 }
 
 void VarBin::InitializeBins(){
-    binsPt_ = {
-        15, 25, 35, 50, 75, 100, 130, 170, 230, 300, 500, 1000
-    };
+
+    binsPt_ = {};
+    if (channel_ == GlobalFlag::Channel::ZeeJet || channel_ == GlobalFlag::Channel::ZmmJet) {
+        binsPt_ = { 15.0, 20.0, 25.0, 30.0, 35.0, 40.0, 45.0, 
+                    50.0, 60.0, 70.0, 85.0, 105.0, 130.0, 175.0, 
+                    230.0, 300.0, 400.0, 500.0, 700.0, 1000.0, 1500.0 };
+    }
+    else if (channel_ == GlobalFlag::Channel::GamJet) {
+        binsPt_ = {15.0, 20.0, 25.0, 30.0, 35.0, 40.0, 50.0, 
+                    60.0, 70.0, 85.0, 105.0, 130.0, 175.0, 230.0, 
+                    300.0, 400.0, 500.0, 600.0, 700.0, 850.0, 1000.0, 1200.0, 1450.0, 1750.0}; 
+    }
+    else if (channel_ == GlobalFlag::Channel::MultiJet) {
+        binsPt_ = {10.0, 15.0, 21.0, 28.0, 37.0, 49.0, 64.0, 
+                    84.0, 114.0, 153.0, 196.0, 245.0, 300.0, 362.0, 
+                    430.0, 507.0, 592.0, 686.0, 790.0, 905.0, 1032.0, 
+                    1172.0, 1327.0, 1497.0, 1684.0, 1890.0, 2116.0, 2366.0, 
+                    2640.0, 2941.0, 3273.0, 5220.0};
+    }
+    else{
+        binsPt_ = {15, 25, 35, 50, 75, 100, 130, 170, 230, 300, 500, 1000 };
+    }
+
     binsEta_ = {
         -5.191, -3.839, -3.489, -3.139, -2.964, -2.853,
         -2.650, -2.500, -2.322, -2.172, -1.930, -1.653,
@@ -60,19 +80,7 @@ void VarBin::InitializeBins(){
     rangeMassJet1_  = {100, 0, 150};
     rangeMassJetSum_  = {100, 0, 15000};
 
-    rangeRun_ = { 200, 271030, 325200 };
-    if (year_ == GlobalFlag::Year::Year2016Pre){
-        rangeRun_ = {200, 271036, 284044};
-    }
-    if (year_ == GlobalFlag::Year::Year2016Post){
-        rangeRun_ = {200, 271036, 284044};
-    }
-    if (year_ == GlobalFlag::Year::Year2017){
-        rangeRun_ = {200, 294927, 306462};
-    }
-    if (year_ == GlobalFlag::Year::Year2018){
-        rangeRun_ = {200, 314472, 325175};
-    }
+    rangeRun_ = { 200, 271036, 325175 };//2016 to 2018
 
     rangeDeltaR_ = { 50, 0, 10 };
     rangeDeltaPhi_ = { 100, 0, 5 };
