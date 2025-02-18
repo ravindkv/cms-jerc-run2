@@ -8,7 +8,7 @@ struct always_false : std::false_type {};
 // Template function to set style
 template<typename T>
 void TdrStyle::setStyle(T* obj) {
-    if constexpr (std::is_same_v<T, TH1D>) {
+    if constexpr (std::is_same_v<T, TH1D> || std::is_same_v<T, TH1F>) {
         obj->SetLineWidth(3);
         obj->GetYaxis()->CenterTitle();
         obj->GetXaxis()->SetTitleOffset(1.0);

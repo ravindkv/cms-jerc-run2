@@ -74,9 +74,6 @@ void PlotEras1D<T>::loadHists(const std::string& sourceType, const std::vector<s
         gROOT->cd();  // Change to ROOT's global directory
         T* clonedHist = (T*)hist->Clone(bin.c_str());  // Clone the histogram
 
-        // Apply style settings
-        tdrStyle_->setStyle(clonedHist);
-
         // Store the histograms in the appropriate vector
         if (sourceType == "Data") {
             dataHists_.push_back(clonedHist);
@@ -106,6 +103,8 @@ void PlotEras1D<T>::drawHists(const std::vector<T*>& hists) {
     // Clone the histogram and cast it back to type T*
     T* hist = static_cast<T*>(hists.at(i)->Clone(hists.at(i)->GetName()));
     if (hist != nullptr) {
+      // Apply style settings
+      tdrStyle_->setStyle(hist);
       // Normalize 
       if (tdrStyle_->getIsNorm() && hist->Integral() > 0.0){
         hist->Scale(1./hist->Integral());

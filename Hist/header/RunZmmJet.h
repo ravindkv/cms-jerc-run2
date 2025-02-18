@@ -1,5 +1,5 @@
-#ifndef HISTZMMJET_H
-#define HISTZMMJET_H
+#ifndef RUNZMMJET_H
+#define RUNZMMJET_H
 
 #include <iostream>
 #include <cmath>
@@ -38,5 +38,5 @@ private:
     // Add any private member variables or methods here if needed
 };
 
-#endif // HISTZMMJET_H
+#endif // RUNZMMJET_H
 

@@ -5,6 +5,8 @@
 #include "RunGamJetFake.h"
 #include "RunMultiJet.h"
 #include "RunDiJet.h"
+#include "RunWqqe.h"
+#include "RunWqqm.h"
 
 #include <iostream>
 #include <filesystem>
@@ -134,6 +136,16 @@ int main(int argc, char* argv[]){
         std::cout << "==> Running DiJet" << std::endl;
         auto diJet = std::make_unique<RunDiJet>(globalFlag);
         diJet->Run(nanoT, fout.get());
+    }
+    if (globalFlag.isWqqe) {
+        std::cout << "==> Running Wqqe" << std::endl;
+        auto wqqe = std::make_unique<RunWqqe>(globalFlag);
+        wqqe->Run(nanoT, fout.get());
+    }
+    if (globalFlag.isWqqm) {
+        std::cout << "==> Running Wqqm" << std::endl;
+        auto wqqm = std::make_unique<RunWqqm>(globalFlag);
+        wqqm->Run(nanoT, fout.get());
     }
 	return 0;
 }

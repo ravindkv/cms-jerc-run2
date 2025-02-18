@@ -29,7 +29,8 @@ class GlobalFlag{
         bool isGamJetFake;
         bool isMultiJet;
         bool isDiJet;
-        bool isWqq;
+        bool isWqqe;
+        bool isWqqm;
 
         //Sample (e.g. QCD)
         bool isQCD;

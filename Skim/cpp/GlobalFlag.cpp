@@ -14,7 +14,8 @@ GlobalFlag::GlobalFlag(const string& outName) :
     isGamJetFake(false), 
     isMultiJet(false), 
     isDiJet(false), 
-    isWqq(false), 
+    isWqqe(false), 
+    isWqqm(false), 
     isQCD(false), 
     isMG(false){
 
@@ -32,7 +33,8 @@ GlobalFlag::GlobalFlag(const string& outName) :
     else if(outName.find("GamJet")!= string::npos)    isGamJet    = true;
     if(outName.find("MultiJet")!= string::npos)  isMultiJet  = true;
     if(outName.find("DiJet")!= string::npos)  isDiJet  = true;
-    if(outName.find("Wqq")!= string::npos)       isWqq       = true;
+    if(outName.find("Wqqe")!= string::npos)       isWqqe       = true;
+    if(outName.find("Wqqm")!= string::npos)       isWqqm       = true;
 
     if(outName.find("QCD")!= string::npos)    isQCD    = true;
     if(outName.find("MC")!= string::npos)     isMG     = true;
@@ -52,7 +54,8 @@ void GlobalFlag::printFlag(){
     if(isGamJetFake  )cout<<"isGamJetFake  = true"<<'\n';
     if(isMultiJet)cout<<"isMultiJet= true"<<'\n';
     if(isDiJet)cout<<"isDiJet= true"<<'\n';
-    if(isWqq     )cout<<"isWqq     = true"<<'\n';
+    if(isWqqe     )cout<<"isWqqe     = true"<<'\n';
+    if(isWqqm     )cout<<"isWqqm     = true"<<'\n';
 
     if(isQCD     )cout<<"isQCD     = true"<<'\n';
     if(isMG      )cout<<"isMG      = true"<<'\n';

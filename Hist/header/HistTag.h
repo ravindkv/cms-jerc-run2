@@ -1,5 +1,5 @@
-#ifndef TAGGED_H
-#define TAGGED_H
+#ifndef HISTTAGGED_H
+#define HISTTAGGED_H
 
 #include <memory>
 #include <string>
@@ -90,5 +90,5 @@ private:
     void InitializeHistograms(TDirectory *origDir, const std::string& directoryName, const VarBin& varBin);
 };
 
-#endif // TAGGED_H
+#endif // HISTTAGGED_H
 

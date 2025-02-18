@@ -8,7 +8,7 @@ eosSkimDir = "root://hip-cms-se.csc.fi/store/user/rverma/cms-jerc-run2/Jan2025/S
 # Years and Channels to process
 Years = [
     '2016Pre',
-    '2016Post',
+    #'2016Post',
     '2017',
     '2018'
 ]
@@ -18,8 +18,10 @@ Channels = [
     #'ZmmJet',
     #'GamJet',
     #'GamJetFake',
-    'MultiJet',
+    #'MultiJet',
     #'DiJet',
+    'Wqqe',
+    'Wqqm',
 ]
 
 # VOMS Proxy path (adjust as needed)

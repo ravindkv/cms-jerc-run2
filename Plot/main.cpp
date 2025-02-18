@@ -2,13 +2,14 @@
 #include "RunZmmJet.h"
 #include "RunGamJet.h"
 #include "RunMultiJet.h"
+#include "RunWqqe.h"
+#include "RunWqqm.h"
 
 //#include "RunMCTruth.h"
 //#include "RunFlavour.h"
 //#include "RunVetoMap.h"
 //#include "RunIncJet.h"
 //#include "RunDiJet.h"
-//#include "RunWqq.h"
 #include "GlobalFlag.h"
 #include "Slide.h"
 
@@ -113,6 +114,19 @@ int main(int argc, char* argv[]){
     RunMultiJet *multiJet = new RunMultiJet(outName);
     multiJet->Run(js, eosPlotDir, channelSlide, allChannelSlide);
   }
+
+  if(globF->isWqqe or isAllChannel){
+    cout<<"==> Running Wqqe"<<endl;
+    RunWqqe *wqqe = new RunWqqe(outName);
+    wqqe->Run(js, eosPlotDir, channelSlide, allChannelSlide);
+  }
+
+  if(globF->isWqqm or isAllChannel){
+    cout<<"==> Running Wqqm"<<endl;
+    RunWqqm *wqqm = new RunWqqm(outName);
+    wqqm->Run(js, eosPlotDir, channelSlide, allChannelSlide);
+  }
+
   /*
   if(globF->isMCTruth){
     cout<<"==> Running MCTruth"<<endl;
@@ -137,11 +151,6 @@ int main(int argc, char* argv[]){
   if(globF->isDiJet){
     cout<<"==> Running DiJet"<<endl;
     PlotDiJet *diJet = new PlotDiJet(oName);
-    diJet->Run(js, outRoot, chLatex);  
-  }
-  if(globF->isWqq){
-    cout<<"==> Running Wqq"<<endl;
-    PlotWqq *diJet = new PlotWqq(oName);
     diJet->Run(js, outRoot, chLatex);  
   }
   */

@@ -12,8 +12,11 @@ Channels = {}
 #Channels["ZeeJet"]    = "ZeeJet"
 #Channels["ZmmJet"]    = "ZmmJet"
 #Channels["GamJet"]    = "GamJet"
-Channels["GamJetFake"]= "GamJetFake"
+#Channels["GamJetFake"]= "GamJetFake"
 #Channels["MultiJet"]  = "MultiJet"
+Channels["Wqqe"]= "Wqqe"
+Channels["Wqqm"]= "Wqqm"
+
 #Channels["MCTruth"]   = "MultiJet"
 #Channels["Flavour"]   = "MultiJet"
 #Channels["VetoMap"]   = "MultiJet"

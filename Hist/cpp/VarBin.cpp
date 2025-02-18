@@ -77,8 +77,10 @@ void VarBin::InitializeBins(){
     rangePhi_ = {72,-TMath::Pi(),TMath::Pi()};
     rangePhiRebin_ = {300,-TMath::Pi(),TMath::Pi()};
     rangeMass_  = {100, 0, 200};
+    rangeChiSqr_  = {1000, 0, 1000};
     rangeMassJet1_  = {100, 0, 150};
     rangeMassJetSum_  = {100, 0, 15000};
+    rangeMassTop_  = {100, 0, 400};
 
     rangeRun_ = { 200, 271036, 325175 };//2016 to 2018
 
@@ -152,7 +154,15 @@ const std::vector<double>& VarBin::getRangeMassJetSum() const {
     printBins("getRangeMassJetSum()", rangeMassJetSum_);
     return rangeMassJetSum_;
 }
+const std::vector<double>& VarBin::getRangeMassTop() const {
+    printBins("getRangeMassTop()", rangeMassTop_);
+    return rangeMassTop_;
+}
 
+const std::vector<double>& VarBin::getRangeChiSqr() const {
+    printBins("getRangeChiSqr()", rangeChiSqr_);
+    return rangeChiSqr_;
+}
 
 
 const std::vector<double>& VarBin::getRangeRun() const {

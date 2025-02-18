@@ -42,6 +42,15 @@ void TrigDetail::InitializeList(){
             trigMapRangePt_["HLT_Photon30_R9Id90_HE10_IsoM"]   = TrigRangePt{35  ,40 };
             trigMapRangePt_["HLT_Photon22_R9Id90_HE10_IsoM"]   = TrigRangePt{20  ,35 };
         }
+
+        // Wqqe channel
+        if(channel_ == GlobalFlag::Channel::Wqqe){
+            trigList_ = {"HLT_Ele27_WPTight_Gsf", "HLT_Photon175", "HLT_Ele115_CaloIdVT_GsfTrkIdT"};
+        }        
+        // Wqqm channel
+        if(channel_ == GlobalFlag::Channel::Wqqm){
+            trigList_ = {"HLT_Mu50", "HLT_TkMu50"};
+        }        
     }
     //Year2017
     else if (year_ == GlobalFlag::Year::Year2017){
@@ -66,6 +75,14 @@ void TrigDetail::InitializeList(){
             trigMapRangePt_["HLT_Photon30_HoverELoose"]        = TrigRangePt{35  ,60 };
             trigMapRangePt_["HLT_Photon20_HoverELoose"]        = TrigRangePt{20  ,35 };
         }
+        // Wqqe channel
+        if(channel_ == GlobalFlag::Channel::Wqqe){
+            trigList_ = {"HLT_Ele35_WPTight_Gsf", "HLT_Photon200", "HLT_Ele115_CaloIdVT_GsfTrkIdT"};
+        }        
+        // Wqqm channel
+        if(channel_ == GlobalFlag::Channel::Wqqm){
+            trigList_ = {"HLT_Mu50", "HLT_TkMu100", "HLT_OldMu100"};
+        }        
     } 
     
     else if (year_ == GlobalFlag::Year::Year2018){
@@ -90,6 +107,14 @@ void TrigDetail::InitializeList(){
             trigMapRangePt_["HLT_Photon30_HoverELoose"]          = TrigRangePt{35  ,60 };
             trigMapRangePt_["HLT_Photon20_HoverELoose"]          = TrigRangePt{20  ,35 };
         }
+        // Wqqe channel
+        if(channel_ == GlobalFlag::Channel::Wqqe){
+            trigList_ = {"HLT_Ele32_WPTight_Gsf", "HLT_Photon200", "HLT_Ele115_CaloIdVT_GsfTrkIdT"};
+        }        
+        // Wqqm channel
+        if(channel_ == GlobalFlag::Channel::Wqqm){
+            trigList_ = {"HLT_Mu50", "HLT_OldMu100", "HLT_TkMu100"};
+        }        
     }
 
     if(channel_ == GlobalFlag::Channel::MultiJet){
@@ -125,10 +150,11 @@ void TrigDetail::InitializeList(){
 
 const std::vector<std::string> TrigDetail::getTrigNames() const{
     std::vector<std::string> tNames;
-    if(channel_ == GlobalFlag::Channel::ZeeJet){
-        tNames = trigList_;
-    }        
-    else if(channel_ == GlobalFlag::Channel::ZmmJet){
+    if(channel_ == GlobalFlag::Channel::ZeeJet
+      || channel_ == GlobalFlag::Channel::ZmmJet
+      || channel_ == GlobalFlag::Channel::Wqqe
+      || channel_ == GlobalFlag::Channel::Wqqm
+    ){
         tNames = trigList_;
     }        
     else if(channel_ == GlobalFlag::Channel::GamJet){

@@ -91,8 +91,10 @@ void GlobalFlag::parseFlags() {
         channel_ = Channel::IncJet;
     } else if (outName_.find("MultiJet") != std::string::npos) {
         channel_ = Channel::MultiJet;
-    } else if (outName_.find("Wqq") != std::string::npos) {
-        channel_ = Channel::Wqq;
+    } else if (outName_.find("Wqqe") != std::string::npos) {
+        channel_ = Channel::Wqqe;
+    } else if (outName_.find("Wqqm") != std::string::npos) {
+        channel_ = Channel::Wqqm;
     }
 
     // Parsing Samples
@@ -205,8 +207,11 @@ void GlobalFlag::printFlags() const {
         case Channel::MultiJet:
             std::cout << "Channel = MultiJet" << '\n';
             break;
-        case Channel::Wqq:
-            std::cout << "Channel = Wqq" << '\n';
+        case Channel::Wqqe:
+            std::cout << "Channel = Wqqe" << '\n';
+            break;
+        case Channel::Wqqm:
+            std::cout << "Channel = Wqqm" << '\n';
             break;
         default:
             std::cout << "Channel = NONE" << '\n';

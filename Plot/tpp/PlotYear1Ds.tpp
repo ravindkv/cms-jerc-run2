@@ -88,8 +88,6 @@ void PlotYear1Ds<T>::loadHists(const std::string& sourceType, const std::vector<
             gROOT->cd();
             T* clonedHist = static_cast<T*>(hist->Clone((bin + histName).c_str()));
 
-            tdrStyle_->setStyle(clonedHist);
-
             // Push this MC histogram onto the vector in the map
             if (sourceType == "Data") {
                 mapDataHists_[histName].push_back(clonedHist);
@@ -148,6 +146,7 @@ void PlotYear1Ds<T>::drawHists(const std::vector<T*>& hists, const bool& isMC)
         }
 
         // Assign color/style
+        tdrStyle_->setStyle(hist);
         tdrStyle_->setColor(hist, i);
 
         // Decide the draw option

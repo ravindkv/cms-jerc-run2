@@ -35,7 +35,7 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pick
     // Cutflow histograms
     std::vector<std::string> cuts = {
     		"passSkim", "passHlt", "passGoodLumi", "passMetFilter", "passExactly1Ref",
-    		"passAtleast1Jet", "passJetVetoMap", "passDPhiRefJet1", "passRefBarrel",
+    		"passAtleast2Jet", "passJetVetoMap", "passDPhiRefJet1", "passRefBarrel",
     		"passAlpha", "passResponse"
     };
     auto h1EventInCutflow = std::make_unique<HistCutflow>(origDir, "", cuts, globalFlags_);
@@ -46,7 +46,7 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pick
 
     HistRef histRef(origDir, "passExactly1Ref", varBin);
 
-    HistScale histScale(origDir, "passAtleast1Jet", varBin);
+    HistScale histScale(origDir, "passAtleast2Jet", varBin);
     
     HistBarrel histBarrel(origDir, "passRefBarrel", varBin);
 
@@ -166,7 +166,7 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pick
         p4Jetn+= p4Jet2; // except leading jet
 
         if (fabs(p4Jet1.Eta()) >= 1.3) continue; 
-        h1EventInCutflow->fill("passAtleast1Jet");
+        h1EventInCutflow->fill("passAtleast2Jet");
         histScale.FillElectron(*scaleElectron);
         histScale.FillJetMet(*scaleJetMet);
 

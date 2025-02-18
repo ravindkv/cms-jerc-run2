@@ -91,14 +91,26 @@ auto PickObject::getPickedGenJetsIndex() const -> const std::vector<int>& {
 void PickObject::pickMuons(const SkimTree& skimT) {
     printDebug("Starting Selection, nMuon = "+std::to_string(skimT.nMuon));
     pickedMuons_.clear();
+    
+    double ptThreshold = 20.f;
+    double etaThreshold = 2.3;
+    if(channel_ == GlobalFlag::Channel::Wqqm){
+        etaThreshold = 2.4;
+        if(year_ == GlobalFlag::Year::Year2017){
+            ptThreshold = 29;
+        }
+        else{
+            ptThreshold = 26;
+        }
+    }
 
     for (UInt_t m = 0; m < skimT.nMuon; ++m) {
         double eta = skimT.Muon_eta[m];
         double pt = skimT.Muon_pt[m];
 
         bool passPrompt = false;
-        if (pt > 20) {
-            passPrompt = (std::abs(eta) <= 2.3 &&
+        if (pt > ptThreshold) {
+            passPrompt = (std::abs(eta) <= etaThreshold &&
                           skimT.Muon_tightId[m] &&
                           skimT.Muon_pfRelIso04_all[m] < 0.15 &&
                           skimT.Muon_dxy[m] < 0.2 &&
@@ -120,6 +132,19 @@ void PickObject::pickElectrons(const SkimTree& skimT) {
     printDebug("Starting Selection, nElectron = "+std::to_string(skimT.nElectron));
     pickedElectrons_.clear();
 
+    double ptThreshold = 25.f;
+    double etaThreshold = 2.4;
+    if(channel_ == GlobalFlag::Channel::Wqqe){
+        etaThreshold = 2.4;
+        if(year_ == GlobalFlag::Year::Year2016Pre ||  year_ == GlobalFlag::Year::Year2016Post){
+            ptThreshold = 34;
+        }
+        else{
+            ptThreshold = 35;
+            etaThreshold = 2.5;
+        }
+    }
+
     for (int eleInd = 0; eleInd < skimT.nElectron; ++eleInd) {
         double eta = skimT.Electron_eta[eleInd];
         double absEta = std::abs(eta);
@@ -132,7 +157,7 @@ void PickObject::pickElectrons(const SkimTree& skimT) {
         // Tight electron ID
         bool passTightID = skimT.Electron_cutBased[eleInd] == 4;
 
-        bool eleSel = (passEtaEBEEGap && absEta <= 2.4 && pt >= 25 && passTightID);
+        bool eleSel = (passEtaEBEEGap && absEta <= etaThreshold && pt >= ptThreshold && passTightID);
         if (eleSel) {
             pickedElectrons_.push_back(eleInd);
             printDebug("Electron " + std::to_string(eleInd) + " selected: pt = " + std::to_string(pt) + ", eta = " + std::to_string(eta));

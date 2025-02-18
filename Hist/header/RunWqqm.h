@@ -1,5 +1,5 @@
-#ifndef RUNZEEJET_H
-#define RUNZEEJET_H
+#ifndef RUNWQQM_H
+#define RUNWQQM_H
 
 #include <iostream>
 #include <cmath>
@@ -21,13 +21,12 @@
 #include "ScaleEvent.h"
 #include "ScaleObject.h"
 #include "GlobalFlag.h"
-#include "VarCut.h"
 
-class RunZeeJet{
+class RunWqqm{
 public:
     // Constructor accepting a reference to GlobalFlag
-    explicit RunZeeJet(GlobalFlag& globalFlags);
-    ~RunZeeJet() = default;
+    explicit RunWqqm(GlobalFlag& globalFlags);
+    ~RunWqqm() = default;
 
     int Run(std::shared_ptr<SkimTree>& skimT, PickEvent* pickEvent, PickObject* pickObject, ScaleEvent* scaleEvent, ScaleObject* scaleObject, TFile* fout);
 
@@ -38,5 +37,5 @@ private:
     // Add any private member variables or methods here if needed
 };
 
-#endif // RUNZEEJET_H
+#endif // RUNWQQM_H
 

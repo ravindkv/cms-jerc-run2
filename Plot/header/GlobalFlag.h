@@ -34,7 +34,8 @@ class GlobalFlag{
     bool isDiJet;
     bool isIncJet;
     bool isMultiJet;
-    bool isWqq;
+    bool isWqqe;
+    bool isWqqm;
     
     void printFlag();
   private:

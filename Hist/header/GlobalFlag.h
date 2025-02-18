@@ -45,7 +45,8 @@ public:
         DiJet,
         IncJet,
         MultiJet,
-        Wqq
+        Wqqe,
+        Wqqm
     };
 
     // Constructor and Destructor

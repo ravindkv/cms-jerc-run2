@@ -227,7 +227,7 @@ void SkimTree::loadTree() {
 	//--------------------------------------- 
 	// Electron (for DiEleJet)
 	//--------------------------------------- 
-	if(channel_ == GlobalFlag::Channel::ZeeJet){
+	if(channel_ == GlobalFlag::Channel::ZeeJet || channel_ == GlobalFlag::Channel::Wqqe){
 		//status
 		fChain_->SetBranchStatus("nElectron",true);
 		fChain_->SetBranchStatus("Electron_*",true);
@@ -246,7 +246,7 @@ void SkimTree::loadTree() {
 	//--------------------------------------- 
 	// Muon (for DiMuJet)
 	//--------------------------------------- 
-	if (channel_ == GlobalFlag::Channel::ZmmJet){
+	if (channel_ == GlobalFlag::Channel::ZmmJet || channel_ == GlobalFlag::Channel::Wqqm){
 	  	//status
 	  	fChain_->SetBranchStatus("nMuon",true);
 	  	fChain_->SetBranchStatus("Muon_*",true);

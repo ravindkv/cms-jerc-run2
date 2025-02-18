@@ -92,9 +92,6 @@ void PlotEra1Ds<T>::loadHist(const std::string& sourceType, const std::string& e
         gROOT->cd();
         T* clonedHist = static_cast<T*>(hist->Clone(histName.c_str()));
 
-        // Apply custom style
-        tdrStyle_->setStyle(clonedHist);
-
         // Store it in the Data map
         mapDataHist_[histName] = clonedHist;
     }
@@ -126,8 +123,6 @@ void PlotEra1Ds<T>::loadHists(const std::string& sourceType, const std::vector<s
 
             gROOT->cd();
             T* clonedHist = static_cast<T*>(hist->Clone((mcBin + histName).c_str()));
-
-            tdrStyle_->setStyle(clonedHist);
 
             // Push this MC histogram onto the vector in the map
             mapMcHists_[histName].push_back(clonedHist);
@@ -182,6 +177,7 @@ void PlotEra1Ds<T>::drawHists(const std::vector<T*>& hists, const bool& isMC)
         }
 
         // Assign color/style
+        tdrStyle_->setStyle(hist);
         tdrStyle_->setColor(hist, i);
 
         // Decide the draw option

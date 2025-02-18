@@ -120,6 +120,9 @@ void PlotTime1Ds<T>::drawHists() {
     if(tdrStyle_->getXLog())gPad->SetLogx(true);
     if(tdrStyle_->getYLog())gPad->SetLogy(true);
 
+    // Get the EraName to RunNumber map
+    std::vector<std::pair<std::string, int>> eraRunMap;
+    
     for (size_t i = 0; i < histNames_.size(); ++i) {
         const auto& histName = histNames_[i];
         // Aggregate all histograms of this type across  all  eras
@@ -136,6 +139,17 @@ void PlotTime1Ds<T>::drawHists() {
             continue;
         }
 
+        eraRunMap = getEraRunMap(histsToDraw);
+        int firstRun = -1;
+        int lastRun = -1;
+        // Check if the vector is not empty
+        if (!eraRunMap.empty()) {
+            firstRun = eraRunMap.front().second; // First Run number 
+            lastRun = eraRunMap.back().second;   // Last Run number
+        } else {
+            std::cout << "The eraRunMap vector is empty.\n";
+        }
+
         for(size_t j = 0; j < histsToDraw.size(); ++j){
             auto hist = histsToDraw[j];
             tdrStyle_->setColor(hist, i);
@@ -145,6 +159,8 @@ void PlotTime1Ds<T>::drawHists() {
             // Draw the first histogram with option, then overlay the rest
             if(j == 0 && i == 0){
                 hist->Draw("Pz");
+                if(firstRun != -1 &&  lastRun != -1 )
+                hist->GetXaxis()->SetRangeUser(firstRun, lastRun);
             }
             else{
                 hist->Draw("Pz SAME");
@@ -153,9 +169,6 @@ void PlotTime1Ds<T>::drawHists() {
         }
         // Draw vertical lines for era breaks and add labels
         if(i==0){
-            // Get the EraName to RunNumber map
-            std::vector<std::pair<std::string, int>> eraRunMap = getEraRunMap(histsToDraw);
-            
             // Iterate over the map in ascending order of run numbers
             for (const auto& [era, run] : eraRunMap) {
                 std::cout << "Run Number: " << run << " | Era Name: " << era << std::endl;
@@ -164,7 +177,7 @@ void PlotTime1Ds<T>::drawHists() {
                 line->SetLineColor(kBlack);
                 line->Draw();
                 
-                TLatex *label = new TLatex(run-1, 0.6, era.c_str());
+                TLatex *label = new TLatex(run-1, 0.4*(yMin_ + yMax_), era.c_str());
                 label->SetTextAngle(90);
                 label->SetTextSize(0.03);
                 label->Draw();

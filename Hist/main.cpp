@@ -3,13 +3,14 @@
 #include "RunGamJet.h"
 #include "RunGamJetFake.h"
 #include "RunMultiJet.h"
+#include "RunWqqe.h"
+#include "RunWqqm.h"
 
 //#include "HistMCTruth.h"
 //#include "HistFlavour.h"
 //#include "HistVetoMap.h"
 //#include "HistIncJet.h"
 //#include "HistDiJet.h"
-//#include "HistWqq.h"
 
 #include "SkimTree.h"
 #include "PickEvent.h"
@@ -225,6 +226,16 @@ int main(int argc, char* argv[]) {
         auto multiJet = std::make_unique<RunMultiJet>(globalFlag);
         multiJet->Run(skimT, pickEvent.get(), pickObject.get(), scaleEvent.get(), scaleObj.get(), fout.get());
     }
+    if (globalFlag.getChannel() == GlobalFlag::Channel::Wqqe) {
+        std::cout << "==> Running Wqqe" << std::endl;
+        auto wqqe = std::make_unique<RunWqqe>(globalFlag);
+        wqqe->Run(skimT, pickEvent.get(), pickObject.get(), scaleEvent.get(), scaleObj.get(), fout.get());
+    }
+    if (globalFlag.getChannel() == GlobalFlag::Channel::Wqqm) {
+        std::cout << "==> Running Wqqm" << std::endl;
+        auto wqqm = std::make_unique<RunWqqm>(globalFlag);
+        wqqm->Run(skimT, pickEvent.get(), pickObject.get(), scaleEvent.get(), scaleObj.get(), fout.get());
+    }
 /*
 
   if (globalFlag->isMCTruth) {
@@ -251,11 +262,6 @@ int main(int argc, char* argv[]) {
     std::cout << "==> Running DiJet" << std::endl;
     auto diJet = std::make_unique<RunDiJet>(outName);
     diJet->Run(skimT.get(), pickEvent.get(), pickObject.get(), scaleEvent.get(), scaleObj.get(), fout.get());
-  }
-  if (globalFlag->isWqq) {
-    std::cout << "==> Running Wqq" << std::endl;
-    auto wqq = std::make_unique<RunWqq>(outName);
-    wqq->Run(skimT.get(), pickEvent.get(), pickObject.get(), scaleEvent.get(), scaleObj.get(), fout.get());
   }
   */
 
