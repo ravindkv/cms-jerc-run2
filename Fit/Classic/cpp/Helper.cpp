@@ -4,7 +4,6 @@
 #include <iostream>
 #include <memory>
 
-namespace ClassicFit {
 namespace Helper {
 
 std::string nWhiteSpaces(int n)
@@ -17,20 +16,22 @@ TString completeWhiteSpaces(const TString& text, int ntot)
     return text + nWhiteSpaces(ntot - text.Length());
 }
 
-bool findInString(const std::string& search, const std::string& str)
+bool findInString(const std::string_view search, const std::string_view str)
 {
     return (str.find(search) != std::string::npos);
 }
 
 void printLoading(TString type, TString name, TString objname, const std::string& color)
 {
-    print("Loading " + type + " for " + completeWhiteSpaces(name) + ": " + objname + "...", color);
+    print("Loading " + type + " for " + completeWhiteSpaces(name) +
+          ": " + objname + "...", color);
     std::cout << colReset << std::endl;
 }
 
 void printParameter(TString name, double val, double err, const std::string& color)
 {
-    printLine("  --> " + completeWhiteSpaces(name) + Form(": %+5.2f +/- %5.2f", val, err), color);
+    printLine("  --> " + completeWhiteSpaces(name) +
+              Form(": %+5.2f +/- %5.2f", val, err), color);
 }
 
 void removeZerosFromGraph(TGraphErrors* graph)
@@ -106,7 +107,7 @@ void multiplyGraph(TGraphErrors* graph, TF1* func)
         double x   = graph->GetX()[i];
         double y   = graph->GetY()[i];
         double ey  = graph->GetEY()[i];
-        double fval= func->Eval(x);
+        double fval = func->Eval(x);
         graph->SetPoint(i, x, fval * y);
         graph->SetPointError(i, graph->GetEX()[i], fval * ey);
     }
@@ -132,5 +133,4 @@ void propagateErrorToGraph(TGraphErrors* graph, std::vector<TF1*> funcs, TMatrix
 }
 
 } // namespace Helper
-} // namespace ClassicFit
 

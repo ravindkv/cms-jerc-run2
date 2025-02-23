@@ -114,7 +114,7 @@ configs["ConfigYear1Ds"].append(
                     "h1EventInHadTMass",
                     "h1EventInLepTMass",
                     ],
-        xTitle="p_{T} (GeV)",
+        xTitle="m_{T} (GeV)",
         yTitle="Events (normalized to 1)",
         yMin=0.001,
         yMax=0.05,

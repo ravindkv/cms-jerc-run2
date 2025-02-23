@@ -204,7 +204,7 @@ void compareHistograms(const std::vector<TH1*>& hists,
     // Decide if you want log scale or normalization:
     // For example, skip log scale for TProfile, etc.
     bool isLog  = false;
-    bool isNorm = true;
+    bool isNorm = false;
     // If you need to do logic here, go for it.
 
     c1->Clear();
