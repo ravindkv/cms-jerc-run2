@@ -1,0 +1,25 @@
+{
+  "cuts": [
+    "passSkim",
+    "passHlt",
+    "passGoodLumi",
+    "passMetFilter",
+    "passExactly1Ref",
+    "passAtleast2Jet",
+    "passJetVetoMap",
+    "passDPhiRefJet1",
+    "passRefBarrel",
+    "passAlpha",
+    "passResponse"
+  ],
+  "minRefPts": [30, 110, 230],
+  "minElectron": 2,
+  "maxElectron": 3,
+  "minJet": 2,
+  "maxDphi": 0.44,
+  "maxAlpha": 1.0,
+  "maxRefEta": 1.3,
+  "minDbResp": 0.7,
+  "minMpfResp": 0.7
+}
+

@@ -1,0 +1,129 @@
+{
+  "Channels": {
+    "ZeeJet": {
+      "baseTrigList": ["HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ"],
+      "Years": {
+        "2016Pre": {},
+        "2016Post": {},
+        "2017": {
+          "trigList": ["HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL"]
+        },
+        "2018": {
+          "trigList": ["HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL"]
+        }
+      },
+      "Data": {},
+      "MC": {}
+    },
+    "ZmmJet": {
+      "baseTrigList": ["HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ"],
+      "Years": {
+        "2016Pre": {},
+        "2016Post": {},
+        "2017": {
+          "trigList": ["HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8"]
+        },
+        "2018": {
+          "trigList": ["HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8"]
+        }
+      }
+    },
+    "GamJet": {
+      "baseTrigMapRangePt": {
+        "HLT_Photon175": { "ptMin": 230, "ptMax": 4000 },
+        "HLT_Photon165_R9Id90_HE10_IsoM": { "ptMin": 175, "ptMax": 230 },
+        "HLT_Photon120_R9Id90_HE10_IsoM": { "ptMin": 130, "ptMax": 175 },
+        "HLT_Photon90_R9Id90_HE10_IsoM": { "ptMin": 105, "ptMax": 130 },
+        "HLT_Photon75_R9Id90_HE10_IsoM": { "ptMin": 85, "ptMax": 105 },
+        "HLT_Photon50_R9Id90_HE10_IsoM": { "ptMin": 60, "ptMax": 85 },
+        "HLT_Photon36_R9Id90_HE10_IsoM": { "ptMin": 40, "ptMax": 60 },
+        "HLT_Photon30_R9Id90_HE10_IsoM": { "ptMin": 35, "ptMax": 40 },
+        "HLT_Photon22_R9Id90_HE10_IsoM": { "ptMin": 20, "ptMax": 35 }
+      },
+      "Years": {
+        "2016Pre": {},
+        "2016Post": {},
+        "2017": {
+          "trigMapRangePt": {
+            "HLT_Photon200": { "ptMin": 230, "ptMax": 4000 }
+          }
+        },
+        "2018": {
+          "trigMapRangePt": {
+            "HLT_Photon200": { "ptMin": 230, "ptMax": 4000 },
+            "HLT_Photon110EB_TightID_TightIso": { "ptMin": 130, "ptMax": 230 },
+            "HLT_Photon100EB_TightID_TightIso": { "ptMin": 105, "ptMax": 130 },
+            "HLT_Photon90_R9Id90_HE10_IsoM": { "ptMin": 95, "ptMax": 105 },
+            "HLT_Photon75_R9Id90_HE10_IsoM": { "ptMin": 85, "ptMax": 95 },
+            "HLT_Photon50_R9Id90_HE10_IsoM": { "ptMin": 60, "ptMax": 85 },
+            "HLT_Photon30_HoverELoose": { "ptMin": 35, "ptMax": 60 },
+            "HLT_Photon20_HoverELoose": { "ptMin": 20, "ptMax": 35 }
+          }
+        }
+      }
+    },
+    "Wqqe": {
+      "baseTrigList": ["HLT_Ele27_WPTight_Gsf", "HLT_Photon175", "HLT_Ele115_CaloIdVT_GsfTrkIdT"],
+      "Years": {
+        "2016Pre": {},
+        "2016Post": {},
+        "2017": {
+          "trigList": ["HLT_Ele35_WPTight_Gsf", "HLT_Photon200", "HLT_Ele115_CaloIdVT_GsfTrkIdT"]
+        },
+        "2018": {
+          "trigList": ["HLT_Ele32_WPTight_Gsf", "HLT_Photon200", "HLT_Ele115_CaloIdVT_GsfTrkIdT"]
+        }
+      }
+    },
+    "Wqqm": {
+      "baseTrigList": ["HLT_Mu50", "HLT_TkMu50"],
+      "Years": {
+        "2016Pre": {},
+        "2016Post": {},
+        "2017": {
+          "trigList": ["HLT_Mu50", "HLT_TkMu100", "HLT_OldMu100"]
+        },
+        "2018": {
+          "trigList": ["HLT_Mu50", "HLT_OldMu100", "HLT_TkMu100"]
+        }
+      }
+    },
+    "MultiJet": {
+      "baseTrigMapRangePtEta": {
+        "HLT_PFJet40":   { "trigPt": 40,  "ptMin": 49,  "ptMax": 84,  "absEtaMin": 0.0,  "absEtaMax": 2.964 },
+        "HLT_PFJet60":   { "trigPt": 60,  "ptMin": 84,  "ptMax": 114, "absEtaMin": 0.0,  "absEtaMax": 3.0 },
+        "HLT_PFJet80":   { "trigPt": 80,  "ptMin": 114, "ptMax": 196, "absEtaMin": 0.0,  "absEtaMax": 3.0 },
+        "HLT_PFJet140":  { "trigPt": 140, "ptMin": 196, "ptMax": 272, "absEtaMin": 0.0,  "absEtaMax": 3.0 },
+        "HLT_PFJet200":  { "trigPt": 200, "ptMin": 272, "ptMax": 330, "absEtaMin": 0.0,  "absEtaMax": 2.964 },
+        "HLT_PFJet260":  { "trigPt": 260, "ptMin": 330, "ptMax": 395, "absEtaMin": 0.0,  "absEtaMax": 2.964 },
+        "HLT_PFJet320":  { "trigPt": 320, "ptMin": 395, "ptMax": 468, "absEtaMin": 0.0,  "absEtaMax": 2.964 },
+        "HLT_PFJet400":  { "trigPt": 400, "ptMin": 468, "ptMax": 548, "absEtaMin": 0.0,  "absEtaMax": 2.964 },
+        "HLT_PFJet450":  { "trigPt": 450, "ptMin": 548, "ptMax": 686, "absEtaMin": 0.0,  "absEtaMax": 2.964 },
+        "HLT_PFJet500":  { "trigPt": 500, "ptMin": 686, "ptMax": 6500, "absEtaMin": 0.0, "absEtaMax": 2.964 },
+        "HLT_PFJetFwd40":  { "trigPt": 40,  "ptMin": 49,  "ptMax": 84,  "absEtaMin": 2.964, "absEtaMax": 5.2 },
+        "HLT_PFJetFwd60":  { "trigPt": 60,  "ptMin": 84,  "ptMax": 114, "absEtaMin": 3.0,   "absEtaMax": 5.2 },
+        "HLT_PFJetFwd80":  { "trigPt": 80,  "ptMin": 114, "ptMax": 196, "absEtaMin": 3.0,   "absEtaMax": 5.2 },
+        "HLT_PFJetFwd140": { "trigPt": 140, "ptMin": 196, "ptMax": 272, "absEtaMin": 3.0,   "absEtaMax": 5.2 },
+        "HLT_PFJetFwd200": { "trigPt": 200, "ptMin": 272, "ptMax": 330, "absEtaMin": 2.964, "absEtaMax": 5.2 },
+        "HLT_PFJetFwd260": { "trigPt": 260, "ptMin": 330, "ptMax": 395, "absEtaMin": 2.964, "absEtaMax": 5.2 },
+        "HLT_PFJetFwd320": { "trigPt": 320, "ptMin": 395, "ptMax": 468, "absEtaMin": 2.964, "absEtaMax": 5.2 },
+        "HLT_PFJetFwd400": { "trigPt": 400, "ptMin": 468, "ptMax": 548, "absEtaMin": 2.964, "absEtaMax": 5.2 },
+        "HLT_PFJetFwd450": { "trigPt": 450, "ptMin": 548, "ptMax": 686, "absEtaMin": 2.964, "absEtaMax": 5.2 },
+        "HLT_PFJetFwd500": { "trigPt": 500, "ptMin": 686, "ptMax": 6500, "absEtaMin": 2.964, "absEtaMax": 5.2 }
+      },
+      "Years": {
+        "2016Pre": {},
+        "2016Post": {},
+        "2017": {
+          "trigMapRangePtEta": {
+            "HLT_PFJet40":   { "trigPt": 40,  "ptMin": 50,  "ptMax": 85,  "absEtaMin": 0.0,  "absEtaMax": 2.9 }
+          }
+        },
+        "2018": {}
+      },
+      "Data": {},
+      "MC": {}
+    }
+  }
+}
+

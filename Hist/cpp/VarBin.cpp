@@ -1,101 +1,111 @@
 #include "VarBin.h"
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <TMath.h>
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
 
-// Constructor implementation
+// Anonymous namespace: helper to extract fixed-width ranges from JSON.
+// This template returns a std::vector<double> with three elements: [N, min, max].
+namespace {
+    template<typename T, typename U>
+    std::vector<double> getRange(const json &ranges, const std::string &key) {
+        std::vector<double> ret;
+        ret.push_back(static_cast<double>(ranges.at(key)[0].get<T>()));
+        ret.push_back(ranges.at(key)[1].get<U>());
+        ret.push_back(ranges.at(key)[2].get<U>());
+        return ret;
+    }
+}
+
 VarBin::VarBin(const GlobalFlag& globalFlags)
-    :globalFlags_(globalFlags),
-    year_(globalFlags_.getYear()),
-    channel_(globalFlags_.getChannel()),
-    isDebug_(globalFlags_.isDebug()){
-
+    : globalFlags_(globalFlags),
+      year_(globalFlags_.getYear()),
+      channel_(globalFlags_.getChannel()),
+      isDebug_(globalFlags_.isDebug())
+{
     InitializeBins();
 }
 
-void VarBin::InitializeBins(){
-
-    binsPt_ = {};
-    if (channel_ == GlobalFlag::Channel::ZeeJet || channel_ == GlobalFlag::Channel::ZmmJet) {
-        binsPt_ = { 15.0, 20.0, 25.0, 30.0, 35.0, 40.0, 45.0, 
-                    50.0, 60.0, 70.0, 85.0, 105.0, 130.0, 175.0, 
-                    230.0, 300.0, 400.0, 500.0, 700.0, 1000.0, 1500.0 };
+void VarBin::InitializeBins() {
+    // Open and parse the JSON configuration file for VarBin settings.
+    std::ifstream ifs("config/VarBin.json");
+    if (!ifs.is_open()) {
+        std::cerr << "Error: Could not open config/VarBin.json" << std::endl;
+        return;
     }
-    else if (channel_ == GlobalFlag::Channel::GamJet) {
-        binsPt_ = {15.0, 20.0, 25.0, 30.0, 35.0, 40.0, 50.0, 
-                    60.0, 70.0, 85.0, 105.0, 130.0, 175.0, 230.0, 
-                    300.0, 400.0, 500.0, 600.0, 700.0, 850.0, 1000.0, 1200.0, 1450.0, 1750.0}; 
-    }
-    else if (channel_ == GlobalFlag::Channel::MultiJet) {
-        binsPt_ = {10.0, 15.0, 21.0, 28.0, 37.0, 49.0, 64.0, 
-                    84.0, 114.0, 153.0, 196.0, 245.0, 300.0, 362.0, 
-                    430.0, 507.0, 592.0, 686.0, 790.0, 905.0, 1032.0, 
-                    1172.0, 1327.0, 1497.0, 1684.0, 1890.0, 2116.0, 2366.0, 
-                    2640.0, 2941.0, 3273.0, 5220.0};
-    }
-    else{
-        binsPt_ = {15, 25, 35, 50, 75, 100, 130, 170, 230, 300, 500, 1000 };
+    json j;
+    try {
+        ifs >> j;
+    } catch (json::parse_error& e) {
+        std::cerr << "JSON parse error in VarBin: " << e.what() << std::endl;
+        return;
     }
 
-    binsEta_ = {
-        -5.191, -3.839, -3.489, -3.139, -2.964, -2.853,
-        -2.650, -2.500, -2.322, -2.172, -1.930, -1.653,
-        -1.479, -1.305, -1.044, -0.783, -0.522, -0.261,
-        0.000, 0.261, 0.522, 0.783, 1.044, 1.305, 1.479,
-        1.653, 1.930, 2.172, 2.322, 2.500, 2.650, 2.853,
-        2.964, 3.139, 3.489, 3.839, 5.191
-    };
-    binsPhi_ = {
-        -3.142, -3.054, -2.967, -2.880, -2.793, -2.705,
-        -2.618, -2.531, -2.443, -2.356, -2.269, -2.182,
-        -2.094, -2.007, -1.920, -1.833, -1.745, -1.658,
-        -1.571, -1.484, -1.396, -1.309, -1.222, -1.134,
-        -1.047, -0.960, -0.873, -0.785, -0.698, -0.611,
-        -0.524, -0.436, -0.349, -0.262, -0.175, -0.087,
-        0.000, 0.087, 0.175, 0.262, 0.349, 0.436, 0.524,
-        0.611, 0.698, 0.785, 0.873, 0.960, 1.047, 1.134,
-        1.222, 1.309, 1.396, 1.484, 1.571, 1.658, 1.745,
-        1.833, 1.920, 2.007, 2.094, 2.182, 2.269, 2.356,
-        2.443, 2.531, 2.618, 2.705, 2.793, 2.880, 2.967,
-        3.054, 3.142
-    };
-    binsPhiRebin_ = binsPhi_;
+    // Use getChannelStr() from GlobalFlag to select the channel configuration.
+    std::string channelStr = globalFlags_.getChannelStr();
 
-    binsMass_ = {
-        60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 
-        81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100,
-        101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 
-        116, 117, 118, 119, 120 
-    };
-    if (channel_ == GlobalFlag::Channel::GamJet) {
-        binsMass_ = { -3, -2, -1, 0, 1, 2, 3 };
+    // Set binsPt_ based on channel
+    if (j["channels"].contains(channelStr)) {
+        binsPt_ = j["channels"][channelStr]["binsPt"].get<std::vector<double>>();
+        // For GamJet, if a binsMass override is provided, use it.
+        if (channel_ == GlobalFlag::Channel::GamJet &&
+            j["channels"][channelStr].contains("binsMass")) {
+            binsMass_ = j["channels"][channelStr]["binsMass"].get<std::vector<double>>();
+        }
+    } else {
+        binsPt_ = j["channels"]["default"]["binsPt"].get<std::vector<double>>();
     }
-    
-    // Fixed width (N, min, max)
-    rangePt_  = {100, 0, 1500};
-    rangeEta_ = {30,-1.305,+1.305};
-    rangePhi_ = {72,-TMath::Pi(),TMath::Pi()};
-    rangePhiRebin_ = {300,-TMath::Pi(),TMath::Pi()};
-    rangeMass_  = {100, 0, 200};
-    rangeChiSqr_  = {1000, 0, 1000};
-    rangeMassJet1_  = {100, 0, 150};
-    rangeMassJetSum_  = {100, 0, 15000};
-    rangeMassTop_  = {100, 0, 400};
 
-    rangeRun_ = { 200, 271036, 325175 };//2016 to 2018
+    // Global bin arrays
+    binsEta_ = j["binsEta"].get<std::vector<double>>();
+    binsPhi_ = j["binsPhi"].get<std::vector<double>>();  // Fixed: two closing angle brackets.
+    // For binsPhiRebin, if the JSON entry is "same_as_binsPhi", copy binsPhi_
+    if (j["binsPhiRebin"].is_string()) {
+        std::string s = j["binsPhiRebin"].get<std::string>();
+        if (s == "same_as_binsPhi") {
+            binsPhiRebin_ = binsPhi_;
+        }
+    } else {
+        binsPhiRebin_ = j["binsPhiRebin"].get<std::vector<double>>();
+    }
+    // Use global binsMass if not set already
+    if (binsMass_.empty()) {
+        binsMass_ = j["binsMass"].get<std::vector<double>>();
+    }
 
-    rangeDeltaR_ = { 50, 0, 10 };
-    rangeDeltaPhi_ = { 100, 0, 5 };
-    rangeResponse_ = { 100, 0, 5 };
-    rangeCountRef_ = { 5, -0.5, 4.5 };
-    rangeFraction_ = { 50, 0.0, 1.0};
-    rangeIndex_ = { 30, -0.5, 29.5};
+    // Use helper getRange() to load fixed-width ranges.
+    json ranges = j["ranges"];
+    rangePt_       = getRange<int, double>(ranges, "rangePt");
+    rangeEta_      = getRange<int, double>(ranges, "rangeEta");
+    rangePhi_      = getRange<int, double>(ranges, "rangePhi");
+    rangePhiRebin_ = getRange<int, double>(ranges, "rangePhiRebin");
+    rangeMass_     = getRange<int, double>(ranges, "rangeMass");
+    rangeChiSqr_   = getRange<int, double>(ranges, "rangeChiSqr");
+    rangeMassJet1_ = getRange<int, double>(ranges, "rangeMassJet1");
+    rangeMassJetSum_ = getRange<int, double>(ranges, "rangeMassJetSum");
+    rangeMassTop_  = getRange<int, double>(ranges, "rangeMassTop");
+    rangeRun_      = getRange<int, double>(ranges, "rangeRun");
+    rangeDeltaR_   = getRange<int, double>(ranges, "rangeDeltaR");
+    rangeDeltaPhi_ = getRange<int, double>(ranges, "rangeDeltaPhi");
+    rangeResponse_ = getRange<int, double>(ranges, "rangeResponse");
+    rangeCountRef_ = getRange<int, double>(ranges, "rangeCountRef");
+    rangeFraction_ = getRange<int, double>(ranges, "rangeFraction");
+    rangeIndex_    = getRange<int, double>(ranges, "rangeIndex");
+
+    // (Optional) Print bins for debugging.
+    printBins("BinsPt", binsPt_);
+    printBins("BinsEta", binsEta_);
+    printBins("BinsPhi", binsPhi_);
+    printBins("BinsPhiRebin", binsPhiRebin_);
+    printBins("BinsMass", binsMass_);
 }
 
 // Helper method to print bin values
 void VarBin::printBins(const std::string& binName, const std::vector<double>& bins) const {
     if (isDebug_) {
-        std::cout << "=======: VarBin::" << binName << " :======\n";
+        std::cout << "======= VarBin::" << binName << " =======\n";
         for (const auto& bin : bins) {
             std::cout << bin << ", ";
         }
@@ -124,7 +134,6 @@ const std::vector<double>& VarBin::getBinsMass() const {
     printBins("getBinsMass()", binsMass_);
     return binsMass_;
 }
-
 
 const std::vector<double>& VarBin::getRangePt() const {
     printBins("getRangePt()", rangePt_);
@@ -158,13 +167,10 @@ const std::vector<double>& VarBin::getRangeMassTop() const {
     printBins("getRangeMassTop()", rangeMassTop_);
     return rangeMassTop_;
 }
-
 const std::vector<double>& VarBin::getRangeChiSqr() const {
     printBins("getRangeChiSqr()", rangeChiSqr_);
     return rangeChiSqr_;
 }
-
-
 const std::vector<double>& VarBin::getRangeRun() const {
     printBins("getRangeRun()", rangeRun_);
     return rangeRun_;
@@ -193,3 +199,4 @@ const std::vector<double>& VarBin::getRangeIndex() const {
     printBins("getRangeIndex()", rangeIndex_);
     return rangeIndex_;
 }
+

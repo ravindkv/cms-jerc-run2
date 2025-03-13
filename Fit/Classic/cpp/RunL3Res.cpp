@@ -14,7 +14,8 @@ RunL3Res::RunL3Res(GlobalFlag& globalFlags)
 void RunL3Res::Run()
 {
     // Load configuration.
-    std::string configFile = "input/fit_config.json";
+    //std::string configFile = "input/json/fit_config.json";
+    std::string configFile = "input/json/fit_configs/fit_config_Wqqm_2017F.json";
     Config config(configFile);
     if (!config.isValid()) {
         std::cerr << "Invalid configuration." << std::endl;

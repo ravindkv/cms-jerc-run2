@@ -1,195 +1,103 @@
-#include"ScaleObject.h"
-#include"Helper.h"
-#include<iostream>
-#include<stdexcept>  // For std::runtime_error
+#include "ScaleObject.h"
+#include "Helper.h"
+#include <fstream>
+#include <nlohmann/json.hpp>
+#include <iostream>
+#include <stdexcept>
+using json = nlohmann::json;
 
-// Constructor implementation
-ScaleObject::ScaleObject(GlobalFlag& globalFlags) : 
-    globalFlags_(globalFlags),
-    year_(globalFlags_.getYear()),
-    era_(globalFlags_.getEra()),
-    channel_(globalFlags_.getChannel()),
-    isDebug_(globalFlags_.isDebug()),
-    isData_(globalFlags_.isData()),
-    isMC_(globalFlags_.isMC()){
+ScaleObject::ScaleObject(GlobalFlag& globalFlags)
+    : globalFlags_(globalFlags),
+      year_(globalFlags_.getYear()),
+      era_(globalFlags_.getEra()),
+      channel_(globalFlags_.getChannel()),
+      isDebug_(globalFlags_.isDebug()),
+      isData_(globalFlags_.isData()),
+      isMC_(globalFlags_.isMC()){
 }
 
 void ScaleObject::setInputs() {
-  if (year_ == GlobalFlag::Year::Year2016Pre) {
-    // Jet L1, L2, L3
-    jercJsonPath_          = "POG/JME/2016preVFP_UL/jet_jerc.json.gz";
-    jetL1FastJetName_      = "Summer19UL16APV_V7_MC_L1FastJet_AK4PFchs";
-    jetL2RelativeName_     = "Summer19UL16APV_V7_MC_L2Relative_AK4PFchs";
-    jetL3AbsoluteName_     = "Summer19UL16APV_V7_MC_L3Absolute_AK4PFchs";
-    jetL2L3ResidualName_   = "Summer19UL16APV_V7_MC_L2L3Residual_AK4PFchs";
-    if (isData_) {
-      if (era_ == GlobalFlag::Era::Era2016PreBCD) {
-        jetL1FastJetName_    = "Summer19UL16APV_RunBCD_V7_DATA_L1FastJet_AK4PFchs";
-        jetL2RelativeName_   = "Summer19UL16APV_RunBCD_V7_DATA_L2Relative_AK4PFchs";
-        jetL3AbsoluteName_   = "Summer19UL16APV_RunBCD_V7_DATA_L3Absolute_AK4PFchs";
-        jetL2L3ResidualName_ = "Summer19UL16APV_RunBCD_V7_DATA_L2L3Residual_AK4PFchs";
-      } else if (era_ == GlobalFlag::Era::Era2016PreEF) {
-        jetL1FastJetName_    = "Summer19UL16APV_RunEF_V7_DATA_L1FastJet_AK4PFchs";
-        jetL2RelativeName_   = "Summer19UL16APV_RunEF_V7_DATA_L2Relative_AK4PFchs";
-        jetL3AbsoluteName_   = "Summer19UL16APV_RunEF_V7_DATA_L3Absolute_AK4PFchs";
-        jetL2L3ResidualName_ = "Summer19UL16APV_RunEF_V7_DATA_L2L3Residual_AK4PFchs";
-      } else {
-        throw std::runtime_error("Error: inputs are not set for data in ScaleObject::setInputs() for 2016 pre.");
-      }
-    } // isData_
-    // Jer
-    JerResoName_     = "Summer20UL16APV_JRV3_MC_PtResolution_AK4PFchs";
-    JerSfName_       = "Summer20UL16APV_JRV3_MC_ScaleFactor_AK4PFchs";
-    // Photon SS
-    phoSsJsonPath_   = "POG/EGM/S+SJSON/2022Re-recoBCD/photonSS.json";
-    phoSsName_       = "2022Re-recoBCD_SmearingJSON";
-    //Muon Rochester
-    muRochJsonPath_  = "POG/MUO/roccor/RoccoR2016aUL.txt";
-    // Electron SS
-    eleSsJsonPath_   = "POG/EGM/electronSS.json";
-    eleSsName_       = "2022Re-recoBCD_ScaleJSON";
-	} 
+    // Open and parse the JSON configuration file for ScaleObject settings
+    std::ifstream ifs("config/ScaleObject.json");
+    if (!ifs.is_open()) {
+        throw std::runtime_error("Error: Could not open config/ScaleObject.json");
+    }
+    json j;
+    try {
+        ifs >> j;
+    } catch (json::parse_error& e) {
+        throw std::runtime_error(std::string("JSON parse error: ") + e.what());
+    }
 
-  else if (year_ == GlobalFlag::Year::Year2016Post) {
-    // Jet L1, L2, L3
-    jercJsonPath_          = "POG/JME/2016postVFP_UL/jet_jerc.json.gz";
-    jetL1FastJetName_      = "Summer19UL16_V7_MC_L1FastJet_AK4PFchs";
-    jetL2RelativeName_     = "Summer19UL16_V7_MC_L2Relative_AK4PFchs";
-    jetL3AbsoluteName_     = "Summer19UL16_V7_MC_L3Absolute_AK4PFchs";
-    jetL2L3ResidualName_   = "Summer19UL16_V7_MC_L2L3Residual_AK4PFchs";
-    if (isData_) {
-      if (era_ == GlobalFlag::Era::Era2016PostFGH) {
-        jetL1FastJetName_    = "Summer19UL16_RunFGH_V7_DATA_L1FastJet_AK4PFchs";
-        jetL2RelativeName_   = "Summer19UL16_RunFGH_V7_DATA_L2Relative_AK4PFchs";
-        jetL3AbsoluteName_   = "Summer19UL16_RunFGH_V7_DATA_L3Absolute_AK4PFchs";
-        jetL2L3ResidualName_ = "Summer19UL16_RunFGH_V7_DATA_L2L3Residual_AK4PFchs";
-      } else {
-        throw std::runtime_error("Error: inputs are not set for data in ScaleObject::setInputs() for 2016 post.");
-      }
-    } // isData_
-    // Jer
-    JerResoName_     = "Summer20UL16_JRV3_MC_PtResolution_AK4PFchs";
-    JerSfName_       = "Summer20UL16_JRV3_MC_ScaleFactor_AK4PFchs";
-    // Photon SS
-    phoSsJsonPath_   = "POG/EGM/S+SJSON/2022Re-recoBCD/photonSS.json";
-    phoSsName_       = "2022Re-recoBCD_SmearingJSON";
-    //Muon Rochester
-    muRochJsonPath_  = "POG/MUO/roccor/RoccoR2016bUL.txt";
-    // Electron SS
-    eleSsJsonPath_   = "POG/EGM/electronSS.json";
-    eleSsName_       = "2022Re-recoBCD_ScaleJSON";
-  }
+    // Get the year string from GlobalFlag (should return "2016Pre", "2016Post", "2017", or "2018")
+    std::string yearStr = globalFlags_.getYearStr();
+    json yearConf;
+    try {
+        yearConf = j.at(yearStr);
+    } catch (json::exception& e) {
+        throw std::runtime_error("Error: Year configuration not found in ScaleObject.json for " + yearStr);
+    }
 
-  else if (year_ == GlobalFlag::Year::Year2017) {
-    // Jet L1, L2, L3
-    jercJsonPath_          = "POG/JME/2017_UL/jet_jerc.json.gz";
-    jetL1FastJetName_      = "Summer19UL17_V5_MC_L1FastJet_AK4PFchs";
-    jetL2RelativeName_     = "Summer19UL17_V5_MC_L2Relative_AK4PFchs";
-    jetL3AbsoluteName_     = "Summer19UL17_V5_MC_L3Absolute_AK4PFchs";
-    jetL2L3ResidualName_   = "Summer19UL17_V5_MC_L2L3Residual_AK4PFchs";
-    if (isData_) {
-      if (era_ == GlobalFlag::Era::Era2017B) {
-        jetL1FastJetName_    = "Summer19UL17_RunB_V5_DATA_L1FastJet_AK4PFchs";
-        jetL2RelativeName_   = "Summer19UL17_RunB_V5_DATA_L2Relative_AK4PFchs";
-        jetL3AbsoluteName_   = "Summer19UL17_RunB_V5_DATA_L3Absolute_AK4PFchs";
-        jetL2L3ResidualName_ = "Summer19UL17_RunB_V5_DATA_L2L3Residual_AK4PFchs";
-      } else if (era_ == GlobalFlag::Era::Era2017C) {
-        jetL1FastJetName_    = "Summer19UL17_RunC_V5_DATA_L1FastJet_AK4PFchs";
-        jetL2RelativeName_   = "Summer19UL17_RunC_V5_DATA_L2Relative_AK4PFchs";
-        jetL3AbsoluteName_   = "Summer19UL17_RunC_V5_DATA_L3Absolute_AK4PFchs";
-        jetL2L3ResidualName_ = "Summer19UL17_RunC_V5_DATA_L2L3Residual_AK4PFchs";
-      } else if (era_ == GlobalFlag::Era::Era2017D) {
-        jetL1FastJetName_    = "Summer19UL17_RunD_V5_DATA_L1FastJet_AK4PFchs";
-        jetL2RelativeName_   = "Summer19UL17_RunD_V5_DATA_L2Relative_AK4PFchs";
-        jetL3AbsoluteName_   = "Summer19UL17_RunD_V5_DATA_L3Absolute_AK4PFchs";
-        jetL2L3ResidualName_ = "Summer19UL17_RunD_V5_DATA_L2L3Residual_AK4PFchs";
-      } else if (era_ == GlobalFlag::Era::Era2017E) {
-        jetL1FastJetName_    = "Summer19UL17_RunE_V5_DATA_L1FastJet_AK4PFchs";
-        jetL2RelativeName_   = "Summer19UL17_RunE_V5_DATA_L2Relative_AK4PFchs";
-        jetL3AbsoluteName_   = "Summer19UL17_RunE_V5_DATA_L3Absolute_AK4PFchs";
-        jetL2L3ResidualName_ = "Summer19UL17_RunE_V5_DATA_L2L3Residual_AK4PFchs";
-      } else if (era_ == GlobalFlag::Era::Era2017F) {
-        jetL1FastJetName_    = "Summer19UL17_RunF_V5_DATA_L1FastJet_AK4PFchs";
-        jetL2RelativeName_   = "Summer19UL17_RunF_V5_DATA_L2Relative_AK4PFchs";
-        jetL3AbsoluteName_   = "Summer19UL17_RunF_V5_DATA_L3Absolute_AK4PFchs";
-        jetL2L3ResidualName_ = "Summer19UL17_RunF_V5_DATA_L2L3Residual_AK4PFchs";
-      } else {
-        throw std::runtime_error("Error: inputs are not set for data in ScaleObject::setInputs() for 2017.");
-      }
-    } // isData_
-    // Jer
-    JerResoName_     = "Summer19UL17_JRV2_MC_PtResolution_AK4PFchs";
-    JerSfName_       = "Summer19UL17_JRV2_MC_ScaleFactor_AK4PFchs";
-    // Photon SS
-    phoSsJsonPath_   = "POG/EGM/S+SJSON/2022Re-recoBCD/photonSS.json";
-    phoSsName_       = "2022Re-recoBCD_SmearingJSON";
-    //Muon Rochester
-    muRochJsonPath_  = "POG/MUO/roccor/RoccoR2017UL.txt";
-    // Electron SS
-    eleSsJsonPath_   = "POG/EGM/electronSS.json";
-    eleSsName_       = "2022Re-recoBCD_ScaleJSON";
-  } 
+    // Set common (MC) inputs
+    jercJsonPath_          = yearConf.at("jercJsonPath").get<std::string>();
+    jetL1FastJetName_      = yearConf.at("jetL1FastJetName").get<std::string>();
+    jetL2RelativeName_     = yearConf.at("jetL2RelativeName").get<std::string>();
+    jetL3AbsoluteName_     = yearConf.at("jetL3AbsoluteName").get<std::string>();
+    jetL2L3ResidualName_   = yearConf.at("jetL2L3ResidualName").get<std::string>();
+    JerResoName_           = yearConf.at("JerResoName").get<std::string>();
+    JerSfName_             = yearConf.at("JerSfName").get<std::string>();
+    phoSsJsonPath_         = yearConf.at("phoSsJsonPath").get<std::string>();
+    phoSsName_             = yearConf.at("phoSsName").get<std::string>();
+    muRochJsonPath_        = yearConf.at("muRochJsonPath").get<std::string>();
+    eleSsJsonPath_         = yearConf.at("eleSsJsonPath").get<std::string>();
+    eleSsName_             = yearConf.at("eleSsName").get<std::string>();
 
-  else if (year_ == GlobalFlag::Year::Year2018) {
-    // Jet L1, L2, L3
-    jercJsonPath_          = "POG/JME/2018_UL/jet_jerc.json.gz";
-    jetL1FastJetName_      = "Summer19UL18_V5_MC_L1FastJet_AK4PFchs";
-    jetL2RelativeName_     = "Summer19UL18_V5_MC_L2Relative_AK4PFchs";
-    jetL3AbsoluteName_     = "Summer19UL18_V5_MC_L3Absolute_AK4PFchs";
-    jetL2L3ResidualName_   = "Summer19UL18_V5_MC_L2L3Residual_AK4PFchs";
+    // If running on data, override with data-specific settings if available.
     if (isData_) {
-      if (era_ == GlobalFlag::Era::Era2018A) {
-        jetL1FastJetName_    = "Summer19UL18_RunA_V5_DATA_L1FastJet_AK4PFchs";
-        jetL2RelativeName_   = "Summer19UL18_RunA_V5_DATA_L2Relative_AK4PFchs";
-        jetL3AbsoluteName_   = "Summer19UL18_RunA_V5_DATA_L3Absolute_AK4PFchs";
-        jetL2L3ResidualName_ = "Summer19UL18_RunA_V5_DATA_L2L3Residual_AK4PFchs";
-      } else if (era_ == GlobalFlag::Era::Era2018B) {
-        jetL1FastJetName_    = "Summer19UL18_RunB_V5_DATA_L1FastJet_AK4PFchs";
-        jetL2RelativeName_   = "Summer19UL18_RunB_V5_DATA_L2Relative_AK4PFchs";
-        jetL3AbsoluteName_   = "Summer19UL18_RunB_V5_DATA_L3Absolute_AK4PFchs";
-        jetL2L3ResidualName_ = "Summer19UL18_RunB_V5_DATA_L2L3Residual_AK4PFchs";
-      } else if (era_ == GlobalFlag::Era::Era2018C) {
-        jetL1FastJetName_    = "Summer19UL18_RunC_V5_DATA_L1FastJet_AK4PFchs";
-        jetL2RelativeName_   = "Summer19UL18_RunC_V5_DATA_L2Relative_AK4PFchs";
-        jetL3AbsoluteName_   = "Summer19UL18_RunC_V5_DATA_L3Absolute_AK4PFchs";
-        jetL2L3ResidualName_ = "Summer19UL18_RunC_V5_DATA_L2L3Residual_AK4PFchs";
-      } else if (era_ == GlobalFlag::Era::Era2018D) {
-        jetL1FastJetName_    = "Summer19UL18_RunD_V5_DATA_L1FastJet_AK4PFchs";
-        jetL2RelativeName_   = "Summer19UL18_RunD_V5_DATA_L2Relative_AK4PFchs";
-        jetL3AbsoluteName_   = "Summer19UL18_RunD_V5_DATA_L3Absolute_AK4PFchs";
-        jetL2L3ResidualName_ = "Summer19UL18_RunD_V5_DATA_L2L3Residual_AK4PFchs";
-      } else {
-        throw std::runtime_error("Error: inputs are not set for data in ScaleObject::setInputs() for 2018.");
-      }
-    } // isData_
-    // Jer
-    JerResoName_     = "Summer19UL18_JRV2_MC_PtResolution_AK4PFchs";
-    JerSfName_       = "Summer19UL18_JRV2_MC_ScaleFactor_AK4PFchs";
-    // Photon SS
-    phoSsJsonPath_   = "POG/EGM/S+SJSON/2022Re-recoBCD/photonSS.json";
-    phoSsName_       = "2022Re-recoBCD_SmearingJSON";
-    //Muon Rochester
-    muRochJsonPath_  = "POG/MUO/roccor/RoccoR2018UL.txt";
-    // Electron SS
-    eleSsJsonPath_   = "POG/EGM/electronSS.json";
-    eleSsName_       = "2022Re-recoBCD_ScaleJSON";
-  }//is2018
-  else {
-    throw std::runtime_error("Error: Year is not specified correctly in ScaleObject::setInputs().");
-  }
+        // Determine era string from the GlobalFlag era enum.
+        std::string eraStr;
+        switch(era_) {
+            case GlobalFlag::Era::Era2016PreBCD: eraStr = "Era2016PreBCD"; break;
+            case GlobalFlag::Era::Era2016PreEF:  eraStr = "Era2016PreEF";  break;
+            case GlobalFlag::Era::Era2016PostFGH: eraStr = "Era2016PostFGH"; break;
+            case GlobalFlag::Era::Era2017B:      eraStr = "Era2017B";      break;
+            case GlobalFlag::Era::Era2017C:      eraStr = "Era2017C";      break;
+            case GlobalFlag::Era::Era2017D:      eraStr = "Era2017D";      break;
+            case GlobalFlag::Era::Era2017E:      eraStr = "Era2017E";      break;
+            case GlobalFlag::Era::Era2017F:      eraStr = "Era2017F";      break;
+            case GlobalFlag::Era::Era2018A:      eraStr = "Era2018A";      break;
+            case GlobalFlag::Era::Era2018B:      eraStr = "Era2018B";      break;
+            case GlobalFlag::Era::Era2018C:      eraStr = "Era2018C";      break;
+            case GlobalFlag::Era::Era2018D:      eraStr = "Era2018D";      break;
+            default: eraStr = ""; break;
+        }
+        if (!eraStr.empty() && yearConf.contains("data") && yearConf["data"].contains(eraStr)) {
+            json dataConf = yearConf["data"].at(eraStr);
+            // Override jet names with data-specific values if provided.
+            if (dataConf.contains("jetL1FastJetName"))
+                jetL1FastJetName_ = dataConf.at("jetL1FastJetName").get<std::string>();
+            if (dataConf.contains("jetL2RelativeName"))
+                jetL2RelativeName_ = dataConf.at("jetL2RelativeName").get<std::string>();
+            if (dataConf.contains("jetL3AbsoluteName"))
+                jetL3AbsoluteName_ = dataConf.at("jetL3AbsoluteName").get<std::string>();
+            if (dataConf.contains("jetL2L3ResidualName"))
+                jetL2L3ResidualName_ = dataConf.at("jetL2L3ResidualName").get<std::string>();
+        }
+    }
 
-  std::cout<<"jercJsonPath           = " << jercJsonPath_         <<'\n';
-  std::cout<<"jetL1FastJetName       = " << jetL1FastJetName_     <<'\n';
-  std::cout<<"jetL2RelativeName      = " << jetL2RelativeName_    <<'\n';
-  std::cout<<"jetL2L3ResidualName    = " << jetL2L3ResidualName_  <<'\n';
-  std::cout<<"JerResoName            = " << JerResoName_          <<'\n';
-  std::cout<<"JerSfName              = " << JerSfName_            <<'\n'<<'\n';
-  std::cout<<"phoSsJsonPath          = " << phoSsJsonPath_        <<'\n';
-  std::cout<<"phoSsName              = " << phoSsName_            <<'\n'<<'\n';
-  std::cout<<"muRochJsonPath         = " << muRochJsonPath_       <<'\n'<<'\n';
-  std::cout<<"eleSsJsonPath          = " << eleSsJsonPath_        <<'\n';
-  std::cout<<"eleSsName              = " << eleSsName_            <<'\n'<<'\n';
-}//setInputs 
+    // Print out the settings for verification.
+    std::cout << "jercJsonPath           = " << jercJsonPath_ << '\n';
+    std::cout << "jetL1FastJetName       = " << jetL1FastJetName_ << '\n';
+    std::cout << "jetL2RelativeName      = " << jetL2RelativeName_ << '\n';
+    std::cout << "jetL2L3ResidualName    = " << jetL2L3ResidualName_ << '\n';
+    std::cout << "JerResoName            = " << JerResoName_ << '\n';
+    std::cout << "JerSfName              = " << JerSfName_ << '\n' << '\n';
+    std::cout << "phoSsJsonPath          = " << phoSsJsonPath_ << '\n';
+    std::cout << "phoSsName              = " << phoSsName_ << '\n' << '\n';
+    std::cout << "muRochJsonPath         = " << muRochJsonPath_ << '\n' << '\n';
+    std::cout << "eleSsJsonPath          = " << eleSsJsonPath_ << '\n';
+    std::cout << "eleSsName              = " << eleSsName_ << '\n' << '\n';
+}
 
 
 void ScaleObject::loadJetL1FastJetRef() {

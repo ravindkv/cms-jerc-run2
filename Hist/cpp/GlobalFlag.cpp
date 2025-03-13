@@ -15,6 +15,42 @@ void GlobalFlag::setNDebug(const int & nDebug){
     nDebug_ = nDebug;
 }
 
+std::string GlobalFlag::getChannelStr() const {
+    switch(channel_) {
+        case Channel::GamJetFake: return "GamJetFake";
+        case Channel::GamJet:     return "GamJet";
+        case Channel::ZeeJet:     return "ZeeJet";
+        case Channel::ZmmJet:     return "ZmmJet";
+        case Channel::MCTruth:    return "MCTruth";
+        case Channel::Flavour:    return "Flavour";
+        case Channel::VetoMap:    return "VetoMap";
+        case Channel::DiJet:      return "DiJet";
+        case Channel::IncJet:     return "IncJet";
+        case Channel::MultiJet:   return "MultiJet";
+        case Channel::Wqqe:       return "Wqqe";
+        case Channel::Wqqm:       return "Wqqm";
+        default:                  return "NONE";
+    }
+}
+
+std::string GlobalFlag::getYearStr() const {
+    switch(year_) {
+        case Year::Year2016Pre:  return "2016Pre";
+        case Year::Year2016Post: return "2016Post";
+        case Year::Year2017:     return "2017";
+        case Year::Year2018:     return "2018";
+        default:                 return "NONE";
+    }
+}
+
+std::string GlobalFlag::getDataStr() const {
+    return isData_ ? "Data" : "";
+}
+
+std::string GlobalFlag::getMcStr() const {
+    return isMC_ ? "MC" : "";
+}
+
 void GlobalFlag::parseFlags() {
     // Parsing Year
     if (outName_.find("2016Pre") != std::string::npos) {

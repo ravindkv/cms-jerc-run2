@@ -1,8 +1,12 @@
-#include"ScaleEvent.h"
-#include"TrigDetail.h"
-#include<iostream>
-#include<regex>
-#include<stdexcept>  // For std::runtime_error
+#include "ScaleEvent.h"
+#include "TrigDetail.h"
+#include <iostream>
+#include <regex>
+#include <stdexcept>  // For std::runtime_error
+#include <nlohmann/json.hpp>
+#include <fstream>
+
+using json = nlohmann::json;
 
 // Constructor implementation
 ScaleEvent::ScaleEvent(GlobalFlag& globalFlags) : 
@@ -13,68 +17,48 @@ ScaleEvent::ScaleEvent(GlobalFlag& globalFlags) :
     isDebug_(globalFlags_.isDebug()),
     isData_(globalFlags_.isData()),
     isMC_(globalFlags_.isMC()){
+    // Load configuration from JSON
+    loadConfig("config/ScaleEvent.json");
 }
 
-void ScaleEvent::setInputs() {
-  if (year_ == GlobalFlag::Year::Year2016Pre) {
-    // Jet veto
-    jetVetoJsonPath_ = "POG/JME/2016preVFP_UL/jetvetomaps.json.gz";
-    jetVetoName_     = "Summer19UL16_V1";
-    jetVetoKey_      = "jetvetomap_hot";
-    // Lumi golden JSON
-    goldenLumiJsonPath_    = "POG/LUM/Golden/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt";
-    hltLumiJsonPath_    = "POG/LUM/HLT/LumiForTrig_2016Pre_HLT_Photon.json";
-    puJsonPath_      = "POG/PU/2016preVFP_UL/puWeights.json";
-    puName_          = "Collisions16_UltraLegacy_goldenJSON";
-	} 
+void ScaleEvent::loadConfig(const std::string& filename) {
+    std::ifstream configFile(filename);
+    if (!configFile.is_open()){
+        std::cerr << "Could not open configuration file: " << filename << std::endl;
+        std::exit(EXIT_FAILURE);
+    }
+    
+    json config;
+    configFile >> config;
+    
+    // Map the enum year_ to a key string in the JSON.
+    std::string yearKey = globalFlags_.getYearStr();
+    
+    // Load configuration strings from JSON.
+    jetVetoJsonPath_ = config[yearKey]["jetVetoJsonPath"].get<std::string>();
+    jetVetoName_     = config[yearKey]["jetVetoName"].get<std::string>();
+    jetVetoKey_      = config[yearKey]["jetVetoKey"].get<std::string>();
 
-  else if (year_ == GlobalFlag::Year::Year2016Post) {
-    // Jet veto
-    jetVetoJsonPath_ = "POG/JME/2016postVFP_UL/jetvetomaps.json.gz";
-    jetVetoName_     = "Summer19UL16_V1";
-    jetVetoKey_      = "jetvetomap_hot";
-    // Lumi golden JSON
-    goldenLumiJsonPath_    = "POG/LUM/Golden/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt";
-    hltLumiJsonPath_    = "POG/LUM/HLT/LumiForTrig_2016Post_HLT_Photon.json";
-    puJsonPath_      = "POG/PU/2016postVFP_UL/puWeights.json";
-    puName_          = "Collisions16_UltraLegacy_goldenJSON";
-  }
+    goldenLumiJsonPath_ = config[yearKey]["goldenLumiJsonPath"].get<std::string>();
+    hltLumiJsonPath_    = config[yearKey]["hltLumiJsonPath"].get<std::string>();
+    puJsonPath_         = config[yearKey]["puJsonPath"].get<std::string>();
+    puName_             = config[yearKey]["puName"].get<std::string>();
 
-  else if (year_ == GlobalFlag::Year::Year2017) {
-    // Jet veto
-    jetVetoJsonPath_ = "POG/JME/2017_UL/jetvetomaps.json.gz";
-    jetVetoName_     = "Summer19UL17_V1";
-    jetVetoKey_      = "jetvetomap_hot";
-    // Lumi golden JSON
-    goldenLumiJsonPath_    = "POG/LUM/Golden/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt";
-    hltLumiJsonPath_    = "POG/LUM/HLT/LumiForTrig_2017_HLT_Photon.json";
-    puJsonPath_      = "POG/PU/2017_UL/puWeights.json";
-    puName_          = "Collisions17_UltraLegacy_goldenJSON";
-  } 
-
-  else if (year_ == GlobalFlag::Year::Year2018) {
-    // Jet veto
-    jetVetoJsonPath_ = "POG/JME/2018_UL/jetvetomaps.json.gz";
-    jetVetoName_     = "Summer19UL18_V1";
-    jetVetoKey_      = "jetvetomap_hot";
-    // Lumi golden JSON
-    goldenLumiJsonPath_    = "POG/LUM/Golden/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt";
-    hltLumiJsonPath_    = "POG/LUM/HLT/LumiForTrig_2018_HLT_Photon.json";
-    puJsonPath_      = "POG/PU/2018_UL/puWeights.json";
-    puName_          = "Collisions18_UltraLegacy_goldenJSON";
-  }//is2018
-  else {
-    throw std::runtime_error("Error: Year is not specified correctly in ScaleEvent::setInputs().");
-  }
-
-  std::cout<<"jetVetoJsonPath        = " << jetVetoJsonPath_      <<'\n';
-  std::cout<<"jetVetoKey             = " << jetVetoKey_           <<'\n';
-  std::cout<<"jetVetoName            = " << jetVetoName_          <<'\n'<<'\n';
-  std::cout<<"goldenLumiJsonPath           = " << goldenLumiJsonPath_         <<'\n';
-  std::cout<<"hltLumiJsonPath           = " << hltLumiJsonPath_         <<'\n';
-  std::cout<<"puJsonPath             = " << puJsonPath_           <<'\n';
-  std::cout<<"puName                 = " << puName_               <<'\n';
-}//setInputs 
+    // Optionally load additional parameters (for example, minbXsec) if provided.
+    if (config[yearKey].contains("minbXsec")) {
+        minbXsec_ = config[yearKey]["minbXsec"].get<double>();
+    }
+    
+    // For debugging, print out the loaded configuration.
+    std::cout << "Loaded configuration for " << yearKey << ":\n";
+    std::cout << "  jetVetoJsonPath: " << jetVetoJsonPath_ << "\n";
+    std::cout << "  jetVetoName: " << jetVetoName_ << "\n";
+    std::cout << "  jetVetoKey: " << jetVetoKey_ << "\n";
+    std::cout << "  goldenLumiJsonPath: " << goldenLumiJsonPath_ << "\n";
+    std::cout << "  hltLumiJsonPath: " << hltLumiJsonPath_ << "\n";
+    std::cout << "  puJsonPath: " << puJsonPath_ << "\n";
+    std::cout << "  puName: " << puName_ << "\n";
+}
 
 
 void ScaleEvent::loadJetVetoRef() {

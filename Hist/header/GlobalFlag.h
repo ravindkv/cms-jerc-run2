@@ -74,6 +74,12 @@ public:
     bool isQCD() const { return isQCD_; }
     bool isMG() const { return isMG_; }
 
+    // New helper functions to return string representations
+    std::string getChannelStr() const;
+    std::string getYearStr() const;
+    std::string getDataStr() const;
+    std::string getMcStr() const;
+
     // Method to print active flags
     void printFlags() const;
 

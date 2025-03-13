@@ -73,6 +73,9 @@ private:
     const bool isDebug_;
     const bool isData_;
     const bool isMC_;
+
+    // Load configuration from external JSON file
+    void loadConfig(const std::string& filename);
 };
 
 #endif

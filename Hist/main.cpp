@@ -138,7 +138,6 @@ int main(int argc, char* argv[]) {
     // Pass GlobalFlag reference to ScaleEvent
     std::shared_ptr<ScaleEvent> scaleEvent = std::make_shared<ScaleEvent>(globalFlag);
     try {
-        scaleEvent->setInputs();
         scaleEvent->loadJetVetoRef();
         scaleEvent->loadPuRef();
         if (globalFlag.isData()) {
@@ -202,7 +201,7 @@ int main(int argc, char* argv[]) {
     if (globalFlag.getChannel() == GlobalFlag::Channel::ZeeJet) {
         std::cout << "==> Running ZeeJet" << std::endl;
         auto zeeJet = std::make_unique<RunZeeJet>(globalFlag);
-        zeeJet->Run(skimT, pickEvent.get(), pickObject.get(), scaleEvent.get(), scaleObj.get(), fout.get());
+        zeeJet->Run(skimT, pickEvent.get(), scaleEvent.get(), scaleObj.get(), fout.get());
     }
     if (globalFlag.getChannel() == GlobalFlag::Channel::ZmmJet) {
         std::cout << "==> Running ZmmJet" << std::endl;

@@ -1,6 +1,8 @@
-// TrigDetail.cpp
 #include "TrigDetail.h"
+#include <fstream>
+#include <nlohmann/json.hpp>
 #include <iostream>
+using json = nlohmann::json;
 
 // Constructor implementation
 TrigDetail::TrigDetail(const GlobalFlag& globalFlags)
@@ -12,139 +14,112 @@ TrigDetail::TrigDetail(const GlobalFlag& globalFlags)
     InitializeList();
 }
 
-void TrigDetail::InitializeList(){
-    // We know we will insert ~9 or so triggers for GamJet
-    // and ~20-30 triggers for MultiJet. Adjust as needed.
-    trigMapRangePt_.reserve(15);//approx number
+void TrigDetail::InitializeList() {
+    // Reserve capacity as before (optional)
+    trigMapRangePt_.reserve(15);
     trigMapRangePtEta_.reserve(30);
-
-    //Year2016Pre
-    if (year_ == GlobalFlag::Year::Year2016Pre || year_ == GlobalFlag::Year::Year2016Post) {
-        // ZeeJet channel
-        if(channel_ == GlobalFlag::Channel::ZeeJet){
-            trigList_ = {"HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ"};
-        }        
-
-        // ZmmJet channel
-        if(channel_ == GlobalFlag::Channel::ZmmJet){
-            trigList_ = {"HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ"};
-        }        
-
-        // GamJet channel
-        if(channel_ == GlobalFlag::Channel::GamJet){
-            trigMapRangePt_["HLT_Photon175"]                   = TrigRangePt{230 ,4000};
-            trigMapRangePt_["HLT_Photon165_R9Id90_HE10_IsoM"]  = TrigRangePt{175 ,230};
-            trigMapRangePt_["HLT_Photon120_R9Id90_HE10_IsoM"]  = TrigRangePt{130 ,175};
-            trigMapRangePt_["HLT_Photon90_R9Id90_HE10_IsoM"]   = TrigRangePt{105 ,130};
-            trigMapRangePt_["HLT_Photon75_R9Id90_HE10_IsoM"]   = TrigRangePt{85  ,105};
-            trigMapRangePt_["HLT_Photon50_R9Id90_HE10_IsoM"]   = TrigRangePt{60  ,85 };
-            trigMapRangePt_["HLT_Photon36_R9Id90_HE10_IsoM"]   = TrigRangePt{40  ,60 };
-            trigMapRangePt_["HLT_Photon30_R9Id90_HE10_IsoM"]   = TrigRangePt{35  ,40 };
-            trigMapRangePt_["HLT_Photon22_R9Id90_HE10_IsoM"]   = TrigRangePt{20  ,35 };
-        }
-
-        // Wqqe channel
-        if(channel_ == GlobalFlag::Channel::Wqqe){
-            trigList_ = {"HLT_Ele27_WPTight_Gsf", "HLT_Photon175", "HLT_Ele115_CaloIdVT_GsfTrkIdT"};
-        }        
-        // Wqqm channel
-        if(channel_ == GlobalFlag::Channel::Wqqm){
-            trigList_ = {"HLT_Mu50", "HLT_TkMu50"};
-        }        
-    }
-    //Year2017
-    else if (year_ == GlobalFlag::Year::Year2017){
-        // ZeeJet channel
-        if(channel_ == GlobalFlag::Channel::ZeeJet){
-            trigList_ = {"HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL"};
-        }        
-
-        // ZmmJet channel
-        if(channel_ == GlobalFlag::Channel::ZmmJet){
-            trigList_ = {"HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8"};
-        }        
-
-        // GamJet channel
-        if(channel_ == GlobalFlag::Channel::GamJet){
-            trigMapRangePt_["HLT_Photon200"]                   = TrigRangePt{230 ,4000};
-            trigMapRangePt_["HLT_Photon165_R9Id90_HE10_IsoM"]  = TrigRangePt{175 ,230};
-            trigMapRangePt_["HLT_Photon120_R9Id90_HE10_IsoM"]  = TrigRangePt{130 ,175};
-            trigMapRangePt_["HLT_Photon90_R9Id90_HE10_IsoM"]   = TrigRangePt{105 ,130};
-            trigMapRangePt_["HLT_Photon75_R9Id90_HE10_IsoM"]   = TrigRangePt{85  ,105};
-            trigMapRangePt_["HLT_Photon50_R9Id90_HE10_IsoM"]   = TrigRangePt{60  ,85 };
-            trigMapRangePt_["HLT_Photon30_HoverELoose"]        = TrigRangePt{35  ,60 };
-            trigMapRangePt_["HLT_Photon20_HoverELoose"]        = TrigRangePt{20  ,35 };
-        }
-        // Wqqe channel
-        if(channel_ == GlobalFlag::Channel::Wqqe){
-            trigList_ = {"HLT_Ele35_WPTight_Gsf", "HLT_Photon200", "HLT_Ele115_CaloIdVT_GsfTrkIdT"};
-        }        
-        // Wqqm channel
-        if(channel_ == GlobalFlag::Channel::Wqqm){
-            trigList_ = {"HLT_Mu50", "HLT_TkMu100", "HLT_OldMu100"};
-        }        
-    } 
     
-    else if (year_ == GlobalFlag::Year::Year2018){
-        // ZeeJet channel
-        if(channel_ == GlobalFlag::Channel::ZeeJet){
-            trigList_ = {"HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL"};
-        }        
-
-        // ZmmJet channel
-        if(channel_ == GlobalFlag::Channel::ZmmJet){
-            trigList_ = {"HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8"};
-        }        
-
-        // GamJet channel
-        if(channel_ == GlobalFlag::Channel::GamJet){
-            trigMapRangePt_["HLT_Photon200"]                     = TrigRangePt{230 ,4000};
-            trigMapRangePt_["HLT_Photon110EB_TightID_TightIso"]  = TrigRangePt{130 ,230};
-            trigMapRangePt_["HLT_Photon100EB_TightID_TightIso"]  = TrigRangePt{105 ,130};
-            trigMapRangePt_["HLT_Photon90_R9Id90_HE10_IsoM"]     = TrigRangePt{95  ,105};
-            trigMapRangePt_["HLT_Photon75_R9Id90_HE10_IsoM"]     = TrigRangePt{85  ,95 };
-            trigMapRangePt_["HLT_Photon50_R9Id90_HE10_IsoM"]     = TrigRangePt{60  ,85 };
-            trigMapRangePt_["HLT_Photon30_HoverELoose"]          = TrigRangePt{35  ,60 };
-            trigMapRangePt_["HLT_Photon20_HoverELoose"]          = TrigRangePt{20  ,35 };
-        }
-        // Wqqe channel
-        if(channel_ == GlobalFlag::Channel::Wqqe){
-            trigList_ = {"HLT_Ele32_WPTight_Gsf", "HLT_Photon200", "HLT_Ele115_CaloIdVT_GsfTrkIdT"};
-        }        
-        // Wqqm channel
-        if(channel_ == GlobalFlag::Channel::Wqqm){
-            trigList_ = {"HLT_Mu50", "HLT_OldMu100", "HLT_TkMu100"};
-        }        
+    // Open and parse the JSON configuration file
+    std::ifstream ifs("config/TrigDetail.json");
+    if (!ifs.is_open()) {
+        std::cerr << "Error: Could not open config/TrigDetail.json" << std::endl;
+        return;
     }
-
-    if(channel_ == GlobalFlag::Channel::MultiJet){
-        //https://github.com/NestorMancilla/dijet/blob/0ee620884662cadfb7b41ac1914b98ba7d94ea39/histogram_scripts/DijetHistosCombine.C#L673-L694
-        double fwdEta0 = 2.964;//2.853; // 40 and 260 up
-        double fwdEta = 3.0; // was 3.139; // was 2.853. 80% (100%) on negative (positive) side
-        double minEta = 0.0;
-        double maxEta = 5.2;
-        //Multijet channels
-        trigMapRangePtEta_["HLT_PFJet40"]            = TrigRangePtEta{40,  49,  84,  minEta, fwdEta0};
-        trigMapRangePtEta_["HLT_PFJet60"]            = TrigRangePtEta{60,  84,  114, minEta, fwdEta};
-        trigMapRangePtEta_["HLT_PFJet80"]            = TrigRangePtEta{80,  114, 196, minEta, fwdEta};
-        trigMapRangePtEta_["HLT_PFJet140"]           = TrigRangePtEta{140, 196, 272, minEta, fwdEta};
-        trigMapRangePtEta_["HLT_PFJet200"]           = TrigRangePtEta{200, 272, 330, minEta, fwdEta0};
-        trigMapRangePtEta_["HLT_PFJet260"]           = TrigRangePtEta{260, 330, 395, minEta, fwdEta0};
-        trigMapRangePtEta_["HLT_PFJet320"]           = TrigRangePtEta{320, 395, 468, minEta, fwdEta0};
-        trigMapRangePtEta_["HLT_PFJet400"]           = TrigRangePtEta{400, 468, 548, minEta, fwdEta0};
-        trigMapRangePtEta_["HLT_PFJet450"]           = TrigRangePtEta{450, 548, 686, minEta, fwdEta0};
-        trigMapRangePtEta_["HLT_PFJet500"]           = TrigRangePtEta{500, 686,6500, minEta, fwdEta0};
-
-        trigMapRangePtEta_["HLT_PFJetFwd40"]         = TrigRangePtEta{40,  49,  84,  fwdEta0, maxEta};
-        trigMapRangePtEta_["HLT_PFJetFwd60"]         = TrigRangePtEta{60,  84,  114, fwdEta, maxEta};
-        trigMapRangePtEta_["HLT_PFJetFwd80"]         = TrigRangePtEta{80,  114, 196, fwdEta, maxEta};
-        trigMapRangePtEta_["HLT_PFJetFwd140"]        = TrigRangePtEta{140, 196, 272, fwdEta, maxEta};
-        trigMapRangePtEta_["HLT_PFJetFwd200"]        = TrigRangePtEta{200, 272, 330, fwdEta0, maxEta};
-        trigMapRangePtEta_["HLT_PFJetFwd260"]        = TrigRangePtEta{260, 330, 395, fwdEta0, maxEta};
-        trigMapRangePtEta_["HLT_PFJetFwd320"]        = TrigRangePtEta{320, 395, 468, fwdEta0, maxEta};
-        trigMapRangePtEta_["HLT_PFJetFwd400"]        = TrigRangePtEta{400, 468, 548, fwdEta0, maxEta};
-        trigMapRangePtEta_["HLT_PFJetFwd450"]        = TrigRangePtEta{450, 548, 686, fwdEta0, maxEta};
-        trigMapRangePtEta_["HLT_PFJetFwd500"]        = TrigRangePtEta{500, 686,6500, fwdEta0, maxEta};
+    json j;
+    try {
+        ifs >> j;
+    } catch (json::parse_error& e) {
+        std::cerr << "JSON parse error: " << e.what() << std::endl;
+        return;
+    }
+    
+    // Use GlobalFlag helper functions for string representations.
+    std::string yearStr = globalFlags_.getYearStr();
+    std::string channelStr = globalFlags_.getChannelStr();
+    
+    // Look up the channel configuration under "Channels"
+    try {
+        json channelConf = j.at("Channels").at(channelStr);
+        
+        // For channels with a base trigger list (simple list)
+        if (channelConf.contains("baseTrigList")) {
+            trigList_ = channelConf.at("baseTrigList").get<std::vector<std::string>>();
+            // Append year-specific trigger list if available
+            if (channelConf.contains("Years") && channelConf["Years"].contains(yearStr)) {
+                json yearConf = channelConf["Years"].at(yearStr);
+                if (yearConf.contains("trigList")) {
+                    auto yearTrigList = yearConf.at("trigList").get<std::vector<std::string>>();
+                    trigList_.insert(trigList_.end(), yearTrigList.begin(), yearTrigList.end());
+                }
+            }
+        }
+        
+        // For channels with a base trigger map using only pt (e.g., GamJet)
+        if (channelConf.contains("baseTrigMapRangePt")) {
+            json baseMap = channelConf.at("baseTrigMapRangePt");
+            for (auto& item : baseMap.items()) {
+                const std::string& key = item.key();
+                json value = item.value();
+                double ptMin = value.at("ptMin").get<double>();
+                double ptMax = value.at("ptMax").get<double>();
+                trigMapRangePt_[key] = TrigRangePt{ ptMin, ptMax };
+            }
+            // Merge year-specific overrides if available
+            if (channelConf.contains("Years") && channelConf["Years"].contains(yearStr)) {
+                json yearConf = channelConf["Years"].at(yearStr);
+                if (yearConf.contains("trigMapRangePt")) {
+                    json yearMap = yearConf.at("trigMapRangePt");
+                    for (auto& item : yearMap.items()) {
+                        const std::string& key = item.key();
+                        json value = item.value();
+                        double ptMin = value.at("ptMin").get<double>();
+                        double ptMax = value.at("ptMax").get<double>();
+                        // Overwrite or add the key from the year-specific configuration
+                        trigMapRangePt_[key] = TrigRangePt{ ptMin, ptMax };
+                    }
+                }
+            }
+        }
+        
+        // For channels with a base trigger map using pt and eta (e.g., MultiJet)
+        if (channelConf.contains("baseTrigMapRangePtEta")) {
+            json baseMap = channelConf.at("baseTrigMapRangePtEta");
+            for (auto& item : baseMap.items()) {
+                const std::string& key = item.key();
+                json value = item.value();
+                int trigPt = value.at("trigPt").get<int>();
+                double ptMin = value.at("ptMin").get<double>();
+                double ptMax = value.at("ptMax").get<double>();
+                double absEtaMin = value.at("absEtaMin").get<double>();
+                double absEtaMax = value.at("absEtaMax").get<double>();
+                trigMapRangePtEta_[key] = TrigRangePtEta{ trigPt, ptMin, ptMax, absEtaMin, absEtaMax };
+            }
+            // Merge any year-specific changes
+            if (channelConf.contains("Years") && channelConf["Years"].contains(yearStr)) {
+                json yearConf = channelConf["Years"].at(yearStr);
+                if (yearConf.contains("trigMapRangePtEta")) {
+                    json yearMap = yearConf.at("trigMapRangePtEta");
+                    for (auto& item : yearMap.items()) {
+                        const std::string& key = item.key();
+                        json value = item.value();
+                        int trigPt = value.at("trigPt").get<int>();
+                        double ptMin = value.at("ptMin").get<double>();
+                        double ptMax = value.at("ptMax").get<double>();
+                        double absEtaMin = value.at("absEtaMin").get<double>();
+                        double absEtaMax = value.at("absEtaMax").get<double>();
+                        // Overwrite or add the key from the year-specific configuration
+                        trigMapRangePtEta_[key] = TrigRangePtEta{ trigPt, ptMin, ptMax, absEtaMin, absEtaMax };
+                    }
+                }
+            }
+        }
+        
+        // Optionally, you can also merge Data/MC specific configurations here
+        // For example, if channelConf contains a "Data" block with additional triggers.
+        
+    } catch (json::exception& e) {
+        std::cerr << "Error reading configuration for channel " << channelStr
+                  << " and year " << yearStr << ": " << e.what() << std::endl;
     }
 }
 

@@ -95,7 +95,7 @@ void NanoTree::loadJobFileNames() {
     loadedJobFileNames_ = Helper::splitVector(loadedAllFileNames_, loadedTotalJobs_).at(loadedNthJob_ - 1);
 }
 
-void NanoTree::loadTree() {
+    void NanoTree::loadTree() {
     std::cout << "==> loadTree()" << '\n';
     fChain->SetCacheSize(Helper::tTreeCatchSize);
     bool isCopy = false;  // Set to true if you want to copy files locally
@@ -107,7 +107,7 @@ void NanoTree::loadTree() {
 
     // Optimization parameters for xrdcp
     const int streams = 15;              // Number of parallel data streams
-    const int tcpBufSize = 1048576;      // TCP buffer size (1MB)
+    const int tcpBufSize = 1048576;        // TCP buffer size (1MB)
 
     for (const auto& fileName : loadedJobFileNames_) {
         totalFiles++;
@@ -165,6 +165,15 @@ void NanoTree::loadTree() {
             continue;  // Skip adding this file
         }
 
+        // Additional check: if file size is 0, skip the file.
+        std::cout<<f->GetSize()<<'\n';
+        if (f->GetSize() < 3000) {
+            std::cerr << "Warning: file " << fullPath << " has less than 3000, skipping." << std::endl;
+            f->Close();
+            failedFiles++;
+            continue;  // Skip adding this file
+        }
+
         // Check if "Events" tree exists
         if (!f->GetListOfKeys()->Contains("Events")) {
             std::cerr << "Error: 'Events' not found in " << fullPath << '\n';
@@ -174,7 +183,8 @@ void NanoTree::loadTree() {
         }
 
         // Check the entries in the newly added TTree
-        Long64_t fileEntries = f->Get<TTree>("Events")->GetEntries();
+        TTree* tree = f->Get<TTree>("Events");
+        Long64_t fileEntries = tree->GetEntries();
         if (fileEntries == 0) {
             std::cerr << "\nWarning: 'Events' TTree in file " << fullPath << " has 0 entries. Skipping file.\n\n";
             f->Close();
@@ -207,7 +217,6 @@ void NanoTree::loadTree() {
         std::cerr << "Error: No valid ROOT files were added to the TChain. Exiting.\n";
         return;
     }
-
     fChain->SetBranchStatus("*", false);
     fChain->SetBranchStatus("run", true);
     fChain->SetBranchStatus("event", true);
