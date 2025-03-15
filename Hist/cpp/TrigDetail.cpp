@@ -6,138 +6,93 @@ using json = nlohmann::json;
 
 // Constructor implementation
 TrigDetail::TrigDetail(const GlobalFlag& globalFlags)
-    :globalFlags_(globalFlags),
-    year_(globalFlags_.getYear()),
-    channel_(globalFlags_.getChannel()),
-    isDebug_(globalFlags_.isDebug()){
+    : globalFlags_(globalFlags),
+      year_(globalFlags_.getYear()),
+      channel_(globalFlags_.getChannel()),
+      isDebug_(globalFlags_.isDebug()) {
 
-    InitializeList();
+    loadConfig();
 }
 
-void TrigDetail::InitializeList() {
+void TrigDetail::loadConfig() {
     // Reserve capacity as before (optional)
     trigMapRangePt_.reserve(15);
     trigMapRangePtEta_.reserve(30);
     
-    // Open and parse the JSON configuration file
-    std::ifstream ifs("config/TrigDetail.json");
+    // Get string representations for year and channel.
+    std::string yearStr = globalFlags_.getYearStr();
+    std::string channelStr = globalFlags_.getChannelStr();
+    
+    // Build the file name for the current channel's configuration.
+    std::string configFile = "config/TrigDetail" + channelStr + ".json";
+    std::ifstream ifs(configFile);
     if (!ifs.is_open()) {
-        std::cerr << "Error: Could not open config/TrigDetail.json" << std::endl;
+        std::cerr << "Error: Could not open " << configFile << std::endl;
         return;
     }
+    
     json j;
     try {
         ifs >> j;
     } catch (json::parse_error& e) {
-        std::cerr << "JSON parse error: " << e.what() << std::endl;
+        std::cerr << "JSON parse error in " << configFile << ": " << e.what() << std::endl;
         return;
     }
     
-    // Use GlobalFlag helper functions for string representations.
-    std::string yearStr = globalFlags_.getYearStr();
-    std::string channelStr = globalFlags_.getChannelStr();
+    // Ensure the JSON contains the current year.
+    if (!j.contains(yearStr)) {
+        std::cerr << "Error: " << configFile << " does not contain configuration for year " << yearStr << std::endl;
+        return;
+    }
     
-    // Look up the channel configuration under "Channels"
-    try {
-        json channelConf = j.at("Channels").at(channelStr);
+    // Retrieve the configuration for the active year.
+    auto yearConfig = j.at(yearStr);
+    
+    // For channels with a simple trigger list.
+    if (channel_ == GlobalFlag::Channel::ZeeJet ||
+        channel_ == GlobalFlag::Channel::ZmmJet ||
+        channel_ == GlobalFlag::Channel::Wqqe ||
+        channel_ == GlobalFlag::Channel::Wqqm) {
         
-        // For channels with a base trigger list (simple list)
-        if (channelConf.contains("baseTrigList")) {
-            trigList_ = channelConf.at("baseTrigList").get<std::vector<std::string>>();
-            // Append year-specific trigger list if available
-            if (channelConf.contains("Years") && channelConf["Years"].contains(yearStr)) {
-                json yearConf = channelConf["Years"].at(yearStr);
-                if (yearConf.contains("trigList")) {
-                    auto yearTrigList = yearConf.at("trigList").get<std::vector<std::string>>();
-                    trigList_.insert(trigList_.end(), yearTrigList.begin(), yearTrigList.end());
-                }
-            }
+        trigList_ = yearConfig.get<std::vector<std::string>>();
+    }
+    // For channels with a trigger map using only pt (e.g., GamJet).
+    else if (channel_ == GlobalFlag::Channel::GamJet) {
+        for (auto& item : yearConfig.items()) {
+            const std::string& key = item.key();
+            json value = item.value();
+            double ptMin = value.at("ptMin").get<double>();
+            double ptMax = value.at("ptMax").get<double>();
+            trigMapRangePt_[key] = TrigRangePt{ ptMin, ptMax };
         }
-        
-        // For channels with a base trigger map using only pt (e.g., GamJet)
-        if (channelConf.contains("baseTrigMapRangePt")) {
-            json baseMap = channelConf.at("baseTrigMapRangePt");
-            for (auto& item : baseMap.items()) {
-                const std::string& key = item.key();
-                json value = item.value();
-                double ptMin = value.at("ptMin").get<double>();
-                double ptMax = value.at("ptMax").get<double>();
-                trigMapRangePt_[key] = TrigRangePt{ ptMin, ptMax };
-            }
-            // Merge year-specific overrides if available
-            if (channelConf.contains("Years") && channelConf["Years"].contains(yearStr)) {
-                json yearConf = channelConf["Years"].at(yearStr);
-                if (yearConf.contains("trigMapRangePt")) {
-                    json yearMap = yearConf.at("trigMapRangePt");
-                    for (auto& item : yearMap.items()) {
-                        const std::string& key = item.key();
-                        json value = item.value();
-                        double ptMin = value.at("ptMin").get<double>();
-                        double ptMax = value.at("ptMax").get<double>();
-                        // Overwrite or add the key from the year-specific configuration
-                        trigMapRangePt_[key] = TrigRangePt{ ptMin, ptMax };
-                    }
-                }
-            }
+    }
+    // For channels with a trigger map using pt and eta (e.g., MultiJet).
+    else if (channel_ == GlobalFlag::Channel::MultiJet) {
+        for (auto& item : yearConfig.items()) {
+            const std::string& key = item.key();
+            json value = item.value();
+            int trigPt = value.at("trigPt").get<int>();
+            double ptMin = value.at("ptMin").get<double>();
+            double ptMax = value.at("ptMax").get<double>();
+            double absEtaMin = value.at("absEtaMin").get<double>();
+            double absEtaMax = value.at("absEtaMax").get<double>();
+            trigMapRangePtEta_[key] = TrigRangePtEta{ trigPt, ptMin, ptMax, absEtaMin, absEtaMax };
         }
-        
-        // For channels with a base trigger map using pt and eta (e.g., MultiJet)
-        if (channelConf.contains("baseTrigMapRangePtEta")) {
-            json baseMap = channelConf.at("baseTrigMapRangePtEta");
-            for (auto& item : baseMap.items()) {
-                const std::string& key = item.key();
-                json value = item.value();
-                int trigPt = value.at("trigPt").get<int>();
-                double ptMin = value.at("ptMin").get<double>();
-                double ptMax = value.at("ptMax").get<double>();
-                double absEtaMin = value.at("absEtaMin").get<double>();
-                double absEtaMax = value.at("absEtaMax").get<double>();
-                trigMapRangePtEta_[key] = TrigRangePtEta{ trigPt, ptMin, ptMax, absEtaMin, absEtaMax };
-            }
-            // Merge any year-specific changes
-            if (channelConf.contains("Years") && channelConf["Years"].contains(yearStr)) {
-                json yearConf = channelConf["Years"].at(yearStr);
-                if (yearConf.contains("trigMapRangePtEta")) {
-                    json yearMap = yearConf.at("trigMapRangePtEta");
-                    for (auto& item : yearMap.items()) {
-                        const std::string& key = item.key();
-                        json value = item.value();
-                        int trigPt = value.at("trigPt").get<int>();
-                        double ptMin = value.at("ptMin").get<double>();
-                        double ptMax = value.at("ptMax").get<double>();
-                        double absEtaMin = value.at("absEtaMin").get<double>();
-                        double absEtaMax = value.at("absEtaMax").get<double>();
-                        // Overwrite or add the key from the year-specific configuration
-                        trigMapRangePtEta_[key] = TrigRangePtEta{ trigPt, ptMin, ptMax, absEtaMin, absEtaMax };
-                    }
-                }
-            }
-        }
-        
-        // Optionally, you can also merge Data/MC specific configurations here
-        // For example, if channelConf contains a "Data" block with additional triggers.
-        
-    } catch (json::exception& e) {
-        std::cerr << "Error reading configuration for channel " << channelStr
-                  << " and year " << yearStr << ": " << e.what() << std::endl;
     }
 }
 
-const std::vector<std::string> TrigDetail::getTrigNames() const{
+const std::vector<std::string> TrigDetail::getTrigNames() const {
     std::vector<std::string> tNames;
-    if(channel_ == GlobalFlag::Channel::ZeeJet
-      || channel_ == GlobalFlag::Channel::ZmmJet
-      || channel_ == GlobalFlag::Channel::Wqqe
-      || channel_ == GlobalFlag::Channel::Wqqm
-    ){
+    if (channel_ == GlobalFlag::Channel::ZeeJet ||
+        channel_ == GlobalFlag::Channel::ZmmJet ||
+        channel_ == GlobalFlag::Channel::Wqqe ||
+        channel_ == GlobalFlag::Channel::Wqqm) {
         tNames = trigList_;
-    }        
-    else if(channel_ == GlobalFlag::Channel::GamJet){
+    } else if (channel_ == GlobalFlag::Channel::GamJet) {
         for (const auto& trig : trigMapRangePt_) {
             tNames.push_back(trig.first);
         }
-    }
-    else if(channel_ == GlobalFlag::Channel::MultiJet){
+    } else if (channel_ == GlobalFlag::Channel::MultiJet) {
         for (const auto& trig : trigMapRangePtEta_) {
             tNames.push_back(trig.first);
         }

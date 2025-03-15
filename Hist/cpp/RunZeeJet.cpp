@@ -7,7 +7,7 @@
 #include "HistMain.h"
 #include "HistFinal.h"
 
-#include "PickZeeJet.h"
+#include "PickObjectZeeJet.h"
 
 #include "ScaleElectron.h"
 #include "ScaleJetMet.h"
@@ -78,7 +78,7 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Scal
     HistFinal histFinal(origDir, "passAlpha", varBin);
     HistTime histTime(origDir, "passResponse", varBin, minRefPts_);
     
-    auto pickZeeJet = std::make_shared<PickZeeJet>(globalFlags_);
+    auto pickObjectZeeJet = std::make_shared<PickObjectZeeJet>(globalFlags_);
 
     // Scale constructor
     auto scaleElectron = std::make_shared<ScaleElectron>(scaleObject, globalFlags_.isData());
@@ -130,11 +130,11 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Scal
         scaleElectron->applyCorrections(skimT);
         if(globalFlags_.isDebug()) scaleElectron->print();
 
-        pickZeeJet->pickElectrons(*skimT);
-        if (pickZeeJet->getPickedElectrons().size() < minElectron_) continue;
-        if (pickZeeJet->getPickedElectrons().size() > maxElectron_) continue;
-        pickZeeJet->pickRefs(*skimT);
-        std::vector<TLorentzVector> p4Refs = pickZeeJet->getPickedRefs();
+        pickObjectZeeJet->pickElectrons(*skimT);
+        if (pickObjectZeeJet->getPickedElectrons().size() < minElectron_) continue;
+        if (pickObjectZeeJet->getPickedElectrons().size() > maxElectron_) continue;
+        pickObjectZeeJet->pickRefs(*skimT);
+        std::vector<TLorentzVector> p4Refs = pickObjectZeeJet->getPickedRefs();
         if (p4Refs.size() != 1) continue; 
         h1EventInCutflow->fill("passExactly1Ref");
 
@@ -149,9 +149,9 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Scal
         // Gen objects
         p4GenRef.SetPtEtaPhiM(0, 0, 0, 0);
         if (globalFlags_.isMC()) {
-            pickZeeJet->pickGenElectrons(*skimT);
-            pickZeeJet->pickGenRefs(*skimT, p4Ref);
-            std::vector<TLorentzVector> p4GenRefs = pickZeeJet->getPickedGenRefs();
+            pickObjectZeeJet->pickGenElectrons(*skimT);
+            pickObjectZeeJet->pickGenRefs(*skimT, p4Ref);
+            std::vector<TLorentzVector> p4GenRefs = pickObjectZeeJet->getPickedGenRefs();
             if (p4GenRefs.empty()) continue;
             p4GenRef = p4GenRefs.at(0);
         }
@@ -165,10 +165,10 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Scal
         //------------------------------------------------
         // Select jets 
         //------------------------------------------------
-        pickZeeJet->pickJets(*skimT, p4Ref);
+        pickObjectZeeJet->pickJets(*skimT, p4Ref);
 
         // Pick index of jets
-        std::vector<int> jetsIndex = pickZeeJet->getPickedJetsIndex();
+        std::vector<int> jetsIndex = pickObjectZeeJet->getPickedJetsIndex();
         if (jetsIndex.size() != minJet_) continue; // sanity 
         int iJet1 = jetsIndex.at(0);
         int iJet2 = jetsIndex.at(1);
@@ -177,7 +177,7 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Scal
 
         // Pick p4 of jets
         TLorentzVector p4Jet1, p4Jet2, p4Jetn;
-        std::vector<TLorentzVector> jetsP4 = pickZeeJet->getPickedJetsP4();
+        std::vector<TLorentzVector> jetsP4 = pickObjectZeeJet->getPickedJetsP4();
         p4Jet1 = jetsP4.at(0);
         p4Jet2 = jetsP4.at(1);
         p4Jetn = jetsP4.at(2);
@@ -221,11 +221,11 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Scal
         int iGenJet1 = -1;
         int iGenJet2 = -1;
         if (globalFlags_.isMC()){
-            pickZeeJet->pickGenJets(*skimT, iJet1, iJet2, p4Jet1, p4Jet2);
-            std::vector<TLorentzVector> genJetsP4 = pickZeeJet->getPickedGenJetsP4();
+            pickObjectZeeJet->pickGenJets(*skimT, iJet1, iJet2, p4Jet1, p4Jet2);
+            std::vector<TLorentzVector> genJetsP4 = pickObjectZeeJet->getPickedGenJetsP4();
             p4GenJet1 = genJetsP4.at(0);
             p4GenJet2 = genJetsP4.at(1);
-            std::vector<int> genJetsIndex = pickZeeJet->getPickedGenJetsIndex();
+            std::vector<int> genJetsIndex = pickObjectZeeJet->getPickedGenJetsIndex();
             iGenJet1 = genJetsIndex.at(0);
             iGenJet2 = genJetsIndex.at(1);
         }

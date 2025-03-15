@@ -12,6 +12,7 @@
 //#include "HistIncJet.h"
 //#include "HistDiJet.h"
 
+#include "SkimFile.h"
 #include "SkimTree.h"
 #include "PickEvent.h"
 #include "PickObject.h"
@@ -121,16 +122,18 @@ int main(int argc, char* argv[]) {
     globalFlag.printFlags();  
 
     std::cout << "\n--------------------------------------" << std::endl;
+    std::cout << " Set and load SkimFile.cpp" << std::endl;
+    std::cout << "--------------------------------------" << std::endl;
+    
+    const std::string& inJsonDir = "input/json/";
+    std::shared_ptr<SkimFile> skimF = std::make_shared<SkimFile>(globalFlag, outName, inJsonDir);
+    
+    std::cout << "\n--------------------------------------" << std::endl;
     std::cout << " Set and load SkimTree.cpp" << std::endl;
     std::cout << "--------------------------------------" << std::endl;
     
     std::shared_ptr<SkimTree> skimT = std::make_shared<SkimTree>(globalFlag);
-    skimT->setInput(outName);
-    skimT->loadInput();
-    skimT->setInputJsonPath("input/json/");
-    skimT->loadInputJson();
-    skimT->loadJobFileNames();
-    skimT->loadTree();
+    skimT->loadTree(skimF->getJobFileNames());
 
     std::cout << "\n--------------------------------------" << std::endl;
     std::cout << " Set and load ScaleEvent.cpp" << std::endl;

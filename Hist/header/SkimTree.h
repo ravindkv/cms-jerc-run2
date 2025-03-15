@@ -1,13 +1,11 @@
-#ifndef SKIMTREE_H
-#define SKIMTREE_H
+
+#pragma once
 
 #include <TFile.h>
 #include <TTree.h>
 #include <TChain.h>
 #include <fstream>
 #include <string>
-#include <vector>
-#include <nlohmann/json.hpp>
 
 #include "GlobalFlag.h"
 #include "TrigDetail.h"
@@ -24,15 +22,7 @@ public:
     Int_t getEntry(Long64_t entry);
     Long64_t loadEntry(Long64_t entry);
 
-    // Input handling
-    void setInput(const std::string& outName);
-    void loadInput();
-
-    void setInputJsonPath(const std::string& inDir);
-    void loadInputJson();
-
-    void loadJobFileNames();
-    void loadTree();
+    void loadTree(std::vector<std::string> skimFileList);
 
     // Accessors for tree variables (public for direct access)
     // {} in the end is to initialise
@@ -40,11 +30,11 @@ public:
     UInt_t run{};
     UInt_t luminosityBlock{};
     ULong64_t event{};
-    UInt_t bunchCrossing{}; // NanoV12
+    UInt_t bunchCrossing{}; 
 
     // MET information
-    Float_t ChsMET_phi{};      // Run2
-    Float_t ChsMET_pt{};       // Run2
+    Float_t ChsMET_phi{};      
+    Float_t ChsMET_pt{};      
 
     // Jet variables
     static const int nJetMax = 200;
@@ -71,7 +61,7 @@ public:
     Float_t Jet_chEmEF[nJetMax]{};
     Float_t Jet_muEF[nJetMax]{};
 
-    Short_t Jet_genJetIdx[nJetMax]{}; // NanoV12 , FIXME for V9
+    Short_t Jet_genJetIdx[nJetMax]{}; 
 
     // Photon variables
     static const int nPhotonMax = 200;
@@ -173,14 +163,6 @@ public:
     }
 
 private:
-    // Member variables
-    std::string outName_;
-    std::string loadedSampKey_ = "MC_Year_Channel_Name";
-    int loadedNthJob_ = 1;
-    int loadedTotJob_ = 100;
-    std::string inputJsonPath_ = "./FilesSkim_2022_GamJet.json";
-    std::vector<std::string> loadedAllFileNames_;
-    std::vector<std::string> loadedJobFileNames_;
 
     Int_t fCurrent_; // Current Tree number in a TChain
 
@@ -218,6 +200,4 @@ private:
     Float_t nanoXssOrLumi_ = 1.0;
     Int_t   nanoEvents_ = 1.0;
 };
-
-#endif // SKIMTREE_H
 

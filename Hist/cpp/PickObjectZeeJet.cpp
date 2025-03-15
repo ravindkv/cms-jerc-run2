@@ -1,4 +1,4 @@
-#include "PickZeeJet.h"
+#include "PickObjectZeeJet.h"
 #include <TRandom.h>
 #include <fstream>
 #include "nlohmann/json.hpp"
@@ -6,22 +6,22 @@
 using json = nlohmann::json;
 
 // Constructor implementation
-PickZeeJet::PickZeeJet(GlobalFlag& globalFlags) :
+PickObjectZeeJet::PickObjectZeeJet(GlobalFlag& globalFlags) :
     globalFlags_(globalFlags),
     year_(globalFlags_.getYear()),
     channel_(globalFlags_.getChannel()),
     isDebug_(globalFlags_.isDebug())
 {
-    loadConfig("config/PickZeeJet.json");
+    loadConfig("config/PickObjectZeeJet.json");
 }
 
 // Destructor
-PickZeeJet::~PickZeeJet() {
+PickObjectZeeJet::~PickObjectZeeJet() {
     // Cleanup if necessary
 }
 
 // Load configuration from JSON file and store values in private members
-void PickZeeJet::loadConfig(const std::string& filename) {
+void PickObjectZeeJet::loadConfig(const std::string& filename) {
     std::ifstream configFile(filename);
     if (!configFile.is_open()){
         std::cerr << "Could not open configuration file: " << filename << std::endl;
@@ -60,13 +60,13 @@ void PickZeeJet::loadConfig(const std::string& filename) {
 }
 
 // Helper function for debug printing
-void PickZeeJet::printDebug(const std::string& message) const {
+void PickObjectZeeJet::printDebug(const std::string& message) const {
     if (isDebug_) {
         std::cout << message << '\n';
     }
 }
 
-void PickZeeJet::pickElectrons(const SkimTree& skimT) {
+void PickObjectZeeJet::pickElectrons(const SkimTree& skimT) {
     printDebug("Starting pickElectrons, nElectron = " + std::to_string(skimT.nElectron));
     pickedElectrons_.clear();
 
@@ -97,7 +97,7 @@ void PickZeeJet::pickElectrons(const SkimTree& skimT) {
 }
 
 // Reference object picking (e.g., for Z->ee)
-void PickZeeJet::pickRefs(const SkimTree& skimT) {
+void PickObjectZeeJet::pickRefs(const SkimTree& skimT) {
     pickedRefs_.clear();
     if (channel_ == GlobalFlag::Channel::ZeeJet && pickedElectrons_.size() > 1) {
         int j = pickedElectrons_.at(0);
@@ -121,7 +121,7 @@ void PickZeeJet::pickRefs(const SkimTree& skimT) {
     printDebug("Total Reference Objects Picked: " + std::to_string(pickedRefs_.size()));
 }
 
-void PickZeeJet::pickJets(const SkimTree& skimT, const TLorentzVector& p4Ref) {
+void PickObjectZeeJet::pickJets(const SkimTree& skimT, const TLorentzVector& p4Ref) {
     printDebug("pickJets: Starting, nJet = " + std::to_string(skimT.nJet));
 
     pickedJetsIndex_.clear();
@@ -224,7 +224,7 @@ void PickZeeJet::pickJets(const SkimTree& skimT, const TLorentzVector& p4Ref) {
     printDebug("pickJets: Done.");
 }
 
-void PickZeeJet::pickGenElectrons(const SkimTree& skimT) {
+void PickObjectZeeJet::pickGenElectrons(const SkimTree& skimT) {
     pickedGenElectrons_.clear();
     printDebug("Starting pickGenElectrons, nGenDressedLepton = " + std::to_string(skimT.nGenDressedLepton));
 
@@ -238,7 +238,7 @@ void PickZeeJet::pickGenElectrons(const SkimTree& skimT) {
     printDebug("Total Gen Electrons Picked: " + std::to_string(pickedGenElectrons_.size()));
 }
 
-void PickZeeJet::pickGenRefs(const SkimTree& skimT, const TLorentzVector& p4Ref) {
+void PickObjectZeeJet::pickGenRefs(const SkimTree& skimT, const TLorentzVector& p4Ref) {
     pickedGenRefs_.clear();
     if (channel_ == GlobalFlag::Channel::ZeeJet && pickedGenElectrons_.size() > 1) {
         for (size_t j = 0; j < pickedGenElectrons_.size(); ++j) {
@@ -267,7 +267,7 @@ void PickZeeJet::pickGenRefs(const SkimTree& skimT, const TLorentzVector& p4Ref)
     printDebug("Total Gen Reference Objects Picked: " + std::to_string(pickedGenRefs_.size()));
 }
 
-void PickZeeJet::pickGenJets(const SkimTree& skimT, const int& iJet1, const int& iJet2,
+void PickObjectZeeJet::pickGenJets(const SkimTree& skimT, const int& iJet1, const int& iJet2,
                              const TLorentzVector& p4Jet1, const TLorentzVector& p4Jet2) {
     printDebug("pickGenJets: Starting, nJet = " + std::to_string(skimT.nGenJet));
 

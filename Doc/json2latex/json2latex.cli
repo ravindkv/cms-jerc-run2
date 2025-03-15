@@ -1,0 +1,23 @@
+# json2latex/cli.py
+
+import argparse
+import os
+from .renderer import render_template
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Convert a JSON file to a LaTeX document using Jinja2 templates"
+    )
+    parser.add_argument("--json", required=True, help="Path to the JSON file")
+    args = parser.parse_args()
+
+    json_file = args.json
+    base_name = os.path.splitext(json_file)[0]
+    template_file = f"{base_name}.tex"
+    output_file = f"{base_name}_output.tex"
+
+    render_template(json_file, template_file, output_file)
+
+if __name__ == "__main__":
+    main()
+

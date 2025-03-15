@@ -58,7 +58,7 @@ private:
     // trigMapRangePtEta std::unordered_map
     std::unordered_map<std::string, TrigRangePtEta> trigMapRangePtEta_;
 
-    void InitializeList();
+    void loadConfig();
 };
 
 #endif // TRIGDETAIL_H

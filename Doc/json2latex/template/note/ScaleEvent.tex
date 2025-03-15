@@ -1,0 +1,16 @@
+\documentclass{article}
+\begin{document}
+\section*{Scale Events}
+{% for year, details in data.items() %}
+\subsection*{Year: {{ year }}}
+\begin{itemize}
+    \item \textbf{Jet Veto JSON Path:} {{ details.jetVetoJsonPath | latex_escape }}
+    \item \textbf{Jet Veto Name:} {{ details.jetVetoName | latex_escape }}
+    \item \textbf{Golden Lumi JSON Path:} {{ details.goldenLumiJsonPath | latex_escape }}
+    \item \textbf{HLT Lumi JSON Path:} {{ details.hltLumiJsonPath | latex_escape }}
+    \item \textbf{PU JSON Path:} {{ details.puJsonPath | latex_escape }}
+    \item \textbf{PU Name:} {{ details.puName | latex_escape }}
+\end{itemize}
+{% endfor %}
+\end{document}
+

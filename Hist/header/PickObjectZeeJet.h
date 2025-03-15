@@ -15,11 +15,11 @@
 #include "SkimTree.h"
 #include "GlobalFlag.h"
 
-class PickZeeJet{
+class PickObjectZeeJet{
 public:
     // Constructor accepting a reference to GlobalFlag
-    explicit PickZeeJet(GlobalFlag& globalFlags);
-    ~PickZeeJet();
+    explicit PickObjectZeeJet(GlobalFlag& globalFlags);
+    ~PickObjectZeeJet();
 
     // Reco objects
     void pickElectrons(const SkimTree& skimT);
