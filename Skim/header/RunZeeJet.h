@@ -1,28 +1,16 @@
-#ifndef RUNZEEJET_H
-#define RUNZEEJET_H
+#pragma once
 
-#include <iostream>
-#include <TFile.h>
+#include "RunBase.h"
 
-#include "NanoTree.h"
-#include "GlobalFlag.h"
-
-class RunZeeJet{
+class RunZeeJet : public RunBase {
 public:
-    // Constructor accepting a reference to GlobalFlag
     explicit RunZeeJet(GlobalFlag& globalFlags);
     ~RunZeeJet() = default;
 
-    int Run(std::shared_ptr<NanoTree>& skimT, TFile* fout);
+    // Inherit Run() from RunBase
+    int Run(std::shared_ptr<NanoTree>& nanoT, TFile* fout) override final;
 
-private:
-    GlobalFlag& globalFlags_;
-
-    std::vector<std::string> trigList_;
-    std::map<std::string, Bool_t> trigVals_;
-    std::map<std::string, TBranch*> trigTBranches_;
-
+protected:
+    std::string getConfigPath() const override;
 };
-
-#endif // RUNZEEJET_H
 

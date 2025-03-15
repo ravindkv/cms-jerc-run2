@@ -1,0 +1,34 @@
+{
+  "treeBranches": [
+    "Muon_charge",
+    "Muon_pt",
+    "Muon_eta",
+    "Muon_phi",
+    "Muon_mass",
+    "Muon_mediumId",
+    "Muon_tightId",
+    "Muon_highPurity",
+    "Muon_nTrackerLayers",
+    "Muon_pfRelIso04_all",
+    "Muon_tkRelIso",
+    "Muon_dxy",
+    "Muon_dz",
+    "nMuon"
+  ],
+  "mcBranches": [
+    "GenDressedLepton_*",
+    "nGenDressedLepton"
+  ],
+  "triggers": {
+    "2016": [
+      "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ"
+    ],
+    "2017": [
+      "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8"
+    ],
+    "2018": [
+      "HLT_Mu17_TrkIsoVVL_Mu8_TrkIsoVVL_DZ_Mass8"
+    ]
+  }
+}
+

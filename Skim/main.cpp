@@ -1,4 +1,8 @@
 
+#include "NanoFile.h"
+#include "NanoTree.h"
+#include "GlobalFlag.h"
+
 #include "RunZeeJet.h"
 #include "RunZmmJet.h"
 #include "RunGamJet.h"
@@ -14,9 +18,6 @@
 #include <nlohmann/json.hpp>
 
 #include <TFile.h>
-
-#include "NanoTree.h"
-#include "GlobalFlag.h"
 
 
 namespace fs = std::filesystem;
@@ -92,16 +93,19 @@ int main(int argc, char* argv[]){
     globalFlag.printFlag();
     
     
-    cout<<"\n--------------------------------------"<<endl;
-    cout<<" Set and load NanoTree"<<endl;
-    cout<<"--------------------------------------"<<endl;
+    std::cout << "\n--------------------------------------" << std::endl;
+    std::cout << " Set and load NanoFile.cpp" << std::endl;
+    std::cout << "--------------------------------------" << std::endl;
+    
+    const std::string& inJsonDir = "input/json/";
+    std::shared_ptr<NanoFile> nanoF = std::make_shared<NanoFile>(globalFlag, outName, inJsonDir);
+    
+    std::cout << "\n--------------------------------------" << std::endl;
+    std::cout << " Set and load NanoTree.cpp" << std::endl;
+    std::cout << "--------------------------------------" << std::endl;
+    
     std::shared_ptr<NanoTree> nanoT = std::make_shared<NanoTree>(globalFlag);
-    nanoT->setInput(outName);
-    nanoT->loadInput();
-    nanoT->setInputJsonPath("input/json/");
-    nanoT->loadInputJson();
-    nanoT->loadJobFileNames();
-    nanoT->loadTree();
+    nanoT->loadTree(nanoF->getJobFileNames());
 
 	std::string outDir = "output";
     mkdir(outDir.c_str(), S_IRWXU);

@@ -1,5 +1,5 @@
-#ifndef NANOTREE_H
-#define NANOTREE_H
+
+#pragma once
 
 #include <iostream>
 #include <fstream>
@@ -12,7 +12,6 @@
 #include <TTree.h>
 #include <TChain.h>
 #include <TMath.h>
-#include <nlohmann/json.hpp>
 
 #include "GlobalFlag.h"
 
@@ -24,41 +23,25 @@ public:
     ~NanoTree();
 
     Long64_t getEntries() const;
+    Long64_t getEntriesRuns() const;
     Int_t getEntry(Long64_t entry);
     Long64_t loadEntry(Long64_t entry);
+    Long64_t loadEntryRuns(Long64_t entry);
 
-    // Input management
-    void setInput(const std::string& outputName);
-    void loadInput();
-
-    // JSON management
-    void setInputJsonPath(const std::string& inputDir);
-    void loadInputJson();
-
-    // File loading
-    void loadJobFileNames();
-    void loadTree();
+    void loadTree(std::vector<std::string> nanoFileList);
 
     TChain* fChain = new TChain("Events");   
+    TChain* fChainRuns = new TChain("Runs");
 
 private:
     // Member variables
     GlobalFlag& globalFlags_;
     Int_t fCurrent_{-1}; 
+    Int_t fCurrentRuns_{-1}; 
 
     UInt_t run_{};
     ULong64_t event_{};
     UInt_t lumis_{};
 
-    std::string outputName_;
-    std::string loadedSampleKey_ = "MC_Year_Channel_Name";
-    std::string inputJsonPath_ = "./FilesNano_2022_GamJet.json";
-    std::size_t loadedNthJob_ = 1;
-    std::size_t loadedTotalJobs_ = 100;
-
-    std::vector<std::string> loadedAllFileNames_;
-    std::vector<std::string> loadedJobFileNames_;
 };
-
-#endif // NANOTREE_H
 

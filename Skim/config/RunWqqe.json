@@ -1,0 +1,29 @@
+{
+  "treeBranches": [
+    "nElectron",
+    "Electron_charge",
+    "Electron_pt",
+    "Electron_deltaEtaSC",
+    "Electron_eta",
+    "Electron_phi",
+    "Electron_mass",
+    "Electron_cutBased",
+    "Electron_seedGain",
+    "Electron_eCorr",
+    "Electron_dE*",
+    "Electron_pfRelIso03_all",
+    "Electron_sieie",
+    "Electron_photonIdx",
+    "Electron_mvaFall17V2Iso_WP*"
+  ],
+  "mcBranches": [
+    "GenDressedLepton_*",
+    "nGenDressedLepton"
+  ],
+  "triggers": {
+    "2016": ["HLT_Ele27_WPTight_Gsf", "HLT_Photon175", "HLT_Ele115_CaloIdVT_GsfTrkIdT"],
+    "2017": ["HLT_Ele35_WPTight_Gsf", "HLT_Photon200", "HLT_Ele115_CaloIdVT_GsfTrkIdT"],
+    "2018": ["HLT_Ele32_WPTight_Gsf", "HLT_Photon200", "HLT_Ele115_CaloIdVT_GsfTrkIdT"]
+  }
+}
+

@@ -1,7 +1,5 @@
-#pragma once
 
-#ifndef HELPER_H
-#define HELPER_H
+#pragma once
 
 #include <string>
 #include <iostream>
@@ -64,6 +62,4 @@ public:
     static const int hundred = 100; 
     static const int sixty = 60; 
 };
-
-#endif // HELPER_H
 

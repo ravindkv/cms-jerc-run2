@@ -1,5 +1,5 @@
-#ifndef GlobalFlag_H
-#define GlobalFlag_H
+
+#pragma once
         
 #include <iostream>
 using namespace std;
@@ -37,4 +37,3 @@ class GlobalFlag{
         bool isMG;
         void printFlag();
 };
-#endif

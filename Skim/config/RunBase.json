@@ -1,0 +1,76 @@
+{
+  "commonTreeBranches": [
+    "run",
+    "event",
+    "luminosityBlock",
+    "Jet_btagDeepFlav*",
+    "Jet_qgl",
+    "Jet_chEmEF",
+    "Jet_chHEF",
+    "Jet_eta",
+    "Jet_mass",
+    "Jet_muEF",
+    "Jet_neEmEF",
+    "Jet_neHEF",
+    "Jet_phi",
+    "Jet_pt",
+    "Jet_rawFactor",
+    "Jet_jetId",
+    "Jet_puId",
+    "Jet_area",
+    "nJet",
+    "PV_z",
+    "PV_npvs",
+    "PV_npvsGood",
+    "MET_pt",
+    "MET_phi",
+    "ChsMET_pt",
+    "ChsMET_phi",
+    "RawPuppiMET_pt",
+    "RawPuppiMET_phi",
+    "fixedGridRhoFastjetAll"
+  ],
+  "commonMCBranches": [
+    "Jet_hadronFlavour",
+    "Jet_genJetIdx",
+    "genWeight",
+    "nPSWeight",
+    "PSWeight",
+    "LHE_HT",
+    "Pileup_nTrueInt",
+    "GenJet_*",
+    "nGenJet"
+  ],
+  "filters": {
+    "2016": [
+        "Flag_goodVertices",
+        "Flag_globalSuperTightHalo2016Filter",
+        "Flag_HBHENoiseFilter",
+        "Flag_HBHENoiseIsoFilter",
+        "Flag_EcalDeadCellTriggerPrimitiveFilter",
+        "Flag_BadPFMuonFilter",
+        "Flag_eeBadScFilter"
+    ],
+    "2017": [
+        "Flag_goodVertices",
+        "Flag_globalSuperTightHalo2016Filter",
+        "Flag_HBHENoiseFilter",
+        "Flag_HBHENoiseIsoFilter",
+        "Flag_EcalDeadCellTriggerPrimitiveFilter",
+        "Flag_BadPFMuonFilter",
+        "Flag_eeBadScFilter",
+        "Flag_ecalBadCalibFilter"
+    ],
+    "2018": [
+        "Flag_goodVertices",
+        "Flag_globalSuperTightHalo2016Filter",
+        "Flag_HBHENoiseFilter",
+        "Flag_HBHENoiseIsoFilter",
+        "Flag_EcalDeadCellTriggerPrimitiveFilter",
+        "Flag_BadPFMuonFilter",
+        "Flag_eeBadScFilter",
+        "Flag_ecalBadCalibFilter"
+    ]
+  }
+}
+

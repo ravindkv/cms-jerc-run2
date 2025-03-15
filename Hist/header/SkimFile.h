@@ -17,8 +17,6 @@ public:
     SkimFile(const SkimFile&) = delete;
     SkimFile& operator=(const SkimFile&) = delete;
 
-    // Input handling
-    void setInput(const std::string& outName);
     void loadInput();
 
     void setInputJsonPath(const std::string& inDir);

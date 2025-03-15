@@ -1,6 +1,5 @@
-// HistCutflow.h
-#ifndef HISTCUTFLOW_H
-#define HISTCUTFLOW_H
+
+#pragma once
 
 #include <string>
 #include <vector>
@@ -29,6 +28,4 @@ private:
     std::unique_ptr<TH1D> h1EventsInCutflow;
     std::map<std::string, int> cutToBinMap;
 };
-
-#endif // HISTCUTFLOW_H
 

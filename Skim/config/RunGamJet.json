@@ -1,0 +1,56 @@
+{
+  "treeBranches": [
+    "nPhoton",
+    "Photon_e*",
+    "Photon_hoe",
+    "Photon_phi",
+    "Photon_pt",
+    "Photon_r9",
+    "Photon_cutBased",
+    "Photon_mvaID*",
+    "Photon_pf*",
+    "Photon_pixel*",
+    "Photon_jetIdx",
+    "Photon_seedGain",
+    "Photon_mass"
+  ],
+  "mcBranches": [
+    "Photon_genPartIdx",
+    "GenIsolatedPhoton_*",
+    "nGenIsolatedPhoton"
+  ],
+  "triggers": {
+    "2016": [
+      "HLT_Photon175",
+      "HLT_Photon165_R9Id90_HE10_IsoM",
+      "HLT_Photon120_R9Id90_HE10_IsoM",
+      "HLT_Photon90_R9Id90_HE10_IsoM",
+      "HLT_Photon75_R9Id90_HE10_IsoM",
+      "HLT_Photon50_R9Id90_HE10_IsoM",
+      "HLT_Photon36_R9Id90_HE10_IsoM",
+      "HLT_Photon30_R9Id90_HE10_IsoM",
+      "HLT_Photon22_R9Id90_HE10_IsoM"
+    ],
+    "2017": [
+      "HLT_Photon200",
+      "HLT_Photon165_R9Id90_HE10_IsoM",
+      "HLT_Photon120_R9Id90_HE10_IsoM",
+      "HLT_Photon90_R9Id90_HE10_IsoM",
+      "HLT_Photon75_R9Id90_HE10_IsoM",
+      "HLT_Photon50_R9Id90_HE10_IsoM",
+      "HLT_Photon30_HoverELoose",
+      "HLT_Photon20_HoverELoose"
+    ],
+    "2018": [
+      "HLT_Photon200",
+      "HLT_Photon110EB_TightID_TightIso",
+      "HLT_Photon100EB_TightID_TightIso",
+      "HLT_Photon90_R9Id90_HE10_IsoM",
+      "HLT_Photon75_R9Id90_HE10_IsoM",
+      "HLT_Photon50_R9Id90_HE10_IsoM",
+      "HLT_Photon30_HoverELoose",
+      "HLT_Photon20_HoverELoose"
+    ]
+  }
+}
+

@@ -1,28 +1,16 @@
-#ifndef RUNDIJET_H
-#define RUNDIJET_H
+#pragma once
 
-#include <iostream>
-#include <TFile.h>
+#include "RunBase.h"
 
-#include "NanoTree.h"
-#include "GlobalFlag.h"
-
-class RunDiJet{
+class RunDiJet : public RunBase {
 public:
-    // Constructor accepting a reference to GlobalFlag
     explicit RunDiJet(GlobalFlag& globalFlags);
     ~RunDiJet() = default;
 
-    int Run(std::shared_ptr<NanoTree>& skimT, TFile* fout);
+    // Inherit Run() from RunBase
+    int Run(std::shared_ptr<NanoTree>& nanoT, TFile* fout) override final;
 
-private:
-    GlobalFlag& globalFlags_;
-
-    std::vector<std::string> trigList_;
-    std::map<std::string, Bool_t> trigVals_;
-    std::map<std::string, TBranch*> trigTBranches_;
-
+protected:
+    std::string getConfigPath() const override;
 };
-
-#endif // RUNDIJET_H
 
