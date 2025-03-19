@@ -8,21 +8,62 @@ NanoTree::NanoTree(GlobalFlag& globalFlags) : globalFlags_(globalFlags) {}
 
 NanoTree::~NanoTree() {
     delete fChain;
-    //delete fChainRuns;
+    delete fChainRuns;
+}
+
+// Helper function: Validate and open a file
+TFile* NanoTree::validateAndOpenFile(const std::string& fullPath) {
+    TFile* file = TFile::Open(fullPath.c_str(), "READ");
+    if (!file || file->IsZombie()) {
+        std::cerr << "Error: Failed to open or corrupted file " << fullPath << '\n';
+        if (file) file->Close();
+        return nullptr;
+    }
+    // Check file size (using 3000 bytes as a threshold)
+    if (file->GetSize() < 3000) {
+        std::cerr << "Warning: file " << fullPath << " has less than 3000 bytes, skipping.\n";
+        file->Close();
+        return nullptr;
+    }
+    // Check that the file contains the "Events" tree
+    if (!file->GetListOfKeys()->Contains("Events")) {
+        std::cerr << "Error: 'Events' not found in " << fullPath << '\n';
+        file->Close();
+        return nullptr;
+    }
+    // Check the entries in the "Events" tree
+    TTree* tree = file->Get<TTree>("Events");
+    if (tree->GetEntries() == 0) {
+        std::cerr << "Warning: 'Events' TTree in file " << fullPath << " has 0 entries. Skipping file.\n";
+        file->Close();
+        return nullptr;
+    }
+    return file;
+}
+
+// Helper function: Add file to TChains
+bool NanoTree::addFileToChains(const std::string& fullPath) {
+    int added = fChain->Add(fullPath.c_str());
+    fChainRuns->Add(fullPath.c_str());
+    if (added == 0) {
+        std::cerr << "Warning: TChain::Add failed for " << fullPath << '\n';
+        return false;
+    }
+    return true;
 }
 
 void NanoTree::loadTree(std::vector<std::string> nanoFileList) {
-    std::cout << "==> loadTree()" << '\n';
+    std::cout << "==> loadTree()\n";
     fChain->SetCacheSize(Helper::tTreeCatchSize);
     fChainRuns->SetCacheSize(Helper::tTreeCatchSize);
     bool isCopy = false;  // Set to true if you want to copy files locally
-    std::string dir = "root://cms-xrd-global.cern.ch/";  // Default remote directory
+    std::string baseDir = "root://cms-xrd-global.cern.ch/";  // Default remote directory
 
     int totalFiles = 0;
     int addedFiles = 0;
     int failedFiles = 0;
 
-    // Optimization parameters for xrdcp
+    // Optimization parameters for xrdcp (when copying files locally)
     const int streams = 15;              // Number of parallel data streams
     const int tcpBufSize = 1048576;        // TCP buffer size (1MB)
 
@@ -31,98 +72,51 @@ void NanoTree::loadTree(std::vector<std::string> nanoFileList) {
         std::string fullPath;
 
         if (isCopy) {
-            // Extract the local file name from the remote path
+            // Example of copying the file locally (using system calls)
             std::string localFile = fileName.substr(fileName.find_last_of('/') + 1);
-            std::string cmd = "xrdcp ";
-
-            // Append optimization options to the xrdcp command
-            cmd += "--streams " + std::to_string(streams) + " ";
-
-            // Construct the full remote path
-            std::string remoteFile = dir + fileName;
-
-            // Build the final command
+            std::string cmd = "xrdcp --streams " + std::to_string(streams) + " ";
+            std::string remoteFile = baseDir + fileName;
             cmd += remoteFile + " " + localFile;
-
             std::cout << "Executing command: " << cmd << '\n';
             int ret = system(cmd.c_str());
-
             if (ret != 0) {
                 std::cerr << "Error: Failed to copy " << remoteFile << " to local file " << localFile << '\n';
                 failedFiles++;
                 continue;  // Skip adding this file
             }
-
-            // Check if the file was successfully copied
             if (!std::filesystem::exists(localFile)) {
                 std::cerr << "Error: Local file " << localFile << " does not exist after copying.\n";
                 failedFiles++;
-                continue;  // Skip adding this file
+                continue;
             }
-
-            fullPath = localFile;  // Use the local file path
+            fullPath = localFile;
         } else {
-            // Remote file handling
+            // Remote file handling: try local EOS path first
             std::filesystem::path filePath = "/eos/cms/" + fileName;
             if (std::filesystem::exists(filePath)) {
-                dir = "/eos/cms/";  // Use local EOS path
-                fullPath = dir + fileName;
+                baseDir = "/eos/cms/";
             } else {
-                dir = "root://cms-xrd-global.cern.ch/";  // Fallback to remote
-                fullPath = dir + fileName;
+                baseDir = "root://cms-xrd-global.cern.ch/";
             }
+            fullPath = baseDir + fileName;
         }
 
-        // Attempt to open the file to verify its validity
-        TFile* f = TFile::Open(fullPath.c_str(), "READ");
-        if (!f || f->IsZombie()) {
-            std::cerr << "Error: Failed to open or corrupted file " << fullPath << '\n';
-            if (f) f->Close();
+        // Validate and open the file
+        TFile* file = validateAndOpenFile(fullPath);
+        if (!file) {
             failedFiles++;
-            continue;  // Skip adding this file
+            continue;
         }
-
-        // Additional check: if file size is 0, skip the file.
-        std::cout<<f->GetSize()<<'\n';
-        if (f->GetSize() < 3000) {
-            std::cerr << "Warning: file " << fullPath << " has less than 3000, skipping." << std::endl;
-            f->Close();
+        // Add file to the TChains
+        if (!addFileToChains(fullPath)) {
             failedFiles++;
-            continue;  // Skip adding this file
+            file->Close();
+            continue;
         }
-
-        // Check if "Events" tree exists
-        if (!f->GetListOfKeys()->Contains("Events")) {
-            std::cerr << "Error: 'Events' not found in " << fullPath << '\n';
-            f->Close();
-            failedFiles++;
-            continue;  // Skip adding this file
-        }
-
-        // Check the entries in the newly added TTree
-        TTree* tree = f->Get<TTree>("Events");
-        Long64_t fileEntries = tree->GetEntries();
-        if (fileEntries == 0) {
-            std::cerr << "\nWarning: 'Events' TTree in file " << fullPath << " has 0 entries. Skipping file.\n\n";
-            f->Close();
-            failedFiles++;
-            continue;  // Skip adding this file to the final count
-        }
-
-        // File is valid, add it to the TChain
-        int added = fChain->Add(fullPath.c_str());
-        fChainRuns->Add(fullPath.c_str());
-        if (added == 0) {
-            std::cerr << "Warning: TChain::Add failed for " << fullPath << '\n';
-            f->Close();
-            failedFiles++;
-            continue;  // Skip adding this file
-        }
-
-        std::cout << fullPath << ", EntriesRuns: " << fChainRuns->GetEntries() 
-                              << ", Entries: " << fChain->GetEntries() << '\n';
+        std::cout << fullPath << ", EntriesRuns: " << fChainRuns->GetEntries()
+                  << ", Entries: " << fChain->GetEntries() << '\n';
         addedFiles++;
-        f->Close();
+        file->Close();
     }
 
     // Final summary
@@ -131,12 +125,12 @@ void NanoTree::loadTree(std::vector<std::string> nanoFileList) {
     std::cout << "Successfully added files: " << addedFiles << '\n';
     std::cout << "Failed to add files: " << failedFiles << '\n';
 
-    // Check if the chain has any trees
     if (fChain->GetNtrees() == 0) {
         std::cerr << "Error: No valid ROOT files were added to the TChain. Exiting.\n";
         return;
     }
-    fChain->SetBranchStatus("*", false);// To be enabled in RunBase class
+    // Set branch statuses as required for later processing
+    fChain->SetBranchStatus("*", false); // To be enabled in the processing class
     fChainRuns->SetBranchStatus("*", true);
 }
 
@@ -171,3 +165,40 @@ auto NanoTree::loadEntryRuns(Long64_t entry) -> Long64_t {
     }
     return centry;
 }
+
+// New member function: Enable a list of branches in fChain.
+void NanoTree::enableBranches(const std::vector<std::string>& branchNames, const std::string & context) {
+    for (const auto & branch : branchNames) {
+        if (!fChain->GetListOfBranches()->FindObject(branch.c_str())) {
+            if (globalFlags_.isDebug) {
+                std::cerr << "Debug: Branch '" << branch << "' not found in " << context << ".\n";
+            }
+        } else {
+            fChain->SetBranchStatus(branch.c_str(), true);
+            if (globalFlags_.isDebug) {
+                std::cout << "Debug: Enabled branch '" << branch << "' in " << context << ".\n";
+            }
+        }
+    }
+}
+
+// New member function: Set branch addresses in fChain and store pointers in maps.
+void NanoTree::setBranchAddressForMap(const std::vector<std::string>& branchNames,
+                                        std::map<std::string, Bool_t>& valMap,
+                                        std::map<std::string, TBranch*>& branchMap,
+                                        const std::string & context) {
+    for (const auto & branch : branchNames) {
+        if (!fChain->GetListOfBranches()->FindObject(branch.c_str())) {
+            if (globalFlags_.isDebug) {
+                std::cerr << "Debug: Branch '" << branch << "' not found in " << context << ".\n";
+            }
+        } else {
+            fChain->SetBranchStatus(branch.c_str(), true);
+            fChain->SetBranchAddress(branch.c_str(), &valMap[branch], &branchMap[branch]);
+            if (globalFlags_.isDebug) {
+                std::cout << "Debug: Set branch address for '" << branch << "' in " << context << ".\n";
+            }
+        }
+    }
+}
+

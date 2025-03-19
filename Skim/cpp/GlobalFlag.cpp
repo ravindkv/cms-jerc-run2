@@ -40,6 +40,10 @@ GlobalFlag::GlobalFlag(const string& outName) :
     if(outName.find("MC")!= string::npos)     isMG     = true;
 }
 
+void GlobalFlag::setDebug(bool debug){
+    isDebug = debug;
+}
+
 void GlobalFlag::printFlag(){
     if(isDebug   )cout<<"isDebug   = true"<<'\n';
     if(is2016Pre   )cout<<"is2016Pre   = true"<<'\n';

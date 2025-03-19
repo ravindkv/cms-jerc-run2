@@ -3,8 +3,6 @@
   "mcBranches": [],
   "triggers": {
     "2016": [
-      "HLT_ZeroBias",
-      "HLT_MC",
       "HLT_DiPFJetAve40",
       "HLT_PFJet40",
       "HLT_PFJet60",
@@ -34,8 +32,6 @@
       "HLT_DiPFJetAve300_HFJEC"
     ],
     "2017": [
-      "HLT_ZeroBias",
-      "HLT_MC",
       "HLT_DiPFJetAve40",
       "HLT_PFJet40",
       "HLT_PFJet60",
@@ -65,8 +61,6 @@
       "HLT_DiPFJetAve300_HFJEC"
     ],
     "2018": [
-      "HLT_ZeroBias",
-      "HLT_MC",
       "HLT_DiPFJetAve40",
       "HLT_PFJet40",
       "HLT_PFJet60",

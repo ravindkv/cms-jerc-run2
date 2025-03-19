@@ -1,48 +1,47 @@
 {
     "2016Pre": {
         "MC": {
-            "MC_Wqqe_2016Pre_TTToSemiLeptonic": [1.0, "/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM"]
+            "MC_Wqqe_2016Pre_TTToSemiLeptonic": {"xsecInPb": 6.871e+02, "nameOnDAS": "/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODAPVv9-106X_mcRun2_asymptotic_preVFP_v11-v1/NANOAODSIM"}
         },
         "Data": {
-            "Data_Wqqe_2016PreBv1_SingleElectron": [1.0, "/SingleElectron/Run2016B-ver1_HIPM_UL2016_MiniAODv2_NanoAODv9-v2/NANOAOD"],
-            "Data_Wqqe_2016PreBv2_SingleElectron": [1.0, "/SingleElectron/Run2016B-ver2_HIPM_UL2016_MiniAODv2_NanoAODv9-v2/NANOAOD"],
-            "Data_Wqqe_2016PreC_SingleElectron": [1.0, "/SingleElectron/Run2016C-HIPM_UL2016_MiniAODv2_NanoAODv9-v2/NANOAOD"],
-            "Data_Wqqe_2016PreD_SingleElectron": [1.0, "/SingleElectron/Run2016D-HIPM_UL2016_MiniAODv2_NanoAODv9-v2/NANOAOD"],
-            "Data_Wqqe_2016PreE_SingleElectron": [1.0, "/SingleElectron/Run2016E-HIPM_UL2016_MiniAODv2_NanoAODv9-v2/NANOAOD"],
-            "Data_Wqqe_2016PreF_SingleElectron": [1.0, "/SingleElectron/Run2016F-HIPM_UL2016_MiniAODv2_NanoAODv9-v2/NANOAOD"]
+            "Data_Wqqe_2016PreB_SingleElectron": {"lumiInFb": 5.829, "nameOnDAS": "/SingleElectron/Run2016B-ver2_HIPM_UL2016_MiniAODv2_NanoAODv9-v2/NANOAOD"},
+            "Data_Wqqe_2016PreC_SingleElectron": {"lumiInFb": 2.621, "nameOnDAS": "/SingleElectron/Run2016C-HIPM_UL2016_MiniAODv2_NanoAODv9-v2/NANOAOD"},
+            "Data_Wqqe_2016PreD_SingleElectron": {"lumiInFb": 4.286, "nameOnDAS": "/SingleElectron/Run2016D-HIPM_UL2016_MiniAODv2_NanoAODv9-v2/NANOAOD"},
+            "Data_Wqqe_2016PreE_SingleElectron": {"lumiInFb": 4.065, "nameOnDAS": "/SingleElectron/Run2016E-HIPM_UL2016_MiniAODv2_NanoAODv9-v2/NANOAOD"},
+            "Data_Wqqe_2016PreF_SingleElectron": {"lumiInFb": 2.718, "nameOnDAS": "/SingleElectron/Run2016F-HIPM_UL2016_MiniAODv2_NanoAODv9-v2/NANOAOD"}
         }
     },
     "2016Post": {
         "MC": {
-            "MC_Wqqe_2016Post_TTToSemiLeptonic": [1.0, "/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODv9-20UL16JMENano_106X_mcRun2_asymptotic_v17-v1/NANOAODSIM"]
+            "MC_Wqqe_2016Post_TTToSemiLeptonic": {"xsecInPb": 6.871e+02, "nameOnDAS": "/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL16NanoAODv9-20UL16JMENano_106X_mcRun2_asymptotic_v17-v1/NANOAODSIM"}
         },
         "Data": {
-            "Data_Wqqe_2016PostF_SingleElectron": [1.0, "/SingleElectron/Run2016F-UL2016_MiniAODv2_NanoAODv9-v1/NANOAOD"],
-            "Data_Wqqe_2016PostG_SingleElectron": [1.0, "/SingleElectron/Run2016G-UL2016_MiniAODv2_NanoAODv9-v1/NANOAOD"],
-            "Data_Wqqe_2016PostH_SingleElectron": [1.0, "/SingleElectron/Run2016H-UL2016_MiniAODv2_NanoAODv9-v1/NANOAOD"]
+            "Data_Wqqe_2016PostF_SingleElectron": {"lumiInFb": 0.418, "nameOnDAS": "/SingleElectron/Run2016F-UL2016_MiniAODv2_NanoAODv9-v1/NANOAOD"},
+            "Data_Wqqe_2016PostG_SingleElectron": {"lumiInFb": 7.653, "nameOnDAS": "/SingleElectron/Run2016G-UL2016_MiniAODv2_NanoAODv9-v1/NANOAOD"},
+            "Data_Wqqe_2016PostH_SingleElectron": {"lumiInFb": 8.740, "nameOnDAS": "/SingleElectron/Run2016H-UL2016_MiniAODv2_NanoAODv9-v1/NANOAOD"}
         }
     },
     "2017": {
         "MC": {
-            "MC_Wqqe_2017_TTToSemiLeptonic": [1.0, "/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL17NanoAODv9-20UL17JMENano_106X_mc2017_realistic_v9-v1/NANOAODSIM"]
+            "MC_Wqqe_2017_TTToSemiLeptonic": {"xsecInPb": 6.871e+02, "nameOnDAS": "/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL17NanoAODv9-20UL17JMENano_106X_mc2017_realistic_v9-v1/NANOAODSIM"}
         },
         "Data": {
-            "Data_Wqqe_2017B_SingleElectron": [1.0, "/SingleElectron/Run2017B-UL2017_MiniAODv2_NanoAODv9-v1/NANOAOD"],
-            "Data_Wqqe_2017C_SingleElectron": [1.0, "/SingleElectron/Run2017C-UL2017_MiniAODv2_NanoAODv9-v1/NANOAOD"],
-            "Data_Wqqe_2017D_SingleElectron": [1.0, "/SingleElectron/Run2017D-UL2017_MiniAODv2_NanoAODv9-v1/NANOAOD"],
-            "Data_Wqqe_2017E_SingleElectron": [1.0, "/SingleElectron/Run2017E-UL2017_MiniAODv2_NanoAODv9-v1/NANOAOD"],
-            "Data_Wqqe_2017F_SingleElectron": [1.0, "/SingleElectron/Run2017F-UL2017_MiniAODv2_NanoAODv9-v1/NANOAOD"]
+            "Data_Wqqe_2017B_SingleElectron": {"lumiInFb": 4.823, "nameOnDAS": "/SingleElectron/Run2017B-UL2017_MiniAODv2_NanoAODv9-v1/NANOAOD"},
+            "Data_Wqqe_2017C_SingleElectron": {"lumiInFb": 9.664, "nameOnDAS": "/SingleElectron/Run2017C-UL2017_MiniAODv2_NanoAODv9-v1/NANOAOD"},
+            "Data_Wqqe_2017D_SingleElectron": {"lumiInFb": 4.252, "nameOnDAS": "/SingleElectron/Run2017D-UL2017_MiniAODv2_NanoAODv9-v1/NANOAOD"},
+            "Data_Wqqe_2017E_SingleElectron": {"lumiInFb": 9.278, "nameOnDAS": "/SingleElectron/Run2017E-UL2017_MiniAODv2_NanoAODv9-v1/NANOAOD"},
+            "Data_Wqqe_2017F_SingleElectron": {"lumiInFb": 13.54, "nameOnDAS": "/SingleElectron/Run2017F-UL2017_MiniAODv2_NanoAODv9-v1/NANOAOD"}
         }
     },
     "2018": {
         "MC": {
-            "MC_Wqqe_2018_TTToSemiLeptonic": [1.0, "/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-20UL18JMENano_106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM"]
+            "MC_Wqqe_2018_TTToSemiLeptonic": {"xsecInPb": 6.871e+02, "nameOnDAS": "/TTToSemiLeptonic_TuneCP5_13TeV-powheg-pythia8/RunIISummer20UL18NanoAODv9-20UL18JMENano_106X_upgrade2018_realistic_v16_L1v1-v1/NANOAODSIM"}
         },
         "Data": {
-            "Data_Wqqe_2018A_EGamma": [1.0, "/EGamma/Run2018A-UL2018_MiniAODv2_NanoAODv9-v1/NANOAOD"],
-            "Data_Wqqe_2018B_EGamma": [1.0, "/EGamma/Run2018B-UL2018_MiniAODv2_NanoAODv9-v1/NANOAOD"],
-            "Data_Wqqe_2018C_EGamma": [1.0, "/EGamma/Run2018C-UL2018_MiniAODv2_NanoAODv9-v1/NANOAOD"],
-            "Data_Wqqe_2018D_EGamma": [1.0, "/EGamma/Run2018D-UL2018_MiniAODv2_NanoAODv9-v3/NANOAOD"]
+            "Data_Wqqe_2018A_EGamma": {"lumiInFb": 14.00, "nameOnDAS": "/EGamma/Run2018A-UL2018_MiniAODv2_NanoAODv9-v1/NANOAOD"},
+            "Data_Wqqe_2018B_EGamma": {"lumiInFb": 7.10,  "nameOnDAS": "/EGamma/Run2018B-UL2018_MiniAODv2_NanoAODv9-v1/NANOAOD"},
+            "Data_Wqqe_2018C_EGamma": {"lumiInFb": 6.94,  "nameOnDAS": "/EGamma/Run2018C-UL2018_MiniAODv2_NanoAODv9-v1/NANOAOD"},
+            "Data_Wqqe_2018D_EGamma": {"lumiInFb": 31.93, "nameOnDAS": "/EGamma/Run2018D-UL2018_MiniAODv2_NanoAODv9-v3/NANOAOD"}
         }
     }
 }

@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <iostream>
@@ -15,6 +14,7 @@
 #include "GlobalFlag.h"
 #include "HistCutflow.h"
 #include "Helper.h"
+#include "ReadConfig.h" // Include the new ReadConfig
 
 class RunBase {
 public:
@@ -34,18 +34,11 @@ protected:
     std::map<std::string, Bool_t> trigVals_;
     std::map<std::string, TBranch*> trigTBranches_;
 
-    // Load configuration file (JSON)
-    nlohmann::json loadConfig(const std::string& configPath);
-
-    // Derived classes must provide the config file path
+    // Derived classes must provide the channel-specific config file path.
     virtual std::string getConfigPath() const = 0;
 
-    // Set branch statuses from config
-    void setBranches(NanoTree* nanoT, const nlohmann::json& config);
-    // Set filter, trigger list and branch addresses from config
-    void setFilters(NanoTree* nanoT, const nlohmann::json& config);
-    void setTriggers(NanoTree* nanoT, const nlohmann::json& config);
-    // Run the common event loop that fills the output tree
-    void runEventLoop(NanoTree* nanoT, TTree* newTree);
+    // Event loop
+    void runEventLoop(NanoTree* nanoT, TFile* fout);
+
 };
 

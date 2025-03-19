@@ -90,6 +90,7 @@ int main(int argc, char* argv[]){
     cout<<" Set GlobalFlag.cpp"<<endl;
     cout<<"--------------------------------------"<<endl;
     GlobalFlag globalFlag(outName);
+    globalFlag.setDebug(false);
     globalFlag.printFlag();
     
     

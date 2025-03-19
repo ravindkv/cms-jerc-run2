@@ -32,7 +32,7 @@ def check_file(args):
             return (sKey, skim, True)
         
         # Check for the specific histogram
-        h = f.Get("Cutflow/h1EventInCutflow")
+        h = f.Get("h1EventInCutflow")
         if not h:
             print(f"[Missing Cutflow] {skim}")
             return (sKey, skim, True)

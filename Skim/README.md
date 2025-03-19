@@ -2,7 +2,7 @@
 
 ### Step-1: get input root files of samples from DAS
 * cd input
-* python3 getFiles.py  
+* python3 getRootFiles.py 
 
 Have a look at the files produced from the above command
 

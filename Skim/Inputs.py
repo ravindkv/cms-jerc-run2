@@ -2,26 +2,26 @@
 
 # Directory where skimmed files will be stored
 #eosSkimDir = "/eos/user/r/rverma/www/public/cms-jerc-run3/Skim"
-#eosSkimDir = "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Jan2025/Skim"
-eosSkimDir = "root://hip-cms-se.csc.fi/store/user/rverma/cms-jerc-run2/Jan2025/Skim" 
+#eosSkimDir = "/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Skim"
+eosSkimDir = "root://hip-cms-se.csc.fi/store/user/rverma/cms-jerc-run2/Skim" 
 
 # Years and Channels to process
 Years = [
     '2016Pre',
-    #'2016Post',
+    '2016Post',
     '2017',
     '2018'
 ]
 
 Channels = [
-    #'ZeeJet',
-    #'ZmmJet',
+    'ZeeJet',
+    'ZmmJet',
     #'GamJet',
     #'GamJetFake',
     #'MultiJet',
     #'DiJet',
-    'Wqqe',
-    'Wqqm',
+    #'Wqqe',
+    #'Wqqm',
 ]
 
 # VOMS Proxy path (adjust as needed)

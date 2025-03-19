@@ -36,4 +36,5 @@ class GlobalFlag{
         bool isQCD;
         bool isMG;
         void printFlag();
+        void setDebug(bool debug);
 };

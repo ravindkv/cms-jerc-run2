@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <iostream>
@@ -30,6 +29,13 @@ public:
 
     void loadTree(std::vector<std::string> nanoFileList);
 
+    // Data access layer: enable branches and set branch addresses.
+    void enableBranches(const std::vector<std::string>& branchNames, const std::string & context);
+    void setBranchAddressForMap(const std::vector<std::string>& branchNames,
+                                std::map<std::string, Bool_t>& valMap,
+                                std::map<std::string, TBranch*>& branchMap,
+                                const std::string & context);
+
     TChain* fChain = new TChain("Events");   
     TChain* fChainRuns = new TChain("Runs");
 
@@ -43,5 +49,7 @@ private:
     ULong64_t event_{};
     UInt_t lumis_{};
 
+    TFile* validateAndOpenFile(const std::string& fullPath);
+    bool addFileToChains(const std::string& fullPath);
 };
 

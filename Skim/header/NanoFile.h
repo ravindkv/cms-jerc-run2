@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <iostream>
@@ -7,6 +6,8 @@
 #include <string>
 #include <vector>
 #include <filesystem>
+#include <regex>
+#include <stdexcept>
 
 #include <nlohmann/json.hpp>
 
@@ -30,6 +31,10 @@ public:
     [[nodiscard]] const std::vector<std::string>& getJobFileNames() const { 
         return loadedJobFileNames_; 
     }
+
+    // Utility functions to split strings and vectors.
+    std::vector<std::vector<std::string>> splitVector(const std::vector<std::string>& strings, std::size_t n);
+    std::vector<std::string> splitString(const std::string& s, const std::string& delimiter);
 
 private:
     // Member variables

@@ -93,8 +93,10 @@ def main():
                     print(f"{sampleKey} has more than 3 underscores, follow DataOrMC_Channel_Year_SampleName convention")
                     print(f"Skipped this {sampleKey}")
                     continue
-                datasetXssOrLumi = dataset[0] 
-                datasetName = dataset[1] 
+                xsecOrLumi = 1
+                if "MC" in sampleKey: xsecOrLumi = dataset["xsecInPb"]
+                else: xsecOrLumi = dataset["lumiInFb"]
+                datasetName = dataset["nameOnDAS"]
                 filesNano = getFiles(datasetName)
                 if not filesNano:
                     print(f"PROBLEM: No files found for datasetName '{datasetName}'.\n")
@@ -114,12 +116,15 @@ def main():
                 # Ensure the number of jobs does not exceed the number of files
                 nJobs = min(nJobs, nFiles)
                 jobDict = {}
-                jobDict["xssOrLumi"] = datasetXssOrLumi
+                #Lumi per era:
+                #2017, 2018: https://twiki.cern.ch/twiki/bin/view/CMS/PdmV2018Analysis
+                #2016Pre/Post: Provided by Fikri
+                jobDict["xsecOrLumi"] = xsecOrLumi
                 jobDict["nSkimJobs"] = nJobs
                 jobDict["nEvents"] = nEvents
                 jobDict["nEventsPretty"] = evtStr
                 jobDict["nNanoFiles"] = nFiles
-                toJobs[sampleKey] = [datasetXssOrLumi, nJobs, evtStr, nEvents, nFiles]
+                toJobs[sampleKey] = [xsecOrLumi, nJobs, evtStr, nEvents, nFiles]
                 allJobsYear += nJobs
 
                 # Generate skim file paths
