@@ -12,6 +12,10 @@ void HistMain::InitializeHistograms(TDirectory *origDir, const std::string& dire
     // Use the Helper method to get or create the directory
     std::string dirName = directoryName + "/HistMain";
     TDirectory* newDir = Helper::createTDirectory(origDir, dirName);
+    if (!newDir) {
+        std::cerr << "Error: Failed to create directory " << dirName << std::endl;
+        return; // or handle the error appropriately
+    }
     newDir->cd();
 
     const double* binsPt  = varBin.getBinsPt().data();
@@ -36,6 +40,10 @@ void HistMain::InitializeHistograms(TDirectory *origDir, const std::string& dire
     // 1D Composition and Response
     hist_.p1DbRespInRefPt = std::make_unique<TProfile>("p1DbRespInRefPt", "", nPt, binsPt);
     hist_.p1MpfRespInRefPt = std::make_unique<TProfile>("p1MpfRespInRefPt", "", nPt, binsPt);
+    hist_.p1Mpf1RespInRefPt = std::make_unique<TProfile>("p1Mpf1RespInRefPt", "", nPt, binsPt);
+    hist_.p1MpfnRespInRefPt = std::make_unique<TProfile>("p1MpfnRespInRefPt", "", nPt, binsPt);
+    hist_.p1MpfuRespInRefPt = std::make_unique<TProfile>("p1MpfuRespInRefPt", "", nPt, binsPt);
+    hist_.p1MpfnuRespInRefPt = std::make_unique<TProfile>("p1MpfnuRespInRefPt", "", nPt, binsPt);
     hist_.p1Jet1ChHefInRefPt = std::make_unique<TProfile>("p1Jet1ChHefInRefPt", "", nPt, binsPt);
     hist_.p1Jet1NeHefInRefPt = std::make_unique<TProfile>("p1Jet1NeHefInRefPt", "", nPt, binsPt);
     hist_.p1Jet1NeEmefInRefPt = std::make_unique<TProfile>("p1Jet1NeEmefInRefPt", "", nPt, binsPt);
@@ -108,6 +116,10 @@ void HistMain::InitializeHistograms(TDirectory *origDir, const std::string& dire
 
 void HistMain::Fill(SkimTree* skimT, int iJet1, double bal, double mpf, double ptRef, double weight)
 {
+    if (!skimT) {
+    std::cerr << "Error: Invalid SkimTree pointer passed to HistMain::Fill." << std::endl;
+    return;
+    }
     double eta = skimT->Jet_eta[iJet1];
     double phi = skimT->Jet_phi[iJet1];
     double chHEF  =  skimT->Jet_chHEF[iJet1];
@@ -169,5 +181,14 @@ void HistMain::Fill(SkimTree* skimT, int iJet1, double bal, double mpf, double p
         //hist_.p2JetChPv0efInJet1PhiJet1EtaForRefPt230->Fill(eta, phi, chFPV0EF, weight);
     }
     
+}
+
+void HistMain::FillOtherResp(double mpf1, double mpfn, double mpfu, double mpfnu, double ptRef, double weight)
+{
+    hist_.p1Mpf1RespInRefPt->Fill(ptRef, mpf1, weight);
+    hist_.p1MpfnRespInRefPt->Fill(ptRef, mpfn, weight);
+    hist_.p1MpfuRespInRefPt->Fill(ptRef, mpfu, weight);
+    hist_.p1MpfnuRespInRefPt->Fill(ptRef, mpfnu, weight);
+
 }
 

@@ -80,6 +80,33 @@ public:
               const TLorentzVector& p4Jet2, const TLorentzVector& p4GenJet2,
               int iGenJet2, bool isMC, double weight);
 
+    /**
+     * @brief Fills the common histograms based on event data.
+     * 
+     * This function fills histograms related to response metrics that are common
+     * regardless of gen-level matching.
+     * 
+     * @param ptRef Reference pT value.
+     * @param bal Balance response metric.
+     * @param mpf MPF response metric.
+     * @param weight Event weight.
+     */
+    void FillCommon(double ptRef, double bal, double mpf, bool passDbResp, bool passMpfResp, double weight);
+    
+    /**
+     * @brief Fills the gen-specific histograms based on event data.
+     * 
+     * This function fills TProfile histograms that require gen-level matching.
+     * 
+     * @param ptRef Reference pT value.
+     * @param p4Jet2 TLorentzVector of the second jet.
+     * @param p4GenJet2 TLorentzVector of the generated second jet.
+     * @param iGenJet2 Index of the generated second jet (-1 if not matched).
+     * @param weight Event weight.
+     */
+    void FillGen(double ptRef, const TLorentzVector& p4Jet2, const TLorentzVector& p4GenJet2, double weight);
+
+
 private:
     // Struct holding all histograms
     FinalHistograms hist_;

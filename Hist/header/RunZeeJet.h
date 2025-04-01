@@ -1,5 +1,5 @@
-#ifndef RUNZEEJET_H
-#define RUNZEEJET_H
+
+#pragma once
 
 #include <iostream>
 #include <cmath>
@@ -37,20 +37,18 @@ private:
     GlobalFlag& globalFlags_;
 
     // Configuration parameters loaded from JSON
-    std::vector<std::string> cuts_;
+    std::vector<std::string> cutflows_;
     std::vector<int> minRefPts_;
-    int minElectron_; 
-    int maxElectron_; 
-    int minJet_; 
-    double maxDphi_;
+    int nElectronMin_; 
+    int nElectronMax_; 
+    double maxDeltaPhiRefJet1_;
     double maxAlpha_;
     double maxRefEta_;
-    double minDbResp_;
-    double minMpfResp_;
+    std::vector<double> alphaCuts_;
+    double minResp_;
+    double maxResp_;
 
     // Method to load the configuration.
     void loadConfig(const std::string& filename);
 };
-
-#endif // RUNZEEJET_H
 

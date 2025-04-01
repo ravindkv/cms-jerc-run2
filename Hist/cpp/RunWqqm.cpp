@@ -31,7 +31,7 @@ auto RunWqqm::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, PickOb
     
     // Cutflow histograms
     std::vector<std::string> cuts = {
-    		"passSkim", "passHlt", "passGoodLumi", "passMetFilter", "passExactly1Lep", 
+    		"passSkim", "passHlt", "passGoodLumi", "passExactly1Lep", 
             "passAtleast4Jet", "passExactly2bJet", "passJetVetoMap" 
     };
     auto h1EventInCutflow = std::make_unique<HistCutflow>(origDir, "", cuts, globalFlags_);
@@ -97,9 +97,6 @@ auto RunWqqm::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, PickOb
         }
         if (!passGoodLumi) continue; 
         h1EventInCutflow->fill("passGoodLumi");
-
-        if (!pickEvent->passFilter(skimT)) continue; 
-        h1EventInCutflow->fill("passMetFilter");
 
         //------------------------------------------
         // Select objects

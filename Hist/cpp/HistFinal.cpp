@@ -13,6 +13,10 @@ void HistFinal::InitializeHistograms(TDirectory* origDir, const std::string& dir
     // Use the Helper method to get or create the directory
     std::string dirName = directoryName + "/HistFinal";
     TDirectory* newDir = Helper::createTDirectory(origDir, dirName);
+    if (!newDir) {
+        std::cerr << "Error: Failed to create directory " << dirName << std::endl;
+        return; // Or handle the error appropriately
+    }
     newDir->cd();
 
     // Retrieve binning configurations
@@ -95,3 +99,35 @@ void HistFinal::Fill(double ptRef, double bal, double mpf,
     }
 }
 
+void HistFinal::FillCommon(double ptRef, double bal, double mpf, bool passDbResp, bool passMpfResp, double weight)
+{
+    // Fill 2D Histograms
+    hist_.h2EventInDbRespRefPt->Fill(ptRef, bal, weight);
+    hist_.h2EventInMpfRespRefPt->Fill(ptRef, mpf, weight);
+
+    // Conditional filling based on pass criteria
+    if (passMpfResp) {
+        hist_.h2EventInDbRespRefPtForPassMpf->Fill(ptRef, bal, weight);
+    }
+    if (passDbResp) {
+        hist_.h2EventInMpfRespRefPtForPassDb->Fill(ptRef, mpf, weight);
+    }
+    if (passMpfResp && passDbResp) {
+        hist_.h2EventInDbRespRefPtForPassBoth->Fill(ptRef, bal, weight);
+        hist_.h2EventInMpfRespRefPtForPassBoth->Fill(ptRef, mpf, weight);
+    }
+}
+
+void HistFinal::FillGen(double ptRef, const TLorentzVector& p4Jet2, const TLorentzVector& p4GenJet2, double weight)
+{
+    // Fill TProfile histograms based on jet conditions.
+    if (p4Jet2.Pt() > 0) {
+        if(ptRef > 0){
+            hist_.p1Jet2PtOverRefPtInRefPt->Fill(ptRef, p4Jet2.Pt() / ptRef, weight);
+            hist_.p1GenJet2PtOverRefPtInRefPt->Fill(ptRef, p4GenJet2.Pt() / ptRef, weight);
+        }
+        if (p4GenJet2.Pt() > 0) {
+            hist_.p1Jet2PtOverGenJet2PtInGenJet2Pt->Fill(p4GenJet2.Pt(), p4Jet2.Pt() / p4GenJet2.Pt(), weight);
+        }
+    }
+}

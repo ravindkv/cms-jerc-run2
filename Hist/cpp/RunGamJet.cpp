@@ -36,7 +36,7 @@ auto RunGamJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pick
     
     // Cutflow histograms
     std::vector<std::string> cuts = {
-    		"passSkim", "passHlt", "passGoodLumi", "passMetFilter", "passExactly1Ref",
+    		"passSkim", "passHlt", "passGoodLumi", "passExactly1Ref",
     		"passHltWithPt", "passAtleast2Jet", "passJetVetoMap", "passDPhiRefJet1",
             "passRefBarrel", "passAlpha", "passResponse"
     };
@@ -46,7 +46,7 @@ auto RunGamJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pick
     VarBin varBin(globalFlags_);
     std::vector<int> pTRefs = {30, 110, 230};
 
-    HistObjectVar histObjectVar(origDir, "passMetFilter", varBin);
+    HistObjectVar histObjectVar(origDir, "passSkim", varBin);
 
     HistRef histRef(origDir, "passExactly1Ref", varBin);
 
@@ -93,7 +93,7 @@ auto RunGamJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pick
         h1EventInCutflow->fill("passSkim");
 
         //------------------------------------
-        // Trigger and golden lumi, MET filter selection 
+        // Trigger and golden lumi
         //------------------------------------
         if (!pickEvent->passHlt(skimT)) continue; 
         h1EventInCutflow->fill("passHlt");
@@ -105,8 +105,6 @@ auto RunGamJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pick
         if (!passGoodLumi) continue; 
         h1EventInCutflow->fill("passGoodLumi");
 
-        if (!pickEvent->passFilter(skimT)) continue; 
-        h1EventInCutflow->fill("passMetFilter");
         // Weight
         double weight = 1.0;
         histObjectVar.FillPhoton(*skimT, weight);

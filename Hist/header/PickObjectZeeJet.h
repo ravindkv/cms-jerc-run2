@@ -71,8 +71,9 @@ private:
 
     // Jet pick config
     double minPtJet_;
-    double maxEtaJet_;
-    double minDeltaR_;
+    double maxEtaLeadingJet_;
+    int Jet_ElectronIdx1_;
+    int Jet_ElectronIdx2_;
     int minJetId_;
 
     // Gen Electron pick config

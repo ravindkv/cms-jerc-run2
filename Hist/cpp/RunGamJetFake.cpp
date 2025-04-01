@@ -36,7 +36,7 @@ auto RunGamJetFake::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, 
     
     // Cutflow histograms
     std::vector<std::string> cuts = {
-    		"passSkim", "passMetFilter", "passAtleast3Jet",  
+    		"passSkim", "passAtleast3Jet",  
             "passExactly1Ref", "passJetVetoMap", "passDPhiRefJet1",
             "passRefBarrel", "passAlpha", "passResponse"
     };
@@ -46,7 +46,7 @@ auto RunGamJetFake::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, 
     VarBin varBin(globalFlags_);
     std::vector<int> pTRefs = {30, 110, 230};
 
-    HistObjectVar histObjectVar(origDir, "passMetFilter", varBin);
+    HistObjectVar histObjectVar(origDir, "passSkim", varBin);
 
     HistRef histRef(origDir, "passExactly1Ref", varBin);
 
@@ -91,11 +91,6 @@ auto RunGamJetFake::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, 
         skimT->getChain()->GetTree()->GetEntry(ientry);
         h1EventInCutflow->fill("passSkim");
 
-        //------------------------------------
-        // MET filter selection 
-        //------------------------------------
-        if (!pickEvent->passFilter(skimT)) continue; 
-        h1EventInCutflow->fill("passMetFilter");
         // Weight
         double weight = 1.0;
         histObjectVar.FillJet(*skimT, weight, 0);

@@ -43,6 +43,17 @@ std::string GlobalFlag::getYearStr() const {
     }
 }
 
+double GlobalFlag::getLumiPerYear() const {
+    switch(year_) {
+        case Year::Year2016Pre:  return 19.5;
+        case Year::Year2016Post: return 16.8;
+        case Year::Year2017:     return 41.5;
+        case Year::Year2018:     return 59.8;
+        default:                 return 1.0;
+    }
+}
+
+
 std::string GlobalFlag::getDataStr() const {
     return isData_ ? "Data" : "";
 }

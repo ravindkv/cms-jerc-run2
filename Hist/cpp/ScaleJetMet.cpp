@@ -37,7 +37,16 @@ void ScaleJetMet::Initialize() {
 
 // Apply corrections
 void ScaleJetMet::applyCorrections(std::shared_ptr<SkimTree>& skimT, CorrectionLevel level) {
-
+    // Check if the SkimTree pointer is valid
+    if (!skimT) {
+        std::cerr << "Error: Invalid SkimTree pointer passed to applyCorrections." << std::endl;
+        return;
+    }
+    // Check if the ScaleObject pointer is valid
+    if (!scaleObj_) {
+        std::cerr << "Error: scaleObj_ is null in ScaleJetMet." << std::endl;
+        return;
+    }
     Initialize();
 
     TLorentzVector p4Met;
@@ -103,7 +112,7 @@ void ScaleJetMet::applyCorrections(std::shared_ptr<SkimTree>& skimT, CorrectionL
             p4MapSelJetSum_["Corr"] += p4Jet;
             p4SumCorrAndUnCorr_ += p4Jet;
             
-            p4Met -= p4Jet;//Substract corrected p4Jet
+            p4Met -= p4Jet;//Subtract corrected p4Jet
         }//if pT, eta
         else{
             p4Jet.SetPtEtaPhiM(skimT->Jet_pt[i], skimT->Jet_eta[i],

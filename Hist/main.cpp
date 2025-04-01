@@ -6,19 +6,15 @@
 #include "RunWqqe.h"
 #include "RunWqqm.h"
 
-//#include "HistMCTruth.h"
-//#include "HistFlavour.h"
-//#include "HistVetoMap.h"
-//#include "HistIncJet.h"
-//#include "HistDiJet.h"
-
 #include "SkimFile.h"
 #include "SkimTree.h"
+#include "RunsTree.h"
 #include "PickEvent.h"
 #include "PickObject.h"
 #include "ScaleEvent.h"
 #include "ScaleObject.h"
 #include "GlobalFlag.h"
+#include "Helper.h"
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -31,7 +27,6 @@
 
 using namespace std;
 namespace fs = std::filesystem;
-
 
 int main(int argc, char* argv[]) {
 
@@ -111,95 +106,85 @@ int main(int argc, char* argv[]) {
     }
   }
 
-	std::cout << "\n--------------------------------------" << std::endl;
-    std::cout << " Set GlobalFlag.cpp" << std::endl;
-    std::cout << "--------------------------------------" << std::endl;
-    
-    // Initialize GlobalFlag instance
+    Helper::printBanner("Set GlobalFlag.cpp");
     GlobalFlag globalFlag(outName);
     globalFlag.setDebug(false);
     globalFlag.setNDebug(10000);
     globalFlag.printFlags();  
 
-    std::cout << "\n--------------------------------------" << std::endl;
-    std::cout << " Set and load SkimFile.cpp" << std::endl;
-    std::cout << "--------------------------------------" << std::endl;
-    
+    Helper::printBanner("Set and load SkimFile.cpp");
     const std::string& inJsonDir = "input/json/";
     std::shared_ptr<SkimFile> skimF = std::make_shared<SkimFile>(globalFlag, outName, inJsonDir);
-    
-    std::cout << "\n--------------------------------------" << std::endl;
-    std::cout << " Set and load SkimTree.cpp" << std::endl;
-    std::cout << "--------------------------------------" << std::endl;
-    
+
+    Helper::printBanner("Set and load RunsTree.cpp");
+    std::shared_ptr<RunsTree> runsT = std::make_shared<RunsTree>(globalFlag);
+    Double_t normGenEventSumw = 1.0; 
+    if (globalFlag.isMC()) {
+        std::string cacheFilePath = "config/RunsTree.json";
+        normGenEventSumw = runsT->getCachedNormGenEventSumw(skimF->getSampleKey(), 
+                                                     cacheFilePath, 
+                                                     skimF->getAllFileNames());
+    }
+
+    Helper::printBanner("Set and load SkimTree.cpp");
     std::shared_ptr<SkimTree> skimT = std::make_shared<SkimTree>(globalFlag);
     skimT->loadTree(skimF->getJobFileNames());
 
-    std::cout << "\n--------------------------------------" << std::endl;
-    std::cout << " Set and load ScaleEvent.cpp" << std::endl;
-    std::cout << "--------------------------------------" << std::endl;
+    Helper::printBanner("Set and load ScaleEvent.cpp");
     // Pass GlobalFlag reference to ScaleEvent
     std::shared_ptr<ScaleEvent> scaleEvent = std::make_shared<ScaleEvent>(globalFlag);
     try {
         scaleEvent->loadJetVetoRef();
-        scaleEvent->loadPuRef();
         if (globalFlag.isData()) {
             scaleEvent->loadGoldenLumiJson();
             scaleEvent->loadHltLumiJson();
+        }else{
+            scaleEvent->loadPuRef();
+            scaleEvent->setNormGenEventSumw(normGenEventSumw);
+            scaleEvent->setLumiWeightInput(globalFlag.getLumiPerYear(), skimF->getXsecNano(), skimF->getEventsNano());
         }
     } catch (const std::runtime_error& e) {
         std::cerr << "Critical error: " << e.what() << std::endl;
-        return EXIT_FAILURE;  // Exit with failure code
+        return EXIT_FAILURE;
     }
 
-
-    std::cout << "\n--------------------------------------" << std::endl;
-    std::cout << " Set and load ScaleObject.cpp" << std::endl;
-    std::cout << "--------------------------------------" << std::endl;
+    Helper::printBanner("Set and load ScaleObject.cpp");
     // Pass GlobalFlag reference to ScaleObject
     std::shared_ptr<ScaleObject> scaleObj = std::make_shared<ScaleObject>(globalFlag);
     try {
         scaleObj->setInputs();
         scaleObj->loadJetL1FastJetRef();
         scaleObj->loadJetL2RelativeRef();
-        scaleObj->loadJetL2L3ResidualRef();
-        scaleObj->loadJerResoRef();
-        scaleObj->loadJerSfRef();
-        // Use the GlobalFlag instance for conditional checks
-        if (globalFlag.getChannel() == GlobalFlag::Channel::GamJet) {  // Scale and Smearing
-            //scaleObj->loadPhoSsRef();
-            //scaleObj->loadEleSsRef();
+        if (globalFlag.isData()) {
+            scaleObj->loadJetL2L3ResidualRef();
+        }else{
+            scaleObj->loadJerResoRef();
+            scaleObj->loadJerSfRef();
+        }
+        if (globalFlag.getChannel() == GlobalFlag::Channel::GamJet) {  
+            // scaleObj->loadPhoSsRef();
+            // scaleObj->loadEleSsRef();
         }
         if (globalFlag.getChannel() == GlobalFlag::Channel::ZmmJet) { 
             scaleObj->loadMuRochRef();
         }
     } catch (const std::runtime_error& e) {
         std::cerr << "Critical error: " << e.what() << std::endl;
-        return EXIT_FAILURE;  // Exit with failure code
+        return EXIT_FAILURE;
     }
 
-    std::cout << "\n--------------------------------------" << std::endl;
-    std::cout << " Set and load PickEvent.cpp" << std::endl;
-    std::cout << "--------------------------------------" << std::endl;
-    
-    // Pass GlobalFlag reference to PickEvent
+    Helper::printBanner("Set and load PickEvent.cpp");
     auto pickEvent = std::make_unique<PickEvent>(globalFlag);
 
-    std::cout << "\n--------------------------------------" << std::endl;
-    std::cout << " Set and load PickObject.cpp" << std::endl;
-    std::cout << "--------------------------------------" << std::endl;
-    
-    // Pass GlobalFlag reference to PickObject
+    Helper::printBanner("Set and load PickObject.cpp");
     auto pickObject = std::make_unique<PickObject>(globalFlag);
 
-    // Output directory setup
     std::string outDir = "output";
     mkdir(outDir.c_str(), S_IRWXU);
     auto fout = std::make_unique<TFile>((outDir + "/" + outName).c_str(), "RECREATE");
 
-    std::cout << "\n--------------------------------------" << std::endl;
-    std::cout << " Loop over events and fill Histos" << std::endl;
-    std::cout << "--------------------------------------" << std::endl;
+    Helper::printBanner("Loop over events and fill Histos");
+
     
     if (globalFlag.getChannel() == GlobalFlag::Channel::ZeeJet) {
         std::cout << "==> Running ZeeJet" << std::endl;

@@ -72,10 +72,9 @@ void SkimTree::loadTree(std::vector<std::string> skimFileList) {
 	fChain_->SetBranchAddress("Jet_jetId", &Jet_jetId);
 	
 	//--------------------------------------- 
-	// HLT and MET Filters
+	// HLT 
 	//--------------------------------------- 
 	initializeTriggers();
-	initializeFilters();
 
 	//--------------------------------------- 
 	// Photon (for GamJet)
@@ -112,6 +111,9 @@ void SkimTree::loadTree(std::vector<std::string> skimFileList) {
 		fChain_->SetBranchAddress("Electron_mass", &Electron_mass);
 		fChain_->SetBranchAddress("Electron_eCorr", &Electron_eCorr);
 		fChain_->SetBranchAddress("Electron_cutBased", &Electron_cutBased);
+	    fChain_->SetBranchAddress("Jet_electronIdx1", &Jet_electronIdx1);
+	    fChain_->SetBranchAddress("Jet_electronIdx2", &Jet_electronIdx2);
+	
 	}
 	
 	//--------------------------------------- 
@@ -136,6 +138,8 @@ void SkimTree::loadTree(std::vector<std::string> skimFileList) {
 	  	fChain_->SetBranchAddress("Muon_tkRelIso", &Muon_tkRelIso);
 	  	fChain_->SetBranchAddress("Muon_dxy", &Muon_dxy);
 	  	fChain_->SetBranchAddress("Muon_dz", &Muon_dz);
+	    fChain_->SetBranchAddress("Jet_muonIdx1", &Jet_muonIdx1);
+	    fChain_->SetBranchAddress("Jet_muonIdx2", &Jet_muonIdx2);
 	}
 	
 	fChain_->SetBranchAddress("ChsMET_phi", &ChsMET_phi);
@@ -205,7 +209,7 @@ void SkimTree::initializeTriggers() {
     }
     // After population
     if (isDebug_) {
-        std::cout << "Initialized " << trigNames_.size() << " triggers." << std::endl;
+        std::cout << "Initialized " << trigNames_.size() << " trigger(s)" << std::endl;
     }
     
     if (trigNames_.size() != trigValues_.size()) {
@@ -226,60 +230,6 @@ Bool_t SkimTree::getTrigValue(const std::string& trigName) const {
         return false; // Default to false if trigger not found
     }
 }
-
-//--------------------------------------- 
-// MET Filter 
-//--------------------------------------- 
-void SkimTree::initializeFilters() {
-    std::vector<std::string> filterNames = {
-	    "Flag_goodVertices",
-	    "Flag_globalSuperTightHalo2016Filter",
-	    "Flag_HBHENoiseFilter",
-	    "Flag_HBHENoiseIsoFilter",
-	    "Flag_EcalDeadCellTriggerPrimitiveFilter",
-	    "Flag_BadPFMuonFilter",
-	    "Flag_eeBadScFilter"
-    };
-	if(year_ == GlobalFlag::Year::Year2017 || year_ == GlobalFlag::Year::Year2018){
-        filterNames.push_back("Flag_ecalBadCalibFilter");
-	}
-    size_t numFilters = filterNames.size();
-    std::cout<<"numFilters = "<<numFilters<<std::endl;
-    // Reserve space to prevent reallocations
-    filterNames_.reserve(numFilters);
-    filterValues_.reserve(numFilters);
-    filterNameToIndex_.reserve(numFilters);
-
-    for (size_t index = 0; index < numFilters; ++index) {
-        const auto& filterName = filterNames[index];
-        filterNames_.emplace_back(filterName);
-        filterValues_.emplace_back(0); // Initialize to 0 (false)
-        filterNameToIndex_.emplace(filterName, index);
-
-        // Set branch status and address
-        fChain_->SetBranchStatus(filterName.c_str(), true);
-        fChain_->SetBranchAddress(filterName.c_str(), &filterValues_[index]);
-    }
-    // After population
-    if (isDebug_) {
-        std::cout << "Initialized " << filterNames_.size() << " filters." << std::endl;
-    }
-    
-}
-
-Bool_t SkimTree::getFilterValue(const std::string& filterName) const {
-    auto it = filterNameToIndex_.find(filterName);
-    if (it != filterNameToIndex_.end()) {
-        return filterValues_[it->second] != 0; // Convert to bool
-    }
-    else{
-        if (isDebug_) {
-            std::cerr << "Filter name not found: " << filterName << std::endl;
-        }
-        return false; // Default to false if filterger not found
-    }
-}
-
 
 auto SkimTree::getEntries() const -> Long64_t {
     return fChain_ ? fChain_->GetEntries() : 0;

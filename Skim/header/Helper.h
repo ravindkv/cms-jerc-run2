@@ -15,6 +15,7 @@
 class Helper {
 public:
     static void initProgress(); 
+    static void printBanner(const std::string &title);
     static void printProgress(Long64_t jentry, Long64_t nentries, 
                        std::chrono::time_point<std::chrono::high_resolution_clock>& startClock, 
                        double& totTime);

@@ -49,6 +49,13 @@ std::vector<std::string> Helper::splitString(const std::string& s, const std::st
     return tokens;
 }
 
+void Helper::printBanner(const std::string &title) {
+    std::cout << "\n--------------------------------------" << std::endl;
+    std::cout << " " << title << std::endl;
+    std::cout << "--------------------------------------" << std::endl;
+}
+
+
 // Function to print progress during event processing
 void Helper::initProgress(Long64_t nentries){
     std::cout << "\nStarting loop over " << nentries << " entries" << '\n';

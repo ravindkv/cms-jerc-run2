@@ -25,7 +25,6 @@ void MathHdm::calcResponse(const TLorentzVector& p4CorrMet,
     p4Conservation_ = p4CorrMet + (p4Ref + p4Jet1 + p4Jetn);
 
     // Calculate intermediate 4-vectors according to the provided formulas.
-    // Note: p4Ref.Pt() is used for the pt reference.
     double ptRef = p4Ref_.Pt();
     double ptRefSqr = ptRef*ptRef;
     if (ptRef == 0) {
@@ -33,7 +32,7 @@ void MathHdm::calcResponse(const TLorentzVector& p4CorrMet,
         return;
     }
     
-    //Eq.8 of hdm_2023082.pdf
+    //Eq.8 of hdm_2023082.pdf // Eq.11 of JME-21-001
     p4Metu_ = -(p4CorrMet_ + p4Ref_ + p4Jet1_ + p4Jetn_);
 
     p4Met1_ = -p4Ref_ - p4Jet1_;

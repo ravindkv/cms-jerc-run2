@@ -3,7 +3,7 @@
 eosHistDir="/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Hist/"
 #-----------------------------------------------------------------
 
-years = [
+Years = [
     '2016Pre',
     '2016Post',
     '2017',
@@ -12,9 +12,11 @@ years = [
 
 # Example channels configuration without explicit extra systematics per year:
 chBaseConfig = {
-    "Wqqe":     {"years": years},
-    "Wqqm":     {"years": years},
-    "GamJet":   {"years": years},
+    "ZeeJet":     {"Years": Years},
+    #"ZmmJet":     {"Years": Years},
+    #"Wqqe":     {"Years": Years},
+    #"Wqqm":     {"Years": Years},
+    #"GamJet":   {"Years": Years},
 }
 
 
@@ -25,14 +27,12 @@ reduceJobsDataBy   = 10
 
 # Base configuration template remains the same.
 baseConfig = {
-    "skimFrom": None,
     "systOnMc": ["Base", "FsrUp", "FsrDown"],
     "systOnData": ["Base"],
 }
 
-def createChannelConfig(baseConfig, skimFrom, extraSystOnMc=None, extraSystOnData=None):
+def createChannelConfig(baseConfig, extraSystOnMc=None, extraSystOnData=None):
     config = baseConfig.copy()
-    config["skimFrom"] = skimFrom
     if extraSystOnMc:
         config["systOnMc"] = baseConfig.get("systOnMc", []) + extraSystOnMc
     if extraSystOnData:
@@ -52,16 +52,17 @@ def getExtraSystematics(channel, year):
 channelDetails = {}
 for channel, conf in chBaseConfig.items():
     channelDetails[channel] = {}
-    for year in conf["years"]:
+    for year in conf["Years"]:
         syst = getExtraSystematics(channel, year)
         channelDetails[channel][year] = createChannelConfig(
             baseConfig,
-            skimFrom=channel,
             extraSystOnMc=syst.get("extraSystOnMc"),
             extraSystOnData=syst.get("extraSystOnData")
         )
 
 
-from pprint import pprint
-pprint(channelDetails)
+if __name__=="__main__":
+    from pprint import pprint
+    pprint(channelDetails.keys())
+    pprint(channelDetails)
 

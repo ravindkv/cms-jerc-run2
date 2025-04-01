@@ -14,6 +14,7 @@ public:
     const std::vector<double>& getBinsPhi() const;
     const std::vector<double>& getBinsPhiRebin() const;
     const std::vector<double>& getBinsMass() const;
+    const std::vector<double>& getBinsAlpha() const;
 
     // Fixed bin width
     const std::vector<double>& getRangePt() const;
@@ -25,6 +26,7 @@ public:
     const std::vector<double>& getRangeMassJetSum() const;
     const std::vector<double>& getRangeMassTop() const;
     const std::vector<double>& getRangeChiSqr() const;
+    const std::vector<double>& getRangeAlpha() const;
 
     const std::vector<double>& getRangeRun() const;
     const std::vector<double>& getRangeDeltaR() const;
@@ -50,6 +52,7 @@ private:
     std::vector<double> binsPhi_;
     std::vector<double> binsPhiRebin_;
     std::vector<double> binsMass_;
+    std::vector<double> binsAlpha_;
 
     std::vector<double> rangePt_;
     std::vector<double> rangeEta_;
@@ -59,6 +62,7 @@ private:
     std::vector<double> rangeMassJet1_;
     std::vector<double> rangeMassJetSum_;
     std::vector<double> rangeMassTop_;
+    std::vector<double> rangeAlpha_;
 
     std::vector<double> rangeRun_;
     std::vector<double> rangeDeltaR_;

@@ -11,7 +11,6 @@ public:
     // Constructor accepting a reference to GlobalFlag
     explicit PickEvent(GlobalFlag& globalFlags);
 
-    bool passFilter(const std::shared_ptr<SkimTree>& skimT) const;
     bool passHlt(const std::shared_ptr<SkimTree>& skimT);
     bool passHltWithPt(const std::shared_ptr<SkimTree>& skimT, const double& pt);
     bool passHltWithPtEta(const std::shared_ptr<SkimTree>& skimT, const double& pt, const double& eta);

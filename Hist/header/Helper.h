@@ -25,6 +25,7 @@ public:
     // Function to split a string into smaller vectors of string 
     static std::vector<std::string> splitString(const std::string& s, const std::string& delimiter);
     
+    static void printBanner(const std::string &title);
     //Function to print the progress time of an event loop
     static void initProgress(Long64_t nentries); 
     static void printProgress(Long64_t jentry, Long64_t nentries, 

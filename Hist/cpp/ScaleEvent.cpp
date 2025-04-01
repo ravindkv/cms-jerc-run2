@@ -60,6 +60,21 @@ void ScaleEvent::loadConfig(const std::string& filename) {
     std::cout << "  puName: " << puName_ << "\n";
 }
 
+void ScaleEvent::setNormGenEventSumw(Double_t normGenEventSumw){
+    normGenEventSumw_ = normGenEventSumw;
+    if (isDebug_) {
+        std::cout<<"normGenEventSumw = "<<normGenEventSumw<<'\n';
+    }
+}
+void ScaleEvent::setLumiWeightInput(double lumiPerYear, double xsec, double nEventsNano){
+    lumiWeight_ = 1000 * lumiPerYear * xsec/nEventsNano; //1000 to convert pb into fb
+    if (isDebug_) {
+        std::cout<<"lumiPerYear = "<<lumiPerYear<<'\n';
+        std::cout<<"xsec = "<<xsec<<'\n';
+        std::cout<<"nEventsNano = "<<nEventsNano<<'\n';
+        std::cout<<"lumiWeight  = "<<lumiWeight_<<'\n';
+    }
+}
 
 void ScaleEvent::loadJetVetoRef() {
   std::cout << "==> loadJetVetoRef()" << '\n';
@@ -97,6 +112,28 @@ auto ScaleEvent::checkJetVetoMap(const SkimTree& skimT) const -> bool {
         isVeto = true;
         break; // Exit the loop as soon as we find a veto.
       }
+    }
+  } catch (const std::exception &e) {
+    std::cerr << "\nEXCEPTION: in checkJetVetoMap(): " << e.what() << '\n';
+    throw std::runtime_error("Failed to check Jet Veto Map");
+  }
+  return isVeto;
+}
+
+auto ScaleEvent::checkJetVetoMapOnJet1(const TLorentzVector& p4Jet1) const -> bool {
+  bool isVeto = false;
+  try {
+      auto jvNumber = loadedJetVetoRef_->evaluate({jetVetoKey_, p4Jet1.Eta(), p4Jet1.Phi()});
+      if (isDebug_) {
+        std::cout << 
+            jetVetoKey_
+            << ", jetEta= " << p4Jet1.Eta()
+            << ", jetPhi= " << p4Jet1.Phi()
+            << ", jetVetoNumber = " << jvNumber 
+            << '\n';
+      }
+      if (jvNumber > 0) {
+        isVeto = true;
     }
   } catch (const std::exception &e) {
     std::cerr << "\nEXCEPTION: in checkJetVetoMap(): " << e.what() << '\n';

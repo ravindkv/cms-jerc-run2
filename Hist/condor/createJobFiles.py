@@ -4,7 +4,9 @@ import json
 import itertools
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.getcwd().replace("condor",""))
+
 from Inputs import *
+Channels =  list(channelDetails.keys()) 
 
 def createJobs(jsonFile, jdlFile, logDir="log"):
     os.system(f"mkdir -p tmpSub/{logDir}")

@@ -22,10 +22,26 @@ public:
     void setInputJsonPath(const std::string& inDir);
     void loadInputJson();
 
+    [[nodiscard]] const std::string& getSampleKey() const { 
+        return loadedSampKey_; 
+    }
+
+    [[nodiscard]] const std::vector<std::string>& getAllFileNames() const { 
+        return loadedAllFileNames_; 
+    }
+
     void loadJobFileNames();
 
     [[nodiscard]] const std::vector<std::string>& getJobFileNames() const { 
         return loadedJobFileNames_; 
+    }
+
+    [[nodiscard]] const double & getXsecNano() const { 
+        return nanoXssOrLumi_; 
+    }
+
+    [[nodiscard]] const long int & getEventsNano() const { 
+        return nanoEvents_; 
     }
 
 private:

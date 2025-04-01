@@ -1,6 +1,13 @@
 
 #include "Helper.h"
 
+void Helper::printBanner(const std::string &title) {
+    std::cout << "\n--------------------------------------" << std::endl;
+    std::cout << " " << title << std::endl;
+    std::cout << "--------------------------------------" << std::endl;
+}
+
+
 void Helper::initProgress(){
     std::cout<<"---------------------------"<<'\n';
     std::cout<<std::setw(coutTabWidth10)

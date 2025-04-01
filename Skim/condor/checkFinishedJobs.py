@@ -84,7 +84,7 @@ def checkJobs(jsonFile):
             continue
 
     # Check in parallel
-    with multiprocessing.Pool() as pool:
+    with multiprocessing.Pool(processes=5) as pool:
         results = pool.map(check_file, file_list)
 
     # Build the "unfinished" (corrupted) dictionary

@@ -1,6 +1,5 @@
 {
-  "2016Pre": ["HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ"],
-  "2016Post": ["HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ"],
+  "2016": ["HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL_DZ"],
   "2017": ["HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL"],
   "2018": ["HLT_Ele23_Ele12_CaloIdL_TrackIdL_IsoVL"]
 }

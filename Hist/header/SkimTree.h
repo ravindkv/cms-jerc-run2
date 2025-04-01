@@ -62,6 +62,10 @@ public:
     Float_t Jet_muEF[nJetMax]{};
 
     Short_t Jet_genJetIdx[nJetMax]{}; 
+    Int_t Jet_muonIdx1[nJetMax]{}; 
+    Int_t Jet_muonIdx2[nJetMax]{}; 
+    Int_t Jet_electronIdx1[nJetMax]{}; 
+    Int_t Jet_electronIdx2[nJetMax]{}; 
 
     // Photon variables
     static const int nPhotonMax = 200;
@@ -78,11 +82,9 @@ public:
     Float_t Photon_eCorr[nPhotonMax]{};
     Float_t Photon_energyErr[nPhotonMax]{};
 
-    //HLT and MET Filters
+    //HLT
     std::vector<std::string> getTrigNames() const {return trigNames_;}
     Bool_t getTrigValue(const std::string& trigName) const;
-    std::vector<std::string> getFilterNames() const {return filterNames_;}
-    Bool_t getFilterValue(const std::string& filterName) const;
 
     // Gen photon variables
     UInt_t nGenIsolatedPhoton{};
@@ -179,14 +181,6 @@ private:
     std::vector<char> trigValues_; // Changed from std::vector<Bool_t> to std::vector<char>
     std::unordered_map<std::string, size_t> trigNameToIndex_;
     void initializeTriggers();
-
-    // MET Filter
-    std::vector<std::string> filterNames_;
-    std::vector<char> filterValues_; // Changed from std::vector<Bool_t> to std::vector<char>
-    std::unordered_map<std::string, size_t> filterNameToIndex_;
-    void initializeFilters();
-    
-    //std::unordered_map<std::string, Bool_t> metFilterName2Values_;
 
     // Reference to GlobalFlag instance
     GlobalFlag& globalFlags_;

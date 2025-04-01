@@ -9,6 +9,7 @@ import subprocess
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.getcwd().replace("condor/merge",""))
 from Inputs import *
+Channels =  channelDetails
 
 def merge_root_files(sKey, jHist, dirName, channel, year):
     dirPath = os.path.join(eosHistDir, channel, "MergedJobs", year)
@@ -28,9 +29,8 @@ if __name__=="__main__":
     tasks = []
 
     for ch, year in itertools.product(Channels.keys(), Years):
-        chHist = Channels[ch]
         print(f"\nProcessing Channel: {ch}, Year: {year}\n")
-        fHist = open(f"{histDir}/FilesHist_{chHist}_{year}.json", "r")
+        fHist = open(f"{histDir}/FilesHist_{ch}_{year}.json", "r")
         jHist = json.load(fHist)
         fHist.close()  # Close the file after reading
 

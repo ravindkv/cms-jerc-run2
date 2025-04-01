@@ -1,5 +1,5 @@
-#ifndef SCALEEVENT_H
-#define SCALEEVENT_H
+
+#pragma once 
 
 #include <set>
 #include <iostream>
@@ -11,6 +11,7 @@
 #include "GlobalFlag.h"
 
 #include <nlohmann/json.hpp>
+#include <TLorentzVector.h>
 
 class ScaleEvent{
 public: 
@@ -18,11 +19,16 @@ public:
     explicit ScaleEvent(GlobalFlag& globalFlags);
     ~ScaleEvent(){}
     
-    void setInputs();
+    void setNormGenEventSumw(Double_t normGenEventSumw);
+    void setLumiWeightInput(double lumiPerYear, double xsec, double nEventsNano);
+
+    Double_t getNormGenEventSumw(){return normGenEventSumw_;} 
+    Double_t getLumiWeight(){return lumiWeight_;} 
 
     // Jet veto
     void loadJetVetoRef();
     bool checkJetVetoMap(const SkimTree& skimT) const;
+    bool checkJetVetoMapOnJet1(const TLorentzVector& p4Jet1) const;
     
     // Lumi
     void loadGoldenLumiJson();
@@ -47,6 +53,7 @@ private:
     correction::Correction::Ref loadedJetVetoRef_;
     
     // Lumi
+    double lumiWeight_;
     std::string goldenLumiJsonPath_;
     nlohmann::json loadedGoldenLumiJson_;
 
@@ -64,6 +71,7 @@ private:
     correction::Correction::Ref loadedPuRef_;
     
     double minbXsec_{};
+    Double_t normGenEventSumw_;
 
     // Reference to GlobalFlag instance
     GlobalFlag& globalFlags_;
@@ -77,6 +85,4 @@ private:
     // Load configuration from external JSON file
     void loadConfig(const std::string& filename);
 };
-
-#endif
 

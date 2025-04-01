@@ -11,6 +11,10 @@ void HistRef::InitializeHistograms(TDirectory *origDir, const std::string& direc
     // Use the Helper method to get or create the directory
     std::string dirName = directoryName + "/HistRef";
     TDirectory* newDir = Helper::createTDirectory(origDir, dirName);
+    if (!newDir) {
+        std::cerr << "Error: Failed to create directory: " << dirName << std::endl;
+        return;  
+    }
     newDir->cd();
 
     std::vector<double> binsPt  = varBin.getBinsPt();
@@ -104,7 +108,7 @@ void HistRef::Fill(const int& nRef, const TLorentzVector& p4Ref, const TLorentzV
 	}
     if (fabs(refEta) < 1.3) {
         hist_.h1EventInRefPtForRefBarrel->Fill(refPt, weight);
-        if (p4GenRef.Pt() > 0) {
+        if (p4GenRef.Pt() > 0 && refPt > 0) {
            hist_.p1RefPtOverGenRefPtInGenRefPt->Fill(p4GenRef.Pt(), refPt / p4GenRef.Pt(), weight);
            hist_.p1GenRefPtOverRefPtInRefPt->Fill(refPt, p4GenRef.Pt() / refPt, weight);
         }

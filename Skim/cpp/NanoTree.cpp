@@ -100,7 +100,7 @@ void NanoTree::loadTree(std::vector<std::string> nanoFileList) {
             }
             fullPath = baseDir + fileName;
         }
-
+        std::cout<<fullPath<<std::endl;
         // Validate and open the file
         TFile* file = validateAndOpenFile(fullPath);
         if (!file) {
@@ -169,15 +169,9 @@ auto NanoTree::loadEntryRuns(Long64_t entry) -> Long64_t {
 // New member function: Enable a list of branches in fChain.
 void NanoTree::enableBranches(const std::vector<std::string>& branchNames, const std::string & context) {
     for (const auto & branch : branchNames) {
-        if (!fChain->GetListOfBranches()->FindObject(branch.c_str())) {
-            if (globalFlags_.isDebug) {
-                std::cerr << "Debug: Branch '" << branch << "' not found in " << context << ".\n";
-            }
-        } else {
-            fChain->SetBranchStatus(branch.c_str(), true);
-            if (globalFlags_.isDebug) {
-                std::cout << "Debug: Enabled branch '" << branch << "' in " << context << ".\n";
-            }
+        fChain->SetBranchStatus(branch.c_str(), true);
+        if (globalFlags_.isDebug) {
+            std::cout << "Debug: Enabled branch '" << branch << "' in " << context << ".\n";
         }
     }
 }

@@ -27,10 +27,6 @@ SkimFile::~SkimFile() noexcept {
     // No manual resource cleanup required.
 }
 
-void SkimFile::setInput(const std::string& outName) {
-    outName_ = outName;
-}
-
 void SkimFile::loadInput() {
     std::cout << "==> loadInput()" << '\n';
     try {
@@ -109,7 +105,7 @@ void SkimFile::loadInputJson() {
     try {
         // Parse JSON content and update member variables
         js.at(loadedSampKey_).at(1).get_to(loadedAllFileNames_);
-        js.at(loadedSampKey_).at(0).at("xssOrLumi").get_to(nanoXssOrLumi_);
+        js.at(loadedSampKey_).at(0).at("xsecOrLumi").get_to(nanoXssOrLumi_);
         js.at(loadedSampKey_).at(0).at("nEvents").get_to(nanoEvents_);
         std::cout << "nanoXssOrLumi = " << nanoXssOrLumi_ 
                   << ", nanoEvents = " << nanoEvents_ << '\n';

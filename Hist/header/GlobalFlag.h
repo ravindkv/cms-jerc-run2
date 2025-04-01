@@ -79,6 +79,7 @@ public:
     std::string getYearStr() const;
     std::string getDataStr() const;
     std::string getMcStr() const;
+    double getLumiPerYear() const;
 
     // Method to print active flags
     void printFlags() const;

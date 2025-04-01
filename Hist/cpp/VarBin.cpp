@@ -60,7 +60,8 @@ void VarBin::InitializeBins() {
 
     // Global bin arrays
     binsEta_ = j["binsEta"].get<std::vector<double>>();
-    binsPhi_ = j["binsPhi"].get<std::vector<double>>();  // Fixed: two closing angle brackets.
+    binsPhi_ = j["binsPhi"].get<std::vector<double>>();  
+    binsAlpha_ = j["binsAlpha"].get<std::vector<double>>();  
     // For binsPhiRebin, if the JSON entry is "same_as_binsPhi", copy binsPhi_
     if (j["binsPhiRebin"].is_string()) {
         std::string s = j["binsPhiRebin"].get<std::string>();
@@ -93,6 +94,7 @@ void VarBin::InitializeBins() {
     rangeCountRef_ = getRange<int, double>(ranges, "rangeCountRef");
     rangeFraction_ = getRange<int, double>(ranges, "rangeFraction");
     rangeIndex_    = getRange<int, double>(ranges, "rangeIndex");
+    rangeAlpha_       = getRange<int, double>(ranges, "rangeAlpha");
 
     // (Optional) Print bins for debugging.
     printBins("BinsPt", binsPt_);
@@ -133,6 +135,10 @@ const std::vector<double>& VarBin::getBinsPhiRebin() const {
 const std::vector<double>& VarBin::getBinsMass() const {
     printBins("getBinsMass()", binsMass_);
     return binsMass_;
+}
+const std::vector<double>& VarBin::getBinsAlpha() const {
+    printBins("getBinsAlpha()", binsAlpha_);
+    return binsAlpha_;
 }
 
 const std::vector<double>& VarBin::getRangePt() const {
@@ -200,3 +206,7 @@ const std::vector<double>& VarBin::getRangeIndex() const {
     return rangeIndex_;
 }
 
+const std::vector<double>& VarBin::getRangeAlpha() const {
+    printBins("getRangeAlpha()", rangeAlpha_);
+    return rangeAlpha_;
+}

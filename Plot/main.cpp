@@ -1,17 +1,6 @@
-#include "RunZeeJet.h"
-#include "RunZmmJet.h"
-#include "RunGamJet.h"
-#include "RunMultiJet.h"
-#include "RunWqqe.h"
-#include "RunWqqm.h"
-
-//#include "RunMCTruth.h"
-//#include "RunFlavour.h"
-//#include "RunVetoMap.h"
-//#include "RunIncJet.h"
-//#include "RunDiJet.h"
 #include "GlobalFlag.h"
 #include "Slide.h"
+#include "RunChannel.h"
 
 #include <filesystem>
 #include <nlohmann/json.hpp>
@@ -28,7 +17,7 @@ int main(int argc, char* argv[]){
     return 1;
   }
 
-  std::string jsonFile = "input/root/json/MergedHistFiles.json";
+  std::string jsonFile = "input/json/MergedHistFiles.json";
   nlohmann::json js;
   std::string outName;
 
@@ -68,7 +57,6 @@ int main(int argc, char* argv[]){
     }
   }
 
-  //string eosPlotDir="/eos/user/r/rverma/www/public/cms-jerc-run2/Plot";
   string eosPlotDir="/eos/cms/store/group/phys_jetmet/rverma/cms-jerc-run2/Plot";
   string localTexDir = "./output";
   std::filesystem::create_directories(localTexDir);
@@ -84,76 +72,19 @@ int main(int argc, char* argv[]){
   cout<<"\n--------------------------------------"<<endl;
   cout<<" Set GlobalFlag.cpp"<<endl;
   cout<<"--------------------------------------"<<endl;
-  GlobalFlag *globF =  new GlobalFlag(outName);
-  globF->printFlag();
+  GlobalFlag *globalFlag =  new GlobalFlag(outName);
+  globalFlag->printFlag();
 
   cout<<"\n--------------------------------------"<<endl;
   cout<<" Create plots and slides"<<endl;
   cout<<"--------------------------------------"<<endl;
+  std::string channelConfigPath = "config/json/ReadConfig"+globalFlag->channelStr+".json";
+  ReadConfig readConfig(channelConfigPath);
 
-  if(globF->isZeeJet or isAllChannel){
-    cout<<"==> Running ZeeJet"<<endl;
-    RunZeeJet *zeeJet = new RunZeeJet(outName);
-    zeeJet->Run(js, eosPlotDir, channelSlide, allChannelSlide);
-  }
+  std::cout << "==> Running for: " << channelConfigPath << std::endl;
+  auto runCh = std::make_unique<RunChannel>(outName);
+  runCh->Run(js, eosPlotDir, channelSlide, allChannelSlide, readConfig);
 
-  if(globF->isZmmJet or isAllChannel){
-    cout<<"==> Running ZmmJet"<<endl;
-    RunZmmJet *zmmJet = new RunZmmJet(outName);
-    zmmJet->Run(js, eosPlotDir, channelSlide, allChannelSlide);
-  }
-
-  if(globF->isGamJet or isAllChannel){
-    cout<<"==> Running GamJet"<<endl;
-    RunGamJet *gamJet = new RunGamJet(outName);
-    gamJet->Run(js, eosPlotDir, channelSlide, allChannelSlide);
-  }
-
-  if(globF->isMultiJet or isAllChannel){
-    cout<<"==> Running MultiJet"<<endl;
-    RunMultiJet *multiJet = new RunMultiJet(outName);
-    multiJet->Run(js, eosPlotDir, channelSlide, allChannelSlide);
-  }
-
-  if(globF->isWqqe or isAllChannel){
-    cout<<"==> Running Wqqe"<<endl;
-    RunWqqe *wqqe = new RunWqqe(outName);
-    wqqe->Run(js, eosPlotDir, channelSlide, allChannelSlide);
-  }
-
-  if(globF->isWqqm or isAllChannel){
-    cout<<"==> Running Wqqm"<<endl;
-    RunWqqm *wqqm = new RunWqqm(outName);
-    wqqm->Run(js, eosPlotDir, channelSlide, allChannelSlide);
-  }
-
-  /*
-  if(globF->isMCTruth){
-    cout<<"==> Running MCTruth"<<endl;
-    PlotMCTruth *mcTruth = new PlotMCTruth(oName);
-    mcTruth->Run(js, outRoot, chLatex);  
-  }
-  if(globF->isFlavour){
-    cout<<"==> Running Flavour"<<endl;
-    PlotFlavour *mcFlavour = new PlotFlavour(oName);
-    mcFlavour->Run(js, outRoot, chLatex);  
-  }
-  if(globF->isVetoMap){
-    cout<<"==> Running VetoMap"<<endl;
-    PlotVetoMap *vetoMap = new PlotVetoMap(oName);
-    vetoMap->Run(js, outRoot, chLatex);  
-  }
-  if(globF->isIncJet){
-    cout<<"==> Running IncJet"<<endl;
-    PlotIncJet *incJet = new PlotIncJet(oName);
-    incJet->Run(js, outRoot, chLatex);  
-  }
-  if(globF->isDiJet){
-    cout<<"==> Running DiJet"<<endl;
-    PlotDiJet *diJet = new PlotDiJet(oName);
-    diJet->Run(js, outRoot, chLatex);  
-  }
-  */
   allChannelSlide.addCenteredTextSlide("Thank you!");
   allChannelSlide.endDocument();
   std::cout<<chLatex<<std::endl;

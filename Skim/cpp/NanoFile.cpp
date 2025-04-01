@@ -3,11 +3,10 @@
 #include <stdexcept>
 #include <regex>
 
-NanoFile::NanoFile(GlobalFlag& globalFlags, const std::string& outName, const std::string& inJsonDir)
-    : globalFlags_(globalFlags) {
+NanoFile::NanoFile(GlobalFlag& globalFlags, const std::string& outName, const std::string& inputJsonPath)
+    : globalFlags_(globalFlags), inputJsonPath_(inputJsonPath) {
     setInput(outName);
     loadInput();
-    setInputJsonPath(inJsonDir);
     loadInputJson();
     loadJobFileNames();
 }
@@ -44,18 +43,6 @@ void NanoFile::loadInput() {
         throw std::runtime_error("Error parsing job numbers from output name: " + std::string(e.what()));
     }
     std::cout << "Loaded sample key: " << loadedSampleKey_ << '\n';
-}
-
-void NanoFile::setInputJsonPath(const std::string& inputDir) {
-    // Extract channel from loadedSampleKey_
-    auto parts = splitString(loadedSampleKey_, "_");
-    if (parts.size() < 2) {
-        throw std::runtime_error("Invalid sample key format, expected at least two parts separated by '_': " + loadedSampleKey_);
-    }
-    std::string channel = parts[1];
-    std::string year = globalFlags_.is2016Post ? "2016Post" : globalFlags_.is2017 ? "2017" : globalFlags_.is2018 ? "2018" : "2016Pre";
-    inputJsonPath_ = inputDir + "/FilesNano_" + channel + "_" + year + ".json";
-    std::cout << "+ setInputJsonPath() = " << inputJsonPath_ << '\n';
 }
 
 void NanoFile::loadInputJson() {

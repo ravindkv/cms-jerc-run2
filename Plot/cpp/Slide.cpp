@@ -1,6 +1,8 @@
 #include "Slide.h"
 #include <iostream>
 #include <cmath>
+#include <sstream>
+#include <vector>
 
 Slide::Slide(const std::string& latexFile) {
     file_.open(latexFile);
@@ -190,3 +192,167 @@ void Slide::endDocument() {
     file_ << "\\end{document}\n";
 }
 
+void Slide::addLatexSlide(const std::string& slideTitle, const std::string& latexContent) {
+    file_ << "\\begin{frame}{" << slideTitle << "}\n";
+    // Optionally switch to a smaller font if needed, e.g.:
+    // file_ << "\\scriptsize\n";
+    file_ << latexContent << "\n";
+    file_ << "\\end{frame}\n\n";
+}
+
+
+std::string Slide::processJson(const json& j, int indent) {
+    std::string latex;
+    std::string indentSpaces(indent, ' ');  // simple indentation for readability
+
+    if (j.is_object()) {
+        // For JSON objects, we still use nested itemize.
+        latex += indentSpaces + "\\begin{itemize}\n";
+        for (auto it = j.begin(); it != j.end(); ++it) {
+            // Print key
+            latex += indentSpaces + "  \\item " + formatString(it.key()) + ": ";
+            // Recursively process value
+            latex += processJson(it.value(), indent + 4);
+        }
+        latex += indentSpaces + "\\end{itemize}\n";
+    } 
+    else if (j.is_array()) {
+        latex += "[";
+        for (size_t i = 0; i < j.size(); ++i) {
+            if (i > 0)
+                latex += ", ";
+            latex += j[i].dump();
+        }
+        latex += "]\n";
+    }
+    else {
+        // For primitive types (number, string, bool, null), just convert to string.
+        latex += formatString(j.dump());
+        latex += "\n";
+    }
+
+    return latex;
+}
+
+
+std::vector<std::string> Slide::splitLatexContent(const std::string &latexContent, size_t maxRows) {
+    std::vector<std::string> slides;
+    std::istringstream iss(latexContent);
+    std::string line;
+    std::string currentSlide;
+    size_t rowCount = 0;
+    // Use a stack to track the names of open environments (e.g. "itemize")
+    std::vector<std::string> envStack;
+
+    // Helper lambda: scans a line for any \begin{...} or \end{...} commands and updates envStack.
+    auto processLineEnvs = [&](const std::string& text, std::vector<std::string>& stack) {
+        size_t pos = 0;
+        while (pos < text.size()) {
+            size_t posBegin = text.find("\\begin{", pos);
+            size_t posEnd = text.find("\\end{", pos);
+            if (posBegin == std::string::npos && posEnd == std::string::npos)
+                break;
+            if (posBegin != std::string::npos && (posBegin < posEnd || posEnd == std::string::npos)) {
+                size_t start = posBegin + 7; // after "\begin{"
+                size_t endBrace = text.find("}", start);
+                if (endBrace != std::string::npos) {
+                    std::string envName = text.substr(start, endBrace - start);
+                    stack.push_back(envName);
+                    pos = endBrace + 1;
+                    continue;
+                }
+            } else if (posEnd != std::string::npos) {
+                size_t start = posEnd + 5; // after "\end{"
+                size_t endBrace = text.find("}", start);
+                if (endBrace != std::string::npos) {
+                    std::string envName = text.substr(start, endBrace - start);
+                    if (!stack.empty() && stack.back() == envName)
+                        stack.pop_back();
+                    pos = endBrace + 1;
+                    continue;
+                }
+            }
+            break;
+        }
+    };
+
+    // Helper lambda: trim whitespace from both ends.
+    auto trim = [](const std::string& s) -> std::string {
+       size_t start = s.find_first_not_of(" \t");
+       if (start == std::string::npos) return "";
+       size_t end = s.find_last_not_of(" \t");
+       return s.substr(start, end - start + 1);
+    };
+
+    while (std::getline(iss, line)) {
+        std::string trimmed = trim(line);
+        // Update the environment stack based on the contents of this line.
+        processLineEnvs(line, envStack);
+
+        // Consider a line as "content" if, after removing any inline \begin{itemize} or \end{itemize},
+        // it is not empty.
+        std::string temp = trimmed;
+        size_t pos;
+        while ((pos = temp.find("\\begin{itemize}")) != std::string::npos) {
+            temp.erase(pos, std::string("\\begin{itemize}").length());
+        }
+        while ((pos = temp.find("\\end{itemize}")) != std::string::npos) {
+            temp.erase(pos, std::string("\\end{itemize}").length());
+        }
+        if (!temp.empty()) {
+            rowCount++;
+        }
+
+        currentSlide += line + "\n";
+
+        // When we hit our row limit, we check our current environment state.
+        if (rowCount >= maxRows) {
+            // Save the current open environments.
+            std::vector<std::string> currentEnvs = envStack;
+            // Close them in reverse order so that the current slide has balanced environments.
+            for (auto it = currentEnvs.rbegin(); it != currentEnvs.rend(); ++it) {
+                currentSlide += "\\end{" + *it + "}\n";
+            }
+            slides.push_back(currentSlide);
+            currentSlide.clear();
+            // Reopen the environments in the same order for the new slide.
+            for (const auto &env : currentEnvs) {
+                currentSlide += "\\begin{" + env + "}\n";
+            }
+            rowCount = 0;
+        }
+    }
+    if (!currentSlide.empty()) {
+        slides.push_back(currentSlide);
+    }
+    return slides;
+}
+
+void Slide::makeSlideFromJson(const std::string &jsonContent) {
+    json j;
+    try {
+        j = json::parse(jsonContent);
+    } catch (json::parse_error &e) {
+        std::cerr << "JSON parse error: " << e.what() << std::endl;
+        return;
+    }
+    std::string latexContent = processJson(j);
+    size_t maxRows = 15; // Adjust as needed.
+    std::vector<std::string> slideContents = splitLatexContent(latexContent, maxRows);
+    for (size_t i = 0; i < slideContents.size(); ++i) {
+        std::string frameTitle = "JSON Slide " + std::to_string(i + 1);
+        addLatexSlide(frameTitle, slideContents[i]);
+    }
+}
+
+void Slide::makeSlideFromJsonFile(const std::string &jsonFilePath) {
+    std::ifstream file(jsonFilePath);
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not open JSON file: " << jsonFilePath << std::endl;
+        return;
+    }
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    std::string jsonContent = buffer.str();
+    makeSlideFromJson(jsonContent);
+}

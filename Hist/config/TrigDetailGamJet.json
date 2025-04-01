@@ -1,16 +1,5 @@
 {
-  "2016Pre": {
-    "HLT_Photon175": { "ptMin": 230, "ptMax": 4000 },
-    "HLT_Photon165_R9Id90_HE10_IsoM": { "ptMin": 175, "ptMax": 230 },
-    "HLT_Photon120_R9Id90_HE10_IsoM": { "ptMin": 130, "ptMax": 175 },
-    "HLT_Photon90_R9Id90_HE10_IsoM": { "ptMin": 105, "ptMax": 130 },
-    "HLT_Photon75_R9Id90_HE10_IsoM": { "ptMin": 85, "ptMax": 105 },
-    "HLT_Photon50_R9Id90_HE10_IsoM": { "ptMin": 60, "ptMax": 85 },
-    "HLT_Photon36_R9Id90_HE10_IsoM": { "ptMin": 40, "ptMax": 60 },
-    "HLT_Photon30_R9Id90_HE10_IsoM": { "ptMin": 35, "ptMax": 40 },
-    "HLT_Photon22_R9Id90_HE10_IsoM": { "ptMin": 20, "ptMax": 35 }
-  },
-  "2016Post": {
+  "2016": {
     "HLT_Photon175": { "ptMin": 230, "ptMax": 4000 },
     "HLT_Photon165_R9Id90_HE10_IsoM": { "ptMin": 175, "ptMax": 230 },
     "HLT_Photon120_R9Id90_HE10_IsoM": { "ptMin": 130, "ptMax": 175 },

@@ -1,9 +1,7 @@
 {
   "electronPick": {
-    "default": {
-      "minPtEle": 25.0,
-      "maxEtaEle": 2.4
-    },
+    "minPtEle": 25.0,
+    "maxEtaEle": 2.4,
     "tightId": 4,
     "ebEeGap": {
       "min": 1.4442,
@@ -17,8 +15,9 @@
   },
   "jetPick": {
     "minPtJet": 12.0,
-    "maxEtaJet": 1.3,
-    "minDeltaR": 0.2,
+    "maxEtaLeadingJet": 1.3,
+    "Jet_ElectronIdx1": -1,
+    "Jet_ElectronIdx2": -1,
     "minJetId": 6
   },
   "genElectronPick": {

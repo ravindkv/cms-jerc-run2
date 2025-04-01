@@ -6,6 +6,7 @@
 #include "HistBarrel.h"
 #include "HistMain.h"
 #include "HistFinal.h"
+#include "HistAlpha.h"
 
 #include "PickObjectZeeJet.h"
 
@@ -39,16 +40,16 @@ void RunZeeJet::loadConfig(const std::string& filename) {
     configFile >> config;
     
     // Read the configuration values
-    cuts_ = config["cuts"].get<std::vector<std::string>>();
+    cutflows_ = config["cutflows"].get<std::vector<std::string>>();
     minRefPts_ = config["minRefPts"].get<std::vector<int>>();
-    minElectron_ = config["minElectron"].get<int>();
-    maxElectron_ = config["maxElectron"].get<int>();
-    minJet_ = config["minJet"].get<int>();
-    maxDphi_ = config["maxDphi"].get<double>();
+    nElectronMin_ = config["nElectronMin"].get<int>();
+    nElectronMax_ = config["nElectronMax"].get<int>();
+    maxDeltaPhiRefJet1_ = config["maxDeltaPhiRefJet1"].get<double>();
     maxAlpha_ = config["maxAlpha"].get<double>();
+    alphaCuts_ = config["alphaCuts"].get<std::vector<double>>();
     maxRefEta_ = config["maxRefEta"].get<double>();
-    minDbResp_ = config["minDbResp"].get<double>();
-    minMpfResp_ = config["minMpfResp"].get<double>();
+    minResp_ = config["minResp"].get<double>();
+    maxResp_ = config["maxResp"].get<double>();
 }
 
 // Main run method updated to use configuration parameters
@@ -60,19 +61,20 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Scal
  
     TDirectory *origDir = gDirectory;
     //------------------------------------
-    // Initialise histograms using config cuts
+    // Initialise histograms using config cutflows
     //------------------------------------
     
-    auto h1EventInCutflow = std::make_unique<HistCutflow>(origDir, "", cuts_, globalFlags_);
+    auto h1EventInCutflow = std::make_unique<HistCutflow>(origDir, "", cutflows_, globalFlags_);
       
     // Variable binning
     VarBin varBin(globalFlags_);
     
-    // Use minRefPts from config instead of hardcoding the values
+    // Define histos in cutflows directories 
     HistRef histRef(origDir, "passExactly1Ref", varBin);
-    HistScale histScale(origDir, "passAtleast2Jet", varBin);
+    HistScale histScale(origDir, "passAtleast1Jet", varBin);
     HistBarrel histBarrel(origDir, "passRefBarrel", varBin);
     HistTag histTag(origDir, "passRefBarrel", varBin, globalFlags_);
+    HistAlpha histAlpha(origDir, "passRefBarrel", varBin, alphaCuts_);
     HistRef histRef2(origDir,  "passAlpha", varBin);
     HistMain histMain(origDir, "passAlpha", varBin);
     HistFinal histFinal(origDir, "passAlpha", varBin);
@@ -108,7 +110,7 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Scal
         h1EventInCutflow->fill("passSkim");
 
         //------------------------------------
-        // Trigger and golden lumi, MET filter selection 
+        // Trigger and golden lumi
         //------------------------------------
         if (!pickEvent->passHlt(skimT)) continue; 
         h1EventInCutflow->fill("passHlt");
@@ -120,9 +122,6 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Scal
         if (!passGoodLumi) continue; 
         h1EventInCutflow->fill("passGoodLumi");
 
-        if (!pickEvent->passFilter(skimT)) continue; 
-        h1EventInCutflow->fill("passMetFilter");
-
         //------------------------------------------
         // Select objects
         //------------------------------------------
@@ -131,16 +130,27 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Scal
         if(globalFlags_.isDebug()) scaleElectron->print();
 
         pickObjectZeeJet->pickElectrons(*skimT);
-        if (pickObjectZeeJet->getPickedElectrons().size() < minElectron_) continue;
-        if (pickObjectZeeJet->getPickedElectrons().size() > maxElectron_) continue;
+        int nPickedElectron = pickObjectZeeJet->getPickedElectrons().size();
+        if (nPickedElectron < nElectronMin_) continue;
+        if (nPickedElectron > nElectronMax_) continue;
+
         pickObjectZeeJet->pickRefs(*skimT);
         std::vector<TLorentzVector> p4Refs = pickObjectZeeJet->getPickedRefs();
         if (p4Refs.size() != 1) continue; 
         h1EventInCutflow->fill("passExactly1Ref");
 
         // Weight
-        double weight = (globalFlags_.isMC() ? skimT->genWeight : 1.0);
-        if (globalFlags_.isMC()) weight *= scaleEvent->getPuCorrection(skimT->Pileup_nTrueInt, "nominal");
+        Double_t weight = 1.0;
+        if (globalFlags_.isMC()){
+            double genWeight    = skimT->genWeight; 
+            weight *= genWeight/scaleEvent->getNormGenEventSumw();
+            weight *= scaleEvent->getLumiWeight();
+            weight *= scaleEvent->getPuCorrection(skimT->Pileup_nTrueInt, "nominal");
+            if(globalFlags_.isDebug()){
+                std::cout << "genWeight     = " << genWeight << std::endl;
+                std::cout << "weight        = " << weight << std::endl;
+            }
+        }
 
         p4Ref = p4Refs.at(0);
         p4RawRef = p4Refs.at(0);
@@ -169,11 +179,10 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Scal
 
         // Pick index of jets
         std::vector<int> jetsIndex = pickObjectZeeJet->getPickedJetsIndex();
-        if (jetsIndex.size() != minJet_) continue; // sanity 
         int iJet1 = jetsIndex.at(0);
         int iJet2 = jetsIndex.at(1);
         if (iJet1 == -1) continue; // make sure the events have a valid leading jet
-        if (iJet2 == -1) continue; 
+        h1EventInCutflow->fill("passAtleast1Jet");
 
         // Pick p4 of jets
         TLorentzVector p4Jet1, p4Jet2, p4Jetn;
@@ -183,13 +192,10 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Scal
         p4Jetn = jetsP4.at(2);
         p4Jetn += p4Jet2; // except leading jet
 
-        // Use maxRefEta_ from configuration
-        if (fabs(p4Jet1.Eta()) >= maxRefEta_) continue; 
-        h1EventInCutflow->fill("passAtleast2Jet");
         histScale.FillElectron(*scaleElectron);
         histScale.FillJetMet(*scaleJetMet);
 
-        if (scaleEvent->checkJetVetoMap(*skimT)) continue; // expensive function
+        if (scaleEvent->checkJetVetoMapOnJet1(p4Jet1)) continue; 
         h1EventInCutflow->fill("passJetVetoMap");
         
         //------------------------------------------------
@@ -208,8 +214,8 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Scal
         double mpfnu = mathHdm.getMpfnu();
        
         double deltaPhi = Helper::DELTAPHI(p4Ref.Phi(), p4Jet1.Phi());
-        // Use maxDphi_ from configuration
-        if (fabs(deltaPhi - TMath::Pi()) >= maxDphi_) continue; 
+        // Use maxDeltaPhiRefJet1_ from configuration
+        if (fabs(deltaPhi - TMath::Pi()) >= maxDeltaPhiRefJet1_) continue; 
         h1EventInCutflow->fill("passDPhiRefJet1");
 
         if (fabs(p4Ref.Eta()) > maxRefEta_) continue; 
@@ -236,18 +242,26 @@ auto RunZeeJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Scal
         histTag.FillHistograms(skimT.get(), ptRef, iJet1, iGenJet1, weight);
 
         double alpha = p4Jet2.Pt() / ptRef;
+        histAlpha.Fill(alpha, ptRef, skimT->Rho, bal, mpf, weight);
+
         // Use maxAlpha_ from configuration
         if (alpha > maxAlpha_) continue;
         h1EventInCutflow->fill("passAlpha");
+        
         histRef2.Fill(p4Refs.size(), p4Ref, p4GenRef, weight); 
 
-        histFinal.Fill(ptRef, bal, mpf, p4Jet2, p4GenJet2, iGenJet2, globalFlags_.isMC(), weight);
         histMain.Fill(skimT.get(), iJet1, bal, mpf, ptRef, weight);
+        histMain.FillOtherResp(mpf1, mpfn, mpfu, mpfnu, ptRef, weight);
        
-        bool pass_DbResp = (fabs(1 - bal) < minDbResp_);
-        bool pass_MpfResp = (fabs(1 - mpf) < minMpfResp_); 
-        if (!(pass_DbResp && pass_MpfResp)) continue;
+        bool passDbResp  = bal > minResp_ && bal < maxResp_;
+        bool passMpfResp = mpf > minResp_ && mpf < maxResp_;
+
+        histFinal.FillCommon(ptRef, bal, mpf, passDbResp, passMpfResp, weight);
+        if(globalFlags_.isMC())histFinal.FillGen(ptRef, p4Jet2, p4GenJet2, weight);
+
+        if (!(passDbResp && passMpfResp)) continue;
         h1EventInCutflow->fill("passResponse");
+
         if(globalFlags_.isData()) histTime.Fill(skimT.get(), iJet1, bal, mpf, ptRef, weight);
     }  // end of event loop
 

@@ -1,16 +1,10 @@
 
+#include "GlobalFlag.h"
 #include "NanoFile.h"
 #include "NanoTree.h"
-#include "GlobalFlag.h"
-
-#include "RunZeeJet.h"
-#include "RunZmmJet.h"
-#include "RunGamJet.h"
-#include "RunGamJetFake.h"
-#include "RunMultiJet.h"
-#include "RunDiJet.h"
-#include "RunWqqe.h"
-#include "RunWqqm.h"
+#include "ReadConfig.h"
+#include "RunChannel.h"
+#include "Helper.h"
 
 #include <iostream>
 #include <filesystem>
@@ -86,71 +80,34 @@ int main(int argc, char* argv[]){
       }
     }
     
-    cout<<"\n--------------------------------------"<<endl;
-    cout<<" Set GlobalFlag.cpp"<<endl;
-    cout<<"--------------------------------------"<<endl;
+    Helper::printBanner("Set GlobalFlag.cpp");
     GlobalFlag globalFlag(outName);
     globalFlag.setDebug(false);
     globalFlag.printFlag();
-    
-    
-    std::cout << "\n--------------------------------------" << std::endl;
-    std::cout << " Set and load NanoFile.cpp" << std::endl;
-    std::cout << "--------------------------------------" << std::endl;
-    
-    const std::string& inJsonDir = "input/json/";
-    std::shared_ptr<NanoFile> nanoF = std::make_shared<NanoFile>(globalFlag, outName, inJsonDir);
-    
-    std::cout << "\n--------------------------------------" << std::endl;
-    std::cout << " Set and load NanoTree.cpp" << std::endl;
-    std::cout << "--------------------------------------" << std::endl;
-    
+    string channelStr = globalFlag.channelStr;
+    string yearStr = globalFlag.yearStr;
+
+    Helper::printBanner("Set NanoFile.cpp");
+    std::string inputSamplePath = "input/json/FilesNano_"+channelStr+"_"+yearStr+".json";
+    std::shared_ptr<NanoFile> nanoF = std::make_shared<NanoFile>(globalFlag, outName, inputSamplePath);
+
+    Helper::printBanner("Set and load NanoTree.cpp");
     std::shared_ptr<NanoTree> nanoT = std::make_shared<NanoTree>(globalFlag);
     nanoT->loadTree(nanoF->getJobFileNames());
 
-	std::string outDir = "output";
+    std::string outDir = "output";
     mkdir(outDir.c_str(), S_IRWXU);
     auto fout = std::make_unique<TFile>((outDir + "/" + outName).c_str(), "RECREATE");
 
-    if (globalFlag.isZeeJet) {
-        std::cout << "==> Running ZeeJet" << std::endl;
-        auto zeeJet = std::make_unique<RunZeeJet>(globalFlag);
-        zeeJet->Run(nanoT, fout.get());
-    }
-    if (globalFlag.isZmmJet) {
-        std::cout << "==> Running ZmmJet" << std::endl;
-        auto zmmJet = std::make_unique<RunZmmJet>(globalFlag);
-        zmmJet->Run(nanoT, fout.get());
-    }
-    if (globalFlag.isGamJet) {
-        std::cout << "==> Running GamJet" << std::endl;
-        auto gamJet = std::make_unique<RunGamJet>(globalFlag);
-        gamJet->Run(nanoT, fout.get());
-    }
-    if (globalFlag.isGamJetFake) {
-        std::cout << "==> Running GamJetFake" << std::endl;
-        auto gamJetFake = std::make_unique<RunGamJetFake>(globalFlag);
-        gamJetFake->Run(nanoT, fout.get());
-    }
-    if (globalFlag.isMultiJet) {
-        std::cout << "==> Running MultiJet" << std::endl;
-        auto multiJet = std::make_unique<RunMultiJet>(globalFlag);
-        multiJet->Run(nanoT, fout.get());
-    }
-    if (globalFlag.isDiJet) {
-        std::cout << "==> Running DiJet" << std::endl;
-        auto diJet = std::make_unique<RunDiJet>(globalFlag);
-        diJet->Run(nanoT, fout.get());
-    }
-    if (globalFlag.isWqqe) {
-        std::cout << "==> Running Wqqe" << std::endl;
-        auto wqqe = std::make_unique<RunWqqe>(globalFlag);
-        wqqe->Run(nanoT, fout.get());
-    }
-    if (globalFlag.isWqqm) {
-        std::cout << "==> Running Wqqm" << std::endl;
-        auto wqqm = std::make_unique<RunWqqm>(globalFlag);
-        wqqm->Run(nanoT, fout.get());
-    }
+    Helper::printBanner("Set and load ReadConfig.cpp");
+    std::string commonConfigPath  = "config/ReadConfigCommon.json";
+    std::string channelConfigPath = "config/ReadConfig"+channelStr+".json";
+    ReadConfig readConfig(commonConfigPath, channelConfigPath);
+
+    Helper::printBanner("Finally RunChannel.cpp");
+    std::cout << "==> Running for: " << channelConfigPath << std::endl;
+    auto runCh = std::make_unique<RunChannel>(globalFlag);
+    runCh->Run(nanoT, readConfig, fout.get());
+
 	return 0;
 }

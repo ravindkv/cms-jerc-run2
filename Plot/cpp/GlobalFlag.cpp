@@ -3,7 +3,7 @@
 GlobalFlag::GlobalFlag(std::string oName){
   outName = oName;
   isDebug = false;
-  isPlotTime1Ds = true;
+  isPlotTime1Ds = false;
   isPlotEras1D  = false;
   isPlotEra1Ds  = false;
   isPlotYear1Ds = true;
@@ -11,19 +11,67 @@ GlobalFlag::GlobalFlag(std::string oName){
   isPlotErasXY  = false;
   isPlotEraXYs  = false;
 
-  isPrintFigConfig = true;
+  isPrintFigConfig = false;
 
-  if(outName.find("GamJet")!= string::npos)    isGamJet    = true;
-  if(outName.find("ZeeJet")!= string::npos)    isZeeJet   = true;
-  if(outName.find("ZmmJet")!= string::npos)    isZmmJet    = true;
-  if(outName.find("Wqqe")!= string::npos)    isWqqe    = true;
-  if(outName.find("Wqqm")!= string::npos)    isWqqm    = true;
-  if(outName.find("MCTruth")!= string::npos)   isMcTruth   = true;
-  if(outName.find("Flavour")!= string::npos)   isFlavour   = true;
-  if(outName.find("VetoMap")!= string::npos)   isVetoMap   = true;
-  if(outName.find("DiJet")!= string::npos)     isDiJet     = true;
-  if(outName.find("IncJet")!= string::npos)    isIncJet    = true;
-  if(outName.find("MultiJet")!= string::npos)  isMultiJet  = true;
+  // --- Channels ---
+  const std::string channelZeeJet      = "ZeeJet";
+  const std::string channelZmmJet      = "ZmmJet";
+  const std::string channelGamJetFake  = "GamJetFake";
+  const std::string channelGamJet      = "GamJet";
+  const std::string channelMultiJet    = "MultiJet";
+  const std::string channelDiJet       = "DiJet";
+  const std::string channelWqqe        = "Wqqe";
+  const std::string channelWqqm        = "Wqqm";
+  
+  int channelCount = 0;
+  if (outName.find(channelZeeJet) != std::string::npos) {
+      isZeeJet = true;
+      channelStr = channelZeeJet;
+      ++channelCount;
+  }
+  if (outName.find(channelZmmJet) != std::string::npos) {
+      isZmmJet = true;
+      channelStr = channelZmmJet;
+      ++channelCount;
+  }
+  if (outName.find(channelGamJetFake) != std::string::npos) {
+      isGamJetFake = true;
+      channelStr = channelGamJetFake;
+      ++channelCount;
+  }
+  // Note: using an independent if here because we want to allow only one of these two.
+  if (outName.find(channelGamJet) != std::string::npos) {
+      // If GamJetFake was found, this one should not be set.
+      if (channelCount > 0) {
+          throw std::runtime_error("Error: Multiple channel flags found in " + outName);
+      }
+      isGamJet = true;
+      channelStr = channelGamJet;
+      ++channelCount;
+  }
+  if (outName.find(channelMultiJet) != std::string::npos) {
+      isMultiJet = true;
+      channelStr = channelMultiJet;
+      ++channelCount;
+  }
+  if (outName.find(channelDiJet) != std::string::npos) {
+      isDiJet = true;
+      channelStr = channelDiJet;
+      ++channelCount;
+  }
+  if (outName.find(channelWqqe) != std::string::npos) {
+      isWqqe = true;
+      channelStr = channelWqqe;
+      ++channelCount;
+  }
+  if (outName.find(channelWqqm) != std::string::npos) {
+      isWqqm = true;
+      channelStr = channelWqqm;
+      ++channelCount;
+  }
+  if (channelCount != 1) {
+      throw std::runtime_error("Error: Exactly one channel flag must be set in " + outName);
+  }
 }
 
 void GlobalFlag::printFlag(){

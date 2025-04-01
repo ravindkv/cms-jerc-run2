@@ -29,7 +29,7 @@ auto RunMultiJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pi
     //------------------------------------
     // Cutflow histogram
     std::vector<std::string> cuts = {
-        "passSkim", "passHLT", "passGoodLumi", "passMetFilter", "passExactly1Lead",
+        "passSkim", "passHLT", "passGoodLumi", "passExactly1Lead",
         "passAtleast2Recoil", "passJetVetoMap", "passDPhiLeadAndRecoil", "passVetoNearByJets",
         "passMultiJet", "passHltWithPtEta"
     };
@@ -89,7 +89,7 @@ auto RunMultiJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pi
         h1EventInCutflow->fill("passSkim");
 
         //------------------------------------
-        // Trigger and golden lumi, MET filter selection
+        // Trigger and golden lumi
         //------------------------------------
         if (!pickEvent->passHlt(skimT)) continue;
         std::vector<std::string> passedHlts = pickEvent->getPassedHlts();
@@ -101,9 +101,6 @@ auto RunMultiJet::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, Pi
         }
         if (!passGoodLumi) continue;
         h1EventInCutflow->fill("passGoodLumi");
-
-        if (!pickEvent->passFilter(skimT)) continue;
-        h1EventInCutflow->fill("passMetFilter");
 
         // Weight
         double weight = (globalFlags_.isMC() ? skimT->genWeight : 1.0);

@@ -7,6 +7,7 @@ sys.dont_write_bytecode = True
 sys.path.insert(0, os.getcwd().replace("condor/merge", ""))
 
 from Inputs import *
+Channels =  channelDetails
 
 def merge_root_files_run2(Channels, Years, input_dir, output_base_dir):
     """

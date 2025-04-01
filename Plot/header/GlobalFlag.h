@@ -26,6 +26,7 @@ class GlobalFlag{
 
     //Channels
     bool isGamJet;
+    bool isGamJetFake;
     bool isZeeJet;
     bool isZmmJet;
     bool isMcTruth;
@@ -38,6 +39,7 @@ class GlobalFlag{
     bool isWqqm;
     
     void printFlag();
+    std::string channelStr;
   private:
     string outName;
 };

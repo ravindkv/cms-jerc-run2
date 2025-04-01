@@ -37,4 +37,8 @@ class GlobalFlag{
         bool isMG;
         void printFlag();
         void setDebug(bool debug);
+        std::string channelStr;
+        std::string yearStr;
+        std::string dataStr;
+        std::string mcStr;
 };

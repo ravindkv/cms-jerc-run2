@@ -8,6 +8,8 @@ import multiprocessing
 sys.dont_write_bytecode = True
 sys.path.insert(0, os.getcwd().replace("condor",""))
 from Inputs import *
+Channels =  list(channelDetails.keys()) 
+
 from createJobFiles import createJobs
 
 #-------------------------------------------------
@@ -57,7 +59,7 @@ def checkJobs(jsonFile):
             file_list.append((sKey, skim))
 
     # Use multiprocessing to check files in parallel
-    with multiprocessing.Pool() as pool:
+    with multiprocessing.Pool(processes=5) as pool:
         results = pool.map(check_file, file_list)
 
     # Process the results

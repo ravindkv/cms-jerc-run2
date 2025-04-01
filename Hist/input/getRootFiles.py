@@ -26,14 +26,13 @@ if __name__=="__main__":
     skimDir = "../../Skim/input/json/"
     os.system("mkdir -p json")
     allJobs = 0
-    for ch, year in itertools.product(Channels.keys(), Years):
-        chSkim = Channels[ch]
-        fSkim = open(f"{skimDir}/FilesSkim_{chSkim}_{year}.json", "r")
+    for ch, year in itertools.product(channelDetails.keys(), years):
+        fSkim = open(f"{skimDir}/FilesSkim_{ch}_{year}.json", "r")
         jSkim = json.load(fSkim)
         #Replace the keys (DiJet, IncJet, etc to use same Skims)
         keyMap = {}
         for oldSkimKey in jSkim.keys():
-            newSkimKey = oldSkimKey.replace(f"_{chSkim}_", f"_{ch}_")
+            newSkimKey = oldSkimKey.replace(f"_{ch}_", f"_{ch}_")
             keyMap[oldSkimKey] = newSkimKey
         for oldSkimKey, newSkimKey in keyMap.items():
             if oldSkimKey in jSkim:

@@ -32,6 +32,10 @@ struct MainHistograms {
     // 1D Composition and Response
     std::unique_ptr<TProfile> p1DbRespInRefPt;
     std::unique_ptr<TProfile> p1MpfRespInRefPt;
+    std::unique_ptr<TProfile> p1Mpf1RespInRefPt;
+    std::unique_ptr<TProfile> p1MpfnRespInRefPt;
+    std::unique_ptr<TProfile> p1MpfuRespInRefPt;
+    std::unique_ptr<TProfile> p1MpfnuRespInRefPt;
     std::unique_ptr<TProfile> p1Jet1ChHefInRefPt;
     std::unique_ptr<TProfile> p1Jet1NeHefInRefPt;
     std::unique_ptr<TProfile> p1Jet1NeEmefInRefPt;
@@ -111,7 +115,8 @@ public:
      * @param ptRef Reference pT value for scaling.
      * @param weight Event weight.
      */
-    void Fill(SkimTree* skimT, int iJet1, double bal, double mpf,  double ptRef, double weight);
+    void Fill(SkimTree* skimT, int iJet1, double bal, double mpf, double ptRef, double weight);
+    void FillOtherResp(double mpf1, double mpfn, double mpfu, double mpfnu, double ptRef, double weight);
     
 private:
     // Map from pTRef thresholds to corresponding histograms (if needed)

@@ -123,18 +123,3 @@ auto PickEvent::passHltWithPtEta(const std::shared_ptr<SkimTree>& skimT,
     return false;
 }
 
-// Function to apply event filters
-auto PickEvent::passFilter(const std::shared_ptr<SkimTree>& skimT) const -> bool {
-    printDebug("<- PickEvent::passFilter ->");
-    for (const auto& filterName : skimT->getFilterNames()){
-        const auto& filterValue = static_cast<int>(skimT->getFilterValue(filterName));
-        //exit the loop when a filter is NOT true
-        if (!filterValue){
-            printDebug(filterName + ": "+ std::to_string(filterValue));
-            return false;
-        }
-    }//filter loop
-    return true;
-}
-
-

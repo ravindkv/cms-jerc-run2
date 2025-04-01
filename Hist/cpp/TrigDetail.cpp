@@ -21,6 +21,9 @@ void TrigDetail::loadConfig() {
     
     // Get string representations for year and channel.
     std::string yearStr = globalFlags_.getYearStr();
+    if (year_ == GlobalFlag::Year::Year2016Pre || year_ == GlobalFlag::Year::Year2016Post){
+        yearStr = "2016";
+    }
     std::string channelStr = globalFlags_.getChannelStr();
     
     // Build the file name for the current channel's configuration.
