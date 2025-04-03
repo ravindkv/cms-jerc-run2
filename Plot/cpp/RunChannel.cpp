@@ -264,9 +264,9 @@ int RunChannel::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &cha
 
 void RunChannel::addChannelSlides(Slide & channelSlide){
 
-  //channelSlide.makeSlideFromJsonFile("../Hist/config/PickObjectZeeJet.json");
+  channelSlide.makeSlideFromJsonFile("../Hist/config/PickObject"+channelStr+".json");
   //channelSlide.makeSlideFromJsonFile("../Hist/config/VarBin.json");
-  channelSlide.makeSlideFromJsonFile("../Skim/input/SamplesNano_ZeeJet.json");
+  channelSlide.makeSlideFromJsonFile("../Skim/input/SamplesNano_"+channelStr+".json");
 } 
 
 

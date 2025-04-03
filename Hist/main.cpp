@@ -152,7 +152,6 @@ int main(int argc, char* argv[]) {
     // Pass GlobalFlag reference to ScaleObject
     std::shared_ptr<ScaleObject> scaleObj = std::make_shared<ScaleObject>(globalFlag);
     try {
-        scaleObj->setInputs();
         scaleObj->loadJetL1FastJetRef();
         scaleObj->loadJetL2RelativeRef();
         if (globalFlag.isData()) {
@@ -194,7 +193,7 @@ int main(int argc, char* argv[]) {
     if (globalFlag.getChannel() == GlobalFlag::Channel::ZmmJet) {
         std::cout << "==> Running ZmmJet" << std::endl;
         auto zmmJet = std::make_unique<RunZmmJet>(globalFlag);
-        zmmJet->Run(skimT, pickEvent.get(), pickObject.get(), scaleEvent.get(), scaleObj.get(), fout.get());
+        zmmJet->Run(skimT, pickEvent.get(), scaleEvent.get(), scaleObj.get(), fout.get());
     }
 
     if (globalFlag.getChannel() == GlobalFlag::Channel::GamJet) {

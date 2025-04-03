@@ -6,7 +6,8 @@
     "goldenLumiJsonPath": "POG/LUM/Golden/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt",
     "hltLumiJsonPath": "POG/LUM/HLT/LumiForTrig_2016Pre_HLT_Photon.json",
     "puJsonPath": "POG/PU/2016preVFP_UL/puWeights.json",
-    "puName": "Collisions16_UltraLegacy_goldenJSON"
+    "puName": "Collisions16_UltraLegacy_goldenJSON",
+    "minbXsec": 69.2
   },
   "2016Post": {
     "jetVetoJsonPath": "POG/JME/2016postVFP_UL/jetvetomaps.json.gz",
@@ -15,7 +16,8 @@
     "goldenLumiJsonPath": "POG/LUM/Golden/Cert_271036-284044_13TeV_Legacy2016_Collisions16_JSON.txt",
     "hltLumiJsonPath": "POG/LUM/HLT/LumiForTrig_2016Post_HLT_Photon.json",
     "puJsonPath": "POG/PU/2016postVFP_UL/puWeights.json",
-    "puName": "Collisions16_UltraLegacy_goldenJSON"
+    "puName": "Collisions16_UltraLegacy_goldenJSON",
+    "minbXsec": 69.2
   },
   "2017": {
     "jetVetoJsonPath": "POG/JME/2017_UL/jetvetomaps.json.gz",
@@ -24,7 +26,8 @@
     "goldenLumiJsonPath": "POG/LUM/Golden/Cert_294927-306462_13TeV_UL2017_Collisions17_GoldenJSON.txt",
     "hltLumiJsonPath": "POG/LUM/HLT/LumiForTrig_2017_HLT_Photon.json",
     "puJsonPath": "POG/PU/2017_UL/puWeights.json",
-    "puName": "Collisions17_UltraLegacy_goldenJSON"
+    "puName": "Collisions17_UltraLegacy_goldenJSON",
+    "minbXsec": 69.2
   },
   "2018": {
     "jetVetoJsonPath": "POG/JME/2018_UL/jetvetomaps.json.gz",
@@ -33,7 +36,8 @@
     "goldenLumiJsonPath": "POG/LUM/Golden/Cert_314472-325175_13TeV_Legacy2018_Collisions18_JSON.txt",
     "hltLumiJsonPath": "POG/LUM/HLT/LumiForTrig_2018_HLT_Photon.json",
     "puJsonPath": "POG/PU/2018_UL/puWeights.json",
-    "puName": "Collisions18_UltraLegacy_goldenJSON"
+    "puName": "Collisions18_UltraLegacy_goldenJSON",
+    "minbXsec": 69.2
   }
 }
 

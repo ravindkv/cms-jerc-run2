@@ -3,10 +3,7 @@
 #include <iostream>
 #include <regex>
 #include <stdexcept>  // For std::runtime_error
-#include <nlohmann/json.hpp>
-#include <fstream>
-
-using json = nlohmann::json;
+#include <ReadConfig.h>
 
 // Constructor implementation
 ScaleEvent::ScaleEvent(GlobalFlag& globalFlags) : 
@@ -22,43 +19,34 @@ ScaleEvent::ScaleEvent(GlobalFlag& globalFlags) :
 }
 
 void ScaleEvent::loadConfig(const std::string& filename) {
-    std::ifstream configFile(filename);
-    if (!configFile.is_open()){
-        std::cerr << "Could not open configuration file: " << filename << std::endl;
-        std::exit(EXIT_FAILURE);
-    }
-    
-    json config;
-    configFile >> config;
+    ReadConfig config(filename);
     
     // Map the enum year_ to a key string in the JSON.
     std::string yearKey = globalFlags_.getYearStr();
     
-    // Load configuration strings from JSON.
-    jetVetoJsonPath_ = config[yearKey]["jetVetoJsonPath"].get<std::string>();
-    jetVetoName_     = config[yearKey]["jetVetoName"].get<std::string>();
-    jetVetoKey_      = config[yearKey]["jetVetoKey"].get<std::string>();
+    // Load configuration strings from JSON using ReadConfig's getValue<T>().
+    jetVetoJsonPath_   = config.getValue<std::string>({yearKey, "jetVetoJsonPath"});
+    jetVetoName_       = config.getValue<std::string>({yearKey, "jetVetoName"});
+    jetVetoKey_        = config.getValue<std::string>({yearKey, "jetVetoKey"});
 
-    goldenLumiJsonPath_ = config[yearKey]["goldenLumiJsonPath"].get<std::string>();
-    hltLumiJsonPath_    = config[yearKey]["hltLumiJsonPath"].get<std::string>();
-    puJsonPath_         = config[yearKey]["puJsonPath"].get<std::string>();
-    puName_             = config[yearKey]["puName"].get<std::string>();
+    goldenLumiJsonPath_ = config.getValue<std::string>({yearKey, "goldenLumiJsonPath"});
+    hltLumiJsonPath_    = config.getValue<std::string>({yearKey, "hltLumiJsonPath"});
+    puJsonPath_         = config.getValue<std::string>({yearKey, "puJsonPath"});
+    puName_             = config.getValue<std::string>({yearKey, "puName"});
 
-    // Optionally load additional parameters (for example, minbXsec) if provided.
-    if (config[yearKey].contains("minbXsec")) {
-        minbXsec_ = config[yearKey]["minbXsec"].get<double>();
-    }
+    minbXsec_ = config.getValue<double>({yearKey, "minbXsec"});
     
     // For debugging, print out the loaded configuration.
     std::cout << "Loaded configuration for " << yearKey << ":\n";
     std::cout << "  jetVetoJsonPath: " << jetVetoJsonPath_ << "\n";
-    std::cout << "  jetVetoName: " << jetVetoName_ << "\n";
-    std::cout << "  jetVetoKey: " << jetVetoKey_ << "\n";
+    std::cout << "  jetVetoName: "     << jetVetoName_ << "\n";
+    std::cout << "  jetVetoKey: "      << jetVetoKey_ << "\n";
     std::cout << "  goldenLumiJsonPath: " << goldenLumiJsonPath_ << "\n";
-    std::cout << "  hltLumiJsonPath: " << hltLumiJsonPath_ << "\n";
-    std::cout << "  puJsonPath: " << puJsonPath_ << "\n";
-    std::cout << "  puName: " << puName_ << "\n";
+    std::cout << "  hltLumiJsonPath: "    << hltLumiJsonPath_ << "\n";
+    std::cout << "  puJsonPath: "         << puJsonPath_ << "\n";
+    std::cout << "  puName: "             << puName_ << "\n";
 }
+
 
 void ScaleEvent::setNormGenEventSumw(Double_t normGenEventSumw){
     normGenEventSumw_ = normGenEventSumw;

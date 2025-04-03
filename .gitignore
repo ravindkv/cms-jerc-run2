@@ -36,7 +36,7 @@ Plot/runMain
 Plot/runMain.d
 Plot/input/json
 Plot/config/json/
-Plot/input/config/__pycache__
+Plot/config/__pycache__
 Plot/input/config/json/
 Plot/input/root/json
 
@@ -52,3 +52,5 @@ Fit/Classic/runMain
 Fit/Classic/runMain.d
 Fit/old_Classic
 Fit/Classic/input/root
+
+Doc/AN-XX-YY/

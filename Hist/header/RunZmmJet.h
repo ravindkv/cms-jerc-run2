@@ -1,8 +1,10 @@
-#ifndef RUNZMMJET_H
-#define RUNZMMJET_H
+
+#pragma once
 
 #include <iostream>
 #include <cmath>
+#include <vector>
+#include <string>
 
 // ROOT includes
 #include <TROOT.h>
@@ -17,7 +19,6 @@
 // User-defined includes
 #include "SkimTree.h"
 #include "PickEvent.h"
-#include "PickObject.h"
 #include "ScaleEvent.h"
 #include "ScaleObject.h"
 #include "GlobalFlag.h"
@@ -29,14 +30,25 @@ public:
     explicit RunZmmJet(GlobalFlag& globalFlags);
     ~RunZmmJet() = default;
 
-    int Run(std::shared_ptr<SkimTree>& skimT, PickEvent* pickEvent, PickObject* pickObject, ScaleEvent* scaleEvent, ScaleObject* scaleObject, TFile* fout);
+    int Run(std::shared_ptr<SkimTree>& skimT, PickEvent* pickEvent, ScaleEvent* scaleEvent, ScaleObject* scaleObject, TFile* fout);
 
 private:
     // Reference to GlobalFlag instance
     GlobalFlag& globalFlags_;
 
-    // Add any private member variables or methods here if needed
-};
+    // Configuration parameters loaded from JSON
+    std::vector<std::string> cutflows_;
+    std::vector<int> minRefPts_;
+    int nMuonMin_; 
+    int nMuonMax_; 
+    double maxDeltaPhiRefJet1_;
+    double maxAlpha_;
+    double maxRefEta_;
+    std::vector<double> alphaCuts_;
+    double minResp_;
+    double maxResp_;
 
-#endif // RUNZMMJET_H
+    // Method to load the configuration.
+    void loadConfig(const std::string& filename);
+};
 

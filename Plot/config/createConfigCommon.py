@@ -40,8 +40,8 @@ templates["ConfigTime1Ds"].update({
 templates["ConfigEra1Ds"].update({
     "histNames": ["", ""],
     "rTitle": "Data/MC",
-    "rMin": 0.0,
-    "rMax": 2.0
+    "rMin": 0.5,
+    "rMax": 1.5
 })
 
 templates["ConfigYear1Ds"].update({
@@ -213,12 +213,13 @@ for cut in cutsForResp:
             histDir=f"Base/{cut}/HistMain",
             histNames = [
                         "p1DbRespInRefPt",
+                        "p1Mpf1RespInRefPt",
                         "p1MpfRespInRefPt",
                         ],
             xTitle="Reference p_{T} (GeV)",
             yTitle="Response",
-            yMin=0.5,
-            yMax=1.5,
+            yMin=0.4,
+            yMax=1.6,
             rMin = 0.5,
             rMax = 1.5,
             rTitle = "Data/MC",
@@ -227,6 +228,27 @@ for cut in cutsForResp:
         )
     )
 
+for cut in cutsForResp:
+    configs["ConfigYear1Ds"].append(
+        createConfig(
+            "ConfigYear1Ds",
+            histDir=f"Base/{cut}/HistMain",
+            histNames = [
+                        "p1MpfnRespInRefPt",
+                        "p1MpfuRespInRefPt",
+                        "p1MpfnuRespInRefPt",
+                        ],
+            xTitle="Reference p_{T} (GeV)",
+            yTitle="Response",
+            yMin=-2.5,
+            yMax=-0.5,
+            rMin = 0.5,
+            rMax = 1.5,
+            rTitle = "Data/MC",
+            xLog=True,
+            isNorm=False
+        )
+    )
 cutsForVar = [
     #"passGoodLumi",
     "passMetFilter",
@@ -334,8 +356,8 @@ configs["ConfigEras1D"].append(
         histName="p1RefMassInRefPt",
         yTitle="Mean of Z mass (GeV)",
         xTitle="Reference p_{T} (GeV)",
-        yMin=70,
-        yMax=120,
+        yMin=80,
+        yMax=100,
         xLog=True
     )
 )
@@ -347,8 +369,8 @@ configs["ConfigEras1D"].append(
         histName="p1DbRespInRefPt",
         yTitle="DB Response",
         xTitle="Reference p_{T} (GeV)",
-        yMin=0.01,
-        yMax=2.5,
+        yMin=0.5,
+        yMax=1.5,
         xLog=True
     )
 )
@@ -359,8 +381,8 @@ configs["ConfigEras1D"].append(
         histName="p1MpfRespInRefPt",
         yTitle="MPF Response",
         xTitle="Reference p_{T} (GeV)",
-        yMin=0.01,
-        yMax=2.5,
+        yMin=0.5,
+        yMax=1.5,
         xLog=True
     )
 )
@@ -371,8 +393,8 @@ configs["ConfigEras1D"].append(
         histName="p1Jet1ChHefInRefPt",
         yTitle="Mean of Charged Hadron Energy Fraction",
         xTitle="Reference p_{T} (GeV)",
-        yMin=0.1,
-        yMax=1.2,
+        yMin=0.2,
+        yMax=1.0,
         xLog=True
     )
 )
@@ -383,8 +405,8 @@ configs["ConfigEras1D"].append(
         histName="p1Jet1NeHefInRefPt",
         yTitle="Mean of Neutral Hadron Energy Fraction",
         xTitle="Reference p_{T} (GeV)",
-        yMin=0.01,
-        yMax=0.4,
+        yMin=0.05,
+        yMax=0.3,
         xLog=True
     )
 )
@@ -395,8 +417,8 @@ configs["ConfigEras1D"].append(
         histName="p1Jet1ChEmefInRefPt",
         yTitle="Mean of Charged EM Energy Fraction",
         xTitle="Reference p_{T} (GeV)",
-        yMin=0.001,
-        yMax=0.2,
+        yMin=0.01,
+        yMax=0.04,
         xLog=True
     )
 )
@@ -407,8 +429,8 @@ configs["ConfigEras1D"].append(
         histName="p1Jet1NeEmefInRefPt",
         yTitle="Mean of Neutral EM Energy Fraction",
         xTitle="Reference p_{T} (GeV)",
-        yMin=0.01,
-        yMax=0.6,
+        yMin=0.1,
+        yMax=0.5,
         xLog=True
     )
 )

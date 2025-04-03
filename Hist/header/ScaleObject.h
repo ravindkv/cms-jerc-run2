@@ -20,7 +20,8 @@ public:
     explicit ScaleObject(GlobalFlag& globalFlags);
     ~ScaleObject(){}
     
-    void setInputs();
+    // Load configuration from JSON file
+    void loadConfig(const std::string& filename);
 
     // L1 Offset (aka PU or L1RC) correction
     void loadJetL1FastJetRef();

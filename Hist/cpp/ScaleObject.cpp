@@ -1,10 +1,8 @@
 #include "ScaleObject.h"
 #include "Helper.h"
-#include <fstream>
-#include <nlohmann/json.hpp>
 #include <iostream>
 #include <stdexcept>
-using json = nlohmann::json;
+#include <ReadConfig.h>
 
 ScaleObject::ScaleObject(GlobalFlag& globalFlags)
     : globalFlags_(globalFlags),
@@ -14,47 +12,34 @@ ScaleObject::ScaleObject(GlobalFlag& globalFlags)
       isDebug_(globalFlags_.isDebug()),
       isData_(globalFlags_.isData()),
       isMC_(globalFlags_.isMC()){
+    loadConfig("config/ScaleObject.json");
 }
 
-void ScaleObject::setInputs() {
-    // Open and parse the JSON configuration file for ScaleObject settings
-    std::ifstream ifs("config/ScaleObject.json");
-    if (!ifs.is_open()) {
-        throw std::runtime_error("Error: Could not open config/ScaleObject.json");
-    }
-    json j;
-    try {
-        ifs >> j;
-    } catch (json::parse_error& e) {
-        throw std::runtime_error(std::string("JSON parse error: ") + e.what());
-    }
-
-    // Get the year string from GlobalFlag (should return "2016Pre", "2016Post", "2017", or "2018")
+void ScaleObject::loadConfig(const std::string& filename) {
+    // Create a ReadConfig instance for the configuration file.
+    ReadConfig config(filename);
+    
+    // Retrieve the year-specific configuration.
     std::string yearStr = globalFlags_.getYearStr();
-    json yearConf;
-    try {
-        yearConf = j.at(yearStr);
-    } catch (json::exception& e) {
-        throw std::runtime_error("Error: Year configuration not found in ScaleObject.json for " + yearStr);
-    }
 
-    // Set common (MC) inputs
-    jercJsonPath_          = yearConf.at("jercJsonPath").get<std::string>();
-    jetL1FastJetName_      = yearConf.at("jetL1FastJetName").get<std::string>();
-    jetL2RelativeName_     = yearConf.at("jetL2RelativeName").get<std::string>();
-    jetL3AbsoluteName_     = yearConf.at("jetL3AbsoluteName").get<std::string>();
-    jetL2L3ResidualName_   = yearConf.at("jetL2L3ResidualName").get<std::string>();
-    JerResoName_           = yearConf.at("JerResoName").get<std::string>();
-    JerSfName_             = yearConf.at("JerSfName").get<std::string>();
-    phoSsJsonPath_         = yearConf.at("phoSsJsonPath").get<std::string>();
-    phoSsName_             = yearConf.at("phoSsName").get<std::string>();
-    muRochJsonPath_        = yearConf.at("muRochJsonPath").get<std::string>();
-    eleSsJsonPath_         = yearConf.at("eleSsJsonPath").get<std::string>();
-    eleSsName_             = yearConf.at("eleSsName").get<std::string>();
+    // Set common (MC) inputs using the ReadConfig helper.
+    jercJsonPath_          = config.getValue<std::string>({yearStr, "jercJsonPath"});
+    JerResoName_           = config.getValue<std::string>({yearStr, "JerResoName"});
+    JerSfName_             = config.getValue<std::string>({yearStr, "JerSfName"});
+    phoSsJsonPath_         = config.getValue<std::string>({yearStr, "phoSsJsonPath"});
+    phoSsName_             = config.getValue<std::string>({yearStr, "phoSsName"});
+    muRochJsonPath_        = config.getValue<std::string>({yearStr, "muRochJsonPath"});
+    eleSsJsonPath_         = config.getValue<std::string>({yearStr, "eleSsJsonPath"});
+    eleSsName_             = config.getValue<std::string>({yearStr, "eleSsName"});
 
     // If running on data, override with data-specific settings if available.
-    if (isData_) {
-        // Determine era string from the GlobalFlag era enum.
+    if (isMC_){
+        jetL1FastJetName_      = config.getValue<std::string>({yearStr, "jetL1FastJetName"});
+        jetL2RelativeName_     = config.getValue<std::string>({yearStr, "jetL2RelativeName"});
+        jetL3AbsoluteName_     = config.getValue<std::string>({yearStr, "jetL3AbsoluteName"});
+        jetL2L3ResidualName_   = config.getValue<std::string>({yearStr, "jetL2L3ResidualName"});
+    }
+    else if (isData_) {
         std::string eraStr;
         switch(era_) {
             case GlobalFlag::Era::Era2016PreBCD: eraStr = "Era2016PreBCD"; break;
@@ -71,18 +56,10 @@ void ScaleObject::setInputs() {
             case GlobalFlag::Era::Era2018D:      eraStr = "Era2018D";      break;
             default: eraStr = ""; break;
         }
-        if (!eraStr.empty() && yearConf.contains("data") && yearConf["data"].contains(eraStr)) {
-            json dataConf = yearConf["data"].at(eraStr);
-            // Override jet names with data-specific values if provided.
-            if (dataConf.contains("jetL1FastJetName"))
-                jetL1FastJetName_ = dataConf.at("jetL1FastJetName").get<std::string>();
-            if (dataConf.contains("jetL2RelativeName"))
-                jetL2RelativeName_ = dataConf.at("jetL2RelativeName").get<std::string>();
-            if (dataConf.contains("jetL3AbsoluteName"))
-                jetL3AbsoluteName_ = dataConf.at("jetL3AbsoluteName").get<std::string>();
-            if (dataConf.contains("jetL2L3ResidualName"))
-                jetL2L3ResidualName_ = dataConf.at("jetL2L3ResidualName").get<std::string>();
-        }
+        jetL1FastJetName_ = config.getValue<std::string>({yearStr, "data", eraStr, "jetL1FastJetName"});
+        jetL2RelativeName_ = config.getValue<std::string>({yearStr, "data", eraStr, "jetL2RelativeName"});
+        jetL3AbsoluteName_ = config.getValue<std::string>({yearStr, "data", eraStr, "jetL3AbsoluteName"});
+        jetL2L3ResidualName_ = config.getValue<std::string>({yearStr, "data", eraStr, "jetL2L3ResidualName"});
     }
 
     // Print out the settings for verification.

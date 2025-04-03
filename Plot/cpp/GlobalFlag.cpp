@@ -4,7 +4,7 @@ GlobalFlag::GlobalFlag(std::string oName){
   outName = oName;
   isDebug = false;
   isPlotTime1Ds = false;
-  isPlotEras1D  = false;
+  isPlotEras1D  = true;
   isPlotEra1Ds  = false;
   isPlotYear1Ds = true;
   isPlotEra2D   = false;

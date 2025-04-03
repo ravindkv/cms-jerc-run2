@@ -18,10 +18,7 @@
 #include "VarBin.h"
 #include "MathHdm.h"
 
-#include <fstream>
-#include "nlohmann/json.hpp"
-
-using json = nlohmann::json;
+#include "ReadConfig.h"
 
 // Constructor implementation: load configuration from JSON file
 RunZeeJet::RunZeeJet(GlobalFlag& globalFlags)
@@ -30,26 +27,19 @@ RunZeeJet::RunZeeJet(GlobalFlag& globalFlags)
 }
 
 void RunZeeJet::loadConfig(const std::string& filename) {
-    std::ifstream configFile(filename);
-    if (!configFile.is_open()){
-        std::cerr << "Could not open configuration file: " << filename << std::endl;
-        std::exit(EXIT_FAILURE);
-    }
+    ReadConfig config(filename);
     
-    json config;
-    configFile >> config;
-    
-    // Read the configuration values
-    cutflows_ = config["cutflows"].get<std::vector<std::string>>();
-    minRefPts_ = config["minRefPts"].get<std::vector<int>>();
-    nElectronMin_ = config["nElectronMin"].get<int>();
-    nElectronMax_ = config["nElectronMax"].get<int>();
-    maxDeltaPhiRefJet1_ = config["maxDeltaPhiRefJet1"].get<double>();
-    maxAlpha_ = config["maxAlpha"].get<double>();
-    alphaCuts_ = config["alphaCuts"].get<std::vector<double>>();
-    maxRefEta_ = config["maxRefEta"].get<double>();
-    minResp_ = config["minResp"].get<double>();
-    maxResp_ = config["maxResp"].get<double>();
+    // Read the configuration values using getValue() for proper error handling.
+    cutflows_          = config.getValue<std::vector<std::string>>({"cutflows"});
+    minRefPts_         = config.getValue<std::vector<int>>({"minRefPts"});
+    nElectronMin_      = config.getValue<int>({"nElectronMin"});
+    nElectronMax_      = config.getValue<int>({"nElectronMax"});
+    maxDeltaPhiRefJet1_= config.getValue<double>({"maxDeltaPhiRefJet1"});
+    maxAlpha_          = config.getValue<double>({"maxAlpha"});
+    alphaCuts_         = config.getValue<std::vector<double>>({"alphaCuts"});
+    maxRefEta_         = config.getValue<double>({"maxRefEta"});
+    minResp_           = config.getValue<double>({"minResp"});
+    maxResp_           = config.getValue<double>({"maxResp"});
 }
 
 // Main run method updated to use configuration parameters

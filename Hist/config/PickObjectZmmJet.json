@@ -1,12 +1,11 @@
 {
-  "electronPick": {
-    "minPt": 25.0,
-    "maxEta": 2.4,
-    "tightId": 4,
-    "ebEeGap": {
-      "min": 1.4442,
-      "max": 1.566
-    }
+  "muonPick": {
+    "minPt": 20.0,
+    "maxEta": 2.3,
+    "tightId": 1,
+    "maxRelIso": 0.15,
+    "maxDxy": 0.2,
+    "maxDz": 0.5
   },
   "referencePick": {
     "mass": 91.1876,
@@ -16,12 +15,12 @@
   "jetPick": {
     "minPt": 12.0,
     "maxEtaLeading": 1.3,
-    "Jet_electronIdx1": -1,
-    "Jet_electronIdx2": -1,
+    "Jet_muonIdx1": -1,
+    "Jet_muonIdx2": -1,
     "minId": 6
   },
-  "genElectronPick": {
-    "pdgId": 11
+  "genMuonPick": {
+    "pdgId": 13
   },
   "genReferencePick": {
     "maxDeltaR": 0.2
