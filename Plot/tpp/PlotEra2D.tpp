@@ -84,6 +84,7 @@ void PlotEra2D<T>::drawHist2D(const std::string &outPdfName) {
 
     hist->SetTitle(dataEraOrMcBin_.c_str());
     hist->Draw("COLZ");
+    tdrStyle_->drawTitle();
     //leg->AddEntry(hist, hist->GetName(), "L");
     //leg->Draw();
 

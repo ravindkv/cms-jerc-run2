@@ -3,7 +3,8 @@
 GlobalFlag::GlobalFlag(std::string oName){
   outName = oName;
   isDebug = false;
-  isPlotTime1Ds = false;
+  forAN = true;
+  isPlotTime1Ds = true;
   isPlotEras1D  = true;
   isPlotEra1Ds  = false;
   isPlotYear1Ds = true;
@@ -76,6 +77,7 @@ GlobalFlag::GlobalFlag(std::string oName){
 
 void GlobalFlag::printFlag(){
   if(isDebug   )cout<<"isDebug    = true"<<endl;
+  if(forAN   )cout<<"forAN    = true"<<endl;
   if(isPlotEras1D )cout<<"isPlotEras1D   = true"<<endl;
   if(isPlotEra1Ds )cout<<"isPlotEra1Ds   = true"<<endl;
   if(isPlotYear1Ds )cout<<"isPlotYear1Ds   = true"<<endl;

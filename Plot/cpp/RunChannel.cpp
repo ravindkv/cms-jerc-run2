@@ -13,11 +13,9 @@
 #include <filesystem>
 using json = nlohmann::json;
    
-int RunChannel::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &channelSlide, Slide &allChannelSlide, ReadConfig &readConfig){
+int RunChannel::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &channelSlide, Note& channelNote, ReadConfig &readConfig){
     channelSlide.startDocument("JME-21-001: L3Residual from Channel "+ channelStr);
     addChannelSlides(channelSlide);
-
-    allChannelSlide.addCenteredTextSlide("Next we show results from "+channelStr+" channel");
 
     std::string channel = channelStr;
     std::vector<std::string> years;
@@ -41,6 +39,7 @@ int RunChannel::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &cha
         std::filesystem::create_directories(outPlotDirTime1Ds);
         channelSlide.addCenteredTextSlide("Next we show 1D plots");
         for (const auto & config: figConfigVecTime1Ds){
+            if(forAN && !config.forAN) continue;
             auto names = config.histNames;
             std::string name("");
             for (const auto& n: names){name = n + "_";}
@@ -58,7 +57,8 @@ int RunChannel::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &cha
                 plotsForSlide.push_back(outPdfName);
             }
             channelSlide.addPlotSlide(plotsForSlide, dir+"/"+name+" for different Runs");
-            allChannelSlide.addPlotSlide(plotsForSlide, dir+"/"+name+" from Channel channel for different Runs");
+            std::string figCaption = channel+config.caption;
+            if(config.forAN)channelNote.addPlotNote(plotsForSlide, figCaption);
         }//config
     }//isPlot1D
 
@@ -70,6 +70,7 @@ int RunChannel::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &cha
         std::filesystem::create_directories(outPlotDirEra1Ds);
         channelSlide.addCenteredTextSlide("Next we show 1D plots");
         for (const auto & config: figConfigVecEra1Ds){
+            if(forAN && !config.forAN) continue;
             auto names = config.histNames;
             std::string name("");
             for (const auto& n: names){name = n + "_";}
@@ -92,7 +93,8 @@ int RunChannel::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &cha
                     plotsForSlide.push_back(outPdfName);
                 }//era
                 channelSlide.addPlotSlide(plotsForSlide, dir+"/Energy Fractions for "+ year);
-                allChannelSlide.addPlotSlide(plotsForSlide, dir+"/"+name+" from Channel channel for different years");
+                std::string figCaption = channel+config.caption;
+                if(config.forAN)channelNote.addPlotNote(plotsForSlide, figCaption);
             }//year
         }//config
     }//isPlotEra1Ds
@@ -106,6 +108,7 @@ int RunChannel::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &cha
         std::filesystem::create_directories(outPlotDirYear1Ds);
         channelSlide.addCenteredTextSlide("Next we show 1D plots");
         for (const auto & config: figConfigVecYear1Ds){
+            if(forAN && !config.forAN) continue;
             auto names = config.histNames;
             std::string name("");
             for (const auto& n: names){name = n + "_";}
@@ -127,7 +130,8 @@ int RunChannel::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &cha
                 plotsForSlide.push_back(outPdfName);
             }//year
             channelSlide.addPlotSlide(plotsForSlide, dir+"/Energy Fractions for different year");
-            allChannelSlide.addPlotSlide(plotsForSlide, dir+"/"+name+" from Channel channel for different years");
+            std::string figCaption = channel+config.caption;
+            if(config.forAN)channelNote.addPlotNote(plotsForSlide, figCaption);
         }//config
     }//isPlotYear1Ds
 
@@ -139,6 +143,7 @@ int RunChannel::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &cha
         std::filesystem::create_directories(outPlotDirEras1D);
         channelSlide.addCenteredTextSlide("Next we show 1D plots");
         for (const auto & config: figConfigVecEras1D){
+            if(forAN && !config.forAN) continue;
             auto name = config.histName;
             auto dir  = config.histDir;
             if(isPrintFigConfig) config.print();
@@ -157,7 +162,8 @@ int RunChannel::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &cha
                 plotsForSlide.push_back(outPdfName);
             }//year
             channelSlide.addPlotSlide(plotsForSlide, dir+"/"+name+" for different years");
-            allChannelSlide.addPlotSlide(plotsForSlide, dir+"/"+name+" from Channel channel for different years");
+            std::string figCaption = channel+config.caption;
+            if(config.forAN)channelNote.addPlotNote(plotsForSlide, figCaption);
         }//config
     }//isPlot1D
 
@@ -231,6 +237,7 @@ int RunChannel::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &cha
         std::filesystem::create_directories(outPlotDirEraXYs);
         channelSlide.addCenteredTextSlide("Next we show Projection of X in MANY Y bins");
         for (const auto & config: figConfigVecEraXYs){
+            if(forAN && !config.forAN) continue;
             auto name = config.histName;
             auto dir  = config.histDir;
             if(isPrintFigConfig) config.print();
@@ -250,7 +257,8 @@ int RunChannel::Run(nlohmann::json inputJson, std::string eosPlotDir, Slide &cha
                     plotsForSlide.push_back(outPdfName);
                 }//eras
                 channelSlide.addPlotSlide(plotsForSlide, dir+"/"+name+" for "+ year);
-                allChannelSlide.addPlotSlide(plotsForSlide, dir+"/"+name+" from Channel channel for "+ year);
+                std::string figCaption = channel+config.caption;
+                if(config.forAN)channelNote.addPlotNote(plotsForSlide, figCaption);
             }//year
         }//config
     }//isPlotXY
@@ -266,7 +274,7 @@ void RunChannel::addChannelSlides(Slide & channelSlide){
 
   channelSlide.makeSlideFromJsonFile("../Hist/config/PickObject"+channelStr+".json");
   //channelSlide.makeSlideFromJsonFile("../Hist/config/VarBin.json");
-  channelSlide.makeSlideFromJsonFile("../Skim/input/SamplesNano_"+channelStr+".json");
+  //channelSlide.makeSlideFromJsonFile("../Skim/input/SamplesNano_"+channelStr+".json");
 } 
 
 

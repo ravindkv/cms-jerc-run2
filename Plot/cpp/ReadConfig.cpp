@@ -45,12 +45,14 @@ void ReadConfig::readFigConfig(const nlohmann::json& configGroup, std::vector<T>
         figConfig.trigDirs = params.value("trigDirs", std::vector<std::string>{});
         figConfig.xTitle = params.value("xTitle", "");
         figConfig.yTitle = params.value("yTitle", "");
+        figConfig.caption = params.value("caption", "");
         figConfig.xMin = params.value("xMin", 0.0);
         figConfig.xMax = params.value("xMax", 0.0);
         figConfig.yMin = params.value("yMin", 0.0);
         figConfig.yMax = params.value("yMax", 0.0);
         figConfig.xLog = params.value("xLog", false);
         figConfig.yLog = params.value("yLog", false);
+        figConfig.forAN = params.value("forAN", false);
         figConfig.isNorm = params.value("isNorm", false);
         
         // Special handling for specific types

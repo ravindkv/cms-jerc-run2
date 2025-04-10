@@ -11,12 +11,14 @@ baseTemplate = {
     "trigDirs": [],
     "xTitle": "Reference Jet p_{T} (GeV)",
     "yTitle": "Response",
+    "caption": "Figure caption",
     "xMin": -9999,
     "xMax": -9999,
     "yMin": -9999,
     "yMax": -9999,
     "xLog": False,
     "yLog": False,
+    "forAN": False,
     "isNorm": False
 }
 
@@ -143,8 +145,10 @@ for cut in cutsForTime:
                         "p1Jet1ChEmefInRunForRefPt30"],
             xTitle="Run Number",
             yTitle="Response and energy fractions",
+            caption="TimeRespEf",
             yMin=0.0001,
-            yMax=1.5
+            yMax=1.5,
+            forAN=True
         )
     )
 
@@ -164,12 +168,14 @@ configs["ConfigEra1Ds"].append(
                     ],
         xTitle="Reference p_{T} (GeV)",
         yTitle="PF Composition",
+        caption="EraEf",
         yMin=0.001,
         yMax=1.0,
         rMin = 0.0,
         rMax = 2.0,
         rTitle = "Data/MC",
         xLog=True,
+        forAN=True,
         isNorm=False
     )
 )
@@ -197,12 +203,14 @@ for cut in cutsForResp:
                         ],
             xTitle="Reference p_{T} (GeV)",
             yTitle="Jet Energy Fractions",
+            caption="YearEf",
             yMin=0.001,
             yMax=1.0,
             rMin = 0.5,
             rMax = 1.5,
             rTitle = "Data/MC",
             xLog=True,
+            forAN=True,
             isNorm=False
         )
     )
@@ -218,12 +226,14 @@ for cut in cutsForResp:
                         ],
             xTitle="Reference p_{T} (GeV)",
             yTitle="Response",
+            caption="YearResp",
             yMin=0.4,
             yMax=1.6,
-            rMin = 0.5,
-            rMax = 1.5,
+            rMin = 0.8,
+            rMax = 1.2,
             rTitle = "Data/MC",
             xLog=True,
+            forAN=True,
             isNorm=False
         )
     )
@@ -240,12 +250,14 @@ for cut in cutsForResp:
                         ],
             xTitle="Reference p_{T} (GeV)",
             yTitle="Response",
+            caption="YearRespN",
             yMin=-2.5,
             yMax=-0.5,
             rMin = 0.5,
             rMax = 1.5,
             rTitle = "Data/MC",
             xLog=True,
+            forAN=True,
             isNorm=False
         )
     )
@@ -296,30 +308,35 @@ configs["ConfigEras1D"].append(
         histName="h1EventInCutflow",
         xTitle="Cutflow bins",
         yTitle="Events (normalized to 1)",
+        caption="ErasCutflow",
         yMin=0.0001,
         yMax=100,
         rMin = 0.0,
         rMax = 2.0,
         yLog=True,
+        forAN=True,
         isNorm=True
     )
 )
 
-if isMorePlots:
-    configs["ConfigEras1D"].append(
-        createConfig(
-            "ConfigEras1D",
-            histDir="Base/passAlpha/HistRef",
-            histName="h1EventInRefMass",
-            yTitle="Events (normalized to 1)",
-            xTitle="Reference mass (GeV)",
-            xMin=60,
-            xMax=120,
-            yMin=0.001,
-            yMax=0.4,
-            isNorm=True
-        )
+configs["ConfigEras1D"].append(
+    createConfig(
+        "ConfigEras1D",
+        histDir="Base/passAlpha/HistRef",
+        histName="h1EventInRefMass",
+        yTitle="Events (normalized to 1)",
+        xTitle="Reference mass (GeV)",
+        caption="ErasRefMass",
+        xMin=80,
+        xMax=100,
+        yMin=0.001,
+        yMax=0.4,
+        rMin=0.5,
+        rMax=1.5,
+        forAN=True,
+        isNorm=True
     )
+)
 
 if isMorePlots:
     configs["ConfigEras1D"].append(
@@ -329,9 +346,11 @@ if isMorePlots:
             histName="h1EventInRefPt",
             yTitle="Events (normalized to 1)",
             xTitle="Reference pT (GeV)",
+            caption="ErasRefPt",
             yMin=0.001,
             yMax=0.5,
             xLog=True,
+            forAN=True,
             isNorm=True
         )
     )
@@ -356,8 +375,12 @@ configs["ConfigEras1D"].append(
         histName="p1RefMassInRefPt",
         yTitle="Mean of Z mass (GeV)",
         xTitle="Reference p_{T} (GeV)",
-        yMin=80,
-        yMax=100,
+        caption="ErasRefMassInRefPt",
+        yMin=85,
+        yMax=95,
+        rMin=0.8,
+        rMax=1.2,
+        forAN=True,
         xLog=True
     )
 )
@@ -369,8 +392,8 @@ configs["ConfigEras1D"].append(
         histName="p1DbRespInRefPt",
         yTitle="DB Response",
         xTitle="Reference p_{T} (GeV)",
-        yMin=0.5,
-        yMax=1.5,
+        yMin=0.8,
+        yMax=1.2,
         xLog=True
     )
 )

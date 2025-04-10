@@ -18,6 +18,22 @@ TdrStyle::TdrStyle()
     };
 }
 
+void TdrStyle::drawTitle(TPad* pad) {
+    // If no pad is provided, cast gPad to a TPad*
+    if (!pad) pad = static_cast<TPad*>(gPad);
+    pad->cd();
+
+    TLatex titleLatex;
+    titleLatex.SetNDC();            // Use normalized device coordinates
+    titleLatex.SetTextAlign(22);     // Center horizontally (2) and vertically (2)
+    titleLatex.SetTextSize(0.04);    // Set the desired text size
+    // Optional: Set font (e.g., titleLatex.SetTextFont(42); )
+
+    // Draw the title at the top center (x = 0.5, y = 0.96) of the pad
+    titleLatex.DrawLatex(0.5, 0.97, title_.c_str());
+}
+
+
 // Set the TDR style
 void TdrStyle::setTdrStyle() {
     TStyle *tdrStyle = new TStyle("tdrStyle", "Style for P-TDR");

@@ -13,6 +13,7 @@ class GlobalFlag{
     ~GlobalFlag();
     
     bool isDebug;
+    bool forAN;
 
     bool isPlotEras1D;
     bool isPlotEra1Ds;

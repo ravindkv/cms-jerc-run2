@@ -142,6 +142,7 @@ void PlotErasXY<T>::drawHists(const std::vector<TProfile*>& hists) {
       return;
     }
   }
+  tdrStyle_->drawTitle();
 
   leg->Draw();
 }

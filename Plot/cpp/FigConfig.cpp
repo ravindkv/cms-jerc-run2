@@ -7,12 +7,14 @@ void FigConfigBase::print() const {
               << "histDir: " << histDir << "\n"
               << "xTitle: " << xTitle << "\n"
               << "yTitle: " << yTitle << "\n"
+              << "caption: " << caption << "\n"
               << "xMin: " << xMin << "\n"
               << "xMax: " << xMax << "\n"
               << "yMin: " << yMin << "\n"
               << "yMax: " << yMax << "\n"
               << "xLog: " << (xLog ? "true" : "false") << "\n"
               << "yLog: " << (yLog ? "true" : "false") << "\n"
+              << "forAN: " << (forAN ? "true" : "false") << "\n"
               << "isNorm: " << (isNorm ? "true" : "false") << std::endl;
     std::cout << "trigDirs:";
     for(const auto& trigDir: trigDirs){

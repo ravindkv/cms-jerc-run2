@@ -12,12 +12,14 @@ struct FigConfigBase {
     std::vector<std::string> trigDirs;
     std::string xTitle;
     std::string yTitle;
+    std::string caption;
     double xMin;
     double xMax;
     double yMin;
     double yMax;
     bool xLog;
     bool yLog;
+    bool forAN;
     bool isNorm;
 
     virtual void print() const; // Declaration only, implementation will be in .cpp file

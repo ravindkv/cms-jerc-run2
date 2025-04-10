@@ -1,5 +1,6 @@
 #include "GlobalFlag.h"
 #include "Slide.h"
+#include "Note.h"
 #include "RunChannel.h"
 
 #include <filesystem>
@@ -61,13 +62,11 @@ int main(int argc, char* argv[]){
   string localTexDir = "./output";
   std::filesystem::create_directories(localTexDir);
 
-  std::string chLatex = localTexDir+"/"+outName;
+  std::string chLatex = localTexDir+"/Slide_"+outName;
   Slide channelSlide(chLatex);
 
-  bool isAllChannel = false;
-  std::string allLatex = localTexDir+"/AllChannel_Plot.tex";
-  Slide allChannelSlide(allLatex);
-  allChannelSlide.startDocument("JME-21-001: All channel");
+  std::string chLatexNote = "../Doc/AN-25-066/plot/Note_"+outName;
+  Note  channelNote(chLatexNote);
 
   cout<<"\n--------------------------------------"<<endl;
   cout<<" Set GlobalFlag.cpp"<<endl;
@@ -83,12 +82,10 @@ int main(int argc, char* argv[]){
 
   std::cout << "==> Running for: " << channelConfigPath << std::endl;
   auto runCh = std::make_unique<RunChannel>(outName);
-  runCh->Run(js, eosPlotDir, channelSlide, allChannelSlide, readConfig);
+  runCh->Run(js, eosPlotDir, channelSlide, channelNote, readConfig);
 
-  allChannelSlide.addCenteredTextSlide("Thank you!");
-  allChannelSlide.endDocument();
   std::cout<<chLatex<<std::endl;
-  std::cout<<allLatex<<std::endl;
+  std::cout<<chLatexNote<<std::endl;
 
 
   return 0;

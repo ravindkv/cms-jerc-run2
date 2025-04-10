@@ -188,6 +188,7 @@ void PlotEra1Ds<T>::drawHists(const std::vector<T*>& hists, const bool& isMC)
         }
 
         hist->Draw(drawOpt);
+        tdrStyle_->drawTitle();
 
         // Add legend entry
         if (isMC) {

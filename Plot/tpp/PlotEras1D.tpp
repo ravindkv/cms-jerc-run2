@@ -117,6 +117,7 @@ void PlotEras1D<T>::drawHists(const std::vector<T*>& hists) {
       return;
     }
   }
+  tdrStyle_->drawTitle();
 
   leg->Draw();
 }

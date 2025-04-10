@@ -179,6 +179,7 @@ void TdrStyle::setColor(T* obj, int index) {
 // Template function to set figure configuration
 template <typename T>
 void TdrStyle::setFigConfig(const T& params) {
+    title_ = params.histDir;
     xTitle_ = params.xTitle;
     yTitle_ = params.yTitle;
     xMin_ = params.xMin;

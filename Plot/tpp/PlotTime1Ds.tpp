@@ -185,7 +185,7 @@ void PlotTime1Ds<T>::drawHists() {
         }//i==0
     }// for i
 
-
+    tdrStyle_->drawTitle();
     leg->Draw();
 }
 

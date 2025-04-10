@@ -101,6 +101,14 @@ public:
     bool getZLog() const { return zLog_; }
     bool getIsNorm() const { return isNorm_; }
 
+    /**
+     * @brief Draw the plot title using TLatex.
+     * 
+     * This function draws the title at the top center of the current pad.
+     * @param pad Pointer to the TPad on which the title will be drawn. If not provided, gPad is used.
+     */
+    void drawTitle(TPad* pad = nullptr);
+
 private:
     // Global variables
     TString cmsText_ = "CMS";
@@ -127,6 +135,7 @@ private:
     std::vector<std::string> hexColors; ///< Vector to store hex color codes
 
     // Figure configuration
+    std::string title_;
     std::string xTitle_;
     std::string yTitle_;
     std::string zTitle_;
