@@ -1,3 +1,6 @@
+## Migrated to gitlab:
+https://gitlab.cern.ch/cms-analysis/jme/cms-jerc-code/cms-jerc-run2
+
 # cms-jerc-run2
 Jet energy and resolution correction for Run 2
 
