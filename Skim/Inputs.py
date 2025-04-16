@@ -14,10 +14,10 @@ Years = [
 ]
 
 Channels = [
-    'ZeeJet',
-    'ZmmJet',
+    #'ZeeJet',
+    #'ZmmJet',
     #'GamJet',
-    #'GamJetFake',
+    'GamJetFake',
     #'MultiJet',
     #'DiJet',
     #'Wqqe',

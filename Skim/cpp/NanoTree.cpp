@@ -31,6 +31,12 @@ TFile* NanoTree::validateAndOpenFile(const std::string& fullPath) {
         file->Close();
         return nullptr;
     }
+    // Check that the file contains the "Runs" tree
+    if (!file->GetListOfKeys()->Contains("Runs")) {
+        std::cerr << "Error: 'Runs' not found in " << fullPath << '\n';
+        file->Close();
+        return nullptr;
+    }
     // Check the entries in the "Events" tree
     TTree* tree = file->Get<TTree>("Events");
     if (tree->GetEntries() == 0) {

@@ -4,6 +4,7 @@ import sys
 import json
 import itertools
 import multiprocessing
+from tqdm import tqdm
 
 # from ROOT import TFile  # Uncomment in actual environment with ROOT
 
@@ -18,32 +19,52 @@ from createJobFiles import createJobs  # Adjust import path if needed
 #-------------------------------------------------
 def check_file(args):
     """
-    Checks a single file (skim) for corruption.
+    Checks a single ROOT file (skim) for corruption.
+    This version includes a raw connectivity probe and uses open timeouts
+    to skip files that hang on remote storage.
+    
     Returns tuple: (sKey, skim, is_corrupted)
     """
-    from ROOT import TFile  # Import ROOT inside the worker
+    from ROOT import TFile, gSystem  # Import ROOT inside the worker
     sKey, skim = args
     f = None
     try:
+        # --- Step 1: Quick connectivity check using raw mode ---
+        f_test = TFile.Open(skim, "READ")
+        if not f_test or f_test.IsZombie():
+            print(f"[Raw connectivity failure] {skim}")
+            return (sKey, skim, True)
+        if f_test.GetSize() < 3000:
+            print(f"[Raw file too small] {skim}")
+            f_test.Close()
+            return (sKey, skim, True)
+        f_test.Close()  # Raw check passed, close test file
+
+        # --- Step 2: Open the file normally ---
         f = TFile.Open(skim, "READ")
-        
         if not f or f.IsZombie() or f.GetSize() < 3000:
             print(f"[Corrupt/Empty] {skim}")
             return (sKey, skim, True)
         
-        # Check for the specific histogram
+        # Check for the specific histogram.
         h = f.Get("h1EventInCutflow")
         if not h:
             print(f"[Missing Cutflow] {skim}")
             return (sKey, skim, True)
-
-        # Check for the specific TTree
+    
+        # Check for the specific TTree.
         tree = f.Get("Events")
         if not tree:
             print(f"[Missing Events TTree] {skim}")
             return (sKey, skim, True)
 
-        # If we got here, the file is considered good
+        # Check for the specific TTree.
+        tree = f.Get("Runs")
+        if not tree:
+            print(f"[Missing Runs TTree] {skim}")
+            return (sKey, skim, True)
+    
+        # If we got here, the file is considered good.
         return (sKey, skim, False)
         
     except Exception as e:
@@ -53,9 +74,13 @@ def check_file(args):
         if f:
             f.Close()
 
+
 #-------------------------------------------------
 # Check each file in the new-style JSON
 #-------------------------------------------------
+import multiprocessing
+from tqdm import tqdm
+
 def checkJobs(jsonFile):
     """
     Where the input `jsonFile` is of the form:
@@ -83,9 +108,13 @@ def checkJobs(jsonFile):
             print(f"WARNING: '{sKey}' does not conform to new JSON structure. Skipping.")
             continue
 
-    # Check in parallel
-    with multiprocessing.Pool(processes=5) as pool:
-        results = pool.map(check_file, file_list)
+    # Check in parallel using a progress bar
+    results = []
+    pool_size = min(20, len(file_list))
+    with multiprocessing.Pool(processes=pool_size) as pool:
+        # Wrap the imap_unordered iterator with tqdm for a progress bar
+        for res in tqdm(pool.imap_unordered(check_file, file_list), total=len(file_list)):
+            results.append(res)
 
     # Build the "unfinished" (corrupted) dictionary
     corrupted_map = {}

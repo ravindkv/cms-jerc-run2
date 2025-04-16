@@ -43,3 +43,12 @@ void HistCutflow::fill(const std::string& cutName, double weight) {
     }
 }
 
+void HistCutflow::Write() const {
+    if (h1EventsInCutflow) {
+        h1EventsInCutflow->Write();
+    } else {
+        std::cerr << "Error: Histogram pointer is null. Cannot write histogram." << std::endl;
+    }
+}
+
+

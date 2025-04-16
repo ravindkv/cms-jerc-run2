@@ -21,9 +21,11 @@ public:
     
     void setNormGenEventSumw(Double_t normGenEventSumw);
     void setLumiWeightInput(double lumiPerYear, double xsec, double nEventsNano);
+    void setLumiPerEra(double lumiPerEra);
 
     Double_t getNormGenEventSumw(){return normGenEventSumw_;} 
     Double_t getLumiWeight(){return lumiWeight_;} 
+    Double_t getLumiPerEra(){return lumiPerEra_;} 
 
     // Jet veto
     void loadJetVetoRef();
@@ -36,7 +38,7 @@ public:
 
     void loadHltLumiJson();
     double getHltLumiPerRun(const std::string& hltPathBase, const std::string& runNumber) const;
-    double cacheHltLumiPerRun(const std::shared_ptr<SkimTree>& skimT, const double& pt) const;
+    double cacheHltLumiPerRun(const std::string& trigName, const double & run) const;
     // Debugging method to print the cache contents
     void printRunTriggerLumiCache() const;
 
@@ -54,6 +56,7 @@ private:
     
     // Lumi
     double lumiWeight_;
+    double lumiPerEra_;
     std::string goldenLumiJsonPath_;
     nlohmann::json loadedGoldenLumiJson_;
 

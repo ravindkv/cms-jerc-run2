@@ -80,9 +80,6 @@ auto RunGamJetFake::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, 
     Long64_t nentries = skimT->getEntries();
     Helper::initProgress(nentries);
 
-    Float_t mcXssWeight = 1.0;
-    if (globalFlags_.isMC()) mcXssWeight = skimT->getMcXssWeight();
-
     for (Long64_t jentry = 0; jentry < nentries; ++jentry) {
         if (globalFlags_.isDebug() && jentry > globalFlags_.getNDebug()) break;
         Helper::printProgress(jentry, nentries, startClock, totalTime, globalFlags_.isDebug());
@@ -168,7 +165,6 @@ auto RunGamJetFake::Run(std::shared_ptr<SkimTree>& skimT, PickEvent *pickEvent, 
         if (globalFlags_.isMC()){
             weight *= skimT->genWeight;
             weight *= scaleEvent->getPuCorrection(skimT->Pileup_nTrueInt, "nominal");
-            weight *= mcXssWeight; 
         }
 
         // Gen objects

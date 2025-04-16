@@ -22,6 +22,9 @@ public:
     // Accessor for the underlying histogram (optional)
     TH1D* getHistogram() const { return h1EventsInCutflow.get(); }
 
+    // Write method to write the histogram to file
+    void Write() const;
+
 private:
     std::string histName;
     std::vector<std::string> cutNames;

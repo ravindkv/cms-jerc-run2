@@ -64,6 +64,10 @@ void ScaleEvent::setLumiWeightInput(double lumiPerYear, double xsec, double nEve
     }
 }
 
+void ScaleEvent::setLumiPerEra(double lumiPerEra){
+    lumiPerEra_ = lumiPerEra;
+}
+
 void ScaleEvent::loadJetVetoRef() {
   std::cout << "==> loadJetVetoRef()" << '\n';
   try {
@@ -152,10 +156,10 @@ auto ScaleEvent::checkGoodLumi(const unsigned int &run, const unsigned int &lumi
     }
   } catch (const std::exception &e) {
     std::cout << "\nEXCEPTION: ScaleEvent::checkGoodLumi()" << '\n';
-    std::cout << "Run = " << run << ", Lumi = " << lumi << '\n';
     std::cout << e.what() << '\n';
     throw std::runtime_error("Error checking good luminosity.");
   }
+  if(isDebug_) std::cout << "Run = " << run << ", Lumi = " << lumi << '\n';
   return false;
 }
 
@@ -201,55 +205,34 @@ double ScaleEvent::getHltLumiPerRun(const std::string& hltPathBase, const std::s
     return 0.0;
 }
 
-double ScaleEvent::cacheHltLumiPerRun(const std::shared_ptr<SkimTree>& skimT, const double& pt) const {
+double ScaleEvent::cacheHltLumiPerRun(const std::string& trigName, const double & run) const {
     if (isDebug_) printRunTriggerLumiCache(); 
     // 1) Extract the run number as an integer
-    int currentRun = skimT->run;
+    int currentRun = run;
 
     // We'll need to return the luminosity for *the first triggered path*,
     // but now we maintain distinct values for each (run, trigger).
     double matchedLumi = 0.0;
 
-    // 2) Retrieve the trigDetails map from TrigDetail
-    TrigDetail trigDetail(globalFlags_);
     if (channel_ == GlobalFlag::Channel::GamJet) {
-        const auto& trigs = trigDetail.getTrigMapRangePt();
+        //We check if we already have a cached luminosity for (run, triggerName).
+        auto runIter = run2Trig2Lumi_.find(currentRun);
+        if (runIter == run2Trig2Lumi_.end()) {
+            // No entry for this run yet, so create one
+            run2Trig2Lumi_[currentRun] = {};
+            runIter = run2Trig2Lumi_.find(currentRun);
+        }
 
-        // Loop over the triggers
-        for (const auto& trig : trigs) {
-            const std::string& trigName  = trig.first;     // e.g., "HLT_Photon50_R9Id90_HE10_IsoM"
-            const TrigRangePt& trigRange = trig.second;    // {ptMin, ptMax}
-            bool passesHlt = false;
+        auto& trig2lumiMap = runIter->second; // This is the map triggerName -> lumi
+        if (trig2lumiMap.find(trigName) == trig2lumiMap.end()) {
+            // Not in cache, so we do the JSON lookup
+            double newLumi = getHltLumiPerRun(trigName, std::to_string(currentRun));
+            trig2lumiMap[trigName] = newLumi;
+        }
 
-            // Check if the event fired this trigger & if pt is in the correct range
-            if (skimT->getTrigValue(trigName) && 
-                pt >= trigRange.ptMin && pt < trigRange.ptMax) {
-                passesHlt = true;
-            }
-            if (passesHlt) {
-                // 2a) We check if we already have a cached luminosity for (run, triggerName).
-                auto runIter = run2Trig2Lumi_.find(currentRun);
-                if (runIter == run2Trig2Lumi_.end()) {
-                    // No entry for this run yet, so create one
-                    run2Trig2Lumi_[currentRun] = {};
-                    runIter = run2Trig2Lumi_.find(currentRun);
-                }
+        // 2b) Retrieve the cached luminosity for (run, triggerName)
+        matchedLumi = trig2lumiMap[trigName];
 
-                auto& trig2lumiMap = runIter->second; // This is the map triggerName -> lumi
-                if (trig2lumiMap.find(trigName) == trig2lumiMap.end()) {
-                    // Not in cache, so we do the JSON lookup
-                    double newLumi = getHltLumiPerRun(trigName, std::to_string(currentRun));
-                    trig2lumiMap[trigName] = newLumi;
-                }
-
-                // 2b) Retrieve the cached luminosity for (run, triggerName)
-                matchedLumi = trig2lumiMap[trigName];
-
-                // If we only care about the *first* triggered path, break.
-                // Otherwise, we could continue checking other triggers.
-                break;
-            }
-        } // end for (auto& trig : trigs)
     } // end if GamJet
 
     return matchedLumi;

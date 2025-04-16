@@ -26,7 +26,7 @@ if __name__=="__main__":
     skimDir = "../../Skim/input/json/"
     os.system("mkdir -p json")
     allJobs = 0
-    for ch, year in itertools.product(channelDetails.keys(), years):
+    for ch, year in itertools.product(channelDetails.keys(), Years):
         fSkim = open(f"{skimDir}/FilesSkim_{ch}_{year}.json", "r")
         jSkim = json.load(fSkim)
         #Replace the keys (DiJet, IncJet, etc to use same Skims)

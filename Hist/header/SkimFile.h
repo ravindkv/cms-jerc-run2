@@ -36,7 +36,7 @@ public:
         return loadedJobFileNames_; 
     }
 
-    [[nodiscard]] const double & getXsecNano() const { 
+    [[nodiscard]] const double & getXsecOrLumiNano() const { 
         return nanoXssOrLumi_; 
     }
 

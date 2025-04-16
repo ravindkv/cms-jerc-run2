@@ -22,6 +22,45 @@ SkimTree::~SkimTree() {
     // unique_ptr will automatically delete fChain_
 }
 
+// Helper function: Validate and open a file
+TFile* SkimTree::validateAndOpenFile(const std::string& fullPath) {
+    TFile* file = TFile::Open(fullPath.c_str(), "READ");
+    if (!file || file->IsZombie()) {
+        std::cerr << "Error: Failed to open or corrupted file " << fullPath << '\n';
+        if (file) file->Close();
+        return nullptr;
+    }
+    // Check file size (using 3000 bytes as a threshold)
+    if (file->GetSize() < 3000) {
+        std::cerr << "Warning: file " << fullPath << " has less than 3000 bytes, skipping.\n";
+        file->Close();
+        return nullptr;
+    }
+    TTree* tree = dynamic_cast<TTree*>(file->Get("Events"));
+    if (!tree) {
+        std::cerr << "Error: 'Events' not found in " << fullPath << '\n';
+        file->Close();
+        return nullptr;
+    }
+
+    if (tree->GetEntries() == 0) {
+        std::cerr << "Warning: 'Events' TTree in file " << fullPath << " has 0 entries. Skipping file.\n";
+        file->Close();
+        return nullptr;
+    }
+    return file;
+}
+
+// Helper function: Add file to TChains
+bool SkimTree::addFileToChains(const std::string& fullPath) {
+    int added = fChain_->Add(fullPath.c_str());
+    if (added == 0) {
+        std::cerr << "Warning: TChain::Add failed for " << fullPath << '\n';
+        return false;
+    }
+    return true;
+}
+
 void SkimTree::loadTree(std::vector<std::string> skimFileList) {
     std::cout << "==> loadTree()" << '\n';
     if (!fChain_) {
@@ -29,17 +68,47 @@ void SkimTree::loadTree(std::vector<std::string> skimFileList) {
     }
     fChain_->SetCacheSize(100 * 1024 * 1024);
 
+    int totalFiles = 0;
+    int addedFiles = 0;
+    int failedFiles = 0;
+
     if (skimFileList.empty()) {
         throw std::runtime_error("Error: No files to load in loadTree()");
     }
 
     std::string dir = ""; // Adjust as needed
     for (const auto& fName : skimFileList) {
-        if (fChain_->Add((dir + fName).c_str()) == 0) {
-            throw std::runtime_error("Error adding file to TChain: " + dir + fName);
+        totalFiles++;
+        std::string fullPath = fName;
+        std::cout << fullPath << '\n';
+        // Validate and open the file
+        TFile* file = validateAndOpenFile(fullPath);
+        if (!file) {
+            failedFiles++;
+            continue;
         }
-        std::cout << dir + fName << "  " << fChain_->GetEntries() << '\n';
+        // Add file to the TChains
+        if (!addFileToChains(fullPath)) {
+            failedFiles++;
+            file->Close();
+            continue;
+        }
+        std::cout << "Total Entries: " << fChain_->GetEntries()<< '\n';
+        addedFiles++;
+        file->Close();
     }
+
+    // Final summary
+    std::cout << "==> Finished loading files.\n";
+    std::cout << "Total files processed: " << totalFiles << '\n';
+    std::cout << "Successfully added files: " << addedFiles << '\n';
+    std::cout << "Failed to add files: " << failedFiles << '\n';
+
+    if (fChain_->GetNtrees() == 0) {
+        std::cerr << "Error: No valid ROOT files were added to the TChain. Exiting.\n";
+        return;
+    }
+
 
     fChain_->SetBranchStatus("*", true);
     fChain_->SetBranchAddress("run", &run);

@@ -13,10 +13,10 @@ Years = [
 # Example channels configuration without explicit extra systematics per year:
 chBaseConfig = {
     #"ZeeJet":     {"Years": Years},
-    "ZmmJet":     {"Years": Years},
+    #"ZmmJet":     {"Years": Years},
     #"Wqqe":     {"Years": Years},
     #"Wqqm":     {"Years": Years},
-    #"GamJet":   {"Years": Years},
+    "GamJet":   {"Years": Years},
 }
 
 

@@ -8,3 +8,10 @@ Jet energy and resolution correction for Run 2
 
 Go to the Skim, Hist, or other directories and follow the README there
 
+
+## Analysis Note
+https://gitlab.cern.ch/tdr/notes/AN-25-066
+
+
+## CADI: JME-21-001
+https://cms.cern.ch/iCMS/analysisadmin/cadilines?line=JME-21-001 

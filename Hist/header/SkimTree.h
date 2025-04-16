@@ -155,15 +155,6 @@ public:
     static const int nPSWeightMax = 400;
     Float_t PSWeight[nPSWeightMax]{}; // [nPSWeight]
 
-    const Float_t getNanoXssOrLumi(){return nanoXssOrLumi_;}
-    const Int_t getNanoEvents(){return nanoEvents_;}
-    const Float_t getMcXssWeight(){
-        Float_t xssWeight = 1.0;
-        if (nanoXssOrLumi_>0) xssWeight = nanoXssOrLumi_/nanoEvents_;
-        std::cout<<" SkimTree:: getMcXssWeight() = "<<xssWeight<<'\n';
-        return xssWeight;
-    }
-
 private:
 
     Int_t fCurrent_; // Current Tree number in a TChain
@@ -191,7 +182,8 @@ private:
     const bool isData_;
     const bool isMC_;
 
-    Float_t nanoXssOrLumi_ = 1.0;
-    Int_t   nanoEvents_ = 1.0;
+    TFile* validateAndOpenFile(const std::string& fullPath);
+    bool addFileToChains(const std::string& fullPath);
 };
+
 

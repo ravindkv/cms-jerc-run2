@@ -138,10 +138,11 @@ int main(int argc, char* argv[]) {
         if (globalFlag.isData()) {
             scaleEvent->loadGoldenLumiJson();
             scaleEvent->loadHltLumiJson();
+            scaleEvent->setLumiPerEra(skimF->getXsecOrLumiNano());
         }else{
             scaleEvent->loadPuRef();
             scaleEvent->setNormGenEventSumw(normGenEventSumw);
-            scaleEvent->setLumiWeightInput(globalFlag.getLumiPerYear(), skimF->getXsecNano(), skimF->getEventsNano());
+            scaleEvent->setLumiWeightInput(globalFlag.getLumiPerYear(), skimF->getXsecOrLumiNano(), skimF->getEventsNano());
         }
     } catch (const std::runtime_error& e) {
         std::cerr << "Critical error: " << e.what() << std::endl;
@@ -199,7 +200,7 @@ int main(int argc, char* argv[]) {
     if (globalFlag.getChannel() == GlobalFlag::Channel::GamJet) {
         std::cout << "==> Running GamJet" << std::endl;
         auto gamJet = std::make_unique<RunGamJet>(globalFlag);
-        gamJet->Run(skimT, pickEvent.get(), pickObject.get(), scaleEvent.get(), scaleObj.get(), fout.get());
+        gamJet->Run(skimT, pickEvent.get(), scaleEvent.get(), scaleObj.get(), fout.get());
     }
     if (globalFlag.getChannel() == GlobalFlag::Channel::GamJetFake) {
         std::cout << "==> Running GamJetFake" << std::endl;

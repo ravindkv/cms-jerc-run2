@@ -96,12 +96,8 @@ GlobalFlag::GlobalFlag(const std::string& outName) :
         channelStr = channelGamJetFake;
         ++channelCount;
     }
-    // Note: using an independent if here because we want to allow only one of these two.
-    if (outName.find(channelGamJet) != std::string::npos) {
-        // If GamJetFake was found, this one should not be set.
-        if (channelCount > 0) {
-            throw std::runtime_error("Error: Multiple channel flags found in " + outName);
-        }
+    // If GamJetFake was found, this one should not be set.
+    else if (outName.find(channelGamJet) != std::string::npos) {
         isGamJet = true;
         channelStr = channelGamJet;
         ++channelCount;

@@ -16,6 +16,7 @@ void RunChannel::runEventLoop(NanoTree* nanoT, TFile* fout) {
 
     // Clone the tree and set cache.
     TTree* newTree = nanoT->fChain->GetTree()->CloneTree(0);
+    newTree->SetDirectory(fout);  // Ensure newTree is owned by fout.
     newTree->SetCacheSize(Helper::tTreeCatchSize);
 
     // Setup cutflow histogram using newTree's file directory.
@@ -57,21 +58,41 @@ void RunChannel::runEventLoop(NanoTree* nanoT, TFile* fout) {
             }
         }
     }
-    // Process the Runs tree.
-    TTree* newTreeRuns = nanoT->fChainRuns->GetTree()->CloneTree(0);
+    Helper::printCutflow(h1EventInCutflow->getHistogram());
+    std::cout << "nEvents_Skim = " << newTree->GetEntries() << "\n";
+    fout->cd();
+    h1EventInCutflow->Write();
+    newTree->Write("", TObject::kOverwrite);
+
+    std::cout << "\nNow process the RunsTree \n";
+    // Force loading the first tree in the chain.
+    Long64_t centry = nanoT->fChainRuns->LoadTree(0);
+    if (centry < 0) {
+        std::cerr << "Error: fChainRuns->LoadTree(0) returned " << centry 
+                  << ", no valid Runs tree found. Skipping Runs processing." << std::endl;
+        return; // or handle the error as needed.
+    }
+    TTree* runsTree = nanoT->fChainRuns->GetTree();
+    if (!runsTree) {
+        std::cerr << "Error: No valid Runs tree found in the TChain. Skipping Runs processing." << std::endl;
+        return;
+    }
+    TTree* newTreeRuns = runsTree->CloneTree(0);
+
+    totalTime = 0.0;
+    startClock = std::chrono::high_resolution_clock::now();
     newTreeRuns->SetDirectory(fout);
     Long64_t nentriesRuns = nanoT->getEntriesRuns();
     for (Long64_t i = 0; i < nentriesRuns; i++) {
+       Helper::printProgress(i, nentriesRuns, startClock, totalTime);
        Long64_t entry = nanoT->loadEntryRuns(i);
        nanoT->fChainRuns->GetTree()->GetEntry(entry);
        newTreeRuns->Fill();
     }
-
-    Helper::printCutflow(h1EventInCutflow->getHistogram());
-    std::cout << "nEvents_Skim = " << newTree->GetEntries() << "\n";
     std::cout << "nEvents_Runs = " << newTreeRuns->GetEntries() << "\n";
     std::cout << "Output file path = " << fout->GetName() << "\n";
-    fout->Write();
+    fout->cd();
+    newTreeRuns->Write("", TObject::kOverwrite);
 }
 
 
